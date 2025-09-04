@@ -3,42 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Angkor Compliance Platform</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <title>Angkor Compliance - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            /* Primary Gold Theme */
-            --primary-gold: #D4AF37;
-            --primary-gold-dark: #B8941F;
-            --primary-gold-light: #F4E4BC;
-            --primary-gold-lighter: #FDF8E8;
-            --primary-gold-darker: #8B6914;
-            
-            /* Neutral Colors */
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-300: #d1d5db;
-            --neutral-400: #9ca3af;
-            --neutral-500: #6b7280;
-            --neutral-600: #4b5563;
-            --neutral-700: #374151;
-            --neutral-800: #1f2937;
-            --neutral-900: #111827;
-            
-            /* Status Colors */
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-        }
-
+        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
@@ -46,37 +14,37 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            color: #333;
         }
 
+        /* Login container */
         .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
+            display: flex;
             width: 100%;
             max-width: 1200px;
-            min-height: 600px;
-            display: flex;
+            height: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Left side - Branding & Features */
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
-            padding: 60px 40px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            text-align: center;
-            color: white;
+            justify-content: center;
+            padding: 40px;
             position: relative;
             overflow: hidden;
         }
@@ -88,48 +56,44 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .login-left-content {
-            position: relative;
+            background: url('angkor-bg.jpg') center/cover;
+            opacity: 0.1;
             z-index: 1;
         }
 
+        .login-left-content {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
         .logo {
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 48px;
-            color: var(--primary-gold-darker);
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #FDF8E8;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .login-left h1 {
             font-size: 2.5rem;
-            font-weight: 700;
             margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .login-left p {
             font-size: 1.1rem;
+            margin-bottom: 40px;
             line-height: 1.6;
             opacity: 0.9;
-            max-width: 400px;
         }
 
         .features {
-            margin-top: 40px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            max-width: 400px;
+            margin-top: 40px;
         }
 
         .feature {
@@ -141,95 +105,108 @@
         }
 
         .feature i {
-            color: var(--primary-gold-light);
             font-size: 1.2rem;
+            color: #FDF8E8;
         }
 
+        /* Right side - Forms */
         .login-right {
             flex: 1;
-            padding: 60px 40px;
+            padding: 40px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
         }
 
         .form-container {
-            max-width: 400px;
             width: 100%;
+            max-width: 400px;
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .form-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--neutral-900);
-            margin-bottom: 10px;
-        }
-
-        .form-header p {
-            color: var(--neutral-600);
-            font-size: 1rem;
-        }
-
+        /* Form tabs */
         .form-tabs {
             display: flex;
-            background: var(--neutral-100);
-            border-radius: 12px;
-            padding: 4px;
             margin-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
         }
 
         .form-tab {
             flex: 1;
-            padding: 12px 20px;
+            padding: 15px;
             text-align: center;
-            border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
+            color: #6b7280;
             transition: all 0.3s ease;
-            font-weight: 500;
-            color: var(--neutral-600);
+            border-bottom: 3px solid transparent;
         }
 
         .form-tab.active {
-            background: white;
-            color: var(--primary-gold);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #D4AF37;
+            border-bottom-color: #D4AF37;
         }
 
+        .form-tab:hover {
+            color: #B8941F;
+        }
+
+        /* Form sections */
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .form-header p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .alert.success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Form groups */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--neutral-700);
+            font-weight: 600;
+            color: #374151;
             font-size: 0.9rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid var(--neutral-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-        }
-
-        .form-input.error {
-            border-color: var(--danger);
         }
 
         .input-group {
@@ -241,14 +218,35 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--neutral-400);
-            font-size: 1.1rem;
+            color: #9ca3af;
+            font-size: 1rem;
         }
 
         .input-with-icon {
-            padding-left: 48px;
+            padding-left: 48px !important;
         }
 
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Password toggle */
         .password-toggle {
             position: absolute;
             right: 16px;
@@ -256,24 +254,71 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--neutral-400);
+            color: #9ca3af;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             padding: 4px;
         }
 
+        .password-toggle:hover {
+            color: #6b7280;
+        }
+
+        /* Role selector */
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .role-option {
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: #D4AF37;
+            background-color: #FDF8E8;
+        }
+
+        .role-option.selected {
+            border-color: #D4AF37;
+            background-color: #F4E4BC;
+            color: #8B6914;
+        }
+
+        .role-option i {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #D4AF37;
+        }
+
+        .role-option span {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Buttons */
         .form-button {
             width: 100%;
-            padding: 16px 20px;
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-dark) 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
         .form-button:hover {
@@ -281,59 +326,22 @@
             box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
         }
 
+        .form-button:active {
+            transform: translateY(0);
+        }
+
         .form-button:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
 
-        .form-footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .form-footer a {
-            color: var(--primary-gold);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .form-footer a:hover {
-            color: var(--primary-gold-dark);
-        }
-
-        .alert {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .alert.success {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        .alert.error {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .alert.info {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--info);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
+        /* Loading spinner */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
@@ -343,54 +351,31 @@
             to { transform: rotate(360deg); }
         }
 
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .role-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .role-option {
-            padding: 12px 16px;
-            border: 2px solid var(--neutral-200);
-            border-radius: 8px;
+        /* Form footer */
+        .form-footer {
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 20px;
             font-size: 0.9rem;
-            font-weight: 500;
+            color: #6b7280;
         }
 
-        .role-option:hover {
-            border-color: var(--primary-gold);
-            background: var(--primary-gold-lighter);
+        .form-footer a {
+            color: #D4AF37;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-        .role-option.selected {
-            border-color: var(--primary-gold);
-            background: var(--primary-gold);
-            color: white;
+        .form-footer a:hover {
+            color: #B8941F;
+            text-decoration: underline;
         }
 
-        .role-option i {
-            display: block;
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
+        /* Back link */
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--neutral-600);
+            color: #6b7280;
             text-decoration: none;
             font-size: 0.9rem;
             margin-bottom: 20px;
@@ -398,24 +383,19 @@
         }
 
         .back-link:hover {
-            color: var(--primary-gold);
+            color: #D4AF37;
         }
 
-        /* Responsive Design */
+        /* Responsive design */
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
-                min-height: auto;
+                height: auto;
+                margin: 20px;
             }
 
             .login-left {
-                padding: 40px 20px;
-                order: 2;
-            }
-
-            .login-right {
-                padding: 40px 20px;
-                order: 1;
+                padding: 30px 20px;
             }
 
             .login-left h1 {
@@ -424,26 +404,44 @@
 
             .features {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .login-right {
+                padding: 30px 20px;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 480px) {
             .login-container {
-                border-radius: 16px;
                 margin: 10px;
+                border-radius: 15px;
             }
 
-            .login-left, .login-right {
-                padding: 30px 20px;
+            .login-left {
+                padding: 20px 15px;
+            }
+
+            .login-right {
+                padding: 20px 15px;
             }
 
             .form-tabs {
                 flex-direction: column;
-                gap: 4px;
             }
 
-            .role-selector {
-                grid-template-columns: 1fr;
+            .form-tab {
+                border-bottom: none;
+                border-right: 3px solid transparent;
+            }
+
+            .form-tab.active {
+                border-right-color: #D4AF37;
+                border-bottom-color: transparent;
             }
         }
     </style>
@@ -458,7 +456,6 @@
                 </div>
                 <h1>Angkor Compliance</h1>
                 <p>Transform compliance with AI-first, evidence-driven automation. Secure, scalable, and enterprise-ready.</p>
-                
                 <div class="features">
                     <div class="feature">
                         <i class="fas fa-robot"></i>
@@ -496,9 +493,7 @@
                         <h2>Welcome Back</h2>
                         <p>Sign in to your Angkor Compliance account</p>
                     </div>
-
                     <div class="alert" id="login-alert"></div>
-
                     <form id="login-form">
                         <div class="form-group">
                             <label class="form-label" for="login-email">Email Address</label>
@@ -507,7 +502,6 @@
                                 <input type="email" id="login-email" class="form-input input-with-icon" placeholder="Enter your email" required>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="form-label" for="login-password">Password</label>
                             <div class="input-group">
@@ -518,13 +512,11 @@
                                 </button>
                             </div>
                         </div>
-
                         <button type="submit" class="form-button" id="login-button">
                             <span id="login-button-text">Sign In</span>
                             <span id="login-button-loading" class="loading" style="display: none;"></span>
                         </button>
                     </form>
-
                     <div class="form-footer">
                         <a href="#" onclick="showSection('reset')">Forgot your password?</a>
                     </div>
@@ -536,9 +528,7 @@
                         <h2>Create Account</h2>
                         <p>Join the Angkor Compliance Platform</p>
                     </div>
-
                     <div class="alert" id="register-alert"></div>
-
                     <form id="register-form">
                         <div class="form-group">
                             <label class="form-label" for="register-display-name">Full Name</label>
@@ -547,7 +537,6 @@
                                 <input type="text" id="register-display-name" class="form-input input-with-icon" placeholder="Enter your full name" required>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="form-label" for="register-email">Email Address</label>
                             <div class="input-group">
@@ -555,7 +544,6 @@
                                 <input type="email" id="register-email" class="form-input input-with-icon" placeholder="Enter your email" required>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="form-label" for="register-password">Password</label>
                             <div class="input-group">
@@ -566,7 +554,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="form-label">Select Role</label>
                             <div class="role-selector">
@@ -588,13 +575,11 @@
                                 </div>
                             </div>
                         </div>
-
                         <button type="submit" class="form-button" id="register-button">
                             <span id="register-button-text">Create Account</span>
                             <span id="register-button-loading" class="loading" style="display: none;"></span>
                         </button>
                     </form>
-
                     <div class="form-footer">
                         Already have an account? <a href="#" onclick="showSection('login')">Sign in</a>
                     </div>
@@ -606,14 +591,11 @@
                         <i class="fas fa-arrow-left"></i>
                         Back to Sign In
                     </a>
-
                     <div class="form-header">
                         <h2>Reset Password</h2>
                         <p>Enter your email to receive a password reset link</p>
                     </div>
-
                     <div class="alert" id="reset-alert"></div>
-
                     <form id="reset-form">
                         <div class="form-group">
                             <label class="form-label" for="reset-email">Email Address</label>
@@ -622,7 +604,6 @@
                                 <input type="email" id="reset-email" class="form-input input-with-icon" placeholder="Enter your email" required>
                             </div>
                         </div>
-
                         <button type="submit" class="form-button" id="reset-button">
                             <span id="reset-button-text">Send Reset Link</span>
                             <span id="reset-button-loading" class="loading" style="display: none;"></span>
@@ -633,180 +614,66 @@
         </div>
     </div>
 
-    <!-- Load Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
-    <!-- Load Firebase and Services -->
-    <script src="firebase-config.js"></script>
-    <script src="assets/js/services/auth-service.js"></script>
-    <script src="assets/js/services/navigation-service.js"></script>
+    <script type="module">
+        // Import services
+        import AuthService from './assets/js/services/auth-service.js';
+        import NavigationService from './assets/js/services/navigation-service.js';
 
-    <script>
-        // Global variables
-        let selectedRole = 'worker';
-        let currentSection = 'login';
+        // Initialize services
+        let authService;
+        let navigationService;
 
-        // DOM Elements
-        const formTabs = document.querySelectorAll('.form-tab');
-        const formSections = document.querySelectorAll('.form-section');
-        const roleOptions = document.querySelectorAll('.role-option');
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize services
+                authService = new AuthService();
+                navigationService = new NavigationService();
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeEventListeners();
-            checkAuthState();
+                // Wait for services to be ready
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Set up form handlers
+                setupFormHandlers();
+                
+                console.log('✅ Login page initialized successfully');
+            } catch (error) {
+                console.error('❌ Failed to initialize login page:', error);
+            }
         });
 
-        // Event Listeners
-        function initializeEventListeners() {
-            // Tab switching
-            formTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.dataset.tab;
-                    showSection(tabName);
-                });
-            });
+        // Global functions for HTML onclick handlers
+        window.showSection = showSection;
+        window.togglePassword = togglePassword;
 
-            // Role selection
-            roleOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    roleOptions.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-                    selectedRole = option.dataset.role;
-                });
-            });
-
-            // Form submissions
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-            document.getElementById('register-form').addEventListener('submit', handleRegister);
-            document.getElementById('reset-form').addEventListener('submit', handlePasswordReset);
-
-            // Set default role
-            document.querySelector('[data-role="worker"]').classList.add('selected');
-        }
-
-        // Tab Management
+        // Tab management
         function showSection(sectionName) {
-            // Update tabs
-            formTabs.forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === sectionName);
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
             });
 
-            // Update sections
-            formSections.forEach(section => {
-                section.classList.toggle('active', section.id === `${sectionName}-section`);
+            // Remove active class from all tabs
+            document.querySelectorAll('.form-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
 
-            currentSection = sectionName;
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.add('active');
+
+            // Activate corresponding tab
+            document.querySelector(`[data-tab="${sectionName}"]`).classList.add('active');
+
+            // Clear alerts
             clearAlerts();
         }
 
-        // Form Handlers
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                showAlert('login-alert', 'Please fill in all fields', 'error');
-                return;
-            }
-
-            setButtonLoading('login-button', true);
-            
-            try {
-                await window.authService.loginUser(email, password);
-                showAlert('login-alert', 'Login successful! Redirecting...', 'success');
-                
-                // Redirect will be handled by auth state change
-                setTimeout(() => {
-                    redirectBasedOnRole();
-                }, 1000);
-                
-            } catch (error) {
-                showAlert('login-alert', getErrorMessage(error), 'error');
-            } finally {
-                setButtonLoading('login-button', false);
-            }
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            
-            const displayName = document.getElementById('register-display-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            
-            if (!displayName || !email || !password) {
-                showAlert('register-alert', 'Please fill in all fields', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showAlert('register-alert', 'Password must be at least 6 characters', 'error');
-                return;
-            }
-
-            setButtonLoading('register-button', true);
-            
-            try {
-                const userData = {
-                    email,
-                    password,
-                    displayName,
-                    role: selectedRole
-                };
-                
-                await window.authService.registerUser(userData);
-                showAlert('register-alert', 'Account created successfully! Please sign in.', 'success');
-                
-                // Clear form and switch to login
-                document.getElementById('register-form').reset();
-                setTimeout(() => {
-                    showSection('login');
-                }, 2000);
-                
-            } catch (error) {
-                showAlert('register-alert', getErrorMessage(error), 'error');
-            } finally {
-                setButtonLoading('register-button', false);
-            }
-        }
-
-        async function handlePasswordReset(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('reset-email').value;
-            
-            if (!email) {
-                showAlert('reset-alert', 'Please enter your email address', 'error');
-                return;
-            }
-
-            setButtonLoading('reset-button', true);
-            
-            try {
-                await window.authService.resetPassword(email);
-                showAlert('reset-alert', 'Password reset email sent! Check your inbox.', 'success');
-                document.getElementById('reset-form').reset();
-                
-            } catch (error) {
-                showAlert('reset-alert', getErrorMessage(error), 'error');
-            } finally {
-                setButtonLoading('reset-button', false);
-            }
-        }
-
-        // Utility Functions
+        // Password visibility toggle
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
-            const toggle = input.nextElementSibling;
-            const icon = toggle.querySelector('i');
-            
+            const button = input.nextElementSibling;
+            const icon = button.querySelector('i');
+
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -818,12 +685,138 @@
             }
         }
 
-        function setButtonLoading(buttonId, loading) {
-            const button = document.getElementById(buttonId);
-            const buttonText = document.getElementById(`${buttonId}-text`);
-            const buttonLoading = document.getElementById(`${buttonId}-loading`);
+        // Role selection
+        document.addEventListener('DOMContentLoaded', () => {
+            const roleOptions = document.querySelectorAll('.role-option');
+            roleOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    roleOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+            // Select first role by default
+            roleOptions[0].classList.add('selected');
+        });
+
+        // Form handlers
+        function setupFormHandlers() {
+            // Login form
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+
+            // Register form
+            document.getElementById('register-form').addEventListener('submit', handleRegister);
+
+            // Reset password form
+            document.getElementById('reset-form').addEventListener('submit', handleResetPassword);
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
             
-            if (loading) {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showAlert('login-alert', 'Please fill in all fields', 'error');
+                return;
+            }
+
+            setLoading('login-button', true);
+            clearAlert('login-alert');
+
+            try {
+                await authService.loginUser(email, password);
+                showAlert('login-alert', 'Login successful! Redirecting...', 'success');
+                
+                // Redirect based on user role
+                setTimeout(() => {
+                    redirectBasedOnRole();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('login-alert', getErrorMessage(error), 'error');
+            } finally {
+                setLoading('login-button', false);
+            }
+        }
+
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const displayName = document.getElementById('register-display-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const selectedRole = document.querySelector('.role-option.selected')?.dataset.role;
+            
+            if (!displayName || !email || !password || !selectedRole) {
+                showAlert('register-alert', 'Please fill in all fields and select a role', 'error');
+                return;
+            }
+
+            setLoading('register-button', true);
+            clearAlert('register-alert');
+
+            try {
+                await authService.registerUser({
+                    email,
+                    password,
+                    displayName,
+                    role: selectedRole
+                });
+                
+                showAlert('register-alert', 'Registration successful! Please check your email for verification.', 'success');
+                
+                // Clear form
+                document.getElementById('register-form').reset();
+                document.querySelector('.role-option').classList.add('selected');
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                showAlert('register-alert', getErrorMessage(error), 'error');
+            } finally {
+                setLoading('register-button', false);
+            }
+        }
+
+        // Handle password reset
+        async function handleResetPassword(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('reset-email').value;
+            
+            if (!email) {
+                showAlert('reset-alert', 'Please enter your email address', 'error');
+                return;
+            }
+
+            setLoading('reset-button', true);
+            clearAlert('reset-alert');
+
+            try {
+                await authService.resetPassword(email);
+                showAlert('reset-alert', 'Password reset email sent! Please check your inbox.', 'success');
+                
+                // Clear form
+                document.getElementById('reset-form').reset();
+                
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showAlert('reset-alert', getErrorMessage(error), 'error');
+            } finally {
+                setLoading('reset-button', false);
+            }
+        }
+
+        // Utility functions
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            const buttonText = button.querySelector(`#${buttonId}-text`);
+            const buttonLoading = button.querySelector(`#${buttonId}-loading`);
+            
+            if (isLoading) {
                 button.disabled = true;
                 buttonText.style.display = 'none';
                 buttonLoading.style.display = 'inline-block';
@@ -841,9 +834,16 @@
             alert.style.display = 'block';
         }
 
+        function clearAlert(alertId) {
+            const alert = document.getElementById(alertId);
+            alert.style.display = 'none';
+            alert.textContent = '';
+        }
+
         function clearAlerts() {
             document.querySelectorAll('.alert').forEach(alert => {
                 alert.style.display = 'none';
+                alert.textContent = '';
             });
         }
 
@@ -852,59 +852,38 @@
                 return 'No account found with this email address';
             } else if (error.code === 'auth/wrong-password') {
                 return 'Incorrect password';
-            } else if (error.code === 'auth/email-already-in-use') {
-                return 'An account with this email already exists';
-            } else if (error.code === 'auth/weak-password') {
-                return 'Password is too weak';
             } else if (error.code === 'auth/invalid-email') {
                 return 'Invalid email address';
+            } else if (error.code === 'auth/weak-password') {
+                return 'Password should be at least 6 characters';
+            } else if (error.code === 'auth/email-already-in-use') {
+                return 'An account with this email already exists';
+            } else if (error.code === 'auth/too-many-requests') {
+                return 'Too many failed attempts. Please try again later';
             } else {
-                return error.message || 'An error occurred. Please try again.';
-            }
-        }
-
-        // Authentication State Management
-        function checkAuthState() {
-            if (window.authService) {
-                window.authService.addAuthStateListener((user, isAuthenticated) => {
-                    if (isAuthenticated && user) {
-                        redirectBasedOnRole();
-                    }
-                });
+                return error.message || 'An error occurred. Please try again';
             }
         }
 
         function redirectBasedOnRole() {
-            if (window.navigationService) {
-                window.navigationService.redirectToDashboard();
-            } else {
-                // Fallback redirect
-                const user = window.authService?.getCurrentUser();
-                if (user) {
-                    switch (user.role) {
-                        case 'super_admin':
-                            window.location.href = 'super-admin-dashboard.html';
-                            break;
-                        case 'factory_admin':
-                            window.location.href = 'factory-dashboard.html';
-                            break;
-                        case 'hr_staff':
-                            window.location.href = 'hr-dashboard.html';
-                            break;
-                        case 'grievance_committee':
-                            window.location.href = 'grievance-committee-dashboard.html';
-                            break;
-                        case 'auditor':
-                            window.location.href = 'auditor-dashboard.html';
-                            break;
-                        case 'worker':
-                            window.location.href = 'worker-portal.html';
-                            break;
-                        default:
-                            window.location.href = 'dashboard.html';
-                    }
-                }
+            const user = authService.getCurrentUser();
+            if (!user) {
+                window.location.href = '/login.html';
+                return;
             }
+
+            const dashboardUrls = {
+                'super_admin': '/super-admin-dashboard.html',
+                'factory_admin': '/factory-dashboard.html',
+                'hr_staff': '/hr-dashboard.html',
+                'grievance_committee': '/grievance-committee-dashboard.html',
+                'auditor': '/auditor-dashboard.html',
+                'analytics_user': '/analytics-dashboard.html',
+                'worker': '/worker-portal.html'
+            };
+
+            const dashboardUrl = dashboardUrls[user.role] || '/dashboard.html';
+            window.location.href = dashboardUrl;
         }
     </script>
 </body>

@@ -3,42 +3,22 @@
  * Handles user CRUD operations, role management, and factory associations
  */
 
+import { Firebase } from '../../firebase-config.js';
+
 class UserManagementService {
     constructor() {
-        // Bind methods first (before accessing Firebase)
-        this.createUser = this.createUser.bind(this);
-        this.updateUser = this.updateUser.bind(this);
-        this.deleteUser = this.deleteUser.bind(this);
-        this.getUser = this.getUser.bind(this);
-        this.getUsers = this.getUsers.bind(this);
-        this.assignRole = this.assignRole.bind(this);
-        this.assignFactory = this.assignFactory.bind(this);
-        this.deactivateUser = this.deactivateUser.bind(this);
-        this.activateUser = this.activateUser.bind(this);
-        this.getUsersByRole = this.getUsersByRole.bind(this);
-        this.getUsersByFactory = this.getUsersByFactory.bind(this);
-        this.bulkUpdateUsers = this.bulkUpdateUsers.bind(this);
-        this.searchUsers = this.searchUsers.bind(this);
-        
-        // Wait for Firebase to be ready
-        this.waitForFirebase();
+        // Initialize the service
+        this.init();
     }
 
     /**
-     * Wait for Firebase to be fully loaded before initializing
+     * Initialize the service
      */
-    waitForFirebase() {
-        if (window.Firebase && window.Firebase.db && window.Firebase.auth) {
-            // Firebase is ready, initialize services
-            this.db = window.Firebase.db;
-            this.auth = window.Firebase.auth;
-            
+    async init() {
+        try {
             console.log('✅ UserManagementService initialized successfully');
-        } else {
-            // Firebase not ready yet, wait and try again
-            setTimeout(() => {
-                this.waitForFirebase();
-            }, 100);
+        } catch (error) {
+            console.error('❌ UserManagementService initialization failed:', error);
         }
     }
 
@@ -77,8 +57,8 @@ class UserManagementService {
                 organizationId: organizationId || null,
                 permissions: permissions.length > 0 ? permissions : this.getDefaultPermissions(role),
                 isActive: true,
-                createdAt: window.Firebase.serverTimestamp(),
-                updatedAt: window.Firebase.serverTimestamp(),
+                createdAt: Firebase.serverTimestamp(),
+                updatedAt: Firebase.serverTimestamp(),
                 lastLogin: null,
                 profile: {
                     phone: profile.phone || '',
@@ -94,7 +74,7 @@ class UserManagementService {
             };
 
             // Add to Firestore
-            const userRef = await window.Firebase.addDoc(window.Firebase.collection('users'), userDoc);
+            const userRef = await Firebase.addDoc(Firebase.collection(Firebase.db, 'users'), userDoc);
             
             console.log('✅ User created successfully:', { id: userRef.id, ...userDoc });
             return { id: userRef.id, ...userDoc };
@@ -114,10 +94,10 @@ class UserManagementService {
                 throw new Error('User ID is required');
             }
 
-            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
+            const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), userId);
             
             // Get current user data
-            const currentUser = await window.Firebase.getDoc(userRef);
+            const currentUser = await Firebase.getDoc(userRef);
             if (!currentUser.exists()) {
                 throw new Error('User not found');
             }
@@ -125,7 +105,7 @@ class UserManagementService {
             // Prepare update data
             const updateData = {
                 ...updates,
-                updatedAt: window.Firebase.serverTimestamp(),
+                updatedAt: Firebase.serverTimestamp(),
                 metadata: {
                     ...currentUser.data().metadata,
                     lastModifiedBy: window.authService?.getCurrentUser()?.uid || 'system',
@@ -134,7 +114,7 @@ class UserManagementService {
             };
 
             // Update user document
-            await window.Firebase.updateDoc(userRef, updateData);
+            await Firebase.updateDoc(userRef, updateData);
             
             console.log('✅ User updated successfully:', userId);
             return { id: userId, ...updateData };
@@ -158,9 +138,9 @@ class UserManagementService {
             await this.deactivateUser(userId);
             
             // Add deletion metadata
-            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
-            await window.Firebase.updateDoc(userRef, {
-                deletedAt: window.Firebase.serverTimestamp(),
+            const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), userId);
+            await Firebase.updateDoc(userRef, {
+                deletedAt: Firebase.serverTimestamp(),
                 deletedBy: window.authService?.getCurrentUser()?.uid || 'system',
                 isDeleted: true
             });
@@ -183,8 +163,8 @@ class UserManagementService {
                 throw new Error('User ID is required');
             }
 
-            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
-            const userDoc = await window.Firebase.getDoc(userRef);
+            const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), userId);
+            const userDoc = await Firebase.getDoc(userRef);
             
             if (!userDoc.exists()) {
                 return null;
@@ -212,24 +192,24 @@ class UserManagementService {
                 searchTerm = null
             } = options;
 
-            let query = window.Firebase.collection('users');
+            let query = Firebase.collection(Firebase.db, 'users');
 
             // Apply filters
             if (role) {
-                query = window.Firebase.query(query, window.Firebase.where('role', '==', role));
+                query = Firebase.query(query, Firebase.where('role', '==', role));
             }
             if (factoryId) {
-                query = window.Firebase.query(query, window.Firebase.where('factoryId', '==', factoryId));
+                query = Firebase.query(query, Firebase.where('factoryId', '==', factoryId));
             }
             if (isActive !== null) {
-                query = window.Firebase.query(query, window.Firebase.where('isActive', '==', isActive));
+                query = Firebase.query(query, Firebase.where('isActive', '==', isActive));
             }
 
             // Add ordering
-            query = window.Firebase.query(query, window.Firebase.orderBy('createdAt', 'desc'));
+            query = Firebase.query(query, Firebase.orderBy('createdAt', 'desc'));
 
             // Get documents
-            const snapshot = await window.Firebase.getDocs(query);
+            const snapshot = await Firebase.getDocs(query);
             let users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
             // Apply search filter if provided
@@ -375,14 +355,14 @@ class UserManagementService {
                 throw new Error('User IDs array is required');
             }
 
-            const batch = window.Firebase.writeBatch(window.Firebase.db);
+            const batch = Firebase.writeBatch(Firebase.db);
             const results = [];
 
             for (const userId of userIds) {
-                const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
+                const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), userId);
                 batch.update(userRef, {
                     ...updates,
-                    updatedAt: window.Firebase.serverTimestamp(),
+                    updatedAt: Firebase.serverTimestamp(),
                     metadata: {
                         lastModifiedBy: window.authService?.getCurrentUser()?.uid || 'system',
                         lastModifiedAt: new Date()
@@ -483,7 +463,7 @@ class UserManagementService {
      */
     async getUserStatistics() {
         try {
-            const usersSnapshot = await window.Firebase.getDocs(window.Firebase.collection('users'));
+            const usersSnapshot = await Firebase.getDocs(Firebase.collection(Firebase.db, 'users'));
             const users = usersSnapshot.docs.map(doc => doc.data());
 
             const stats = {
@@ -515,12 +495,4 @@ class UserManagementService {
 }
 
 // Export the service
-window.UserManagementService = UserManagementService;
-
-// Auto-initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Create the service instance - it will wait for Firebase to be ready
-    window.userManagementService = new UserManagementService();
-});
-
-// Service is available globally via window.UserManagementService
+export default UserManagementService;

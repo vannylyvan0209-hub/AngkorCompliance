@@ -3,6 +3,8 @@
  * Handles user authentication, role management, and session control
  */
 
+import { Firebase } from '../../firebase-config.js';
+
 class AuthService {
     constructor() {
         this.currentUser = null;
@@ -11,28 +13,8 @@ class AuthService {
         this.isAuthenticated = false;
         this.authStateListeners = [];
         
-        // Initialize the service after Firebase is fully loaded
-        this.waitForFirebase();
-    }
-
-    /**
-     * Wait for Firebase to be fully loaded before initializing
-     */
-    waitForFirebase() {
-        if (window.Firebase && window.Firebase.auth && window.Firebase.db && window.Firebase.storage) {
-            // Firebase is ready, initialize services
-            this.auth = window.Firebase.auth;
-            this.db = window.Firebase.db;
-            this.storage = window.Firebase.storage;
-            
-            // Initialize the service
-            this.init();
-        } else {
-            // Firebase not ready yet, wait and try again
-            setTimeout(() => {
-                this.waitForFirebase();
-            }, 100);
-        }
+        // Initialize the service
+        this.init();
     }
 
     /**
@@ -41,7 +23,7 @@ class AuthService {
     async init() {
         try {
             // Set up auth state listener
-            window.Firebase.onAuthStateChanged(async (user) => {
+            Firebase.onAuthStateChanged(async (user) => {
                 if (user) {
                     await this.handleUserSignIn(user);
                 } else {
@@ -62,8 +44,8 @@ class AuthService {
     async handleUserSignIn(user) {
         try {
             // Get user data from Firestore
-            const userDoc = window.Firebase.doc(window.Firebase.collection('users'), user.uid);
-            const userData = await window.Firebase.getDoc(userDoc);
+            const userDoc = Firebase.doc(Firebase.collection(Firebase.db, 'users'), user.uid);
+            const userData = await Firebase.getDoc(userDoc);
             
             if (userData.exists()) {
                 const userInfo = userData.data();
@@ -136,11 +118,11 @@ class AuthService {
             }
             
             // Create user in Firebase Auth
-            const userCredential = await window.Firebase.createUserWithEmailAndPassword(email, password);
+            const userCredential = await Firebase.createUserWithEmailAndPassword(Firebase.auth, email, password);
             const user = userCredential.user;
             
             // Update profile
-            await window.Firebase.updateProfile(user, { displayName });
+            await Firebase.updateProfile(user, { displayName });
             
             // Create user document in Firestore
             const userDoc = {
@@ -152,8 +134,8 @@ class AuthService {
                 organizationId: organizationId || null,
                 permissions: this.getDefaultPermissions(role),
                 isActive: true,
-                createdAt: window.Firebase.serverTimestamp(),
-                updatedAt: window.Firebase.serverTimestamp(),
+                createdAt: Firebase.serverTimestamp(),
+                updatedAt: Firebase.serverTimestamp(),
                 lastLogin: null,
                 profile: {
                     phone: '',
@@ -163,7 +145,7 @@ class AuthService {
                 }
             };
             
-            await window.Firebase.setDoc(window.Firebase.doc(window.Firebase.collection('users'), user.uid), userDoc);
+            await Firebase.setDoc(Firebase.doc(Firebase.collection(Firebase.db, 'users'), user.uid), userDoc);
             
             console.log('✅ User registered successfully:', userDoc);
             return userDoc;
@@ -179,7 +161,7 @@ class AuthService {
      */
     async loginUser(email, password) {
         try {
-            const userCredential = await window.Firebase.signInWithEmailAndPassword(email, password);
+            const userCredential = await Firebase.signInWithEmailAndPassword(Firebase.auth, email, password);
             const user = userCredential.user;
             
             console.log('✅ User login successful:', user.email);
@@ -196,7 +178,7 @@ class AuthService {
      */
     async logoutUser() {
         try {
-            await window.Firebase.signOut();
+            await Firebase.signOut(Firebase.auth);
             console.log('✅ User logout successful');
         } catch (error) {
             console.error('❌ User logout failed:', error);
@@ -209,7 +191,7 @@ class AuthService {
      */
     async resetPassword(email) {
         try {
-            await window.Firebase.sendPasswordResetEmail(email);
+            await Firebase.sendPasswordResetEmail(Firebase.auth, email);
             console.log('✅ Password reset email sent');
         } catch (error) {
             console.error('❌ Password reset failed:', error);
@@ -226,10 +208,10 @@ class AuthService {
                 throw new Error('No user is currently authenticated');
             }
             
-            const userRef = window.Firebase.doc(window.Firebase.collection('users'), this.currentUser.uid);
-            await window.Firebase.updateDoc(userRef, {
+            const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), this.currentUser.uid);
+            await Firebase.updateDoc(userRef, {
                 ...updates,
-                updatedAt: window.Firebase.serverTimestamp()
+                updatedAt: Firebase.serverTimestamp()
             });
             
             // Update local user data
@@ -286,9 +268,9 @@ class AuthService {
      */
     async updateLastLogin(userId) {
         try {
-            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
-            await window.Firebase.updateDoc(userRef, {
-                lastLogin: window.Firebase.serverTimestamp()
+            const userRef = Firebase.doc(Firebase.collection(Firebase.db, 'users'), userId);
+            await Firebase.updateDoc(userRef, {
+                lastLogin: Firebase.serverTimestamp()
             });
         } catch (error) {
             console.error('❌ Failed to update last login:', error);
@@ -390,11 +372,11 @@ class AuthService {
             
             if (this.currentUser.role === 'super_admin') {
                 // Super admin can see all factories
-                const factoriesSnapshot = await window.Firebase.getDocs(window.Firebase.collection('factories'));
+                const factoriesSnapshot = await Firebase.getDocs(Firebase.collection(Firebase.db, 'factories'));
                 return factoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             } else if (this.currentUser.factoryId) {
                 // Other users can only see their assigned factory
-                const factoryDoc = await window.Firebase.getDoc(window.Firebase.doc(window.Firebase.collection('factories'), this.currentUser.factoryId));
+                const factoryDoc = await Firebase.getDoc(Firebase.doc(Firebase.collection(Firebase.db, 'factories'), this.currentUser.factoryId));
                 if (factoryDoc.exists()) {
                     return [{ id: factoryDoc.id, ...factoryDoc.data() }];
                 }
@@ -409,12 +391,4 @@ class AuthService {
 }
 
 // Export the service
-window.AuthService = AuthService;
-
-// Auto-initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Create the service instance - it will wait for Firebase to be ready
-    window.authService = new AuthService();
-});
-
-// Service is available globally via window.AuthService
+export default AuthService;

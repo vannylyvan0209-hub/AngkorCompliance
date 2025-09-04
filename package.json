@@ -1,36 +1,48 @@
 {
   "name": "angkor-compliance-platform",
-  "version": "1.0.0",
-  "description": "Comprehensive compliance management platform for Angkor factories",
+  "version": "2.0.0",
+  "description": "AI-first, evidence-driven compliance automation platform with multi-tenant architecture",
   "main": "index.html",
+  "type": "module",
   "scripts": {
-    "start": "firebase serve",
-    "build": "echo 'No build step required for static site'",
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Build process will be implemented for production'",
     "deploy": "firebase deploy",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:firestore": "firebase deploy --only firestore",
-    "deploy:storage": "firebase deploy --only storage",
-    "deploy:rules": "firebase deploy --only firestore:rules,storage",
-    "test": "echo 'No tests specified'",
-    "lint": "echo 'No linting configured'"
+    "deploy:functions": "firebase deploy --only functions",
+    "emulators": "firebase emulators:start",
+    "emulators:hosting": "firebase emulators:start --only hosting",
+    "emulators:firestore": "firebase emulators:start --only firestore",
+    "emulators:functions": "firebase emulators:start --only functions",
+    "test": "echo 'Test suite will be implemented'",
+    "lint": "echo 'Linting will be implemented'",
+    "format": "echo 'Code formatting will be implemented'"
   },
   "keywords": [
     "compliance",
-    "document-management",
-    "factory-management",
-    "firebase",
-    "web-app",
-    "openai",
+    "automation",
     "ai",
-    "artificial-intelligence"
+    "enterprise",
+    "firebase",
+    "multi-tenant",
+    "rbac",
+    "audit",
+    "grievance",
+    "cap-management"
   ],
   "author": "Angkor Compliance Team",
   "license": "MIT",
+  "dependencies": {
+    "firebase": "^12.2.1"
+  },
   "devDependencies": {
-    "firebase-tools": "^12.0.0"
+    "firebase-tools": "^14.11.0"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "repository": {
     "type": "git",
@@ -39,9 +51,5 @@
   "bugs": {
     "url": "https://github.com/angkor-compliance/platform/issues"
   },
-  "homepage": "https://angkor-compliance.web.app",
-  "dependencies": {
-    "firebase": "^12.1.0",
-    "firebase-admin": "^13.4.0"
-  }
+  "homepage": "https://angkor-compliance.com"
 }
