@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Review - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/auditor/evidence-review.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-auditor">
+    <div class="evidence-review-container">
+        <!-- Header Section -->
+        <header class="review-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="check-circle"></i>
+                        Evidence Review
+                    </h1>
+                    <p class="page-subtitle">Review, validate, and approve audit evidence for compliance standards</p>
+                </div>
+                <div class="header-right">
+                    <div class="review-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Pending Review</span>
+                            <span class="stat-value" id="pendingReview">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Reviewed Today</span>
+                            <span class="stat-value" id="reviewedToday">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Approval Rate</span>
+                            <span class="stat-value" id="approvalRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="review-content">
+            <!-- Review Controls -->
+            <div class="controls-panel">
+                <div class="panel-header">
+                    <h2>Review Controls</h2>
+                    <div class="controls-actions">
+                        <button class="btn btn-outline" onclick="evidenceReviewer.bulkApprove()">
+                            <i data-lucide="check-square"></i>
+                            Bulk Approve
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceReviewer.bulkReject()">
+                            <i data-lucide="x-square"></i>
+                            Bulk Reject
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceReviewer.exportReviewReport()">
+                            <i data-lucide="download"></i>
+                            Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="evidenceReviewer.startReview()">
+                            <i data-lucide="play"></i>
+                            Start Review
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Review Status</label>
+                        <select id="reviewStatusFilter" class="filter-select" onchange="evidenceReviewer.filterEvidence()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="in_review">In Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="needs_revision">Needs Revision</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Standard</label>
+                        <select id="standardFilter" class="filter-select" onchange="evidenceReviewer.filterEvidence()">
+                            <option value="all">All Standards</option>
+                            <option value="iso_9001">ISO 9001</option>
+                            <option value="iso_14001">ISO 14001</option>
+                            <option value="ohsas_18001">OHSAS 18001</option>
+                            <option value="sa_8000">SA 8000</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Priority</label>
+                        <select id="priorityFilter" class="filter-select" onchange="evidenceReviewer.filterEvidence()">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Reviewer</label>
+                        <select id="reviewerFilter" class="filter-select" onchange="evidenceReviewer.filterEvidence()">
+                            <option value="all">All Reviewers</option>
+                            <option value="me">My Reviews</option>
+                            <option value="others">Others' Reviews</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <input type="date" id="startDate" class="filter-input" onchange="evidenceReviewer.filterEvidence()">
+                        <input type="date" id="endDate" class="filter-input" onchange="evidenceReviewer.filterEvidence()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Queue -->
+            <div class="review-queue-container">
+                <div class="queue-header">
+                    <h2>Review Queue</h2>
+                    <div class="queue-actions">
+                        <button class="btn btn-outline" onclick="evidenceReviewer.selectAll()">
+                            <i data-lucide="check-square"></i>
+                            Select All
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceReviewer.clearSelection()">
+                            <i data-lucide="square"></i>
+                            Clear Selection
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceReviewer.autoReview()">
+                            <i data-lucide="wand-2"></i>
+                            Auto Review
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-queue" id="reviewQueue">
+                    <!-- Evidence items for review will be populated here -->
+                </div>
+            </div>
+
+            <!-- Review History -->
+            <div class="review-history-container">
+                <div class="history-header">
+                    <h2>Review History</h2>
+                    <div class="history-actions">
+                        <button class="btn btn-outline" onclick="evidenceReviewer.viewHistory()">
+                            <i data-lucide="history"></i>
+                            View Full History
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceReviewer.generateReport()">
+                            <i data-lucide="file-text"></i>
+                            Generate Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-history" id="reviewHistory">
+                    <!-- Review history will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Review Evidence</h2>
+                <button class="modal-close" onclick="evidenceReviewer.closeReviewModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="review-content-grid">
+                    <!-- Evidence Preview -->
+                    <div class="evidence-preview-section">
+                        <h3>Evidence Preview</h3>
+                        <div class="evidence-preview-large" id="evidencePreview">
+                            <!-- Evidence preview will be shown here -->
+                        </div>
+                        <div class="evidence-metadata">
+                            <div class="metadata-grid">
+                                <div class="metadata-item">
+                                    <label>File Name:</label>
+                                    <span id="evidenceFileName"></span>
+                                </div>
+                                <div class="metadata-item">
+                                    <label>File Type:</label>
+                                    <span id="evidenceFileType"></span>
+                                </div>
+                                <div class="metadata-item">
+                                    <label>File Size:</label>
+                                    <span id="evidenceFileSize"></span>
+                                </div>
+                                <div class="metadata-item">
+                                    <label>Upload Date:</label>
+                                    <span id="evidenceUploadDate"></span>
+                                </div>
+                                <div class="metadata-item">
+                                    <label>Standard:</label>
+                                    <span id="evidenceStandard"></span>
+                                </div>
+                                <div class="metadata-item">
+                                    <label>Requirement:</label>
+                                    <span id="evidenceRequirement"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Form -->
+                    <div class="review-form-section">
+                        <h3>Review Assessment</h3>
+                        <form id="reviewForm">
+                            <div class="form-group">
+                                <label class="form-label">Review Decision *</label>
+                                <select id="reviewDecision" class="form-select" required>
+                                    <option value="">Select Decision</option>
+                                    <option value="approved">Approve</option>
+                                    <option value="rejected">Reject</option>
+                                    <option value="needs_revision">Needs Revision</option>
+                                    <option value="pending_more_info">Pending More Info</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Quality Score</label>
+                                <div class="quality-score">
+                                    <div class="score-options">
+                                        <input type="radio" id="score1" name="qualityScore" value="1">
+                                        <label for="score1">1</label>
+                                        <input type="radio" id="score2" name="qualityScore" value="2">
+                                        <label for="score2">2</label>
+                                        <input type="radio" id="score3" name="qualityScore" value="3">
+                                        <label for="score3">3</label>
+                                        <input type="radio" id="score4" name="qualityScore" value="4">
+                                        <label for="score4">4</label>
+                                        <input type="radio" id="score5" name="qualityScore" value="5">
+                                        <label for="score5">5</label>
+                                    </div>
+                                    <div class="score-labels">
+                                        <span>Poor</span>
+                                        <span>Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Compliance Assessment</label>
+                                <div class="compliance-checklist">
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="compliance1" name="compliance" value="relevant">
+                                        <label for="compliance1">Relevant to requirement</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="compliance2" name="compliance" value="complete">
+                                        <label for="compliance2">Complete and comprehensive</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="compliance3" name="compliance" value="current">
+                                        <label for="compliance3">Current and up-to-date</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="compliance4" name="compliance" value="authentic">
+                                        <label for="compliance4">Authentic and verifiable</label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <input type="checkbox" id="compliance5" name="compliance" value="accessible">
+                                        <label for="compliance5">Accessible and readable</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Review Comments *</label>
+                                <textarea id="reviewComments" class="form-textarea" rows="4" 
+                                          placeholder="Provide detailed review comments..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Recommendations</label>
+                                <textarea id="reviewRecommendations" class="form-textarea" rows="3" 
+                                          placeholder="Any recommendations for improvement..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Priority Level</label>
+                                <select id="reviewPriority" class="form-select">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="critical">Critical Priority</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Assign To</label>
+                                <select id="assignTo" class="form-select">
+                                    <option value="">No Assignment</option>
+                                    <option value="auditor1">Auditor 1</option>
+                                    <option value="auditor2">Auditor 2</option>
+                                    <option value="senior_auditor">Senior Auditor</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceReviewer.closeReviewModal()">Cancel</button>
+                <button class="btn btn-outline" onclick="evidenceReviewer.saveDraft()">Save Draft</button>
+                <button class="btn btn-primary" onclick="evidenceReviewer.submitReview()">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Review Modal -->
+    <div id="bulkReviewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Bulk Review</h2>
+                <button class="modal-close" onclick="evidenceReviewer.closeBulkReviewModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-review-content">
+                    <div class="selected-items">
+                        <h3>Selected Items (<span id="selectedCount">0</span>)</h3>
+                        <div class="selected-list" id="selectedList">
+                            <!-- Selected items will be shown here -->
+                        </div>
+                    </div>
+
+                    <div class="bulk-review-options">
+                        <h3>Bulk Review Options</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Review Decision</label>
+                                <select id="bulkDecision" class="form-select">
+                                    <option value="approved">Approve All</option>
+                                    <option value="rejected">Reject All</option>
+                                    <option value="needs_revision">Needs Revision</option>
+                                    <option value="pending_more_info">Pending More Info</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Quality Score</label>
+                                <select id="bulkQualityScore" class="form-select">
+                                    <option value="3">3 - Average</option>
+                                    <option value="4">4 - Good</option>
+                                    <option value="5">5 - Excellent</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Priority Level</label>
+                                <select id="bulkPriority" class="form-select">
+                                    <option value="medium">Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="low">Low Priority</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Common Comments</label>
+                                <textarea id="bulkComments" class="form-textarea" rows="3" 
+                                          placeholder="Common comments for all selected items..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceReviewer.closeBulkReviewModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="evidenceReviewer.applyBulkReview()">Apply Bulk Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Review History</h2>
+                <button class="modal-close" onclick="evidenceReviewer.closeHistoryModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="history-filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <input type="date" id="historyStartDate" class="filter-input">
+                        <input type="date" id="historyEndDate" class="filter-input">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Reviewer</label>
+                        <select id="historyReviewer" class="filter-select">
+                            <option value="all">All Reviewers</option>
+                            <option value="me">My Reviews</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Decision</label>
+                        <select id="historyDecision" class="filter-select">
+                            <option value="all">All Decisions</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="needs_revision">Needs Revision</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="history-table" id="historyTable">
+                    <!-- History table will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceReviewer.closeHistoryModal()">Close</button>
+                <button class="btn btn-primary" onclick="evidenceReviewer.exportHistory()">Export History</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing review...</p>
+        </div>
+    </div>
+
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/auditor/evidence-review.js"></script>
+</body>
+</html>

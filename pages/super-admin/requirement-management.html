@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requirement Management - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+
+        
+        .requirement-management {
+            padding: var(--space-4);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-4);
+        }
+
+        .requirements-list {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .list-header {
+            background: var(--primary-color);
+            color: white;
+            padding: var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            gap: var(--space-2);
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: var(--space-2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .requirements-container {
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .requirement-item:hover {
+            background: var(--hover-color);
+        }
+
+        .requirement-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .requirement-item.active .requirement-details {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .requirement-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .requirement-item.active .requirement-icon {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .requirement-info {
+            flex: 1;
+        }
+
+        .requirement-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        .requirement-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .requirement-meta {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-standard {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tag-type {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .tag-priority {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .tag-status {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .requirement-form {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            height: fit-content;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: var(--space-4);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: var(--space-1);
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-2);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--background-color);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .controls-section {
+            margin-top: var(--space-4);
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-2);
+            background: var(--background-color);
+        }
+
+        .control-info {
+            flex: 1;
+        }
+
+        .control-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .control-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .control-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .requirement-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-draft {
+            background: var(--warning-color);
+        }
+
+        .status-active {
+            background: var(--success-color);
+        }
+
+        .status-inactive {
+            background: var(--text-secondary);
+        }
+
+        .add-control-btn {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .add-control-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .requirement-preview {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-3);
+            margin-top: var(--space-3);
+        }
+
+        .preview-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .preview-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .filters-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .filter-row.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .action-item:hover {
+            background: var(--hover-color);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="role-super-admin">
+    <div class="requirement-management">
+        <div class="management-header">
+            <div>
+                <h1><i data-lucide="list-check"></i> Requirement Management</h1>
+                <p>Define requirements and controls for compliance standards</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="exportRequirements()">
+                    <i data-lucide="download"></i> Export
+                </button>
+                <button class="btn btn-primary" onclick="addNewRequirement()">
+                    <i data-lucide="plus"></i> Add Requirement
+                </button>
+            </div>
+        </div>
+
+        <div class="management-grid">
+            <div class="requirements-list">
+                <div class="list-header">
+                    <div class="search-box">
+                        <input type="text" id="searchRequirements" placeholder="Search requirements...">
+                        <button class="btn btn-sm btn-outline" onclick="searchRequirements()">
+                            <i data-lucide="search"></i>
+                        </button>
+                    </div>
+                    <select id="standardFilter" onchange="filterRequirements()">
+                        <option value="">All Standards</option>
+                        <option value="iso9001">ISO 9001</option>
+                        <option value="iso14001">ISO 14001</option>
+                        <option value="iso45001">ISO 45001</option>
+                        <option value="sa8000">SA 8000</option>
+                        <option value="bsci">BSCI</option>
+                    </select>
+                </div>
+                <div class="requirements-container" id="requirementsContainer">
+                    <div class="empty-state">
+                        <i data-lucide="list-check"></i>
+                        <h3>No requirements found</h3>
+                        <p>Add your first requirement to get started</p>
+                        <button class="btn btn-primary" onclick="addNewRequirement()">
+                            <i data-lucide="plus"></i> Add First Requirement
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="filters-card">
+                    <h3><i data-lucide="filter"></i> Filters</h3>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="typeFilter">Type</label>
+                            <select id="typeFilter" onchange="applyFilters()">
+                                <option value="">All Types</option>
+                                <option value="mandatory">Mandatory</option>
+                                <option value="recommended">Recommended</option>
+                                <option value="optional">Optional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="priorityFilter">Priority</label>
+                            <select id="priorityFilter" onchange="applyFilters()">
+                                <option value="">All Priorities</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter" onchange="applyFilters()">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="draft">Draft</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryFilter">Category</label>
+                            <select id="categoryFilter" onchange="applyFilters()">
+                                <option value="">All Categories</option>
+                                <option value="quality">Quality</option>
+                                <option value="environmental">Environmental</option>
+                                <option value="safety">Safety</option>
+                                <option value="social">Social</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" onclick="clearFilters()">
+                        <i data-lucide="refresh-cw"></i> Clear Filters
+                    </button>
+                </div>
+
+                <div class="stats-card">
+                    <h3><i data-lucide="bar-chart-3"></i> Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalRequirements">0</div>
+                            <div class="stat-label">Total Requirements</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="activeRequirements">0</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="mandatoryRequirements">0</div>
+                            <div class="stat-label">Mandatory</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="highPriorityRequirements">0</div>
+                            <div class="stat-label">High Priority</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                    <div class="action-list">
+                        <div class="action-item" onclick="bulkImport()">
+                            <div class="action-icon">
+                                <i data-lucide="upload"></i>
+                            </div>
+                            <div>
+                                <div>Bulk Import</div>
+                                <small>Import requirements from CSV</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="generateChecklist()">
+                            <div class="action-icon">
+                                <i data-lucide="check-square"></i>
+                            </div>
+                            <div>
+                                <div>Generate Checklist</div>
+                                <small>Create audit checklist</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="requirementAnalytics()">
+                            <div class="action-icon">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+                            <div>
+                                <div>Analytics</div>
+                                <small>View requirement analytics</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="standardMapping()">
+                            <div class="action-icon">
+                                <i data-lucide="map"></i>
+                            </div>
+                            <div>
+                                <div>Standard Mapping</div>
+                                <small>Map requirements to standards</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="requirement-form">
+                <div id="noRequirementSelected" class="empty-state">
+                    <i data-lucide="edit"></i>
+                    <h3>Select a Requirement</h3>
+                    <p>Choose a requirement from the list to edit its details</p>
+                </div>
+
+                <div id="requirementForm" style="display: none;">
+                    <div class="form-header">
+                        <h3><i data-lucide="edit"></i> Edit Requirement</h3>
+                        <button class="btn btn-sm btn-outline" onclick="duplicateRequirement()">
+                            <i data-lucide="copy"></i> Duplicate
+                        </button>
+                    </div>
+
+                    <form id="requirementManagementForm">
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="info"></i>
+                                Basic Information
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="requirementTitle">Requirement Title *</label>
+                                    <input type="text" id="requirementTitle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requirementCode">Requirement Code *</label>
+                                    <input type="text" id="requirementCode" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requirementStandard">Standard *</label>
+                                    <select id="requirementStandard" required>
+                                        <option value="">Select Standard</option>
+                                        <option value="iso9001">ISO 9001 (Quality Management)</option>
+                                        <option value="iso14001">ISO 14001 (Environmental Management)</option>
+                                        <option value="iso45001">ISO 45001 (Occupational Health & Safety)</option>
+                                        <option value="sa8000">SA 8000 (Social Accountability)</option>
+                                        <option value="bsci">BSCI (Business Social Compliance Initiative)</option>
+                                        <option value="sedex">Sedex (Supplier Ethical Data Exchange)</option>
+                                        <option value="wrap">WRAP (Worldwide Responsible Accredited Production)</option>
+                                        <option value="fairtrade">Fairtrade</option>
+                                        <option value="organic">Organic Certification</option>
+                                        <option value="gots">GOTS (Global Organic Textile Standard)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requirementCategory">Category</label>
+                                    <select id="requirementCategory">
+                                        <option value="">Select Category</option>
+                                        <option value="quality">Quality Management</option>
+                                        <option value="environmental">Environmental Management</option>
+                                        <option value="safety">Health & Safety</option>
+                                        <option value="social">Social Accountability</option>
+                                        <option value="organic">Organic & Fair Trade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="requirementDescription">Description *</label>
+                                    <textarea id="requirementDescription" rows="4" required placeholder="Detailed description of the requirement"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="settings"></i>
+                                Configuration
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="requirementType">Type *</label>
+                                    <select id="requirementType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="mandatory">Mandatory</option>
+                                        <option value="recommended">Recommended</option>
+                                        <option value="optional">Optional</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requirementPriority">Priority *</label>
+                                    <select id="requirementPriority" required>
+                                        <option value="">Select Priority</option>
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requirementStatus">Status</label>
+                                    <select id="requirementStatus">
+                                        <option value="active">Active</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="complianceLevel">Compliance Level</label>
+                                    <select id="complianceLevel">
+                                        <option value="">Select Level</option>
+                                        <option value="full">Full Compliance</option>
+                                        <option value="partial">Partial Compliance</option>
+                                        <option value="planned">Planned Compliance</option>
+                                        <option value="not-applicable">Not Applicable</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresEvidence">
+                                <label for="requiresEvidence">Requires evidence collection</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresTraining">
+                                <label for="requiresTraining">Requires training</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresDocumentation">
+                                <label for="requiresDocumentation">Requires documentation</label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="shield"></i>
+                                Controls
+                            </div>
+                            <div id="controlsList">
+                                <!-- Controls will be dynamically added here -->
+                            </div>
+                            <button type="button" class="add-control-btn" onclick="addControl()">
+                                <i data-lucide="plus"></i>
+                                Add Control
+                            </button>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="link"></i>
+                                References & Guidance
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="referenceDocument">Reference Document</label>
+                                    <input type="text" id="referenceDocument" placeholder="e.g., ISO 9001:2015 Clause 4.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="guidanceUrl">Guidance URL</label>
+                                    <input type="url" id="guidanceUrl" placeholder="https://example.com/guidance">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="implementationNotes">Implementation Notes</label>
+                                    <textarea id="implementationNotes" rows="3" placeholder="Notes on how to implement this requirement"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="resetForm()">
+                                <i data-lucide="refresh-cw"></i> Reset
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="deleteRequirement()">
+                                <i data-lucide="trash-2"></i> Delete
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="save"></i> Save Requirement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Control Modal -->
+    <div id="controlModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="shield"></i> Add Control</h3>
+                <button class="modal-close" onclick="closeModal('controlModal')">&times;</button>
+            </div>
+            <form id="controlForm">
+                <div class="form-group">
+                    <label for="controlTitle">Control Title *</label>
+                    <input type="text" id="controlTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="controlDescription">Description</label>
+                    <textarea id="controlDescription" rows="3" placeholder="Description of the control"></textarea>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="controlType">Control Type</label>
+                        <select id="controlType">
+                            <option value="preventive">Preventive</option>
+                            <option value="detective">Detective</option>
+                            <option value="corrective">Corrective</option>
+                            <option value="deterrent">Deterrent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="controlFrequency">Frequency</label>
+                        <select id="controlFrequency">
+                            <option value="continuous">Continuous</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="annually">Annually</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('controlModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="plus"></i> Add Control
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/super-admin/requirement-management.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

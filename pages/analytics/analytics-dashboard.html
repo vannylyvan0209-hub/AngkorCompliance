@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <style>
+        /* Role-specific styling for analytics_user */
+        body.role-analytics-user {
+            --role-primary: var(--analytics-primary);
+            --role-secondary: var(--analytics-secondary);
+            --role-accent: var(--analytics-accent);
+        }
+
+        
+        /* Analytics Dashboard Specific Styles */
+        .analytics-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-right {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .date-filter {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+        
+        .date-select {
+            padding: var(--space-2) var(--space-4);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            background: white;
+            cursor: pointer;
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .metric-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+        }
+        
+        .metric-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .metric-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+        
+        .change-positive {
+            color: var(--success-600);
+        }
+        
+        .change-negative {
+            color: var(--error-600);
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+        
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: var(--space-6);
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .insights-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .insights-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            background: var(--neutral-50);
+            transition: all 0.2s ease;
+        }
+        
+        .insight-item:hover {
+            background: var(--primary-50);
+        }
+        
+        .insight-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xs);
+            flex-shrink: 0;
+        }
+        
+        .insight-content {
+            flex: 1;
+        }
+        
+        .insight-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .insight-description {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            line-height: 1.4;
+        }
+        
+        .insight-time {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            margin-top: var(--space-1);
+        }
+        
+        .trends-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .trends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .trend-item {
+            text-align: center;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            background: var(--neutral-50);
+        }
+        
+        .trend-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .trend-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .trend-direction {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+            font-size: var(--text-xs);
+            font-weight: 500;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .trends-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .analytics-dashboard {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .trends-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="role-analytics-user">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="sidebar"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content"><div class="analytics-dashboard">
+        <div class="dashboard-container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header fade-in">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>Analytics Dashboard</h1>
+                        <p>Comprehensive insights and performance metrics</p>
+                    </div></main>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">
+                                <span>AN</span>
+                            </div>
+                            <div>
+                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">Analytics User</div>
+                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">Data Analytics</div>
+                            </div>
+                        </div>
+                        <div class="date-filter">
+                            <select class="date-select" id="dateRange">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                            <button onclick="exportData()" class="export-btn">
+                                <i data-lucide="download"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Metrics -->
+            <div class="metrics-grid fade-in">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">Total Cases</div>
+                        <div class="metric-icon" style="background: linear-gradient(135deg, var(--primary-500), var(--primary-600));">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="totalCases">0</div>
+                    <div class="metric-change change-positive" id="casesChange">
+                        <i data-lucide="trending-up"></i>
+                        <span>+12.5%</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">Resolution Rate</div>
+                        <div class="metric-icon" style="background: linear-gradient(135deg, var(--success-500), var(--success-600));">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="resolutionRate">0%</div>
+                    <div class="metric-change change-positive" id="resolutionChange">
+                        <i data-lucide="trending-up"></i>
+                        <span>+5.2%</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">Average Response Time</div>
+                        <div class="metric-icon" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">
+                            <i data-lucide="clock"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="avgResponseTime">0h</div>
+                    <div class="metric-change change-negative" id="responseChange">
+                        <i data-lucide="trending-down"></i>
+                        <span>-8.3%</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-title">Worker Satisfaction</div>
+                        <div class="metric-icon" style="background: linear-gradient(135deg, var(--info-500), var(--info-600));">
+                            <i data-lucide="heart"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value" id="workerSatisfaction">0%</div>
+                    <div class="metric-change change-positive" id="satisfactionChange">
+                        <i data-lucide="trending-up"></i>
+                        <span>+3.7%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="charts-grid fade-in">
+                <div class="chart-section">
+                    <h2 class="section-title">
+                        <i data-lucide="bar-chart-3"></i>
+                        Case Trends
+                    </h2>
+                    <div class="chart-container">
+                        <canvas id="caseTrendsChart"></canvas>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--primary-500);"></div>
+                            <span>New Cases</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--success-500);"></div>
+                            <span>Resolved Cases</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: var(--warning-500);"></div>
+                            <span>Pending Cases</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insights-section">
+                    <h2 class="section-title">
+                        <i data-lucide="lightbulb"></i>
+                        Key Insights
+                    </h2>
+                    <div class="insights-list" id="insightsList">
+                        <!-- Insights will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Charts -->
+            <div class="charts-grid fade-in">
+                <div class="chart-section">
+                    <h2 class="section-title">
+                        <i data-lucide="pie-chart"></i>
+                        Case Distribution by Type
+                    </h2>
+                    <div class="chart-container">
+                        <canvas id="caseDistributionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h2 class="section-title">
+                        <i data-lucide="activity"></i>
+                        Department Performance
+                    </h2>
+                    <div class="chart-container">
+                        <canvas id="departmentPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trends Section -->
+            <div class="trends-section fade-in">
+                <h2 class="section-title">
+                    <i data-lucide="trending-up"></i>
+                    Performance Trends
+                </h2>
+                <div class="trends-grid">
+                    <div class="trend-item">
+                        <div class="trend-value" id="weeklyCases">0</div>
+                        <div class="trend-label">Cases This Week</div>
+                        <div class="trend-direction change-positive">
+                            <i data-lucide="trending-up"></i>
+                            <span>+15%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trend-item">
+                        <div class="trend-value" id="avgResolutionTime">0</div>
+                        <div class="trend-label">Avg. Resolution (Days)</div>
+                        <div class="trend-direction change-negative">
+                            <i data-lucide="trending-down"></i>
+                            <span>-12%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trend-item">
+                        <div class="trend-value" id="activeWorkers">0</div>
+                        <div class="trend-label">Active Workers</div>
+                        <div class="trend-direction change-positive">
+                            <i data-lucide="trending-up"></i>
+                            <span>+8%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trend-item">
+                        <div class="trend-value" id="complianceScore">0%</div>
+                        <div class="trend-label">Compliance Score</div>
+                        <div class="trend-direction change-positive">
+                            <i data-lucide="trending-up"></i>
+                            <span>+6%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/analytics/analytics-dashboard.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

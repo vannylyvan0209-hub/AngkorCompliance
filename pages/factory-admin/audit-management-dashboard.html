@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Management Dashboard - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="clipboard-check"></i> Audit Management Dashboard</h1>
+                    <p>Manage internal and external audits</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Audit Overview -->
+            <section class="audit-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clipboard-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Audits</h3>
+                            <div class="card-value">24</div>
+                            <div class="card-change">This year</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Passed Audits</h3>
+                            <div class="card-value">18</div>
+                            <div class="card-change positive">75% success rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>In Progress</h3>
+                            <div class="card-value">3</div>
+                            <div class="card-change">Active audits</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Open Findings</h3>
+                            <div class="card-value">12</div>
+                            <div class="card-change negative">Requires action</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Audit Schedule -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="calendar"></i> Audit Schedule</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="scheduleAudit()">
+                                    <i data-lucide="plus"></i> Schedule Audit
+                                </button>
+                                <button class="btn btn-outline" onclick="importAuditData()">
+                                    <i data-lucide="upload"></i> Import
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="audit-schedule" id="auditSchedule">
+                                <!-- Audit schedule will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Results -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="file-text"></i> Audit Results</h2>
+                            <div class="card-actions">
+                                <select id="auditFilter" class="form-select">
+                                    <option value="all">All Audits</option>
+                                    <option value="internal">Internal Audits</option>
+                                    <option value="external">External Audits</option>
+                                    <option value="compliance">Compliance Audits</option>
+                                    <option value="safety">Safety Audits</option>
+                                </select>
+                                <button class="btn btn-outline" onclick="exportAuditReport()">
+                                    <i data-lucide="download"></i> Export Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Audit</th>
+                                            <th>Type</th>
+                                            <th>Auditor</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Score</th>
+                                            <th>Findings</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="auditResultsTable">
+                                        <!-- Audit results will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Findings -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="alert-triangle"></i> Audit Findings</h2>
+                            <div class="card-actions">
+                                <select id="findingsFilter" class="form-select">
+                                    <option value="all">All Findings</option>
+                                    <option value="open">Open</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="findings-grid" id="findingsGrid">
+                                <!-- Audit findings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Audit Types -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="folder"></i> Audit Types</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="audit-types" id="auditTypes">
+                                <!-- Audit types will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Audits -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="clock"></i> Upcoming Audits</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upcoming-audits" id="upcomingAudits">
+                                <!-- Upcoming audits will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="createAuditChecklist()">
+                                    <i data-lucide="clipboard-list"></i>
+                                    <span>Create Checklist</span>
+                                </button>
+                                <button class="action-btn" onclick="assignAuditor()">
+                                    <i data-lucide="user-plus"></i>
+                                    <span>Assign Auditor</span>
+                                </button>
+                                <button class="action-btn" onclick="reviewFindings()">
+                                    <i data-lucide="eye"></i>
+                                    <span>Review Findings</span>
+                                </button>
+                                <button class="action-btn" onclick="generateReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Generate Report</span>
+                                </button>
+                                <button class="action-btn" onclick="auditAnalytics()">
+                                    <i data-lucide="bar-chart-3"></i>
+                                    <span>Audit Analytics</span>
+                                </button>
+                                <button class="action-btn" onclick="complianceCheck()">
+                                    <i data-lucide="check-square"></i>
+                                    <span>Compliance Check</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Statistics -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="trending-up"></i> Audit Statistics</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="audit-stats" id="auditStats">
+                                <!-- Audit statistics will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Schedule Audit Modal -->
+    <div id="scheduleAuditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="calendar"></i> Schedule Audit</h2>
+                <button class="modal-close" onclick="closeModal('scheduleAuditModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="auditTitle">Audit Title</label>
+                    <input type="text" id="auditTitle" class="form-input" placeholder="e.g., Q1 2024 Internal Compliance Audit">
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditDescription">Description</label>
+                    <textarea id="auditDescription" class="form-textarea" rows="3" 
+                        placeholder="Describe the audit scope and objectives..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="auditType">Audit Type</label>
+                        <select id="auditType" class="form-select">
+                            <option value="">Select Type</option>
+                            <option value="internal">Internal Audit</option>
+                            <option value="external">External Audit</option>
+                            <option value="compliance">Compliance Audit</option>
+                            <option value="safety">Safety Audit</option>
+                            <option value="quality">Quality Audit</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditScope">Audit Scope</label>
+                        <select id="auditScope" class="form-select">
+                            <option value="">Select Scope</option>
+                            <option value="full">Full Factory</option>
+                            <option value="department">Department Specific</option>
+                            <option value="process">Process Specific</option>
+                            <option value="compliance">Compliance Specific</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="auditDate">Audit Date</label>
+                        <input type="date" id="auditDate" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditDuration">Duration (Days)</label>
+                        <input type="number" id="auditDuration" class="form-input" min="1" max="30">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditAuditor">Lead Auditor</label>
+                    <select id="auditAuditor" class="form-select">
+                        <option value="">Select Auditor</option>
+                        <option value="auditor1">John Smith</option>
+                        <option value="auditor2">Jane Doe</option>
+                        <option value="auditor3">Mike Johnson</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditTeam">Audit Team</label>
+                    <textarea id="auditTeam" class="form-textarea" rows="2" 
+                        placeholder="List additional team members..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditChecklist">Audit Checklist</label>
+                    <select id="auditChecklist" class="form-select">
+                        <option value="">Select Checklist</option>
+                        <option value="compliance_checklist">Compliance Checklist</option>
+                        <option value="safety_checklist">Safety Checklist</option>
+                        <option value="quality_checklist">Quality Checklist</option>
+                        <option value="custom_checklist">Custom Checklist</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditNotes">Notes</label>
+                    <textarea id="auditNotes" class="form-textarea" rows="3" 
+                        placeholder="Additional notes for this audit..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('scheduleAuditModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveScheduledAudit()">Schedule Audit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Details Modal -->
+    <div id="auditDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="clipboard-check"></i> Audit Details</h2>
+                <button class="modal-close" onclick="closeModal('auditDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="audit-details" id="auditDetails">
+                    <!-- Audit details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('auditDetailsModal')">Close</button>
+                <button class="btn btn-primary" onclick="updateAudit()">Update Audit</button>
+                <button class="btn btn-success" onclick="completeAudit()">Complete Audit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Finding Details Modal -->
+    <div id="findingDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="alert-triangle"></i> Finding Details</h2>
+                <button class="modal-close" onclick="closeModal('findingDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="finding-details" id="findingDetails">
+                    <!-- Finding details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('findingDetailsModal')">Close</button>
+                <button class="btn btn-warning" onclick="createCAP()">Create CAP</button>
+                <button class="btn btn-success" onclick="resolveFinding()">Mark Resolved</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/audit-management-dashboard.js"></script>
+</body>
+</html>

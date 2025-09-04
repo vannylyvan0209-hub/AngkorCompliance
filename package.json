@@ -1,0 +1,47 @@
+{
+  "name": "angkor-compliance-platform",
+  "version": "1.0.0",
+  "description": "Comprehensive compliance management platform for Angkor factories",
+  "main": "index.html",
+  "scripts": {
+    "start": "firebase serve",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "deploy:storage": "firebase deploy --only storage",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'"
+  },
+  "keywords": [
+    "compliance",
+    "document-management",
+    "factory-management",
+    "firebase",
+    "web-app",
+    "openai",
+    "ai",
+    "artificial-intelligence"
+  ],
+  "author": "Angkor Compliance Team",
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-tools": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angkor-compliance/platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/angkor-compliance/platform/issues"
+  },
+  "homepage": "https://angkor-compliance.web.app",
+  "dependencies": {
+    "firebase": "^12.1.0",
+    "firebase-admin": "^13.4.0"
+  }
+}

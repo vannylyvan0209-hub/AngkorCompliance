@@ -1,0 +1,231 @@
+---
+description:
+
+Angkor Compliance — Enterprise System Blueprint (v2)
+A. Vision & Principles
+
+Purpose: Transform the compliance industry 360° with AI-first, evidence-driven, multi-standard automation.
+Ten Principles: Security-by-design • Human-in-the-loop • Explainable AI • Data lineage • Multi-tenant isolation • Offline-capable where needed • API-first • Internationalization • Audit-ready exports • Backward compatibility.
+
+B. Personas & Roles (Enterprise RBAC/ABAC)
+
+Super Admin: Global configurations, tenant control, standards registry, billing, system health.
+
+Factory Admin: Factory creation/connection, user provisioning, approvals, billing for factory.
+
+Factory HR: Document/evidence management, training, permits, CAP execution.
+
+Grievance Committee: Case intake, triage, investigation, resolution, reporting.
+
+Buyer & Auditor (Read/Scoped Write): Read assigned factories, request evidence, leave audit notes.
+
+Worker (Case ID): Submit/track grievances via Worker App/Portal.
+
+Access Model: RBAC with attribute-based filters (factoryId, programId, confidentialityLevel). Field-level & record-level permissions; immutable audit log of all actions.
+
+C. Multi-Tenant Architecture (Scalable & Secure)
+
+Tenancy: Organization (tenant) → Factories (sub-tenants) with strict data isolation.
+
+Data domains: Core (Users, Factories, Standards) • Evidence (Docs, Images, Forms) • Activities (Tasks, Cases, Trainings) • Analytics (Risk & KPIs).
+
+Environments: Prod / Staging / Dev with separate keys, storage buckets, and telemetry.
+
+D. Core Modules & Enterprise Features
+1) Access & Onboarding
+
+Landing (Public): Product, standards supported, buyers, pricing, legal, “Request Demo.”
+
+Register/Approval Flows:
+
+Factory Admin: Application → Super Admin review → Plan selection → Provision factory → Dashboard.
+
+Buyer/Auditor: Self-serve → Scoped access to invited/connected factories.
+
+Worker: Case ID or QR → Grievance Monitoring (no PII beyond consented fields).
+
+Login: SSO (SAML/OIDC), MFA, device/session management.
+
+2) Dashboards
+
+Factories Dashboard: Multi-factory birds-eye view (Super Admin: all | others: assigned). KPIs, expiries, open NCs, CAP aging, alerts. Export (PDF/XLSX/CSV).
+
+Factory Dashboard: Single-factory status, tasks, audit calendar, risk heatmap, permit clock, grievance SLA timers, CAP timeline. Export pack for audits.
+
+3) Document Intelligence
+
+Categories: Reports, Permits, Policies, SOPs, Procedures, Certificates, Trainings, Audit Evidence.
+
+Pipeline: Ingest → OCR → AI Extract → Validate → Version → Approve → Index (full-text + vector).
+
+Document Graph & Traceability: Auto-link evidence ↔ requirements ↔ audits ↔ CAP actions.
+
+Controls: Check-in/out, redaction, watermarking, retention & legal hold.
+
+4) Standards & Audit Orchestrator
+
+Standards Registry: SMETA, Primark/ETES, Higg (FSLM/FEM), SLCP, SA8000, ISO 9001/14001/45001, ILO/BFC, buyer programs (GAP, H&M, Inditex, etc.).
+
+Requirement Model: Requirement → Controls → Evidence → Tests → Scoring → NC → CAP.
+
+Audit Prep: Auto-checklists per program, evidence binder generator, gap scoring, “readiness %.”
+
+Report AI: OCR audit reports → parse findings → map to requirements → generate SMART CAP drafts with root cause (5-Why/ISHIKAWA), actions, owners, cost, deadlines, verification method, follow-up schedule.
+
+Calendar Sync: Audits, sampling, witness dates, verifications.
+
+5) CAP Management
+
+Lifecycle: NC intake → RCA templates → Action design (RACI) → Approvals → Execution → Evidence upload → Verification → Closure → Effectiveness review (30/60/90d).
+
+Controls: SLA timers, escalations, blocker tracking, cost/time impact, duplicate NC merge.
+
+Exports: Buyer-specific CAP formats; audit-ready binders.
+
+6) Grievance & Case Management
+
+Channels: QR/Link, kiosk, hotline form, WhatsApp/Telegram (opt-in), in-person entry.
+
+Triage: Severity, category (harassment, wage, OSH, etc.), anonymity, retaliation guard.
+
+Workflow: Intake → Assign → Investigate → Resolution → Worker acknowledgment → Closure survey.
+
+SLA & Analytics: Time-to-first-response, resolution time, re-open rate, heatmap by dept/line/shift.
+
+7) Permits & Certificates
+
+Registry of required permits (MoC, MoLVT, GDT, MoE, MoI, MoH, etc.) + buyer certifications.
+
+Clock: Expiry countdown, auto-reminders, renewal checklist, evidence capture, calendar sync.
+
+8) Training & Meetings
+
+Training matrix by role/department/standard; agenda generator; attendance capture; quiz/acknowledgment; certificate issuance; refresher rules.
+
+9) Tasks, Calendar, Notifications, Communication
+
+Tasks: Linked to CAPs, standards, permits, audits. Bulk assign; recurring.
+
+Calendar: Factory & personal views; ICS sync; holiday awareness.
+
+Notifications: In-app, email, SMS/WhatsApp (optional). Digest + high-priority alerts.
+
+Communication: Scoped messages on items (document, CAP, case); @mentions; attachments.
+
+10) Assistance (AI Copilot)
+
+“Ask for Standard,” “Generate CAP,” “Draft Agenda,” “Summarize Audit,” “Find Evidence,” “Explain Requirement,” “Create Permit Checklist.”
+
+Explainability: Source-pinned answers with document citations and confidence notes.
+
+Guardrails: Human approval gates for external submissions.
+
+11) System Admin & Monitoring
+
+Settings (Super Admin): Standards management, templates, categories, risk schema, retention policies, plans, metering.
+
+System Monitoring: Uptime, queue health, error budgets, usage heat, token metering, storage growth; downloadable audit logs.
+
+E. AI Stack & Governance
+
+Pipelines: OCR → Layout analysis → Entity extraction (Requirements, NCs, Dates, Owners, Costs) → Normalization → Graph link.
+
+RAG: Hybrid search (BM25 + vector) across multilingual corpora; standards-aware reranking.
+
+Orchestration: Toolformer/agent flows for CAP drafting, checklist building, evidence pairing.
+
+Eval & QA: Golden-set tests, bias & hallucination checks, red-team prompts, rollback.
+
+Privacy: PII detection, auto-masking, on-prem embeddings option for sensitive tenants.
+
+Model Registry: Versioned prompts, model cards, drift detection, A/B for quality.
+
+F. Security, Privacy, Compliance
+
+AuthN/Z: SSO (SAML/OIDC), MFA, passkeys; RBAC + ABAC; SCIM provisioning.
+
+Encryption: TLS 1.2+, AES-256 at rest; KMS-managed keys; customer-managed keys (EE).
+
+Data: Tenant isolation, row-level security, field-level encryption for sensitive data.
+
+Auditability: Immutable audit log (append-only), evidence hash stamps, export on request.
+
+Standards: ISO 27001 roadmap, SOC 2, GDPR, DPAs, data residency (region-pin for EE).
+
+DR/BCP: RPO ≤ 15 min, RTO ≤ 2 hrs; backups, cross-region replicas.
+
+CSP & Hardening: Strict CSP, CSRF, rate-limit, anti-automation, content validation.
+
+G. High-Level Data Model (Entities)
+
+Org, User, Role, Policy
+
+Factory, Department, Line, Shift
+
+Standard, Requirement, Control, Audit, NC, CAP, Verification
+
+Document, Evidence, Version, Signature
+
+Permit, Certificate
+
+Grievance Case, Action, Meeting, Training
+
+Task, CalendarEvent, Notification
+
+Risk, KPI, Scorecard, ExportPackage
+
+H. Integrations & API (API-First)
+
+Inbound: CSV/XLSX importer, email-to-case/document, buyer/auditor data imports.
+
+Outbound: Buyer-format CAP exports, audit binders, webhooks to Slack/Teams/Email/SMS.
+
+Connectors: Google Workspace, Microsoft 365, Drive/SharePoint; WhatsApp/Telegram; optional ESG tools.
+
+Developer Platform: REST/GraphQL, webhooks, OAuth apps, sandbox & API keys, per-scope permissions.
+
+I. Billing & Licensing (Enterprise)
+
+Factory License (annual): $250–$750/factory (tiers by features).
+
+Storage (monthly): $1 per 100 MB (pay-as-you-go, pooled per tenant).
+
+AI Assistant (top-up): Token packs (priced at ×3 market).
+
+Add-ons: SSO/SCIM, data residency, private embeddings, premium support/SLA.
+
+Metering: Per-feature usage dashboards; hard/soft caps; alerting.
+
+J. SRE, Observability & SLAs
+
+SLOs: Availability 99.9% (Std), 99.95% (EE); P95 latency targets per route; background job SLA.
+
+Telemetry: Central logs, traces, metrics; anomaly alerts; user-visible status page.
+
+Error Budgets: Release gating, rollback playbooks, incident post-mortems.
+
+K. Implementation Roadmap (First 120 Days)
+
+Phase 0 — Foundations (Weeks 1–3): RBAC/ABAC, tenancy, audit log, file pipeline MVP, SSO ready.
+Phase 1 — Documents & Standards (Weeks 4–8): OCR + extraction, Standards Registry, Audit Prep, CAP Gen v1, Factory/Factories Dashboards.
+Phase 2 — Grievance & Permits (Weeks 9–12): Worker App, SLA engine, permit registry + renewal flows, notifications.
+Phase 3 — Training/Tasks/Calendar (Weeks 13–15): Training matrix, agenda generator, task orchestration, calendar sync.
+Phase 4 — Analytics & Exports (Weeks 16–17): Risk heatmap, KPIs, buyer-ready export packs.
+Phase 5 — Hardening (Weeks 18–17+): Security pen-test, performance, DR drill, docs, go-live.
+
+L. KPIs & Acceptance Criteria (Examples)
+
+Audit Readiness: ≥90% evidence coverage per requirement before audit date.
+
+NC Closure: Median time-to-closure ↓ 40% within 3 months.
+
+Permit Compliance: On-time renewals ≥98%.
+
+Grievance: P95 time-to-first-response ≤ 24h; resolution ≤ 14 days for non-critical.
+
+Document: OCR accuracy ≥ 95% on forms; extraction F1 ≥ 0.9 for key fields.
+
+System: Uptime meets SLA, critical defect rate ≤ 0.5% per release.
+globs:
+alwaysApply: true
+---

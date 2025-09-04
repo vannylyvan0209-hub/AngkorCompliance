@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP Details - Angkor Compliance Platform</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="assets/css/main-modern.css?v=1.1">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+
+    <style>
+        .cap-detail-layout {
+            display: flex;
+            min-height: 100vh;
+            background: var(--neutral-50);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--neutral-200);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+            color: var(--neutral-900);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: var(--space-4) 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-6);
+            text-decoration: none;
+            color: var(--neutral-700);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-nav-item:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+        }
+        
+        .sidebar-nav-item.active {
+            background: var(--primary-50);
+            color: var(--primary-700);
+            border-right: 3px solid var(--primary-500);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--space-6);
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: var(--space-6);
+        }
+        
+        .header-info {
+            flex: 1;
+        }
+        
+        .cap-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-3);
+        }
+        
+        .cap-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 0.875rem;
+        }
+        
+        .meta-label {
+            color: var(--neutral-600);
+        }
+        
+        .meta-value {
+            font-weight: 500;
+            color: var(--neutral-900);
+        }
+        
+        .cap-status-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-badge.draft {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .status-badge.pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-badge.in-progress {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .status-badge.completed {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-badge.overdue {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .priority-badge.low {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .priority-badge.medium {
+            background: var(--warning-100);
+            color: var(--warning-600);
+        }
+        
+        .priority-badge.high {
+            background: var(--danger-100);
+            color: var(--danger-600);
+        }
+        
+        .progress-container {
+            margin-top: var(--space-3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--neutral-200);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-400));
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            text-align: center;
+        }
+        
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+        
+        .btn-success {
+            background: var(--success-600);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: var(--success-700);
+        }
+        
+        .btn-danger {
+            background: var(--danger-600);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger-700);
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .main-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .description-content {
+            line-height: 1.6;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-4);
+        }
+        
+        .actions-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .action-item {
+            position: relative;
+            padding-left: var(--space-8);
+            padding-bottom: var(--space-4);
+            border-left: 2px solid var(--neutral-200);
+        }
+        
+        .action-item:last-child {
+            border-left-color: transparent;
+        }
+        
+        .action-item.completed {
+            border-left-color: var(--success-500);
+        }
+        
+        .action-marker {
+            position: absolute;
+            left: -8px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--neutral-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-marker.completed {
+            background: var(--success-500);
+            border-color: var(--success-500);
+            color: white;
+        }
+        
+        .action-content {
+            background: var(--neutral-50);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .action-content.completed {
+            background: var(--success-25);
+            border-color: var(--success-200);
+        }
+        
+        .action-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+        }
+        
+        .action-title {
+            font-weight: 500;
+            color: var(--neutral-900);
+        }
+        
+        .action-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--success-500);
+        }
+        
+        .action-description {
+            color: var(--neutral-700);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+        
+        .action-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: var(--space-3);
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .file-item:hover {
+            border-color: var(--primary-300);
+            background: var(--primary-25);
+        }
+        
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: var(--space-2);
+            color: var(--primary-600);
+        }
+        
+        .file-name {
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--neutral-700);
+            word-break: break-word;
+        }
+        
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--neutral-25);
+            border-radius: var(--radius-md);
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .activity-description {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+        }
+        
+        .status-update-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+        }
+        
+        .form-select,
+        .form-textarea {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+        
+        .quick-action {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .quick-action:hover {
+            border-color: var(--primary-500);
+            background: var(--primary-25);
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--neutral-600);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--neutral-300);
+            border-top: 3px solid var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-4);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            left: var(--space-4);
+            z-index: 1001;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .mobile-overlay.open {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--space-4);
+            }
+            
+            .content-card {
+                padding: var(--space-4);
+            }
+            
+            .cap-meta {
+                flex-direction: column;
+                gap: var(--space-2);
+            }
+            
+            .files-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+        
+        .modal.open {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-1);
+            color: var(--neutral-500);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+        }
+    </style>
+</head>
+<body>
+    <div class="cap-detail-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="navbar-brand">
+                    <img src="logo.png" alt="Angkor Compliance" class="logo-image">
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="super-admin-dashboard-enhanced.html" class="sidebar-nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="sidebar-nav-item">
+                    <i data-lucide="building-2"></i>
+                    Factories
+                </a>
+                <a href="#" class="sidebar-nav-item">
+                    <i data-lucide="users"></i>
+                    User Management
+                </a>
+                <a href="cap.html" class="sidebar-nav-item active">
+                    <i data-lucide="clipboard-list"></i>
+                    CAP Management
+                </a>
+                <a href="#" class="sidebar-nav-item">
+                    <i data-lucide="file-text"></i>
+                    Documents
+                </a>
+                <a href="#" class="sidebar-nav-item">
+                    <i data-lucide="message-circle"></i>
+                    Grievances
+                </a>
+                <a href="#" class="sidebar-nav-item">
+                    <i data-lucide="trending-up"></i>
+                    Analytics
+                </a>
+                <a href="settings.html" class="sidebar-nav-item">
+                    <i data-lucide="settings"></i>
+                    System Settings
+                </a>
+                
+                <div style="margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--neutral-200);">
+                    <a href="diagnostics.html" class="sidebar-nav-item">
+                        <i data-lucide="wrench"></i>
+                        Diagnostics
+                    </a>
+                    <a href="#" class="sidebar-nav-item" onclick="logout()">
+                        <i data-lucide="log-out"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <i data-lucide="menu"></i>
+        </button>
+        
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading CAP details...</p>
+            </div>
+            
+            <!-- CAP Content (hidden initially) -->
+            <div id="capContent" style="display: none;">
+                <!-- Page Header -->
+                <header class="page-header">
+                    <div class="breadcrumb">
+                        <a href="cap.html">CAP Management</a>
+                        <i data-lucide="chevron-right"></i>
+                        <span id="breadcrumbCAPId">CAP Details</span>
+                    </div>
+                    
+                    <div class="header-content">
+                        <div class="header-info">
+                            <h1 class="cap-title" id="capTitle">Loading...</h1>
+                            
+                            <div class="cap-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">CAP ID:</span>
+                                    <span class="meta-value" id="capId">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Factory:</span>
+                                    <span class="meta-value" id="factoryName">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Standard:</span>
+                                    <span class="meta-value" id="complianceStandard">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Created:</span>
+                                    <span class="meta-value" id="createdDate">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Due Date:</span>
+                                    <span class="meta-value" id="dueDate">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Responsible:</span>
+                                    <span class="meta-value" id="responsiblePerson">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cap-status-section">
+                            <div>
+                                <span class="status-badge" id="statusBadge">
+                                    <i data-lucide="clock"></i>
+                                    Loading...
+                                </span>
+                            </div>
+                            
+                            <div>
+                                <span class="priority-badge" id="priorityBadge">
+                                    <i data-lucide="equal"></i>
+                                    Loading...
+                                </span>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-text" id="progressText">0% complete</div>
+                            </div>
+                        </div>
+                        
+                        <div class="header-actions">
+                            <a href="#" class="btn btn-primary" id="editCAPBtn">
+                                <i data-lucide="edit-2"></i>
+                                Edit CAP
+                            </a>
+                            <button class="btn btn-secondary" onclick="openStatusModal()">
+                                <i data-lucide="refresh-cw"></i>
+                                Update Status
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportCAP()">
+                                <i data-lucide="download"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Main Section -->
+                    <div class="main-section">
+                        <!-- Issue Description -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i data-lucide="alert-triangle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                                    Issue Description
+                                </h2>
+                            </div>
+                            <div class="description-content" id="issueDescription">
+                                Loading issue description...
+                            </div>
+                            <div id="rootCauseSection" style="display: none;">
+                                <h4 style="font-weight: 600; margin-bottom: var(--space-2); color: var(--neutral-900);">Root Cause Analysis</h4>
+                                <div class="description-content" id="rootCause">
+                                    Loading root cause analysis...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Items -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i data-lucide="list-checks" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                                    Corrective Actions
+                                </h2>
+                                <span id="completedActionsCount" class="text-sm text-neutral-600">0 of 0 completed</span>
+                            </div>
+                            <div class="actions-timeline" id="actionsTimeline">
+                                <!-- Actions will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Supporting Files -->
+                        <div class="content-card" id="filesSection" style="display: none;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <i data-lucide="paperclip" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                                    Supporting Documents
+                                </h2>
+                                <span id="filesCount" class="text-sm text-neutral-600">0 files</span>
+                            </div>
+                            <div class="files-grid" id="filesGrid">
+                                <!-- Files will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar Section -->
+                    <div class="sidebar-section">
+                        <!-- Quick Actions -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i data-lucide="zap" style="width: 18px; height: 18px; margin-right: 6px;"></i>
+                                    Quick Actions
+                                </h3>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-action" onclick="markCompleted()">
+                                    <i data-lucide="check" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Mark Complete
+                                </button>
+                                <button class="quick-action" onclick="addComment()">
+                                    <i data-lucide="message-circle" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Add Comment
+                                </button>
+                                <button class="quick-action" onclick="uploadFile()">
+                                    <i data-lucide="upload" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Upload File
+                                </button>
+                                <button class="quick-action" onclick="setReminder()">
+                                    <i data-lucide="bell" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Set Reminder
+                                </button>
+                                <button class="quick-action" onclick="shareCAP()">
+                                    <i data-lucide="share-2" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Share
+                                </button>
+                                <button class="quick-action" onclick="printCAP()">
+                                    <i data-lucide="printer" style="width: 12px; height: 12px; margin-right: 4px;"></i>
+                                    Print
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Feed -->
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i data-lucide="activity" style="width: 18px; height: 18px; margin-right: 6px;"></i>
+                                    Activity Feed
+                                </h3>
+                            </div>
+                            <div class="activity-feed" id="activityFeed">
+                                <!-- Activity items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Status Update Modal -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update CAP Status</h3>
+                <button class="modal-close" onclick="closeStatusModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form class="status-update-form" onsubmit="updateStatus(event)">
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="newStatus" class="form-select" required>
+                        <option value="draft">Draft</option>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Progress (%)</label>
+                    <input type="range" id="progressSlider" min="0" max="100" value="0" class="form-range" 
+                           oninput="document.getElementById('progressValue').textContent = this.value + '%'">
+                    <div style="text-align: center; margin-top: var(--space-2);">
+                        <span id="progressValue">0%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Update Notes</label>
+                    <textarea id="updateNotes" class="form-textarea" placeholder="Describe what has been done or any issues encountered..." required></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeStatusModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase and Auth Scripts -->
+    <script type="module" src="firebase-config.js?v=1.1"></script>
+    <script src="assets/js/lang.js?v=1.1"></script>
+    <script src="assets/js/auth.js?v=1.1"></script>
+    
+    <script>
+        // CAP Detail Management
+        let capData = null;
+        let factories = [];
+        let capFiles = [];
+        let activityLog = [];
+        let capId = null;
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 CAP Detail page loading...');
+            
+            // Get CAP ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            capId = urlParams.get('id');
+            
+            if (!capId) {
+                console.log('❌ No CAP ID provided, redirecting to CAP list');
+                window.location.href = 'cap.html';
+                return;
+            }
+            
+            // Check authentication
+            await checkAuthentication();
+            
+            // Load CAP data
+            await loadCAPData();
+            
+            // Initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            console.log('✅ CAP Detail page loaded');
+        });
+        
+        async function checkAuthentication() {
+            return new Promise((resolve) => {
+                auth.onAuthStateChanged(async function(user) {
+                    if (!user) {
+                        console.log('❌ No authenticated user, redirecting to login');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        
+                        if (!userDoc.exists) {
+                            console.log('❌ No user profile found, redirecting to login');
+                            window.location.href = 'login.html';
+                            return;
+                        }
+                        
+                        const userData = userDoc.data();
+                        
+                        // Allow super_admin and factory_admin to view CAPs
+                        if (!['super_admin', 'factory_admin'].includes(userData.role)) {
+                            console.log('⚠️ Access denied - insufficient permissions');
+                            window.location.href = 'dashboard.html';
+                            return;
+                        }
+                        
+                        console.log('✅ CAP detail access granted for:', userData.role);
+                        resolve();
+                        
+                    } catch (error) {
+                        console.error('❌ Error loading user profile:', error);
+                        window.location.href = 'login.html';
+                    }
+                });
+            });
+        }
+        
+        async function loadCAPData() {
+            try {
+                console.log('🔍 Loading CAP data for ID:', capId);
+                
+                // Load CAP, factories, files, and activity in parallel
+                const [capDoc, factoriesSnapshot, filesSnapshot] = await Promise.all([
+                    db.collection('caps').doc(capId).get(),
+                    db.collection('factories').get(),
+                    db.collection('cap_files').where('capId', '==', capId).get()
+                ]);
+                
+                console.log('📄 CAP document exists:', capDoc.exists);
+                
+                if (!capDoc.exists) {
+                    console.log('❌ CAP document not found in database');
+                    alert('CAP not found. It may have been deleted or the ID is incorrect.');
+                    window.location.href = 'cap.html';
+                    return;
+                }
+                
+                capData = { id: capDoc.id, ...capDoc.data() };
+                console.log('📋 CAP data loaded:', capData);
+                
+                // Helper function to safely convert dates
+                function safeToDate(dateValue) {
+                    if (!dateValue) return null;
+                    
+                    // If it's already a Date object
+                    if (dateValue instanceof Date) {
+                        return dateValue;
+                    }
+                    
+                    // If it's a Firestore Timestamp with toDate method
+                    if (dateValue && typeof dateValue.toDate === 'function') {
+                        return dateValue.toDate();
+                    }
+                    
+                    // If it's a string, try to parse it
+                    if (typeof dateValue === 'string') {
+                        const parsed = new Date(dateValue);
+                        return isNaN(parsed.getTime()) ? null : parsed;
+                    }
+                    
+                    // If it's a number (timestamp)
+                    if (typeof dateValue === 'number') {
+                        return new Date(dateValue);
+                    }
+                    
+                    // If it has seconds property (Firestore Timestamp object)
+                    if (dateValue && typeof dateValue.seconds === 'number') {
+                        return new Date(dateValue.seconds * 1000);
+                    }
+                    
+                    return null;
+                }
+                
+                // Convert Firestore timestamps safely
+                capData.createdAt = safeToDate(capData.createdAt) || new Date();
+                capData.dueDate = safeToDate(capData.dueDate);
+                capData.updatedAt = safeToDate(capData.updatedAt) || new Date();
+                
+                // Load factories
+                factories = factoriesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                console.log('🏭 Factories loaded:', factories.length);
+                
+                // Load files
+                capFiles = filesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                console.log('📁 Files loaded:', capFiles.length);
+                
+                // Populate UI
+                populateHeader();
+                populateIssueDescription();
+                populateActions();
+                populateFiles();
+                loadActivityFeed();
+                
+                // Hide loading state and show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('capContent').style.display = 'block';
+                
+                console.log('✅ CAP data loaded successfully:', capData);
+                
+            } catch (error) {
+                console.error('❌ Error loading CAP data:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    stack: error.stack
+                });
+                
+                // Show more specific error message
+                let errorMessage = 'Failed to load CAP data. ';
+                if (error.code === 'permission-denied') {
+                    errorMessage += 'You do not have permission to view this CAP.';
+                } else if (error.code === 'not-found') {
+                    errorMessage += 'CAP not found.';
+                } else if (error.message) {
+                    errorMessage += error.message;
+                } else {
+                    errorMessage += 'Please try again.';
+                }
+                
+                alert(errorMessage);
+                window.location.href = 'cap.html';
+            }
+        }
+        
+        function populateHeader() {
+            const factory = factories.find(f => f.id === capData.factoryId);
+            const factoryName = factory ? factory.name : capData.factoryId || 'Unknown Factory';
+            
+            // Update header information
+            document.getElementById('breadcrumbCAPId').textContent = capData.capId || capData.id.substring(0, 8);
+            document.getElementById('capTitle').textContent = capData.title || 'Untitled CAP';
+            document.getElementById('capId').textContent = capData.capId || capData.id.substring(0, 8);
+            document.getElementById('factoryName').textContent = factoryName;
+            document.getElementById('complianceStandard').textContent = capData.standard || 'Not specified';
+            document.getElementById('createdDate').textContent = formatDate(capData.createdAt);
+            document.getElementById('dueDate').textContent = capData.dueDate ? formatDate(capData.dueDate) : 'Not set';
+            document.getElementById('responsiblePerson').textContent = capData.responsiblePerson || 'Not assigned';
+            
+            // Update status badge
+            updateStatusBadge();
+            
+            // Update priority badge
+            updatePriorityBadge();
+            
+            // Update progress
+            updateProgress();
+            
+            // Set edit link
+            document.getElementById('editCAPBtn').href = `new-cap.html?edit=${capData.id}`;
+        }
+        
+        function updateStatusBadge() {
+            const statusBadge = document.getElementById('statusBadge');
+            const status = getStatusWithOverdue(capData);
+            
+            statusBadge.className = `status-badge ${status}`;
+            statusBadge.innerHTML = `${getStatusIcon(status)} ${formatStatus(status)}`;
+        }
+        
+        function updatePriorityBadge() {
+            const priorityBadge = document.getElementById('priorityBadge');
+            const priority = capData.priority || 'medium';
+            
+            priorityBadge.className = `priority-badge ${priority}`;
+            priorityBadge.innerHTML = `${getPriorityIcon(priority)} ${formatPriority(priority)}`;
+        }
+        
+        function updateProgress() {
+            const progress = capData.progress || 0;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${progress}% complete`;
+        }
+        
+        function populateIssueDescription() {
+            document.getElementById('issueDescription').innerHTML = formatText(capData.issueDescription || 'No issue description provided.');
+            
+            if (capData.rootCause) {
+                document.getElementById('rootCauseSection').style.display = 'block';
+                document.getElementById('rootCause').innerHTML = formatText(capData.rootCause);
+            }
+        }
+        
+        function populateActions() {
+            const actionsTimeline = document.getElementById('actionsTimeline');
+            const actions = capData.actions || [];
+            
+            if (actions.length === 0) {
+                actionsTimeline.innerHTML = `
+                    <div style="text-align: center; padding: var(--space-8); color: var(--neutral-500);">
+                        <i data-lucide="clipboard-list" style="width: 48px; height: 48px; margin-bottom: var(--space-4);"></i>
+                        <p>No action items defined for this CAP.</p>
+                        <a href="new-cap.html?edit=${capData.id}" class="btn btn-primary" style="margin-top: var(--space-4);">
+                            <i data-lucide="plus"></i>
+                            Add Actions
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            let completedCount = 0;
+            const actionsHTML = actions.map((action, index) => {
+                const isCompleted = action.completed || false;
+                if (isCompleted) completedCount++;
+                
+                return `
+                    <div class="action-item ${isCompleted ? 'completed' : ''}">
+                        <div class="action-marker ${isCompleted ? 'completed' : ''}">
+                            ${isCompleted ? '<i data-lucide="check" style="width: 10px; height: 10px;"></i>' : index + 1}
+                        </div>
+                        
+                        <div class="action-content ${isCompleted ? 'completed' : ''}">
+                            <div class="action-header">
+                                <div class="action-title">Action ${index + 1}</div>
+                                <input type="checkbox" class="action-checkbox" ${isCompleted ? 'checked' : ''} 
+                                       onchange="toggleActionComplete(${index}, this.checked)">
+                            </div>
+                            
+                            <div class="action-description">
+                                ${action.description || 'No description provided'}
+                            </div>
+                            
+                            <div class="action-meta">
+                                ${action.dueDate ? `<span><i data-lucide="calendar" style="width: 10px; height: 10px; margin-right: 2px;"></i> Due: ${action.dueDate}</span>` : ''}
+                                ${action.responsible ? `<span><i data-lucide="user" style="width: 10px; height: 10px; margin-right: 2px;"></i> ${action.responsible}</span>` : ''}
+                                ${isCompleted ? `<span><i data-lucide="check-circle" style="width: 10px; height: 10px; margin-right: 2px;"></i> Completed</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            actionsTimeline.innerHTML = actionsHTML;
+            
+            // Update completed count
+            document.getElementById('completedActionsCount').textContent = `${completedCount} of ${actions.length} completed`;
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        async function toggleActionComplete(actionIndex, isCompleted) {
+            try {
+                if (!capData.actions) capData.actions = [];
+                
+                capData.actions[actionIndex].completed = isCompleted;
+                
+                // Calculate new progress
+                const completedActions = capData.actions.filter(action => action.completed).length;
+                const totalActions = capData.actions.length;
+                const newProgress = Math.round((completedActions / totalActions) * 100);
+                
+                // Update progress in data
+                capData.progress = newProgress;
+                
+                // Update status if all actions are completed
+                if (newProgress === 100 && capData.status !== 'completed') {
+                    capData.status = 'completed';
+                } else if (newProgress > 0 && capData.status === 'pending') {
+                    capData.status = 'in-progress';
+                }
+                
+                // Save to Firestore
+                await db.collection('caps').doc(capData.id).update({
+                    actions: capData.actions,
+                    progress: newProgress,
+                    status: capData.status,
+                    updatedAt: new Date()
+                });
+                
+                // Update UI
+                updateProgress();
+                updateStatusBadge();
+                populateActions();
+                
+                // Add activity log
+                const actionText = isCompleted ? 'completed' : 'unchecked';
+                addActivityEntry('check-circle', `Action ${actionIndex + 1} ${actionText}`, 
+                    `Action item "${capData.actions[actionIndex].description?.substring(0, 50)}..." was ${actionText}.`);
+                
+                console.log('✅ Action status updated');
+                
+            } catch (error) {
+                console.error('❌ Error updating action status:', error);
+                alert('Failed to update action status. Please try again.');
+                
+                // Revert checkbox state
+                const checkbox = document.querySelector(`input[onchange="toggleActionComplete(${actionIndex}, this.checked)"]`);
+                if (checkbox) {
+                    checkbox.checked = !isCompleted;
+                }
+            }
+        }
+        
+        function populateFiles() {
+            if (capFiles.length === 0) {
+                document.getElementById('filesSection').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('filesSection').style.display = 'block';
+            document.getElementById('filesCount').textContent = `${capFiles.length} files`;
+            
+            const filesGrid = document.getElementById('filesGrid');
+            const filesHTML = capFiles.map(file => `
+                <div class="file-item" onclick="openFile('${file.downloadURL}', '${file.fileName}')">
+                    <div class="file-icon">
+                        ${getFileIcon(file.fileName)}
+                    </div>
+                    <div class="file-name">${file.fileName}</div>
+                </div>
+            `).join('');
+            
+            filesGrid.innerHTML = filesHTML;
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        function loadActivityFeed() {
+            const activityFeed = document.getElementById('activityFeed');
+            
+            // Generate sample activity (in a real app, this would come from a database)
+            const activities = [
+                {
+                    icon: 'plus-circle',
+                    title: 'CAP Created',
+                    description: `CAP was created by ${capData.createdBy || 'System'}`,
+                    time: capData.createdAt
+                },
+                {
+                    icon: 'edit',
+                    title: 'Details Updated',
+                    description: 'CAP details and action items were defined',
+                    time: capData.updatedAt || capData.createdAt
+                }
+            ];
+            
+            // Add status-specific activities
+            if (capData.status === 'in-progress') {
+                activities.push({
+                    icon: 'play',
+                    title: 'Work Started',
+                    description: 'CAP implementation has begun',
+                    time: capData.updatedAt || capData.createdAt
+                });
+            }
+            
+            if (capData.status === 'completed') {
+                activities.push({
+                    icon: 'check-circle',
+                    title: 'CAP Completed',
+                    description: 'All action items have been completed',
+                    time: capData.updatedAt || capData.createdAt
+                });
+            }
+            
+            const activitiesHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i data-lucide="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-description">${activity.description}</div>
+                        <div class="activity-time">${formatTimeAgo(activity.time)}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            activityFeed.innerHTML = activitiesHTML;
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        function addActivityEntry(icon, title, description) {
+            const activityFeed = document.getElementById('activityFeed');
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-icon">
+                    <i data-lucide="${icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${title}</div>
+                    <div class="activity-description">${description}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            `;
+            
+            activityFeed.insertBefore(newActivity, activityFeed.firstChild);
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        // Modal functions
+        function openStatusModal() {
+            const modal = document.getElementById('statusModal');
+            document.getElementById('newStatus').value = capData.status || 'pending';
+            document.getElementById('progressSlider').value = capData.progress || 0;
+            document.getElementById('progressValue').textContent = (capData.progress || 0) + '%';
+            document.getElementById('updateNotes').value = '';
+            
+            modal.classList.add('open');
+        }
+        
+        function closeStatusModal() {
+            document.getElementById('statusModal').classList.remove('open');
+        }
+        
+        async function updateStatus(event) {
+            event.preventDefault();
+            
+            try {
+                const newStatus = document.getElementById('newStatus').value;
+                const newProgress = parseInt(document.getElementById('progressSlider').value);
+                const notes = document.getElementById('updateNotes').value;
+                
+                // Update data
+                capData.status = newStatus;
+                capData.progress = newProgress;
+                capData.updatedAt = new Date();
+                
+                // Save to Firestore
+                await db.collection('caps').doc(capData.id).update({
+                    status: newStatus,
+                    progress: newProgress,
+                    updatedAt: new Date()
+                });
+                
+                // Add activity log entry
+                addActivityEntry('refresh-cw', 'Status Updated', 
+                    `Status changed to ${formatStatus(newStatus)} with ${newProgress}% progress. ${notes}`);
+                
+                // Update UI
+                updateStatusBadge();
+                updateProgress();
+                
+                // Close modal
+                closeStatusModal();
+                
+                console.log('✅ Status updated successfully');
+                
+            } catch (error) {
+                console.error('❌ Error updating status:', error);
+                alert('Failed to update status. Please try again.');
+            }
+        }
+        
+        // Quick action functions
+        function markCompleted() {
+            if (confirm('Mark this CAP as completed? This action cannot be undone.')) {
+                document.getElementById('newStatus').value = 'completed';
+                document.getElementById('progressSlider').value = 100;
+                document.getElementById('progressValue').textContent = '100%';
+                document.getElementById('updateNotes').value = 'CAP marked as completed via quick action.';
+                openStatusModal();
+            }
+        }
+        
+        function addComment() {
+            const comment = prompt('Add a comment or note:');
+            if (comment && comment.trim()) {
+                addActivityEntry('message-circle', 'Comment Added', comment.trim());
+                console.log('Comment added:', comment);
+            }
+        }
+        
+        function uploadFile() {
+            // Create file input
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.multiple = true;
+            fileInput.accept = 'image/*,.pdf,.doc,.docx';
+            
+            fileInput.onchange = async function(event) {
+                const files = Array.from(event.target.files);
+                
+                if (files.length === 0) return;
+                
+                try {
+                    for (const file of files) {
+                        if (file.size > 10 * 1024 * 1024) {
+                            alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                            continue;
+                        }
+                        
+                        // Upload file
+                        const fileName = `caps/${capData.id}/${Date.now()}_${file.name}`;
+                        const storageRef = firebase.storage().ref(fileName);
+                        const snapshot = await storageRef.put(file);
+                        const downloadURL = await snapshot.ref.getDownloadURL();
+                        
+                        // Save file metadata
+                        await db.collection('cap_files').add({
+                            capId: capData.id,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            fileType: file.type,
+                            downloadURL: downloadURL,
+                            uploadedAt: new Date(),
+                            uploadedBy: auth.currentUser.uid
+                        });
+                        
+                        capFiles.push({
+                            fileName: file.name,
+                            downloadURL: downloadURL
+                        });
+                    }
+                    
+                    // Update files display
+                    populateFiles();
+                    
+                    // Add activity entry
+                    addActivityEntry('upload', 'Files Uploaded', 
+                        `${files.length} file(s) uploaded: ${files.map(f => f.name).join(', ')}`);
+                    
+                    console.log('✅ Files uploaded successfully');
+                    
+                } catch (error) {
+                    console.error('❌ Error uploading files:', error);
+                    alert('Failed to upload files. Please try again.');
+                }
+            };
+            
+            fileInput.click();
+        }
+        
+        function setReminder() {
+            alert('Reminder functionality will be implemented in the next update.');
+        }
+        
+        function shareCAP() {
+            if (navigator.share) {
+                navigator.share({
+                    title: capData.title,
+                    text: `CAP: ${capData.title}`,
+                    url: window.location.href
+                });
+            } else {
+                // Copy URL to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('CAP URL copied to clipboard!');
+                });
+            }
+        }
+        
+        function printCAP() {
+            window.print();
+        }
+        
+        function exportCAP() {
+            // Generate and download CAP report
+            const reportData = {
+                capId: capData.capId || capData.id,
+                title: capData.title,
+                factory: document.getElementById('factoryName').textContent,
+                status: capData.status,
+                progress: capData.progress,
+                issueDescription: capData.issueDescription,
+                actions: capData.actions || [],
+                createdAt: capData.createdAt,
+                dueDate: capData.dueDate
+            };
+            
+            // In a real implementation, this would generate a PDF or detailed report
+            const jsonData = JSON.stringify(reportData, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `CAP_${capData.capId || capData.id}_Report.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+        
+        function openFile(url, filename) {
+            // Open file in new tab
+            window.open(url, '_blank');
+        }
+        
+        // Utility functions
+        function getStatusWithOverdue(cap) {
+            if (cap.status === 'completed') return 'completed';
+            
+            if (cap.dueDate && cap.dueDate < new Date() && cap.status !== 'completed') {
+                return 'overdue';
+            }
+            
+            return cap.status || 'pending';
+        }
+        
+        function getStatusIcon(status) {
+            const icons = {
+                draft: '<i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>',
+                pending: '<i data-lucide="clock" style="width: 14px; height: 14px;"></i>',
+                'in-progress': '<i data-lucide="play" style="width: 14px; height: 14px;"></i>',
+                completed: '<i data-lucide="check" style="width: 14px; height: 14px;"></i>',
+                overdue: '<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>'
+            };
+            return icons[status] || '';
+        }
+        
+        function getPriorityIcon(priority) {
+            const icons = {
+                low: '<i data-lucide="minus" style="width: 12px; height: 12px;"></i>',
+                medium: '<i data-lucide="equal" style="width: 12px; height: 12px;"></i>',
+                high: '<i data-lucide="arrow-up" style="width: 12px; height: 12px;"></i>'
+            };
+            return icons[priority] || icons.medium;
+        }
+        
+        function formatStatus(status) {
+            const statusMap = {
+                draft: 'Draft',
+                pending: 'Pending',
+                'in-progress': 'In Progress',
+                completed: 'Completed',
+                overdue: 'Overdue'
+            };
+            return statusMap[status] || 'Unknown';
+        }
+        
+        function formatPriority(priority) {
+            const priorityMap = {
+                low: 'Low',
+                medium: 'Medium',
+                high: 'High'
+            };
+            return priorityMap[priority] || 'Medium';
+        }
+        
+        function formatDate(date) {
+            if (!date) return 'Not set';
+            
+            if (typeof date === 'string') {
+                date = new Date(date);
+            }
+            
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        function formatTimeAgo(date) {
+            if (!date) return 'Unknown';
+            
+            if (typeof date === 'string') {
+                date = new Date(date);
+            }
+            
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+            
+            return formatDate(date);
+        }
+        
+        function formatText(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+        
+        function getFileIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            
+            switch (extension) {
+                case 'pdf':
+                    return '<i data-lucide="file-text"></i>';
+                case 'doc':
+                case 'docx':
+                    return '<i data-lucide="file-text"></i>';
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                    return '<i data-lucide="image"></i>';
+                case 'zip':
+                case 'rar':
+                    return '<i data-lucide="archive"></i>';
+                default:
+                    return '<i data-lucide="file"></i>';
+            }
+        }
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'login.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                    window.location.href = 'login.html';
+                });
+            }
+        }
+        
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+        
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        }
+    </script>
+</body>
+</html>

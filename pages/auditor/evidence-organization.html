@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Organization - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/auditor/evidence-organization.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-auditor">
+    <div class="evidence-organization-container">
+        <!-- Header Section -->
+        <header class="organization-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="folder-open"></i>
+                        Evidence Organization
+                    </h1>
+                    <p class="page-subtitle">Organize and categorize audit evidence by standards and requirements</p>
+                </div>
+                <div class="header-right">
+                    <div class="organization-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Evidence</span>
+                            <span class="stat-value" id="totalEvidence">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Organized</span>
+                            <span class="stat-value" id="organizedEvidence">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Standards</span>
+                            <span class="stat-value" id="activeStandards">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="organization-content">
+            <!-- Organization Controls -->
+            <div class="controls-panel">
+                <div class="panel-header">
+                    <h2>Organization Controls</h2>
+                    <div class="controls-actions">
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.bulkOrganize()">
+                            <i data-lucide="folder-plus"></i>
+                            Bulk Organize
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.autoCategorize()">
+                            <i data-lucide="wand-2"></i>
+                            Auto Categorize
+                        </button>
+                        <button class="btn btn-primary" onclick="evidenceOrganizer.uploadEvidence()">
+                            <i data-lucide="upload"></i>
+                            Upload Evidence
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Standard</label>
+                        <select id="standardFilter" class="filter-select" onchange="evidenceOrganizer.filterEvidence()">
+                            <option value="all">All Standards</option>
+                            <option value="iso_9001">ISO 9001</option>
+                            <option value="iso_14001">ISO 14001</option>
+                            <option value="ohsas_18001">OHSAS 18001</option>
+                            <option value="sa_8000">SA 8000</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select id="statusFilter" class="filter-select" onchange="evidenceOrganizer.filterEvidence()">
+                            <option value="all">All Status</option>
+                            <option value="unorganized">Unorganized</option>
+                            <option value="organized">Organized</option>
+                            <option value="reviewed">Reviewed</option>
+                            <option value="approved">Approved</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Type</label>
+                        <select id="typeFilter" class="filter-select" onchange="evidenceOrganizer.filterEvidence()">
+                            <option value="all">All Types</option>
+                            <option value="document">Document</option>
+                            <option value="photo">Photo</option>
+                            <option value="video">Video</option>
+                            <option value="audio">Audio</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <input type="date" id="startDate" class="filter-input" onchange="evidenceOrganizer.filterEvidence()">
+                        <input type="date" id="endDate" class="filter-input" onchange="evidenceOrganizer.filterEvidence()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Grid -->
+            <div class="evidence-grid-container">
+                <div class="grid-header">
+                    <h2>Evidence Items</h2>
+                    <div class="grid-actions">
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.selectAll()">
+                            <i data-lucide="check-square"></i>
+                            Select All
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.clearSelection()">
+                            <i data-lucide="square"></i>
+                            Clear Selection
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.exportSelected()">
+                            <i data-lucide="download"></i>
+                            Export Selected
+                        </button>
+                    </div>
+                </div>
+
+                <div class="evidence-grid" id="evidenceGrid">
+                    <!-- Evidence items will be populated here -->
+                </div>
+            </div>
+
+            <!-- Organization Panel -->
+            <div class="organization-panel">
+                <div class="panel-header">
+                    <h2>Organization Structure</h2>
+                    <div class="organization-actions">
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.createFolder()">
+                            <i data-lucide="folder-plus"></i>
+                            Create Folder
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceOrganizer.exportStructure()">
+                            <i data-lucide="download"></i>
+                            Export Structure
+                        </button>
+                    </div>
+                </div>
+
+                <div class="organization-tree" id="organizationTree">
+                    <!-- Organization tree will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Evidence Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Upload Evidence</h2>
+                <button class="modal-close" onclick="evidenceOrganizer.closeUploadModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <i data-lucide="upload-cloud"></i>
+                        <h3>Drag & Drop Files Here</h3>
+                        <p>or click to browse files</p>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mp3,.wav" style="display: none;">
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            Choose Files
+                        </button>
+                    </div>
+                </div>
+
+                <div class="upload-preview" id="uploadPreview" style="display: none;">
+                    <h3>Selected Files</h3>
+                    <div class="file-list" id="fileList">
+                        <!-- File previews will be shown here -->
+                    </div>
+                </div>
+
+                <div class="upload-metadata">
+                    <h3>Evidence Metadata</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Standard</label>
+                            <select id="uploadStandard" class="form-select">
+                                <option value="">Select Standard</option>
+                                <option value="iso_9001">ISO 9001 - Quality Management</option>
+                                <option value="iso_14001">ISO 14001 - Environmental Management</option>
+                                <option value="ohsas_18001">OHSAS 18001 - Occupational Health & Safety</option>
+                                <option value="sa_8000">SA 8000 - Social Accountability</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Requirement</label>
+                            <select id="uploadRequirement" class="form-select">
+                                <option value="">Select Requirement</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Evidence Type</label>
+                            <select id="uploadType" class="form-select">
+                                <option value="document">Document</option>
+                                <option value="photo">Photo</option>
+                                <option value="video">Video</option>
+                                <option value="audio">Audio</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea id="uploadDescription" class="form-textarea" rows="3" 
+                                      placeholder="Describe this evidence..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <input type="text" id="uploadTags" class="form-input" 
+                                   placeholder="Enter tags separated by commas">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date Collected</label>
+                            <input type="date" id="uploadDate" class="form-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceOrganizer.closeUploadModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="evidenceOrganizer.processUpload()">Upload Evidence</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Details Modal -->
+    <div id="evidenceDetailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Evidence Details</h2>
+                <button class="modal-close" onclick="evidenceOrganizer.closeDetailsModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="evidence-details" id="evidenceDetails">
+                    <!-- Evidence details will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceOrganizer.closeDetailsModal()">Close</button>
+                <button class="btn btn-outline" onclick="evidenceOrganizer.editEvidence()">Edit</button>
+                <button class="btn btn-primary" onclick="evidenceOrganizer.downloadEvidence()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Folder Modal -->
+    <div id="createFolderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Folder</h2>
+                <button class="modal-close" onclick="evidenceOrganizer.closeCreateFolderModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="folderForm">
+                    <div class="form-group">
+                        <label class="form-label">Folder Name *</label>
+                        <input type="text" id="folderName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parent Folder</label>
+                        <select id="parentFolder" class="form-select">
+                            <option value="">Root Level</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Standard</label>
+                        <select id="folderStandard" class="form-select">
+                            <option value="">No Specific Standard</option>
+                            <option value="iso_9001">ISO 9001</option>
+                            <option value="iso_14001">ISO 14001</option>
+                            <option value="ohsas_18001">OHSAS 18001</option>
+                            <option value="sa_8000">SA 8000</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="folderDescription" class="form-textarea" rows="3" 
+                                  placeholder="Describe this folder's purpose..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceOrganizer.closeCreateFolderModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="evidenceOrganizer.saveFolder()">Create Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Organize Modal -->
+    <div id="bulkOrganizeModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Bulk Organize Evidence</h2>
+                <button class="modal-close" onclick="evidenceOrganizer.closeBulkOrganizeModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-organize-content">
+                    <div class="selected-items">
+                        <h3>Selected Items (<span id="selectedCount">0</span>)</h3>
+                        <div class="selected-list" id="selectedList">
+                            <!-- Selected items will be shown here -->
+                        </div>
+                    </div>
+
+                    <div class="organization-options">
+                        <h3>Organization Options</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Target Folder</label>
+                                <select id="targetFolder" class="form-select">
+                                    <option value="">Select Folder</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Standard</label>
+                                <select id="bulkStandard" class="form-select">
+                                    <option value="">Keep Current</option>
+                                    <option value="iso_9001">ISO 9001</option>
+                                    <option value="iso_14001">ISO 14001</option>
+                                    <option value="ohsas_18001">OHSAS 18001</option>
+                                    <option value="sa_8000">SA 8000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Requirement</label>
+                                <select id="bulkRequirement" class="form-select">
+                                    <option value="">Keep Current</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Add Tags</label>
+                                <input type="text" id="bulkTags" class="form-input" 
+                                       placeholder="Enter tags to add...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceOrganizer.closeBulkOrganizeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="evidenceOrganizer.applyBulkOrganization()">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing evidence...</p>
+        </div>
+    </div>
+
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/auditor/evidence-organization.js"></script>
+</body>
+</html>

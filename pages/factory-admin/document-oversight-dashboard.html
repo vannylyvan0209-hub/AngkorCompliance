@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Oversight Dashboard - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Role-specific styling for factory_admin */
+        body.role-factory-admin {
+            --role-primary: var(--factory-admin-primary);
+            --role-secondary: var(--factory-admin-secondary);
+            --role-accent: var(--factory-admin-accent);
+        }
+
+        
+        .document-oversight {
+            padding: var(--space-4);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .oversight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+        }
+
+        .stat-card.pending::before {
+            background: var(--warning-color);
+        }
+
+        .stat-card.approved::before {
+            background: var(--success-color);
+        }
+
+        .stat-card.rejected::before {
+            background: var(--error-color);
+        }
+
+        .stat-card.overdue::before {
+            background: var(--error-color);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .stat-icon.pending {
+            background: var(--warning-color);
+        }
+
+        .stat-icon.approved {
+            background: var(--success-color);
+        }
+
+        .stat-icon.rejected {
+            background: var(--error-color);
+        }
+
+        .stat-icon.overdue {
+            background: var(--error-color);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--error-color);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-4);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .chart-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .documents-table {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: var(--primary-color);
+            color: white;
+            padding: var(--space-3) var(--space-4);
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px 100px 120px 100px;
+            gap: var(--space-3);
+            align-items: center;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px 100px 120px 100px;
+            gap: var(--space-3);
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .table-row:hover {
+            background: var(--hover-color);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .status-approved {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-rejected {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .status-overdue {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .priority-medium {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .priority-low {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .quick-actions {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .action-item:hover {
+            background: var(--hover-color);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recent-activity {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .activity-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            background: var(--background-color);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .filters-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: var(--space-3);
+            align-items: end;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="role-factory-admin">
+    <div class="document-oversight">
+        <div class="oversight-header">
+            <div>
+                <h1><i data-lucide="file-text"></i> Document Oversight Dashboard</h1>
+                <p>Monitor document processing, approvals, and compliance status</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="exportDocumentData()">
+                    <i data-lucide="download"></i> Export Report
+                </button>
+                <button class="btn btn-primary" onclick="viewAllDocuments()">
+                    <i data-lucide="folder-open"></i> View All Documents
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="pendingDocuments">0</div>
+                        <div class="stat-label">Pending Review</div>
+                        <div class="stat-change positive" id="pendingChange">+12% from last week</div>
+                    </div>
+                    <div class="stat-icon pending">
+                        <i data-lucide="clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card approved">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="approvedDocuments">0</div>
+                        <div class="stat-label">Approved</div>
+                        <div class="stat-change positive" id="approvedChange">+8% from last week</div>
+                    </div>
+                    <div class="stat-icon approved">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card rejected">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="rejectedDocuments">0</div>
+                        <div class="stat-label">Rejected</div>
+                        <div class="stat-change negative" id="rejectedChange">+3% from last week</div>
+                    </div>
+                    <div class="stat-icon rejected">
+                        <i data-lucide="x-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card overdue">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="overdueDocuments">0</div>
+                        <div class="stat-label">Overdue</div>
+                        <div class="stat-change negative" id="overdueChange">+5% from last week</div>
+                    </div>
+                    <div class="stat-icon overdue">
+                        <i data-lucide="alert-triangle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="sidebar"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content"><div class="dashboard-grid">
+            <div class="main-content">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i data-lucide="bar-chart-3"></i> Document Processing Trends</h3>
+                        <select id="chartTimeframe" onchange="updateChart()">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
+                    </div></main>
+                    <div class="chart-container">
+                        <canvas id="documentTrendsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="documents-table">
+                    <div class="table-header">
+                        <div>Document Name</div>
+                        <div>Department</div>
+                        <div>Status</div>
+                        <div>Priority</div>
+                        <div>Submitted</div>
+                        <div>Actions</div>
+                    </div>
+                    <div id="documentsTableBody">
+                        <div class="empty-state">
+                            <i data-lucide="file-text"></i>
+                            <h3>No documents found</h3>
+                            <p>Documents will appear here as they are submitted for review</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="filters-card">
+                    <h3><i data-lucide="filter"></i> Quick Filters</h3>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="statusFilter">Status</label>
+                            <select id="statusFilter" onchange="applyFilters()">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentFilter">Department</label>
+                            <select id="departmentFilter" onchange="applyFilters()">
+                                <option value="">All Departments</option>
+                                <option value="hr">HR</option>
+                                <option value="operations">Operations</option>
+                                <option value="quality">Quality</option>
+                                <option value="safety">Safety</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline" onclick="clearFilters()">
+                            <i data-lucide="refresh-cw"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                    <div class="action-list">
+                        <div class="action-item" onclick="approveAllPending()">
+                            <div class="action-icon">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <div>
+                                <div>Approve All Pending</div>
+                                <small>Bulk approve documents</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="sendReminders()">
+                            <div class="action-icon">
+                                <i data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <div>Send Reminders</div>
+                                <small>Notify overdue documents</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="generateReport()">
+                            <div class="action-icon">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div>
+                                <div>Generate Report</div>
+                                <small>Create compliance report</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="viewAnalytics()">
+                            <div class="action-icon">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+                            <div>
+                                <div>View Analytics</div>
+                                <small>Detailed insights</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3><i data-lucide="activity"></i> Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Safety Policy approved</div>
+                                <div class="activity-time">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i data-lucide="clock"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New document submitted</div>
+                                <div class="activity-time">15 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i data-lucide="x"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Quality report rejected</div>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Document overdue</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/factory-admin/document-oversight-dashboard.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

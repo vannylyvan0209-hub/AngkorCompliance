@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Dashboard - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <style>
+        /* HR Dashboard Specific Styles */
+        .hr-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .hr-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-right {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+        }
+        
+        .stat-number {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+        
+        .stat-trend {
+            font-size: var(--text-sm);
+            margin-top: var(--space-2);
+        }
+        
+        .trend-up {
+            color: var(--success-600);
+        }
+        
+        .trend-down {
+            color: var(--error-600);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+        
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .worker-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .worker-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            background: var(--neutral-50);
+            transition: all 0.2s ease;
+        }
+        
+        .worker-item:hover {
+            background: var(--primary-50);
+        }
+        
+        .worker-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        
+        .worker-info {
+            flex: 1;
+        }
+        
+        .worker-name {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .worker-details {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+        }
+        
+        .worker-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-inactive {
+            background: var(--error-100);
+            color: var(--error-700);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            background: var(--neutral-50);
+            border-left: 4px solid var(--primary-500);
+        }
+        
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            flex-shrink: 0;
+        }
+        
+        .notification-content h4 {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .notification-content p {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            line-height: 1.4;
+        }
+        
+        .notification-time {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            margin-top: var(--space-1);
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-8);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            border: none;
+            padding: var(--space-4) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+        }
+        
+        .action-btn.secondary:hover {
+            background: white;
+            color: var(--neutral-900);
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: var(--space-6);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hr-dashboard {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hr-dashboard">
+        <div class="dashboard-container">
+            <!-- HR Header -->
+            <div class="hr-header fade-in">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>HR Dashboard</h1>
+                        <p>Manage workforce, training, and compliance</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">
+                                <span>HR</span>
+                            </div>
+                            <div>
+                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">HR Staff</div>
+                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">Human Resources</div>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="action-btn secondary" style="padding: var(--space-2) var(--space-4);">
+                            <i data-lucide="log-out"></i>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card slide-in">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: var(--primary-100); color: var(--primary-600);">
+                            <i data-lucide="users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-number" id="totalWorkers">0</div>
+                    <div class="stat-label">Total Workers</div>
+                    <div class="stat-trend trend-up" id="workersTrend">+5% this month</div>
+                </div>
+                
+                <div class="stat-card slide-in">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: var(--success-100); color: var(--success-600);">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-number" id="compliantWorkers">0</div>
+                    <div class="stat-label">Compliant Workers</div>
+                    <div class="stat-trend trend-up" id="complianceTrend">+12% this month</div>
+                </div>
+                
+                <div class="stat-card slide-in">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: var(--warning-100); color: var(--warning-600);">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-number" id="pendingActions">0</div>
+                    <div class="stat-label">Pending Actions</div>
+                    <div class="stat-trend trend-down" id="pendingTrend">-8% this month</div>
+                </div>
+                
+                <div class="stat-card slide-in">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: var(--info-100); color: var(--info-600);">
+                            <i data-lucide="book-open"></i>
+                        </div>
+                    </div>
+                    <div class="stat-number" id="trainingCompleted">0</div>
+                    <div class="stat-label">Training Completed</div>
+                    <div class="stat-trend trend-up" id="trainingTrend">+15% this month</div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i data-lucide="activity"></i>
+                        Workforce Overview
+                    </h2>
+                    
+                    <!-- Worker Distribution Chart -->
+                    <div class="chart-container">
+                        <canvas id="workerDistributionChart"></canvas>
+                    </div>
+                    
+                    <!-- Recent Workers -->
+                    <h3 style="font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); margin: var(--space-6) 0 var(--space-4) 0;">Recent Workers</h3>
+                    <div class="worker-list" id="recentWorkers">
+                        <!-- Worker items will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <!-- Notifications -->
+                    <div class="sidebar-card">
+                        <h3 class="section-title">
+                            <i data-lucide="bell"></i>
+                            Notifications
+                        </h3>
+                        <div id="notificationsList">
+                            <!-- Notifications will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <h3 class="section-title">
+                            <i data-lucide="zap"></i>
+                            Quick Actions
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <button onclick="addNewWorker()" class="action-btn" style="width: 100%; justify-content: flex-start;">
+                                <i data-lucide="user-plus"></i>
+                                Add New Worker
+                            </button>
+                            <button onclick="scheduleTraining()" class="action-btn" style="width: 100%; justify-content: flex-start;">
+                                <i data-lucide="calendar"></i>
+                                Schedule Training
+                            </button>
+                            <button onclick="generateReport()" class="action-btn secondary" style="width: 100%; justify-content: flex-start;">
+                                <i data-lucide="file-text"></i>
+                                Generate Report
+                            </button>
+                            <button onclick="viewCompliance()" class="action-btn secondary" style="width: 100%; justify-content: flex-start;">
+                                <i data-lucide="shield-check"></i>
+                                View Compliance
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Training Progress -->
+                    <div class="sidebar-card">
+                        <h3 class="section-title">
+                            <i data-lucide="book-open"></i>
+                            Training Progress
+                        </h3>
+                        <div id="trainingProgress">
+                            <!-- Training progress will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button onclick="navigateToWorkerManagement()" class="action-btn">
+                    <i data-lucide="users"></i>
+                    Worker Management
+                </button>
+                <button onclick="navigateToTrainingManagement()" class="action-btn">
+                    <i data-lucide="book-open"></i>
+                    Training Management
+                </button>
+                <button onclick="navigateToComplianceMonitoring()" class="action-btn">
+                    <i data-lucide="shield-check"></i>
+                    Compliance Monitoring
+                </button>
+                <button onclick="navigateToHRSettings()" class="action-btn secondary">
+                    <i data-lucide="settings"></i>
+                    HR Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/hr/hr-dashboard.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

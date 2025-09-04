@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Invitation - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="user-plus"></i> User Invitation</h1>
+                    <p>Invite new users to your factory</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Invitation Form -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2><i data-lucide="mail"></i> Send Invitation</h2>
+                </div>
+                <div class="card-body">
+                    <form id="invitationForm">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h3>Basic Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name *</label>
+                                    <input type="text" id="firstName" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name *</label>
+                                    <input type="text" id="lastName" class="form-input" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" class="form-input" required>
+                                <p class="form-help">User will receive invitation at this email address</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-input" placeholder="+855 12 345 678">
+                            </div>
+                        </div>
+
+                        <!-- Role Assignment -->
+                        <div class="form-section">
+                            <h3>Role Assignment</h3>
+                            <div class="form-group">
+                                <label for="userRole">Primary Role *</label>
+                                <select id="userRole" class="form-select" required>
+                                    <option value="">Select a role</option>
+                                    <option value="factory_admin">Factory Administrator</option>
+                                    <option value="compliance_manager">Compliance Manager</option>
+                                    <option value="hr_manager">HR Manager</option>
+                                    <option value="department_head">Department Head</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="worker">Worker</option>
+                                    <option value="auditor">Internal Auditor</option>
+                                    <option value="viewer">Viewer (Read-only)</option>
+                                </select>
+                                <p class="form-help">This role determines the user's access permissions</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select id="department" class="form-select">
+                                    <option value="">Select department</option>
+                                    <option value="production">Production</option>
+                                    <option value="quality">Quality Control</option>
+                                    <option value="hr">Human Resources</option>
+                                    <option value="safety">Health & Safety</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="warehouse">Warehouse</option>
+                                    <option value="office">Office Staff</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="position">Position/Title</label>
+                                <input type="text" id="position" class="form-input" placeholder="e.g., Production Supervisor">
+                            </div>
+                        </div>
+
+                        <!-- Access Permissions -->
+                        <div class="form-section">
+                            <h3>Access Permissions</h3>
+                            <div class="permissions-grid">
+                                <div class="permission-group">
+                                    <h4>Document Management</h4>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewDocuments" class="form-checkbox">
+                                            View Documents
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permUploadDocuments" class="form-checkbox">
+                                            Upload Documents
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permApproveDocuments" class="form-checkbox">
+                                            Approve Documents
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="permission-group">
+                                    <h4>Compliance Management</h4>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewCompliance" class="form-checkbox">
+                                            View Compliance Status
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permManageCAPs" class="form-checkbox">
+                                            Manage CAPs
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewAudits" class="form-checkbox">
+                                            View Audit Results
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="permission-group">
+                                    <h4>User Management</h4>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewUsers" class="form-checkbox">
+                                            View Users
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permInviteUsers" class="form-checkbox">
+                                            Invite Users
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permManageRoles" class="form-checkbox">
+                                            Manage Roles
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="permission-group">
+                                    <h4>Reports & Analytics</h4>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewReports" class="form-checkbox">
+                                            View Reports
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permExportData" class="form-checkbox">
+                                            Export Data
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="permViewAnalytics" class="form-checkbox">
+                                            View Analytics
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invitation Settings -->
+                        <div class="form-section">
+                            <h3>Invitation Settings</h3>
+                            <div class="form-group">
+                                <label for="invitationMessage">Personal Message (Optional)</label>
+                                <textarea id="invitationMessage" class="form-textarea" rows="3" 
+                                    placeholder="Add a personal message to the invitation email..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="expiryDays">Invitation Expiry (Days)</label>
+                                <select id="expiryDays" class="form-select">
+                                    <option value="7">7 days</option>
+                                    <option value="14" selected>14 days</option>
+                                    <option value="30">30 days</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" id="sendWelcomeEmail" class="form-checkbox" checked>
+                                    Send welcome email with platform introduction
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" id="requireMFA" class="form-checkbox">
+                                    Require Multi-Factor Authentication
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="saveDraft()">
+                                <i data-lucide="save"></i> Save Draft
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="previewInvitation()">
+                                <i data-lucide="eye"></i> Preview
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="send"></i> Send Invitation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Invitation Preview -->
+            <div class="content-card" id="invitationPreview" style="display: none;">
+                <div class="card-header">
+                    <h2><i data-lucide="eye"></i> Invitation Preview</h2>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary" onclick="hidePreview()">
+                            <i data-lucide="x"></i> Close Preview
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="email-preview">
+                        <div class="email-header">
+                            <h3>Invitation to Join Angkor Compliance Platform</h3>
+                            <p><strong>To:</strong> <span id="previewEmail"></span></p>
+                            <p><strong>Subject:</strong> You're invited to join our compliance platform</p>
+                        </div>
+                        <div class="email-content" id="previewContent">
+                            <!-- Email content will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Role Templates Modal -->
+    <div id="roleTemplatesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="users"></i> Role Templates</h2>
+                <button class="modal-close" onclick="closeModal('roleTemplatesModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="templates-grid">
+                    <div class="template-item" onclick="applyTemplate('factory_admin')">
+                        <div class="template-header">
+                            <h4>Factory Administrator</h4>
+                            <span class="template-badge">Full Access</span>
+                        </div>
+                        <div class="template-description">
+                            Complete access to all factory operations and settings
+                        </div>
+                        <div class="template-permissions">
+                            <span class="permission-tag">All Permissions</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-item" onclick="applyTemplate('compliance_manager')">
+                        <div class="template-header">
+                            <h4>Compliance Manager</h4>
+                            <span class="template-badge">Compliance Focus</span>
+                        </div>
+                        <div class="template-description">
+                            Manage compliance documents, CAPs, and audit processes
+                        </div>
+                        <div class="template-permissions">
+                            <span class="permission-tag">Documents</span>
+                            <span class="permission-tag">CAPs</span>
+                            <span class="permission-tag">Audits</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-item" onclick="applyTemplate('hr_manager')">
+                        <div class="template-header">
+                            <h4>HR Manager</h4>
+                            <span class="template-badge">HR Focus</span>
+                        </div>
+                        <div class="template-description">
+                            Manage employee data, training, and HR-related compliance
+                        </div>
+                        <div class="template-permissions">
+                            <span class="permission-tag">Users</span>
+                            <span class="permission-tag">Training</span>
+                            <span class="permission-tag">Reports</span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-item" onclick="applyTemplate('supervisor')">
+                        <div class="template-header">
+                            <h4>Supervisor</h4>
+                            <span class="template-badge">Limited Access</span>
+                        </div>
+                        <div class="template-description">
+                            Basic access to view documents and submit reports
+                        </div>
+                        <div class="template-permissions">
+                            <span class="permission-tag">View Documents</span>
+                            <span class="permission-tag">Upload</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Invitation Modal -->
+    <div id="bulkInvitationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="users"></i> Bulk User Invitation</h2>
+                <button class="modal-close" onclick="closeModal('bulkInvitationModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="bulkEmails">Email Addresses</label>
+                    <textarea id="bulkEmails" class="form-textarea" rows="5" 
+                        placeholder="Enter email addresses (one per line)&#10;example@factory.com&#10;user@company.com"></textarea>
+                    <p class="form-help">Enter one email address per line</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkRole">Default Role</label>
+                    <select id="bulkRole" class="form-select">
+                        <option value="worker">Worker</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkDepartment">Default Department</label>
+                    <select id="bulkDepartment" class="form-select">
+                        <option value="">No Department</option>
+                        <option value="production">Production</option>
+                        <option value="quality">Quality Control</option>
+                        <option value="hr">Human Resources</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('bulkInvitationModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="sendBulkInvitations()">Send Invitations</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/user-invitation-modal.js"></script>
+</body>
+</html>

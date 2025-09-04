@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Configuration - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+
+        
+        .standard-configuration {
+            padding: var(--space-4);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .configuration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .configuration-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-4);
+        }
+
+        .standards-list {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .list-header {
+            background: var(--primary-color);
+            color: white;
+            padding: var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            gap: var(--space-2);
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: var(--space-2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .standards-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .standard-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .standard-item:hover {
+            background: var(--hover-color);
+        }
+
+        .standard-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .standard-item.active .standard-details {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .standard-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .standard-item.active .standard-icon {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .standard-info {
+            flex: 1;
+        }
+
+        .standard-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .standard-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .standard-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-draft {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .status-inactive {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .standard-form {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            height: fit-content;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: var(--space-4);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: var(--space-1);
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-2);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--background-color);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .requirements-section {
+            margin-top: var(--space-4);
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-2);
+            background: var(--background-color);
+        }
+
+        .requirement-info {
+            flex: 1;
+        }
+
+        .requirement-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .requirement-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .requirement-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .standard-categories {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+
+        .category-tag {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .version-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .version-badge {
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .standard-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-2);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .add-requirement-btn {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .add-requirement-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body class="role-super-admin">
+    <div class="standard-configuration">
+        <div class="configuration-header">
+            <div>
+                <h1><i data-lucide="shield"></i> Standard Configuration</h1>
+                <p>Manage compliance standards and requirements</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="exportStandards()">
+                    <i data-lucide="download"></i> Export
+                </button>
+                <button class="btn btn-primary" onclick="addNewStandard()">
+                    <i data-lucide="plus"></i> Add Standard
+                </button>
+            </div>
+        </div>
+
+        <div class="configuration-grid">
+            <div class="standards-list">
+                <div class="list-header">
+                    <div class="search-box">
+                        <input type="text" id="searchStandards" placeholder="Search standards...">
+                        <button class="btn btn-sm btn-outline" onclick="searchStandards()">
+                            <i data-lucide="search"></i>
+                        </button>
+                    </div>
+                    <select id="categoryFilter" onchange="filterStandards()">
+                        <option value="">All Categories</option>
+                        <option value="quality">Quality Management</option>
+                        <option value="environmental">Environmental</option>
+                        <option value="safety">Health & Safety</option>
+                        <option value="social">Social Accountability</option>
+                        <option value="organic">Organic & Fair Trade</option>
+                    </select>
+                </div>
+                <div class="standards-container" id="standardsContainer">
+                    <div class="empty-state">
+                        <i data-lucide="shield"></i>
+                        <h3>No standards found</h3>
+                        <p>Add your first compliance standard to get started</p>
+                        <button class="btn btn-primary" onclick="addNewStandard()">
+                            <i data-lucide="plus"></i> Add First Standard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="standard-form">
+                <div id="noStandardSelected" class="empty-state">
+                    <i data-lucide="edit"></i>
+                    <h3>Select a Standard</h3>
+                    <p>Choose a standard from the list to edit its configuration</p>
+                </div>
+
+                <div id="standardForm" style="display: none;">
+                    <div class="form-header">
+                        <h3><i data-lucide="edit"></i> Edit Standard</h3>
+                        <button class="btn btn-sm btn-outline" onclick="duplicateStandard()">
+                            <i data-lucide="copy"></i> Duplicate
+                        </button>
+                    </div>
+
+                    <form id="standardConfigurationForm">
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="info"></i>
+                                Basic Information
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="standardName">Standard Name *</label>
+                                    <input type="text" id="standardName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="standardCode">Standard Code *</label>
+                                    <input type="text" id="standardCode" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="standardCategory">Category *</label>
+                                    <select id="standardCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="quality">Quality Management</option>
+                                        <option value="environmental">Environmental</option>
+                                        <option value="safety">Health & Safety</option>
+                                        <option value="social">Social Accountability</option>
+                                        <option value="organic">Organic & Fair Trade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="standardVersion">Version *</label>
+                                    <input type="text" id="standardVersion" placeholder="e.g., 2021" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="standardDescription">Description</label>
+                                    <textarea id="standardDescription" rows="3" placeholder="Brief description of the standard"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="settings"></i>
+                                Configuration
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="standardStatus">Status</label>
+                                    <select id="standardStatus">
+                                        <option value="active">Active</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="auditFrequency">Default Audit Frequency</label>
+                                    <select id="auditFrequency">
+                                        <option value="">Select Frequency</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="quarterly">Quarterly</option>
+                                        <option value="semi-annually">Semi-Annually</option>
+                                        <option value="annually">Annually</option>
+                                        <option value="biennially">Biennially</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="certificationBody">Certification Body</label>
+                                    <input type="text" id="certificationBody" placeholder="e.g., ISO, BSI">
+                                </div>
+                                <div class="form-group">
+                                    <label for="validityPeriod">Validity Period (months)</label>
+                                    <input type="number" id="validityPeriod" min="1" placeholder="12">
+                                </div>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresTraining">
+                                <label for="requiresTraining">Requires training program</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresDocumentation">
+                                <label for="requiresDocumentation">Requires documentation system</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="requiresAudit">
+                                <label for="requiresAudit">Requires external audit</label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="list-check"></i>
+                                Requirements
+                            </div>
+                            <div id="requirementsList">
+                                <!-- Requirements will be dynamically added here -->
+                            </div>
+                            <button type="button" class="add-requirement-btn" onclick="addRequirement()">
+                                <i data-lucide="plus"></i>
+                                Add Requirement
+                            </button>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">
+                                <i data-lucide="link"></i>
+                                References & Links
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="officialWebsite">Official Website</label>
+                                    <input type="url" id="officialWebsite" placeholder="https://example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="documentationUrl">Documentation URL</label>
+                                    <input type="url" id="documentationUrl" placeholder="https://docs.example.com">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="additionalNotes">Additional Notes</label>
+                                    <textarea id="additionalNotes" rows="3" placeholder="Any additional notes or references"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="resetForm()">
+                                <i data-lucide="refresh-cw"></i> Reset
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="deleteStandard()">
+                                <i data-lucide="trash-2"></i> Delete
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="save"></i> Save Standard
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Requirement Modal -->
+    <div id="requirementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="list-check"></i> Add Requirement</h3>
+                <button class="modal-close" onclick="closeModal('requirementModal')">&times;</button>
+            </div>
+            <form id="requirementForm">
+                <div class="form-group">
+                    <label for="requirementTitle">Requirement Title *</label>
+                    <input type="text" id="requirementTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="requirementDescription">Description</label>
+                    <textarea id="requirementDescription" rows="3" placeholder="Detailed description of the requirement"></textarea>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="requirementType">Type</label>
+                        <select id="requirementType">
+                            <option value="mandatory">Mandatory</option>
+                            <option value="recommended">Recommended</option>
+                            <option value="optional">Optional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="requirementPriority">Priority</label>
+                        <select id="requirementPriority">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('requirementModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="plus"></i> Add Requirement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/super-admin/standard-configuration.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Management - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="role-super-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="credit-card"></i> Billing Management</h1>
+                    <p>Manage subscriptions, payments, and billing oversight</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Super Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Billing Overview -->
+            <section class="billing-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Revenue</h3>
+                            <div class="card-value">$124,750</div>
+                            <div class="card-change positive">+12.5% vs last month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Subscriptions</h3>
+                            <div class="card-value">24</div>
+                            <div class="card-change positive">+2 this month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Payment Issues</h3>
+                            <div class="card-value">3</div>
+                            <div class="card-change negative">+1 this week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Upcoming Renewals</h3>
+                            <div class="card-value">8</div>
+                            <div class="card-change">Next 30 days</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Revenue Chart -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="trending-up"></i> Revenue Trends</h2>
+                            <div class="card-actions">
+                                <select id="revenuePeriod" class="form-select">
+                                    <option value="12">Last 12 Months</option>
+                                    <option value="6">Last 6 Months</option>
+                                    <option value="3">Last 3 Months</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Management -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="users"></i> Subscription Management</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="addNewSubscription()">
+                                    <i data-lucide="plus"></i> Add Subscription
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Factory</th>
+                                            <th>Plan</th>
+                                            <th>Status</th>
+                                            <th>Billing Cycle</th>
+                                            <th>Amount</th>
+                                            <th>Next Billing</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="subscriptionsTable">
+                                        <!-- Subscription data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Processing -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="credit-card"></i> Payment Processing</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" onclick="refreshPayments()">
+                                    <i data-lucide="refresh-cw"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Factory</th>
+                                            <th>Invoice #</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Due Date</th>
+                                            <th>Payment Method</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentsTable">
+                                        <!-- Payment data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Billing Plans -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="package"></i> Billing Plans</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="plan-list">
+                                <div class="plan-item">
+                                    <div class="plan-header">
+                                        <h4>Basic Plan</h4>
+                                        <span class="plan-price">$99/month</span>
+                                    </div>
+                                    <div class="plan-features">
+                                        <ul>
+                                            <li>Up to 50 users</li>
+                                            <li>Basic compliance tools</li>
+                                            <li>Email support</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <button class="btn btn-sm btn-outline" onclick="editPlan('basic')">Edit</button>
+                                        <button class="btn btn-sm btn-primary" onclick="viewPlanDetails('basic')">Details</button>
+                                    </div>
+                                </div>
+
+                                <div class="plan-item">
+                                    <div class="plan-header">
+                                        <h4>Professional Plan</h4>
+                                        <span class="plan-price">$299/month</span>
+                                    </div>
+                                    <div class="plan-features">
+                                        <ul>
+                                            <li>Up to 200 users</li>
+                                            <li>Advanced compliance tools</li>
+                                            <li>Priority support</li>
+                                            <li>Custom integrations</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <button class="btn btn-sm btn-outline" onclick="editPlan('professional')">Edit</button>
+                                        <button class="btn btn-sm btn-primary" onclick="viewPlanDetails('professional')">Details</button>
+                                    </div>
+                                </div>
+
+                                <div class="plan-item">
+                                    <div class="plan-header">
+                                        <h4>Enterprise Plan</h4>
+                                        <span class="plan-price">$599/month</span>
+                                    </div>
+                                    <div class="plan-features">
+                                        <ul>
+                                            <li>Unlimited users</li>
+                                            <li>Full compliance suite</li>
+                                            <li>24/7 support</li>
+                                            <li>Custom development</li>
+                                            <li>Dedicated account manager</li>
+                                        </ul>
+                                    </div>
+                                    <div class="plan-actions">
+                                        <button class="btn btn-sm btn-outline" onclick="editPlan('enterprise')">Edit</button>
+                                        <button class="btn btn-sm btn-primary" onclick="viewPlanDetails('enterprise')">Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="generateInvoice()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Generate Invoice</span>
+                                </button>
+                                <button class="action-btn" onclick="sendPaymentReminder()">
+                                    <i data-lucide="mail"></i>
+                                    <span>Send Reminders</span>
+                                </button>
+                                <button class="action-btn" onclick="exportBillingData()">
+                                    <i data-lucide="download"></i>
+                                    <span>Export Data</span>
+                                </button>
+                                <button class="action-btn" onclick="viewBillingReports()">
+                                    <i data-lucide="bar-chart-3"></i>
+                                    <span>View Reports</span>
+                                </button>
+                                <button class="action-btn" onclick="manageDiscounts()">
+                                    <i data-lucide="percent"></i>
+                                    <span>Manage Discounts</span>
+                                </button>
+                                <button class="action-btn" onclick="configureTaxRates()">
+                                    <i data-lucide="calculator"></i>
+                                    <span>Tax Settings</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="activity"></i> Recent Activity</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-list" id="recentActivity">
+                                <!-- Activity items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Subscription Modal -->
+    <div id="addSubscriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="plus"></i> Add New Subscription</h2>
+                <button class="modal-close" onclick="closeModal('addSubscriptionModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="subscriptionForm">
+                    <div class="form-group">
+                        <label for="factorySelect">Factory</label>
+                        <select id="factorySelect" class="form-select" required>
+                            <option value="">Select Factory</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="planSelect">Billing Plan</label>
+                        <select id="planSelect" class="form-select" required>
+                            <option value="">Select Plan</option>
+                            <option value="basic">Basic Plan - $99/month</option>
+                            <option value="professional">Professional Plan - $299/month</option>
+                            <option value="enterprise">Enterprise Plan - $599/month</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="billingCycle">Billing Cycle</label>
+                        <select id="billingCycle" class="form-select" required>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="annually">Annually</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discountCode">Discount Code (Optional)</label>
+                        <input type="text" id="discountCode" class="form-input" placeholder="Enter discount code">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" class="form-textarea" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addSubscriptionModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSubscription()">Add Subscription</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Details Modal -->
+    <div id="paymentDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="credit-card"></i> Payment Details</h2>
+                <button class="modal-close" onclick="closeModal('paymentDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="paymentDetailsContent">
+                <!-- Payment details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('paymentDetailsModal')">Close</button>
+                <button class="btn btn-primary" onclick="processPayment()">Process Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/billing-management.js"></script>
+</body>
+</html>

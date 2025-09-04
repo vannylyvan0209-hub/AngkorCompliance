@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Checklist Generator - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/auditor/audit-checklist-generator.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="checklist-generator-container">
+        <!-- Header Section -->
+        <header class="generator-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="list-checks"></i>
+                        Audit Checklist Generator
+                    </h1>
+                    <p class="page-subtitle">Generate comprehensive audit checklists based on standards and requirements</p>
+                </div>
+                <div class="header-right">
+                    <div class="generator-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Templates</span>
+                            <span class="stat-value" id="totalTemplates">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Generated</span>
+                            <span class="stat-value" id="generatedChecklists">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Standards</span>
+                            <span class="stat-value" id="availableStandards">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="generator-content">
+            <!-- Checklist Configuration Panel -->
+            <div class="configuration-panel">
+                <div class="panel-header">
+                    <h2>Checklist Configuration</h2>
+                    <div class="configuration-actions">
+                        <button class="btn btn-outline" onclick="checklistGenerator.loadTemplate()">
+                            <i data-lucide="file-text"></i>
+                            Load Template
+                        </button>
+                        <button class="btn btn-outline" onclick="checklistGenerator.saveTemplate()">
+                            <i data-lucide="save"></i>
+                            Save Template
+                        </button>
+                        <button class="btn btn-primary" onclick="checklistGenerator.generateChecklist()">
+                            <i data-lucide="play"></i>
+                            Generate Checklist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Configuration Form -->
+                <div class="configuration-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Checklist Name *</label>
+                            <input type="text" id="checklistName" class="form-input" placeholder="Enter checklist name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Audit Standard *</label>
+                            <select id="auditStandard" class="form-select" onchange="checklistGenerator.updateRequirements()" required>
+                                <option value="">Select Standard</option>
+                                <option value="iso_9001">ISO 9001 - Quality Management</option>
+                                <option value="iso_14001">ISO 14001 - Environmental Management</option>
+                                <option value="ohsas_18001">OHSAS 18001 - Occupational Health & Safety</option>
+                                <option value="sa_8000">SA 8000 - Social Accountability</option>
+                                <option value="custom">Custom Standard</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Audit Type</label>
+                            <select id="auditType" class="form-select">
+                                <option value="">Select Type</option>
+                                <option value="internal">Internal Audit</option>
+                                <option value="external">External Audit</option>
+                                <option value="surveillance">Surveillance Audit</option>
+                                <option value="certification">Certification Audit</option>
+                                <option value="follow_up">Follow-up Audit</option>
+                                <option value="special">Special Investigation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Scope</label>
+                            <select id="auditScope" class="form-select">
+                                <option value="">Select Scope</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <select id="department" class="form-select">
+                                <option value="">Select Department</option>
+                                <option value="all">All Departments</option>
+                                <option value="production">Production</option>
+                                <option value="quality">Quality Control</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="warehouse">Warehouse</option>
+                                <option value="office">Office</option>
+                                <option value="hr">Human Resources</option>
+                                <option value="safety">Safety</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Checklist Level</label>
+                            <select id="checklistLevel" class="form-select">
+                                <option value="basic">Basic</option>
+                                <option value="standard" selected>Standard</option>
+                                <option value="comprehensive">Comprehensive</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requirements Selection -->
+            <div class="requirements-panel">
+                <div class="panel-header">
+                    <h2>Requirements Selection</h2>
+                    <div class="requirements-actions">
+                        <button class="btn btn-outline" onclick="checklistGenerator.selectAllRequirements()">
+                            <i data-lucide="check-square"></i>
+                            Select All
+                        </button>
+                        <button class="btn btn-outline" onclick="checklistGenerator.clearAllRequirements()">
+                            <i data-lucide="square"></i>
+                            Clear All
+                        </button>
+                        <button class="btn btn-outline" onclick="checklistGenerator.filterRequirements()">
+                            <i data-lucide="filter"></i>
+                            Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Requirements Grid -->
+                <div class="requirements-grid" id="requirementsGrid">
+                    <!-- Requirements will be populated here -->
+                </div>
+            </div>
+
+            <!-- Generated Checklist Preview -->
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <h2>Checklist Preview</h2>
+                    <div class="preview-actions">
+                        <button class="btn btn-outline" onclick="checklistGenerator.exportChecklist('pdf')">
+                            <i data-lucide="file-text"></i>
+                            Export PDF
+                        </button>
+                        <button class="btn btn-outline" onclick="checklistGenerator.exportChecklist('excel')">
+                            <i data-lucide="file-spreadsheet"></i>
+                            Export Excel
+                        </button>
+                        <button class="btn btn-outline" onclick="checklistGenerator.printChecklist()">
+                            <i data-lucide="printer"></i>
+                            Print
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Checklist Preview Content -->
+                <div class="checklist-preview" id="checklistPreview">
+                    <!-- Generated checklist will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Selection Modal -->
+    <div id="templateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Select Template</h2>
+                <button class="modal-close" onclick="checklistGenerator.closeTemplateModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="template-grid" id="templateGrid">
+                    <!-- Templates will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="checklistGenerator.closeTemplateModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Template Modal -->
+    <div id="saveTemplateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Save Template</h2>
+                <button class="modal-close" onclick="checklistGenerator.closeSaveModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="templateForm">
+                    <div class="form-group">
+                        <label class="form-label">Template Name *</label>
+                        <input type="text" id="templateName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="templateDescription" class="form-textarea" rows="3" 
+                                  placeholder="Describe this template..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="templateCategory" class="form-select">
+                            <option value="general">General</option>
+                            <option value="quality">Quality Management</option>
+                            <option value="environmental">Environmental</option>
+                            <option value="safety">Health & Safety</option>
+                            <option value="social">Social Accountability</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <input type="text" id="templateTags" class="form-input" 
+                               placeholder="Enter tags separated by commas">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="checklistGenerator.closeSaveModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="checklistGenerator.saveTemplateToDatabase()">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Requirements Modal -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Filter Requirements</h2>
+                <button class="modal-close" onclick="checklistGenerator.closeFilterModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-options">
+                    <div class="form-group">
+                        <label class="form-label">Priority Level</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="priorityHigh" value="high">
+                                High Priority
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="priorityMedium" value="medium" checked>
+                                Medium Priority
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="priorityLow" value="low">
+                                Low Priority
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Requirement Type</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="typeMandatory" value="mandatory" checked>
+                                Mandatory
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="typeRecommended" value="recommended" checked>
+                                Recommended
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="typeOptional" value="optional">
+                                Optional
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Search Keywords</label>
+                        <input type="text" id="searchKeywords" class="form-input" 
+                               placeholder="Enter keywords to search...">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="checklistGenerator.closeFilterModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="checklistGenerator.applyFilter()">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Generating checklist...</p>
+        </div>
+    </div>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auditor/audit-checklist-generator.js"></script>
+</body>
+</html>

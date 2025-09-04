@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Management - Angkor Compliance</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="container">
+        <header class="page-header">
+            <h1>Factory Management</h1>
+            <p>Manage factory registrations and compliance</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a> > <a href="super-admin-dashboard.html">System Overview</a> > Factory Management
+        </nav>
+
+        <div class="actions-bar">
+            <button class="btn btn-primary" onclick="openAddFactoryModal()">
+                <i data-lucide="plus"></i> Add New Factory
+            </button>
+            <button class="btn btn-secondary" onclick="exportFactories()">
+                <i data-lucide="download"></i> Export
+            </button>
+        </div>
+
+        <div class="filters">
+            <select id="status-filter" onchange="filterFactories()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="suspended">Suspended</option>
+            </select>
+            <input type="text" id="search-factory" placeholder="Search factories..." onkeyup="searchFactories()">
+        </div>
+
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Factory Name</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Users</th>
+                        <th>Compliance</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="factories-table">
+                    <tr>
+                        <td>ABC Garment Factory</td>
+                        <td>Phnom Penh, Cambodia</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>25</td>
+                        <td>92%</td>
+                        <td>2024-01-15</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewFactory('abc-001')">
+                                <i data-lucide="eye"></i>
+                            </button>
+                            <button class="btn-icon" onclick="editFactory('abc-001')">
+                                <i data-lucide="edit"></i>
+                            </button>
+                            <button class="btn-icon" onclick="suspendFactory('abc-001')">
+                                <i data-lucide="pause"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>XYZ Textile Factory</td>
+                        <td>Siem Reap, Cambodia</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>15</td>
+                        <td>78%</td>
+                        <td>2024-01-14</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewFactory('xyz-002')">
+                                <i data-lucide="eye"></i>
+                            </button>
+                            <button class="btn-icon" onclick="editFactory('xyz-002')">
+                                <i data-lucide="edit"></i>
+                            </button>
+                            <button class="btn-icon" onclick="approveFactory('xyz-002')">
+                                <i data-lucide="check"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEF Manufacturing</td>
+                        <td>Battambang, Cambodia</td>
+                        <td><span class="status-badge status-suspended">Suspended</span></td>
+                        <td>8</td>
+                        <td>45%</td>
+                        <td>2024-01-10</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewFactory('def-003')">
+                                <i data-lucide="eye"></i>
+                            </button>
+                            <button class="btn-icon" onclick="editFactory('def-003')">
+                                <i data-lucide="edit"></i>
+                            </button>
+                            <button class="btn-icon" onclick="reactivateFactory('def-003')">
+                                <i data-lucide="play"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button class="btn btn-secondary">Previous</button>
+            <span class="page-info">Page 1 of 1</span>
+            <button class="btn btn-secondary">Next</button>
+        </div>
+    </div>
+
+    <!-- Add Factory Modal -->
+    <div id="add-factory-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Factory</h3>
+                <button class="close-btn" onclick="closeAddFactoryModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-factory-form">
+                    <div class="form-group">
+                        <label for="factory-name">Factory Name</label>
+                        <input type="text" id="factory-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="factory-location">Location</label>
+                        <input type="text" id="factory-location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="factory-email">Contact Email</label>
+                        <input type="email" id="factory-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="factory-phone">Contact Phone</label>
+                        <input type="tel" id="factory-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="factory-type">Factory Type</label>
+                        <select id="factory-type" required>
+                            <option value="">Select Type</option>
+                            <option value="garment">Garment</option>
+                            <option value="textile">Textile</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddFactoryModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveFactory()">Save Factory</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function openAddFactoryModal() {
+            document.getElementById('add-factory-modal').style.display = 'block';
+        }
+
+        function closeAddFactoryModal() {
+            document.getElementById('add-factory-modal').style.display = 'none';
+            document.getElementById('add-factory-form').reset();
+        }
+
+        function saveFactory() {
+            const form = document.getElementById('add-factory-form');
+            if (form.checkValidity()) {
+                // Here you would save to Firebase
+                alert('Factory added successfully!');
+                closeAddFactoryModal();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        function viewFactory(id) {
+            alert(`Viewing factory ${id}`);
+        }
+
+        function editFactory(id) {
+            alert(`Editing factory ${id}`);
+        }
+
+        function suspendFactory(id) {
+            if (confirm('Are you sure you want to suspend this factory?')) {
+                alert(`Factory ${id} suspended`);
+            }
+        }
+
+        function approveFactory(id) {
+            alert(`Factory ${id} approved`);
+        }
+
+        function reactivateFactory(id) {
+            alert(`Factory ${id} reactivated`);
+        }
+
+        function filterFactories() {
+            const status = document.getElementById('status-filter').value;
+            // Implement filtering logic
+            console.log('Filtering by status:', status);
+        }
+
+        function searchFactories() {
+            const search = document.getElementById('search-factory').value;
+            // Implement search logic
+            console.log('Searching for:', search);
+        }
+
+        function exportFactories() {
+            alert('Exporting factories data...');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Linking - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/auditor/evidence-linking.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-auditor">
+    <div class="evidence-linking-container">
+        <!-- Header Section -->
+        <header class="linking-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="link"></i>
+                        Evidence Linking
+                    </h1>
+                    <p class="page-subtitle">Link evidence items to compliance requirements and standards</p>
+                </div>
+                <div class="header-right">
+                    <div class="linking-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Unlinked Evidence</span>
+                            <span class="stat-value" id="unlinkedEvidence">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Linked Today</span>
+                            <span class="stat-value" id="linkedToday">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Coverage Rate</span>
+                            <span class="stat-value" id="coverageRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="linking-content">
+            <!-- Linking Controls -->
+            <div class="controls-panel">
+                <div class="panel-header">
+                    <h2>Linking Controls</h2>
+                    <div class="controls-actions">
+                        <button class="btn btn-outline" onclick="evidenceLinker.bulkLink()">
+                            <i data-lucide="link-2"></i>
+                            Bulk Link
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceLinker.autoLink()">
+                            <i data-lucide="wand-2"></i>
+                            Auto Link
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceLinker.exportLinkingReport()">
+                            <i data-lucide="download"></i>
+                            Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="evidenceLinker.startLinking()">
+                            <i data-lucide="play"></i>
+                            Start Linking
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Linking Status</label>
+                        <select id="linkingStatusFilter" class="filter-select" onchange="evidenceLinker.filterEvidence()">
+                            <option value="all">All Status</option>
+                            <option value="unlinked">Unlinked</option>
+                            <option value="linked">Linked</option>
+                            <option value="partially_linked">Partially Linked</option>
+                            <option value="verified">Verified</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Standard</label>
+                        <select id="standardFilter" class="filter-select" onchange="evidenceLinker.filterEvidence()">
+                            <option value="all">All Standards</option>
+                            <option value="iso_9001">ISO 9001</option>
+                            <option value="iso_14001">ISO 14001</option>
+                            <option value="ohsas_18001">OHSAS 18001</option>
+                            <option value="sa_8000">SA 8000</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Evidence Type</label>
+                        <select id="evidenceTypeFilter" class="filter-select" onchange="evidenceLinker.filterEvidence()">
+                            <option value="all">All Types</option>
+                            <option value="document">Document</option>
+                            <option value="photo">Photo</option>
+                            <option value="video">Video</option>
+                            <option value="audio">Audio</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Requirement Category</label>
+                        <select id="requirementCategoryFilter" class="filter-select" onchange="evidenceLinker.filterEvidence()">
+                            <option value="all">All Categories</option>
+                            <option value="policy">Policy</option>
+                            <option value="procedure">Procedure</option>
+                            <option value="record">Record</option>
+                            <option value="training">Training</option>
+                            <option value="monitoring">Monitoring</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <input type="date" id="startDate" class="filter-input" onchange="evidenceLinker.filterEvidence()">
+                        <input type="date" id="endDate" class="filter-input" onchange="evidenceLinker.filterEvidence()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Linking Interface -->
+            <div class="linking-interface">
+                <!-- Evidence Panel -->
+                <div class="evidence-panel">
+                    <div class="panel-header">
+                        <h2>Evidence Items</h2>
+                        <div class="panel-actions">
+                            <button class="btn btn-outline" onclick="evidenceLinker.selectAll()">
+                                <i data-lucide="check-square"></i>
+                                Select All
+                            </button>
+                            <button class="btn btn-outline" onclick="evidenceLinker.clearSelection()">
+                                <i data-lucide="square"></i>
+                                Clear Selection
+                            </button>
+                            <button class="btn btn-outline" onclick="evidenceLinker.viewUnlinked()">
+                                <i data-lucide="eye"></i>
+                                View Unlinked
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="evidence-list" id="evidenceList">
+                        <!-- Evidence items will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Requirements Panel -->
+                <div class="requirements-panel">
+                    <div class="panel-header">
+                        <h2>Compliance Requirements</h2>
+                        <div class="panel-actions">
+                            <button class="btn btn-outline" onclick="evidenceLinker.searchRequirements()">
+                                <i data-lucide="search"></i>
+                                Search
+                            </button>
+                            <button class="btn btn-outline" onclick="evidenceLinker.viewRequirementsTree()">
+                                <i data-lucide="tree-pine"></i>
+                                Tree View
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="requirements-tree" id="requirementsTree">
+                        <!-- Requirements tree will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Linking Panel -->
+                <div class="linking-panel">
+                    <div class="panel-header">
+                        <h2>Linking Management</h2>
+                        <div class="panel-actions">
+                            <button class="btn btn-outline" onclick="evidenceLinker.clearLinks()">
+                                <i data-lucide="unlink"></i>
+                                Clear Links
+                            </button>
+                            <button class="btn btn-outline" onclick="evidenceLinker.verifyLinks()">
+                                <i data-lucide="check-circle"></i>
+                                Verify Links
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="linking-workspace" id="linkingWorkspace">
+                        <!-- Linking workspace will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Linking Analytics -->
+            <div class="linking-analytics">
+                <div class="analytics-header">
+                    <h2>Linking Analytics</h2>
+                    <div class="analytics-actions">
+                        <button class="btn btn-outline" onclick="evidenceLinker.generateCoverageReport()">
+                            <i data-lucide="bar-chart-3"></i>
+                            Coverage Report
+                        </button>
+                        <button class="btn btn-outline" onclick="evidenceLinker.viewLinkingHistory()">
+                            <i data-lucide="history"></i>
+                            Linking History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Standard Coverage</h3>
+                        <div class="coverage-chart" id="standardCoverage">
+                            <!-- Coverage chart will be populated here -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Requirement Status</h3>
+                        <div class="requirement-status" id="requirementStatus">
+                            <!-- Requirement status will be populated here -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Recent Links</h3>
+                        <div class="recent-links" id="recentLinks">
+                            <!-- Recent links will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linking Modal -->
+    <div id="linkingModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Link Evidence to Requirements</h2>
+                <button class="modal-close" onclick="evidenceLinker.closeLinkingModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="linking-content-grid">
+                    <!-- Evidence Details -->
+                    <div class="evidence-details-section">
+                        <h3>Evidence Details</h3>
+                        <div class="evidence-preview-large" id="evidencePreview">
+                            <!-- Evidence preview will be shown here -->
+                        </div>
+                        <div class="evidence-info">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>File Name:</label>
+                                    <span id="evidenceFileName"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>File Type:</label>
+                                    <span id="evidenceFileType"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Current Standard:</label>
+                                    <span id="evidenceStandard"></span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Current Requirements:</label>
+                                    <span id="evidenceRequirements"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requirements Selection -->
+                    <div class="requirements-selection-section">
+                        <h3>Select Requirements</h3>
+                        <div class="requirement-filters">
+                            <div class="filter-group">
+                                <label class="filter-label">Standard</label>
+                                <select id="linkStandard" class="form-select" onchange="evidenceLinker.updateRequirements()">
+                                    <option value="">Select Standard</option>
+                                    <option value="iso_9001">ISO 9001 - Quality Management</option>
+                                    <option value="iso_14001">ISO 14001 - Environmental Management</option>
+                                    <option value="ohsas_18001">OHSAS 18001 - Occupational Health & Safety</option>
+                                    <option value="sa_8000">SA 8000 - Social Accountability</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Category</label>
+                                <select id="linkCategory" class="form-select" onchange="evidenceLinker.updateRequirements()">
+                                    <option value="">All Categories</option>
+                                    <option value="policy">Policy</option>
+                                    <option value="procedure">Procedure</option>
+                                    <option value="record">Record</option>
+                                    <option value="training">Training</option>
+                                    <option value="monitoring">Monitoring</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="requirements-list" id="requirementsList">
+                            <!-- Requirements will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Link Configuration -->
+                    <div class="link-configuration-section">
+                        <h3>Link Configuration</h3>
+                        <form id="linkForm">
+                            <div class="form-group">
+                                <label class="form-label">Link Type</label>
+                                <select id="linkType" class="form-select">
+                                    <option value="direct">Direct Evidence</option>
+                                    <option value="supporting">Supporting Evidence</option>
+                                    <option value="corroborating">Corroborating Evidence</option>
+                                    <option value="contextual">Contextual Evidence</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Link Strength</label>
+                                <div class="strength-slider">
+                                    <input type="range" id="linkStrength" min="1" max="5" value="3" class="strength-range">
+                                    <div class="strength-labels">
+                                        <span>Weak</span>
+                                        <span>Strong</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Link Description</label>
+                                <textarea id="linkDescription" class="form-textarea" rows="3" 
+                                          placeholder="Describe how this evidence supports the requirement..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Tags</label>
+                                <input type="text" id="linkTags" class="form-input" 
+                                       placeholder="Enter tags separated by commas">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Priority</label>
+                                <select id="linkPriority" class="form-select">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="critical">Critical Priority</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceLinker.closeLinkingModal()">Cancel</button>
+                <button class="btn btn-outline" onclick="evidenceLinker.saveLinkDraft()">Save Draft</button>
+                <button class="btn btn-primary" onclick="evidenceLinker.createLink()">Create Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Linking Modal -->
+    <div id="bulkLinkingModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Bulk Link Evidence</h2>
+                <button class="modal-close" onclick="evidenceLinker.closeBulkLinkingModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-linking-content">
+                    <div class="selected-evidence">
+                        <h3>Selected Evidence (<span id="selectedEvidenceCount">0</span>)</h3>
+                        <div class="selected-evidence-list" id="selectedEvidenceList">
+                            <!-- Selected evidence will be shown here -->
+                        </div>
+                    </div>
+
+                    <div class="bulk-linking-options">
+                        <h3>Bulk Linking Options</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Target Standard</label>
+                                <select id="bulkStandard" class="form-select">
+                                    <option value="">Select Standard</option>
+                                    <option value="iso_9001">ISO 9001</option>
+                                    <option value="iso_14001">ISO 14001</option>
+                                    <option value="ohsas_18001">OHSAS 18001</option>
+                                    <option value="sa_8000">SA 8000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Target Requirements</label>
+                                <select id="bulkRequirements" class="form-select" multiple>
+                                    <!-- Requirements will be populated here -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Link Type</label>
+                                <select id="bulkLinkType" class="form-select">
+                                    <option value="direct">Direct Evidence</option>
+                                    <option value="supporting">Supporting Evidence</option>
+                                    <option value="corroborating">Corroborating Evidence</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Link Strength</label>
+                                <select id="bulkLinkStrength" class="form-select">
+                                    <option value="3">3 - Medium</option>
+                                    <option value="4">4 - Strong</option>
+                                    <option value="5">5 - Very Strong</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Common Description</label>
+                                <textarea id="bulkLinkDescription" class="form-textarea" rows="3" 
+                                          placeholder="Common description for all links..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceLinker.closeBulkLinkingModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="evidenceLinker.applyBulkLinking()">Apply Bulk Linking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Requirements Tree Modal -->
+    <div id="requirementsTreeModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Requirements Tree View</h2>
+                <button class="modal-close" onclick="evidenceLinker.closeRequirementsTreeModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tree-filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Standard</label>
+                        <select id="treeStandard" class="filter-select" onchange="evidenceLinker.updateTreeView()">
+                            <option value="all">All Standards</option>
+                            <option value="iso_9001">ISO 9001</option>
+                            <option value="iso_14001">ISO 14001</option>
+                            <option value="ohsas_18001">OHSAS 18001</option>
+                            <option value="sa_8000">SA 8000</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Show Evidence Count</label>
+                        <input type="checkbox" id="showEvidenceCount" checked onchange="evidenceLinker.updateTreeView()">
+                    </div>
+                </div>
+                <div class="requirements-tree-view" id="requirementsTreeView">
+                    <!-- Tree view will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="evidenceLinker.closeRequirementsTreeModal()">Close</button>
+                <button class="btn btn-primary" onclick="evidenceLinker.exportTreeView()">Export Tree</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing links...</p>
+        </div>
+    </div>
+
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/auditor/evidence-linking.js"></script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MFA Setup - Angkor Compliance</title>
+    <link rel="stylesheet" href="assets/css/mfa-setup.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="mfa-setup-container">
+        <header class="setup-header">
+            <div class="header-content">
+                <img src="logo.png" alt="Angkor Compliance" class="logo">
+                <h1>Multi-Factor Authentication Setup</h1>
+                <p>Secure your account with additional authentication methods</p>
+            </div>
+        </header>
+        
+        <main class="setup-main">
+            <!-- MFA Status Overview -->
+            <section class="mfa-status" id="mfaStatus">
+                <div class="status-card">
+                    <div class="status-header">
+                        <h2>Current MFA Status</h2>
+                        <div class="status-indicator" id="statusIndicator">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="status-details" id="statusDetails">
+                        <!-- Status details will be populated here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- MFA Methods Setup -->
+            <section class="mfa-methods">
+                <h2>Authentication Methods</h2>
+                
+                <!-- TOTP Setup -->
+                <div class="method-card" id="totpCard">
+                    <div class="method-header">
+                        <div class="method-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="method-info">
+                            <h3>Authenticator App (TOTP)</h3>
+                            <p>Use Google Authenticator, Authy, or similar apps</p>
+                        </div>
+                        <div class="method-status">
+                            <span class="status-badge" id="totpStatus">Not Set Up</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-content" id="totpContent" style="display: none;">
+                        <div class="setup-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <h4>Scan QR Code</h4>
+                                    <p>Open your authenticator app and scan this QR code:</p>
+                                    <div class="qr-container" id="qrContainer">
+                                        <!-- QR code will be generated here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>Enter the 6-digit code from your authenticator app:</p>
+                                    <div class="verification-input">
+                                        <input type="text" id="totpCode" maxlength="6" placeholder="000000" pattern="[0-9]{6}">
+                                        <button class="btn-verify" onclick="verifyTOTP()">Verify</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="manual-entry">
+                            <h4>Manual Entry</h4>
+                            <p>If you can't scan the QR code, enter this secret manually:</p>
+                            <div class="secret-display">
+                                <code id="totpSecret">Loading...</code>
+                                <button class="btn-copy" onclick="copyToClipboard('totpSecret')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-actions">
+                        <button class="btn-setup" id="totpSetupBtn" onclick="setupTOTP()">
+                            <i class="fas fa-plus"></i>
+                            Set Up TOTP
+                        </button>
+                        <button class="btn-disable" id="totpDisableBtn" onclick="disableTOTP()" style="display: none;">
+                            <i class="fas fa-times"></i>
+                            Disable TOTP
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- SMS Setup -->
+                <div class="method-card" id="smsCard">
+                    <div class="method-header">
+                        <div class="method-icon">
+                            <i class="fas fa-sms"></i>
+                        </div>
+                        <div class="method-info">
+                            <h3>SMS Verification</h3>
+                            <p>Receive verification codes via text message</p>
+                        </div>
+                        <div class="method-status">
+                            <span class="status-badge" id="smsStatus">Not Set Up</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-content" id="smsContent" style="display: none;">
+                        <div class="setup-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <h4>Enter Phone Number</h4>
+                                    <p>Enter your mobile phone number:</p>
+                                    <div class="phone-input">
+                                        <input type="tel" id="smsPhone" placeholder="+855 12 345 678" pattern="[\+]?[0-9\s\-\(\)]+">
+                                        <button class="btn-send" onclick="sendSMSCode()">Send Code</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>Enter the 6-digit code sent to your phone:</p>
+                                    <div class="verification-input">
+                                        <input type="text" id="smsCode" maxlength="6" placeholder="000000" pattern="[0-9]{6}">
+                                        <button class="btn-verify" onclick="verifySMSCode()">Verify</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-actions">
+                        <button class="btn-setup" id="smsSetupBtn" onclick="setupSMS()">
+                            <i class="fas fa-plus"></i>
+                            Set Up SMS
+                        </button>
+                        <button class="btn-disable" id="smsDisableBtn" onclick="disableSMS()" style="display: none;">
+                            <i class="fas fa-times"></i>
+                            Disable SMS
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Email Setup -->
+                <div class="method-card" id="emailCard">
+                    <div class="method-header">
+                        <div class="method-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="method-info">
+                            <h3>Email Verification</h3>
+                            <p>Receive verification codes via email</p>
+                        </div>
+                        <div class="method-status">
+                            <span class="status-badge" id="emailStatus">Not Set Up</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-content" id="emailContent" style="display: none;">
+                        <div class="setup-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <h4>Confirm Email Address</h4>
+                                    <p>We'll send a verification code to your email:</p>
+                                    <div class="email-display">
+                                        <span id="userEmail">Loading...</span>
+                                        <button class="btn-send" onclick="sendEmailCode()">Send Code</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <h4>Enter Verification Code</h4>
+                                    <p>Enter the 6-digit code sent to your email:</p>
+                                    <div class="verification-input">
+                                        <input type="text" id="emailCode" maxlength="6" placeholder="000000" pattern="[0-9]{6}">
+                                        <button class="btn-verify" onclick="verifyEmailCode()">Verify</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-actions">
+                        <button class="btn-setup" id="emailSetupBtn" onclick="setupEmail()">
+                            <i class="fas fa-plus"></i>
+                            Set Up Email
+                        </button>
+                        <button class="btn-disable" id="emailDisableBtn" onclick="disableEmail()" style="display: none;">
+                            <i class="fas fa-times"></i>
+                            Disable Email
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Backup Codes -->
+                <div class="method-card" id="backupCard">
+                    <div class="method-header">
+                        <div class="method-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="method-info">
+                            <h3>Backup Codes</h3>
+                            <p>Use backup codes if you lose access to other methods</p>
+                        </div>
+                        <div class="method-status">
+                            <span class="status-badge" id="backupStatus">Not Set Up</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-content" id="backupContent" style="display: none;">
+                        <div class="backup-codes-display">
+                            <h4>Your Backup Codes</h4>
+                            <p>Save these codes in a secure location. Each code can only be used once.</p>
+                            
+                            <div class="codes-grid" id="backupCodesGrid">
+                                <!-- Backup codes will be generated here -->
+                            </div>
+                            
+                            <div class="backup-actions">
+                                <button class="btn-download" onclick="downloadBackupCodes()">
+                                    <i class="fas fa-download"></i>
+                                    Download Codes
+                                </button>
+                                <button class="btn-print" onclick="printBackupCodes()">
+                                    <i class="fas fa-print"></i>
+                                    Print Codes
+                                </button>
+                                <button class="btn-regenerate" onclick="regenerateBackupCodes()">
+                                    <i class="fas fa-sync"></i>
+                                    Generate New Codes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-actions">
+                        <button class="btn-setup" id="backupSetupBtn" onclick="setupBackupCodes()">
+                            <i class="fas fa-plus"></i>
+                            Generate Backup Codes
+                        </button>
+                        <button class="btn-regenerate" id="backupRegenerateBtn" onclick="regenerateBackupCodes()" style="display: none;">
+                            <i class="fas fa-sync"></i>
+                            Generate New Codes
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Security Recommendations -->
+            <section class="security-recommendations">
+                <div class="recommendations-card">
+                    <h2>Security Recommendations</h2>
+                    <div class="recommendations-list">
+                        <div class="recommendation">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Enable Multiple Methods</h4>
+                                <p>Set up at least two authentication methods for better security</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div>
+                                <h4>Use Authenticator Apps</h4>
+                                <p>TOTP is more secure than SMS or email verification</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation">
+                            <i class="fas fa-key"></i>
+                            <div>
+                                <h4>Save Backup Codes</h4>
+                                <p>Store backup codes securely in case you lose access to other methods</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <h4>Keep Methods Updated</h4>
+                                <p>Regularly update your phone number and email address</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Setting up MFA...</p>
+            </div>
+        </div>
+        
+        <!-- Success Modal -->
+        <div id="successModal" class="modal success-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Success!</h3>
+                <p id="successMessage">MFA method has been set up successfully.</p>
+                <div class="modal-actions">
+                    <button class="btn-modal primary" onclick="closeSuccessModal()">Continue</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error Modal -->
+        <div id="errorModal" class="modal error-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Error</h3>
+                <p id="errorMessage">An error occurred while setting up MFA.</p>
+                <div class="modal-actions">
+                    <button class="btn-modal secondary" onclick="closeErrorModal()">Close</button>
+                    <button class="btn-modal primary" onclick="retrySetup()">Retry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/mfa-authentication-system.js"></script>
+    <script src="assets/js/mfa-setup.js"></script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk Interface - Worker Portal</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/worker-portal.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Role-specific styling for worker */
+        body.role-worker {
+            --role-primary: var(--worker-primary);
+            --role-secondary: var(--worker-secondary);
+            --role-accent: var(--worker-accent);
+        }
+
+        
+        .kiosk-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 18px;
+        }
+        
+        .kiosk-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .kiosk-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .kiosk-content {
+            padding: 40px;
+        }
+        
+        .kiosk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .kiosk-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 40px 30px;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            min-height: 200px;
+            justify-content: center;
+        }
+        
+        .kiosk-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .kiosk-button i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .kiosk-button .description {
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .language-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .qr-instructions {
+            font-size: 18px;
+            color: #666;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        
+        .emergency-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .emergency-button {
+            background: white;
+            color: #ff6b6b;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .emergency-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #25D366;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .help-section {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .help-button {
+            background: white;
+            color: #4ecdc4;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .help-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="role-worker">
+    <div class="kiosk-container">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <button class="language-btn active" data-lang="en">English</button>
+            <button class="language-btn" data-lang="km">ខ្មែរ</button>
+        </div>
+
+        <!-- Header -->
+        <header class="kiosk-header">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span id="statusText">System Online</span>
+            </div>
+            <h1><i class="fas fa-desktop"></i> Worker Self-Service Kiosk</h1>
+            <p>Welcome to Angkor Compliance Platform - Touch to get started</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="kiosk-content">
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h2><i class="fas fa-qrcode"></i> Quick Access</h2>
+                <div class="qr-code">
+                    <div id="qrCodeDisplay">
+                        <!-- QR code will be generated here -->
+                    </div>
+                </div>
+                <div class="qr-instructions">
+                    <p><strong>Scan this QR code with your phone</strong></p>
+                    <p>Access your case information and submit updates directly from your mobile device</p>
+                </div>
+            </div>
+
+            <!-- Emergency Section -->
+            <div class="emergency-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Emergency Assistance</h2>
+                <p>If you need immediate help or have an urgent complaint, please use this option</p>
+                <button class="emergency-button" onclick="kioskInterface.openEmergencyForm()">
+                    <i class="fas fa-phone"></i> Report Emergency
+                </button>
+            </div>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <h2><i class="fas fa-question-circle"></i> Need Help?</h2>
+                <p>Get assistance with your case or learn how to use the system</p>
+                <button class="help-button" onclick="kioskInterface.openHelpForm()">
+                    <i class="fas fa-hands-helping"></i> Get Help
+                </button>
+            </div>
+
+            <!-- Main Action Grid -->
+            <div class="kiosk-grid">
+                <button class="kiosk-button" onclick="kioskInterface.openCaseSubmission()">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Submit New Case</span>
+                    <div class="description">Report a new grievance or compliance issue</div>
+                </button>
+
+                <button class="kiosk-button" onclick="kioskInterface.openCaseTracking()">
+                    <i class="fas fa-search"></i>
+                    <span>Track My Case</span>
+                    <div class="description">Check the status of your existing cases</div>
+                </button>
+
+                <button class="kiosk-button" onclick="kioskInterface.openDocumentUpload()">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Documents</span>
+                    <div class="description">Submit supporting documents for your case</div>
+                </button>
+
+                <button class="kiosk-button" onclick="kioskInterface.openCaseUpdate()">
+                    <i class="fas fa-edit"></i>
+                    <span>Update Case</span>
+                    <div class="description">Provide additional information or updates</div>
+                </button>
+
+                <button class="kiosk-button" onclick="kioskInterface.openContactInfo()">
+                    <i class="fas fa-address-book"></i>
+                    <span>Contact Information</span>
+                    <div class="description">Get contact details for assistance</div>
+                </button>
+
+                <button class="kiosk-button" onclick="kioskInterface.openFaq()">
+                    <i class="fas fa-question"></i>
+                    <span>Frequently Asked Questions</span>
+                    <div class="description">Find answers to common questions</div>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Case Submission Modal -->
+    <div id="caseSubmissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="kioskInterface.closeModal('caseSubmissionModal')">&times;</span>
+            <h2><i class="fas fa-file-alt"></i> Submit New Case</h2>
+            <form id="caseSubmissionForm">
+                <div class="form-group">
+                    <label for="workerName">Full Name *</label>
+                    <input type="text" id="workerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="workerPhone">Phone Number *</label>
+                    <input type="tel" id="workerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="workerEmail">Email Address</label>
+                    <input type="email" id="workerEmail">
+                </div>
+                <div class="form-group">
+                    <label for="caseType">Case Type *</label>
+                    <select id="caseType" required>
+                        <option value="">Select Case Type</option>
+                        <option value="harassment">Harassment</option>
+                        <option value="wage">Wage Dispute</option>
+                        <option value="safety">Safety Issue</option>
+                        <option value="discrimination">Discrimination</option>
+                        <option value="working_conditions">Working Conditions</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="caseDescription">Description *</label>
+                    <textarea id="caseDescription" rows="5" required placeholder="Please describe your issue in detail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="casePriority">Priority Level</label>
+                    <select id="casePriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Case
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Case Tracking Modal -->
+    <div id="caseTrackingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="kioskInterface.closeModal('caseTrackingModal')">&times;</span>
+            <h2><i class="fas fa-search"></i> Track My Case</h2>
+            <form id="caseTrackingForm">
+                <div class="form-group">
+                    <label for="trackingNumber">Case Number *</label>
+                    <input type="text" id="trackingNumber" required placeholder="Enter your case number">
+                </div>
+                <div class="form-group">
+                    <label for="trackingPhone">Phone Number *</label>
+                    <input type="tel" id="trackingPhone" required placeholder="Enter your phone number">
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-search"></i> Track Case
+                </button>
+            </form>
+            <div id="trackingResult"></div>
+        </div>
+    </div>
+
+    <!-- Emergency Form Modal -->
+    <div id="emergencyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="kioskInterface.closeModal('emergencyModal')">&times;</span>
+            <h2><i class="fas fa-exclamation-triangle"></i> Emergency Report</h2>
+            <form id="emergencyForm">
+                <div class="form-group">
+                    <label for="emergencyName">Full Name *</label>
+                    <input type="text" id="emergencyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="emergencyPhone">Phone Number *</label>
+                    <input type="tel" id="emergencyPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="emergencyType">Emergency Type *</label>
+                    <select id="emergencyType" required>
+                        <option value="">Select Emergency Type</option>
+                        <option value="safety">Safety Emergency</option>
+                        <option value="harassment">Harassment Emergency</option>
+                        <option value="medical">Medical Emergency</option>
+                        <option value="security">Security Threat</option>
+                        <option value="other">Other Emergency</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="emergencyDescription">Emergency Description *</label>
+                    <textarea id="emergencyDescription" rows="4" required placeholder="Describe the emergency situation..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="emergencyLocation">Location</label>
+                    <input type="text" id="emergencyLocation" placeholder="Where is this happening?">
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-phone"></i> Report Emergency
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Help Form Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="kioskInterface.closeModal('helpModal')">&times;</span>
+            <h2><i class="fas fa-question-circle"></i> Get Help</h2>
+            <form id="helpForm">
+                <div class="form-group">
+                    <label for="helpName">Full Name *</label>
+                    <input type="text" id="helpName" required>
+                </div>
+                <div class="form-group">
+                    <label for="helpPhone">Phone Number *</label>
+                    <input type="tel" id="helpPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="helpType">Help Type *</label>
+                    <select id="helpType" required>
+                        <option value="">Select Help Type</option>
+                        <option value="technical">Technical Support</option>
+                        <option value="case">Case Assistance</option>
+                        <option value="information">Information Request</option>
+                        <option value="training">Training Request</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="helpDescription">Help Description *</label>
+                    <textarea id="helpDescription" rows="4" required placeholder="Describe what help you need..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-hands-helping"></i> Request Help
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/enhanced-rbac-system.js"></script>
+    <script src="../assets/js/worker-portal/kiosk-interface.js"></script>
+</body>
+</html>

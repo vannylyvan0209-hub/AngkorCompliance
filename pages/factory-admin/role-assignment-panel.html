@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Assignment Panel - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="users"></i> Role Assignment Panel</h1>
+                    <p>Manage user roles and permissions</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Role Management Overview -->
+            <section class="role-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Users</h3>
+                            <div class="card-value">156</div>
+                            <div class="card-change">Active users</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Roles</h3>
+                            <div class="card-value">8</div>
+                            <div class="card-change">Different role types</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pending Assignments</h3>
+                            <div class="card-value">3</div>
+                            <div class="card-change negative">Awaiting approval</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Compliance Score</h3>
+                            <div class="card-value">94%</div>
+                            <div class="card-change positive">Role compliance</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- User List -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="users"></i> User Management</h2>
+                            <div class="card-actions">
+                                <div class="search-box">
+                                    <input type="text" id="userSearch" class="form-input" placeholder="Search users...">
+                                    <i data-lucide="search"></i>
+                                </div>
+                                <select id="roleFilter" class="form-select">
+                                    <option value="">All Roles</option>
+                                    <option value="factory_admin">Factory Admin</option>
+                                    <option value="compliance_manager">Compliance Manager</option>
+                                    <option value="hr_manager">HR Manager</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="worker">Worker</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Current Role</th>
+                                            <th>Department</th>
+                                            <th>Status</th>
+                                            <th>Last Active</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTable">
+                                        <!-- User data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role Templates -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="shield"></i> Role Templates</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="createRoleTemplate()">
+                                    <i data-lucide="plus"></i> Create Template
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="templates-grid" id="roleTemplates">
+                                <!-- Role templates will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Role Assignment -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="user-check"></i> Role Assignment</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="roleAssignmentForm" style="display: none;">
+                                <div class="form-group">
+                                    <label for="selectedUser">Selected User</label>
+                                    <input type="text" id="selectedUser" class="form-input" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="newRole">New Role</label>
+                                    <select id="newRole" class="form-select">
+                                        <option value="">Select Role</option>
+                                        <option value="factory_admin">Factory Administrator</option>
+                                        <option value="compliance_manager">Compliance Manager</option>
+                                        <option value="hr_manager">HR Manager</option>
+                                        <option value="department_head">Department Head</option>
+                                        <option value="supervisor">Supervisor</option>
+                                        <option value="worker">Worker</option>
+                                        <option value="auditor">Internal Auditor</option>
+                                        <option value="viewer">Viewer (Read-only)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentReason">Reason for Change</label>
+                                    <textarea id="assignmentReason" class="form-textarea" rows="3" 
+                                        placeholder="Explain the reason for this role change..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="effectiveDate">Effective Date</label>
+                                    <input type="date" id="effectiveDate" class="form-input">
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button class="btn btn-primary" onclick="assignRole()">
+                                        <i data-lucide="check"></i> Assign Role
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="cancelAssignment()">
+                                        <i data-lucide="x"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="noUserSelected" class="empty-state">
+                                <i data-lucide="user"></i>
+                                <p>Select a user to assign roles</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Permission Matrix -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="key"></i> Permission Matrix</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="permission-matrix" id="permissionMatrix">
+                                <!-- Permission matrix will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="bulkRoleAssignment()">
+                                    <i data-lucide="users"></i>
+                                    <span>Bulk Assignment</span>
+                                </button>
+                                <button class="action-btn" onclick="exportUserRoles()">
+                                    <i data-lucide="download"></i>
+                                    <span>Export Roles</span>
+                                </button>
+                                <button class="action-btn" onclick="roleAudit()">
+                                    <i data-lucide="shield-check"></i>
+                                    <span>Role Audit</span>
+                                </button>
+                                <button class="action-btn" onclick="permissionReview()">
+                                    <i data-lucide="eye"></i>
+                                    <span>Permission Review</span>
+                                </button>
+                                <button class="action-btn" onclick="roleAnalytics()">
+                                    <i data-lucide="bar-chart-3"></i>
+                                    <span>Role Analytics</span>
+                                </button>
+                                <button class="action-btn" onclick="accessReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Access Report</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Role Assignment Modal -->
+    <div id="roleAssignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="user-check"></i> Role Assignment</h2>
+                <button class="modal-close" onclick="closeModal('roleAssignmentModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="user-info" id="modalUserInfo">
+                    <!-- User information will be loaded here -->
+                </div>
+                
+                <div class="role-selection">
+                    <h3>Select New Role</h3>
+                    <div class="role-options" id="roleOptions">
+                        <!-- Role options will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="permission-preview">
+                    <h3>Permission Changes</h3>
+                    <div class="permission-changes" id="permissionChanges">
+                        <!-- Permission changes will be shown here -->
+                    </div>
+                </div>
+                
+                <div class="assignment-details">
+                    <div class="form-group">
+                        <label for="modalReason">Reason for Change</label>
+                        <textarea id="modalReason" class="form-textarea" rows="3" 
+                            placeholder="Explain the reason for this role change..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modalEffectiveDate">Effective Date</label>
+                        <input type="date" id="modalEffectiveDate" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="notifyUser" class="form-checkbox" checked>
+                            Notify user of role change
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('roleAssignmentModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmRoleAssignment()">Assign Role</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Role Assignment Modal -->
+    <div id="bulkRoleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="users"></i> Bulk Role Assignment</h2>
+                <button class="modal-close" onclick="closeModal('bulkRoleModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="bulkUsers">Select Users</label>
+                    <div class="user-selection" id="bulkUserSelection">
+                        <!-- User checkboxes will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkNewRole">New Role</label>
+                    <select id="bulkNewRole" class="form-select">
+                        <option value="">Select Role</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="worker">Worker</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkReason">Reason for Change</label>
+                    <textarea id="bulkReason" class="form-textarea" rows="3" 
+                        placeholder="Explain the reason for this bulk role change..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('bulkRoleModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmBulkAssignment()">Assign Roles</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Template Modal -->
+    <div id="roleTemplateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="shield"></i> Create Role Template</h2>
+                <button class="modal-close" onclick="closeModal('roleTemplateModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="templateName">Template Name</label>
+                    <input type="text" id="templateName" class="form-input" placeholder="e.g., Production Supervisor">
+                </div>
+                
+                <div class="form-group">
+                    <label for="templateDescription">Description</label>
+                    <textarea id="templateDescription" class="form-textarea" rows="3" 
+                        placeholder="Describe this role template..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Permissions</label>
+                    <div class="permissions-grid">
+                        <div class="permission-group">
+                            <h4>Document Management</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templViewDocuments" class="form-checkbox">
+                                    View Documents
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templUploadDocuments" class="form-checkbox">
+                                    Upload Documents
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templApproveDocuments" class="form-checkbox">
+                                    Approve Documents
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-group">
+                            <h4>Compliance Management</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templViewCompliance" class="form-checkbox">
+                                    View Compliance Status
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templManageCAPs" class="form-checkbox">
+                                    Manage CAPs
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="templViewAudits" class="form-checkbox">
+                                    View Audit Results
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('roleTemplateModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveRoleTemplate()">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/role-assignment-panel.js"></script>
+</body>
+</html>

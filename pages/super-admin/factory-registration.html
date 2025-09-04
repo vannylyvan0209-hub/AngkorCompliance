@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Registration - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+
+        
+        .factory-registration {
+            padding: var(--space-4);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .registration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .registration-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+
+        .registration-form {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .form-section {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-2);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .form-row.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: var(--space-2);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--background-color);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .preview-panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .preview-content {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-3);
+            min-height: 400px;
+        }
+
+        .factory-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .factory-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .factory-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .factory-info h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 20px;
+        }
+
+        .factory-info p {
+            margin: 4px 0 0 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .factory-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .factory-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .status-active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-inactive {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .compliance-info {
+            margin-top: var(--space-3);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .compliance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compliance-item:last-child {
+            border-bottom: none;
+        }
+
+        .compliance-label {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .compliance-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .compliance-value.compliant {
+            color: var(--success-color);
+        }
+
+        .compliance-value.non-compliant {
+            color: var(--error-color);
+        }
+
+        .compliance-value.pending {
+            color: var(--warning-color);
+        }
+
+        .empty-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .empty-preview i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .validation-errors {
+            background: var(--error-color);
+            color: white;
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-3);
+            display: none;
+        }
+
+        .validation-errors.show {
+            display: block;
+        }
+
+        .error-list {
+            margin: 0;
+            padding-left: var(--space-3);
+        }
+
+        .error-list li {
+            margin-bottom: var(--space-1);
+        }
+
+        .error-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-3);
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="role-super-admin">
+    <div class="factory-registration">
+        <div class="registration-header">
+            <div>
+                <h1><i data-lucide="building"></i> Factory Registration</h1>
+                <p>Register new factories and manage factory information</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="loadExistingFactories()">
+                    <i data-lucide="list"></i> View All Factories
+                </button>
+                <button class="btn btn-primary" onclick="saveFactory()">
+                    <i data-lucide="save"></i> Save Factory
+                </button>
+            </div>
+        </div>
+
+        <div class="validation-errors" id="validationErrors">
+            <h4><i data-lucide="alert-triangle"></i> Please fix the following errors:</h4>
+            <ul class="error-list" id="errorList"></ul>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h4><i data-lucide="check-circle"></i> Factory registered successfully!</h4>
+            <p>The factory has been added to the system and is ready for use.</p>
+        </div>
+
+        <div class="registration-grid">
+            <div class="registration-form">
+                <form id="factoryRegistrationForm">
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="building"></i>
+                            Basic Information
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="factoryName">Factory Name *</label>
+                                <input type="text" id="factoryName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="factoryCode">Factory Code *</label>
+                                <input type="text" id="factoryCode" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="industry">Industry *</label>
+                                <select id="industry" required>
+                                    <option value="">Select Industry</option>
+                                    <option value="textiles">Textiles & Apparel</option>
+                                    <option value="electronics">Electronics</option>
+                                    <option value="automotive">Automotive</option>
+                                    <option value="food">Food & Beverage</option>
+                                    <option value="chemicals">Chemicals</option>
+                                    <option value="pharmaceuticals">Pharmaceuticals</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="factoryType">Factory Type *</label>
+                                <select id="factoryType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                    <option value="assembly">Assembly</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="warehouse">Warehouse</option>
+                                    <option value="distribution">Distribution</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea id="description" placeholder="Brief description of the factory and its operations"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="map-pin"></i>
+                            Location & Contact
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="country">Country *</label>
+                                <select id="country" required>
+                                    <option value="">Select Country</option>
+                                    <option value="cambodia">Cambodia</option>
+                                    <option value="thailand">Thailand</option>
+                                    <option value="vietnam">Vietnam</option>
+                                    <option value="laos">Laos</option>
+                                    <option value="myanmar">Myanmar</option>
+                                    <option value="malaysia">Malaysia</option>
+                                    <option value="indonesia">Indonesia</option>
+                                    <option value="philippines">Philippines</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" required>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <label for="address">Full Address *</label>
+                                <textarea id="address" required placeholder="Complete street address"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="website">Website</label>
+                                <input type="url" id="website" placeholder="https://example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Timezone *</label>
+                                <select id="timezone" required>
+                                    <option value="">Select Timezone</option>
+                                    <option value="Asia/Phnom_Penh">Asia/Phnom_Penh (GMT+7)</option>
+                                    <option value="Asia/Bangkok">Asia/Bangkok (GMT+7)</option>
+                                    <option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh (GMT+7)</option>
+                                    <option value="Asia/Vientiane">Asia/Vientiane (GMT+7)</option>
+                                    <option value="Asia/Yangon">Asia/Yangon (GMT+6:30)</option>
+                                    <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT+8)</option>
+                                    <option value="Asia/Jakarta">Asia/Jakarta (GMT+7)</option>
+                                    <option value="Asia/Manila">Asia/Manila (GMT+8)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="users"></i>
+                            Management & Staff
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ownerName">Owner/CEO Name *</label>
+                                <input type="text" id="ownerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ownerEmail">Owner/CEO Email *</label>
+                                <input type="email" id="ownerEmail" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="managerName">Factory Manager Name *</label>
+                                <input type="text" id="managerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="managerEmail">Factory Manager Email *</label>
+                                <input type="email" id="managerEmail" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeCount">Number of Employees *</label>
+                                <input type="number" id="employeeCount" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="shiftCount">Number of Shifts *</label>
+                                <select id="shiftCount" required>
+                                    <option value="">Select Shifts</option>
+                                    <option value="1">1 Shift</option>
+                                    <option value="2">2 Shifts</option>
+                                    <option value="3">3 Shifts</option>
+                                    <option value="4">4+ Shifts</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="shield"></i>
+                            Compliance & Standards
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="complianceStandards">Primary Compliance Standards</label>
+                                <select id="complianceStandards" multiple>
+                                    <option value="iso9001">ISO 9001 (Quality Management)</option>
+                                    <option value="iso14001">ISO 14001 (Environmental Management)</option>
+                                    <option value="iso45001">ISO 45001 (Occupational Health & Safety)</option>
+                                    <option value="sa8000">SA 8000 (Social Accountability)</option>
+                                    <option value="bsci">BSCI (Business Social Compliance Initiative)</option>
+                                    <option value="sedex">Sedex (Supplier Ethical Data Exchange)</option>
+                                    <option value="wrap">WRAP (Worldwide Responsible Accredited Production)</option>
+                                    <option value="fairtrade">Fairtrade</option>
+                                    <option value="organic">Organic Certification</option>
+                                    <option value="gots">GOTS (Global Organic Textile Standard)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="auditFrequency">Audit Frequency</label>
+                                <select id="auditFrequency">
+                                    <option value="">Select Frequency</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="semi-annually">Semi-Annually</option>
+                                    <option value="annually">Annually</option>
+                                    <option value="biennially">Biennially</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hasGrievanceSystem">
+                                <label for="hasGrievanceSystem">Has Grievance System</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hasWorkerCommittee">
+                                <label for="hasWorkerCommittee">Has Worker Committee</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hasSafetyProgram">
+                                <label for="hasSafetyProgram">Has Safety Program</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="hasTrainingProgram">
+                                <label for="hasTrainingProgram">Has Training Program</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="settings"></i>
+                            System Configuration
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subscriptionPlan">Subscription Plan *</label>
+                                <select id="subscriptionPlan" required>
+                                    <option value="">Select Plan</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="professional">Professional</option>
+                                    <option value="enterprise">Enterprise</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxUsers">Maximum Users</label>
+                                <input type="number" id="maxUsers" min="1" value="10">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="enableAI">
+                                <label for="enableAI">Enable AI Copilot</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="enableAnalytics">
+                                <label for="enableAnalytics">Enable Advanced Analytics</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="enableMultiLanguage">
+                                <label for="enableMultiLanguage">Enable Multi-Language Support</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="enableAPI">
+                                <label for="enableAPI">Enable API Access</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="resetForm()">
+                            <i data-lucide="refresh-cw"></i> Reset Form
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="previewFactory()">
+                            <i data-lucide="eye"></i> Preview
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="save"></i> Register Factory
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <h3><i data-lucide="eye"></i> Factory Preview</h3>
+                    <button class="btn btn-sm btn-outline" onclick="refreshPreview()">
+                        <i data-lucide="refresh-cw"></i> Refresh
+                    </button>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <div class="empty-preview">
+                        <i data-lucide="building"></i>
+                        <h3>Factory Preview</h3>
+                        <p>Fill out the form to see a preview of the factory card</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/super-admin/factory-registration.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

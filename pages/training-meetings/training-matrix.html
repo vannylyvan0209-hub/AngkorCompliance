@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Matrix - Angkor Compliance</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/training-meetings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="training-matrix-container">
+        <!-- Header -->
+        <header class="training-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i class="fas fa-graduation-cap"></i> Training Matrix</h1>
+                    <p>Role-based training requirements and compliance tracking</p>
+                </div>
+                <div class="header-right">
+                    <button id="language-toggle" class="btn btn-secondary">
+                        <i class="fas fa-globe"></i> ខ្មែរ
+                    </button>
+                    <button id="export-btn" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export Matrix
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Training Matrix Controls -->
+        <div class="matrix-controls">
+            <div class="control-group">
+                <label for="department-filter">Department:</label>
+                <select id="department-filter">
+                    <option value="">All Departments</option>
+                    <option value="production">Production</option>
+                    <option value="quality">Quality Control</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="hr">Human Resources</option>
+                    <option value="management">Management</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="role-filter">Role:</label>
+                <select id="role-filter">
+                    <option value="">All Roles</option>
+                    <option value="worker">Worker</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="manager">Manager</option>
+                    <option value="specialist">Specialist</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="standard-filter">Standard:</label>
+                <select id="standard-filter">
+                    <option value="">All Standards</option>
+                    <option value="iso9001">ISO 9001</option>
+                    <option value="iso14001">ISO 14001</option>
+                    <option value="iso45001">ISO 45001</option>
+                    <option value="sa8000">SA8000</option>
+                    <option value="smeta">SMETA</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="status-filter">Status:</label>
+                <select id="status-filter">
+                    <option value="">All Status</option>
+                    <option value="required">Required</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="expired">Expired</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Training Matrix Table -->
+        <div class="matrix-table-container">
+            <table class="training-matrix-table">
+                <thead>
+                    <tr>
+                        <th>Role/Department</th>
+                        <th>Training Program</th>
+                        <th>Standard</th>
+                        <th>Frequency</th>
+                        <th>Last Completed</th>
+                        <th>Next Due</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="matrix-tbody">
+                    <!-- Matrix data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Training Program Management -->
+        <div class="training-programs-section">
+            <div class="section-header">
+                <h2><i class="fas fa-cogs"></i> Training Program Management</h2>
+                <button id="add-program-btn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Program
+                </button>
+            </div>
+            
+            <div class="programs-grid" id="programs-grid">
+                <!-- Training programs will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-card" onclick="openBulkAssignment()">
+                <i class="fas fa-users"></i>
+                <h3>Bulk Assignment</h3>
+                <p>Assign training to multiple workers</p>
+            </div>
+            <div class="action-card" onclick="openComplianceReport()">
+                <i class="fas fa-chart-bar"></i>
+                <h3>Compliance Report</h3>
+                <p>View training compliance metrics</p>
+            </div>
+            <div class="action-card" onclick="openRefresherRules()">
+                <i class="fas fa-clock"></i>
+                <h3>Refresher Rules</h3>
+                <p>Configure training renewal schedules</p>
+            </div>
+            <div class="action-card" onclick="openCertificateManager()">
+                <i class="fas fa-certificate"></i>
+                <h3>Certificates</h3>
+                <p>Manage training certificates</p>
+            </div>
+        </div>
+
+        <!-- Add Training Program Modal -->
+        <div id="add-program-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Training Program</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="add-program-form">
+                        <div class="form-group">
+                            <label for="program-name">Program Name:</label>
+                            <input type="text" id="program-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="program-description">Description:</label>
+                            <textarea id="program-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="program-standard">Standard:</label>
+                                <select id="program-standard" required>
+                                    <option value="">Select Standard</option>
+                                    <option value="iso9001">ISO 9001</option>
+                                    <option value="iso14001">ISO 14001</option>
+                                    <option value="iso45001">ISO 45001</option>
+                                    <option value="sa8000">SA8000</option>
+                                    <option value="smeta">SMETA</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="program-frequency">Frequency:</label>
+                                <select id="program-frequency" required>
+                                    <option value="">Select Frequency</option>
+                                    <option value="once">Once</option>
+                                    <option value="annual">Annual</option>
+                                    <option value="biannual">Biannual</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="program-duration">Duration (hours):</label>
+                                <input type="number" id="program-duration" min="0.5" step="0.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="program-validity">Validity (months):</label>
+                                <input type="number" id="program-validity" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="program-roles">Applicable Roles:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="worker"> Worker</label>
+                                <label><input type="checkbox" value="supervisor"> Supervisor</label>
+                                <label><input type="checkbox" value="manager"> Manager</label>
+                                <label><input type="checkbox" value="specialist"> Specialist</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="program-departments">Applicable Departments:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="production"> Production</label>
+                                <label><input type="checkbox" value="quality"> Quality Control</label>
+                                <label><input type="checkbox" value="maintenance"> Maintenance</label>
+                                <label><input type="checkbox" value="hr"> Human Resources</label>
+                                <label><input type="checkbox" value="management"> Management</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('add-program-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTrainingProgram()">Save Program</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Assignment Modal -->
+        <div id="bulk-assignment-modal" class="modal">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3>Bulk Training Assignment</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="bulk-assignment-container">
+                        <div class="assignment-filters">
+                            <h4>Select Workers</h4>
+                            <div class="filter-controls">
+                                <select id="bulk-department">
+                                    <option value="">All Departments</option>
+                                    <option value="production">Production</option>
+                                    <option value="quality">Quality Control</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="hr">Human Resources</option>
+                                    <option value="management">Management</option>
+                                </select>
+                                <select id="bulk-role">
+                                    <option value="">All Roles</option>
+                                    <option value="worker">Worker</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="specialist">Specialist</option>
+                                </select>
+                                <button id="select-all-btn" class="btn btn-secondary">Select All</button>
+                                <button id="clear-selection-btn" class="btn btn-secondary">Clear Selection</button>
+                            </div>
+                        </div>
+                        <div class="workers-list" id="workers-list">
+                            <!-- Workers will be populated by JavaScript -->
+                        </div>
+                        <div class="training-selection">
+                            <h4>Select Training Program</h4>
+                            <select id="bulk-training-program">
+                                <option value="">Select Training Program</option>
+                                <!-- Training programs will be populated by JavaScript -->
+                            </select>
+                            <div class="assignment-details">
+                                <label for="bulk-start-date">Start Date:</label>
+                                <input type="date" id="bulk-start-date">
+                                <label for="bulk-due-date">Due Date:</label>
+                                <input type="date" id="bulk-due-date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('bulk-assignment-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="executeBulkAssignment()">Assign Training</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/training-meetings/training-matrix.js"></script>
+</body>
+</html>

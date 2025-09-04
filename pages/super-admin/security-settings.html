@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Settings - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="role-super-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="shield"></i> Security Settings</h1>
+                    <p>Manage security configuration and monitoring</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Super Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Security Overview -->
+            <section class="security-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Security Score</h3>
+                            <div class="card-value">92/100</div>
+                            <div class="card-change positive">+5 points this week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Threats</h3>
+                            <div class="card-value">2</div>
+                            <div class="card-change negative">+1 today</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Sessions</h3>
+                            <div class="card-value">156</div>
+                            <div class="card-change">Across 24 factories</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="lock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Failed Logins</h3>
+                            <div class="card-value">8</div>
+                            <div class="card-change negative">Last 24 hours</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Security Configuration -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="settings"></i> Security Configuration</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="saveSecuritySettings()">
+                                    <i data-lucide="save"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="securitySettingsForm">
+                                <div class="settings-section">
+                                    <h3>Authentication Settings</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="requireMFA" class="form-checkbox">
+                                            Require Multi-Factor Authentication
+                                        </label>
+                                        <p class="form-help">All users must enable MFA for account access</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enforcePasswordPolicy" class="form-checkbox">
+                                            Enforce Strong Password Policy
+                                        </label>
+                                        <p class="form-help">Require passwords with uppercase, lowercase, numbers, and symbols</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="passwordExpiryDays">Password Expiry (Days)</label>
+                                        <input type="number" id="passwordExpiryDays" class="form-input" value="90" min="30" max="365">
+                                        <p class="form-help">Days before users must change their password</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="sessionTimeout">Session Timeout (Minutes)</label>
+                                        <input type="number" id="sessionTimeout" class="form-input" value="30" min="5" max="480">
+                                        <p class="form-help">Inactive session timeout in minutes</p>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3>Access Control</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="restrictIPAccess" class="form-checkbox">
+                                            Restrict IP Access
+                                        </label>
+                                        <p class="form-help">Only allow access from specified IP addresses</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="allowedIPs">Allowed IP Addresses</label>
+                                        <textarea id="allowedIPs" class="form-textarea" rows="3" placeholder="Enter IP addresses (one per line)&#10;Example:&#10;192.168.1.0/24&#10;10.0.0.0/8"></textarea>
+                                        <p class="form-help">Leave empty to allow all IP addresses</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enableAuditLogging" class="form-checkbox">
+                                            Enable Audit Logging
+                                        </label>
+                                        <p class="form-help">Log all user actions for security monitoring</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="logRetentionDays">Log Retention (Days)</label>
+                                        <input type="number" id="logRetentionDays" class="form-input" value="365" min="30" max="2555">
+                                        <p class="form-help">How long to keep security logs</p>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3>Data Protection</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enableDataEncryption" class="form-checkbox">
+                                            Enable Data Encryption
+                                        </label>
+                                        <p class="form-help">Encrypt sensitive data at rest and in transit</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enableBackupEncryption" class="form-checkbox">
+                                            Encrypt Backups
+                                        </label>
+                                        <p class="form-help">Encrypt all backup data</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="dataRetentionPolicy">Data Retention Policy (Days)</label>
+                                        <input type="number" id="dataRetentionPolicy" class="form-input" value="2555" min="365" max="3650">
+                                        <p class="form-help">How long to retain user data</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Security Monitoring -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="activity"></i> Security Monitoring</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" onclick="refreshSecurityLogs()">
+                                    <i data-lucide="refresh-cw"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Event Type</th>
+                                            <th>User</th>
+                                            <th>IP Address</th>
+                                            <th>Details</th>
+                                            <th>Risk Level</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="securityLogsTable">
+                                        <!-- Security logs will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Security Alerts -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="bell"></i> Security Alerts</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alerts-list" id="securityAlerts">
+                                <!-- Security alerts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Sessions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="users"></i> Active Sessions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="sessions-list" id="activeSessions">
+                                <!-- Active sessions will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Metrics -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="bar-chart-3"></i> Security Metrics</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="securityMetricsChart" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="generateSecurityReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Security Report</span>
+                                </button>
+                                <button class="action-btn" onclick="terminateAllSessions()">
+                                    <i data-lucide="log-out"></i>
+                                    <span>Terminate Sessions</span>
+                                </button>
+                                <button class="action-btn" onclick="exportSecurityLogs()">
+                                    <i data-lucide="download"></i>
+                                    <span>Export Logs</span>
+                                </button>
+                                <button class="action-btn" onclick="runSecurityScan()">
+                                    <i data-lucide="search"></i>
+                                    <span>Security Scan</span>
+                                </button>
+                                <button class="action-btn" onclick="updateSecurityPolicies()">
+                                    <i data-lucide="refresh-cw"></i>
+                                    <span>Update Policies</span>
+                                </button>
+                                <button class="action-btn" onclick="configureFirewall()">
+                                    <i data-lucide="shield"></i>
+                                    <span>Firewall Config</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Security Alert Modal -->
+    <div id="securityAlertModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="alert-triangle"></i> Security Alert Details</h2>
+                <button class="modal-close" onclick="closeModal('securityAlertModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="alertDetailsContent">
+                <!-- Alert details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('securityAlertModal')">Close</button>
+                <button class="btn btn-primary" onclick="resolveAlert()">Resolve Alert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Management Modal -->
+    <div id="sessionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="users"></i> Session Management</h2>
+                <button class="modal-close" onclick="closeModal('sessionModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="session-filters">
+                    <div class="form-group">
+                        <label for="sessionFilter">Filter by Factory</label>
+                        <select id="sessionFilter" class="form-select">
+                            <option value="">All Factories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionStatusFilter">Filter by Status</label>
+                        <select id="sessionStatusFilter" class="form-select">
+                            <option value="">All Sessions</option>
+                            <option value="active">Active</option>
+                            <option value="idle">Idle</option>
+                            <option value="suspicious">Suspicious</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="session-actions">
+                    <button class="btn btn-outline" onclick="terminateSelectedSessions()">
+                        <i data-lucide="log-out"></i> Terminate Selected
+                    </button>
+                    <button class="btn btn-outline" onclick="terminateAllSessions()">
+                        <i data-lucide="log-out"></i> Terminate All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/security-settings.js"></script>
+</body>
+</html>

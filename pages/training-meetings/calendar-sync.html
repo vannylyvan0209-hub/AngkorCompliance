@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Sync - Angkor Compliance</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/training-meetings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>
+                Angkor Compliance
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../dashboard.html">
+                    <i class="fas fa-home me-1"></i>
+                    Dashboard
+                </a>
+                <a class="nav-link" href="../training-meetings/training-matrix.html">
+                    <i class="fas fa-graduation-cap me-1"></i>
+                    Training Matrix
+                </a>
+                <a class="nav-link" href="../training-meetings/agenda-generator.html">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    Agenda Generator
+                </a>
+                <a class="nav-link" href="../training-meetings/task-orchestration.html">
+                    <i class="fas fa-tasks me-1"></i>
+                    Task Orchestration
+                </a>
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-calendar-check me-1"></i>
+                    Calendar Sync
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h2 mb-1">
+                            <i class="fas fa-calendar-check text-primary me-2"></i>
+                            Calendar Sync
+                        </h1>
+                        <p class="text-muted mb-0">Factory & personal calendar integration, ICS sync, and holiday awareness</p>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                            <i class="fas fa-plus me-1"></i>
+                            Create Event
+                        </button>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#importCalendarModal">
+                            <i class="fas fa-upload me-1"></i>
+                            Import Calendar
+                        </button>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exportCalendarModal">
+                            <i class="fas fa-download me-1"></i>
+                            Export Calendar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Views Tabs -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="calendarTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="factory-calendar-tab" data-bs-toggle="tab" data-bs-target="#factory-calendar" type="button" role="tab">
+                                    <i class="fas fa-building me-1"></i>
+                                    Factory Calendar
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="personal-calendar-tab" data-bs-toggle="tab" data-bs-target="#personal-calendar" type="button" role="tab">
+                                    <i class="fas fa-user me-1"></i>
+                                    Personal Calendar
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="meeting-calendar-tab" data-bs-toggle="tab" data-bs-target="#meeting-calendar" type="button" role="tab">
+                                    <i class="fas fa-users me-1"></i>
+                                    Meeting Calendar
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="training-calendar-tab" data-bs-toggle="tab" data-bs-target="#training-calendar" type="button" role="tab">
+                                    <i class="fas fa-graduation-cap me-1"></i>
+                                    Training Calendar
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="calendarTabsContent">
+                            <!-- Factory Calendar Tab -->
+                            <div class="tab-pane fade show active" id="factory-calendar" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-secondary" id="factoryToday">
+                                                <i class="fas fa-calendar-day me-1"></i>
+                                                Today
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="factoryPrev">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="factoryNext">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <span class="ms-3" id="factoryCurrentDate">February 2024</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="btn-group float-end">
+                                            <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridDay">Day</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="factoryCalendar"></div>
+                            </div>
+
+                            <!-- Personal Calendar Tab -->
+                            <div class="tab-pane fade" id="personal-calendar" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-secondary" id="personalToday">
+                                                <i class="fas fa-calendar-day me-1"></i>
+                                                Today
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="personalPrev">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="personalNext">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <span class="ms-3" id="personalCurrentDate">February 2024</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="btn-group float-end">
+                                            <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridDay">Day</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="personalCalendar"></div>
+                            </div>
+
+                            <!-- Meeting Calendar Tab -->
+                            <div class="tab-pane fade" id="meeting-calendar" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-secondary" id="meetingToday">
+                                                <i class="fas fa-calendar-day me-1"></i>
+                                                Today
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="meetingPrev">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="meetingNext">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <span class="ms-3" id="meetingCurrentDate">February 2024</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="btn-group float-end">
+                                            <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridDay">Day</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="meetingCalendar"></div>
+                            </div>
+
+                            <!-- Training Calendar Tab -->
+                            <div class="tab-pane fade" id="training-calendar" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="btn-group">
+                                            <button class="btn btn-outline-secondary" id="trainingToday">
+                                                <i class="fas fa-calendar-day me-1"></i>
+                                                Today
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="trainingPrev">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="trainingNext">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <span class="ms-3" id="trainingCurrentDate">February 2024</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="btn-group float-end">
+                                            <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
+                                            <button class="btn btn-outline-secondary" data-calendar-view="timeGridDay">Day</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="trainingCalendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Management Section -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="calendar-header">
+                        <h6 class="mb-0">Calendar Sources</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendar-source-list" id="calendarSources">
+                            <!-- Calendar sources will be populated here -->
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addCalendarSourceModal">
+                            <i class="fas fa-plus me-1"></i>
+                            Add Calendar Source
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="calendar-header">
+                        <h6 class="mb-0">Holiday Calendar</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="holiday-list" id="holidayList">
+                            <!-- Holiday list will be populated here -->
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addHolidayModal">
+                            <i class="fas fa-plus me-1"></i>
+                            Add Holiday
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div class="modal fade" id="createEventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Calendar Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createEventForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Event Title *</label>
+                                    <input type="text" class="form-control" id="eventTitle" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Event Type *</label>
+                                    <select class="form-select" id="eventType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="meeting">Meeting</option>
+                                        <option value="training">Training</option>
+                                        <option value="audit">Audit</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="holiday">Holiday</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Start Date & Time *</label>
+                                    <input type="datetime-local" class="form-control" id="eventStart" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">End Date & Time *</label>
+                                    <input type="datetime-local" class="form-control" id="eventEnd" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Calendar</label>
+                                    <select class="form-select" id="eventCalendar">
+                                        <option value="factory">Factory Calendar</option>
+                                        <option value="personal">Personal Calendar</option>
+                                        <option value="meeting">Meeting Calendar</option>
+                                        <option value="training">Training Calendar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">All Day Event</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="eventAllDay">
+                                        <label class="form-check-label">Mark as all-day event</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="eventLocation" placeholder="Meeting room, address, etc.">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Color</label>
+                                    <input type="color" class="form-control form-control-color" id="eventColor" value="#007bff">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Attendees</label>
+                            <select class="form-select" id="eventAttendees" multiple>
+                                <!-- Attendee options will be populated -->
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple attendees</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Reminders</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select class="form-select" id="reminderType">
+                                        <option value="email">Email</option>
+                                        <option value="popup">Popup</option>
+                                        <option value="sms">SMS</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" id="reminderTime">
+                                        <option value="0">At time of event</option>
+                                        <option value="5">5 minutes before</option>
+                                        <option value="15">15 minutes before</option>
+                                        <option value="30">30 minutes before</option>
+                                        <option value="60">1 hour before</option>
+                                        <option value="1440">1 day before</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEventBtn">Create Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Calendar Modal -->
+    <div class="modal fade" id="importCalendarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Calendar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="importCalendarForm">
+                        <div class="mb-3">
+                            <label class="form-label">Calendar File (ICS/CSV)</label>
+                            <input type="file" class="form-control" id="calendarFile" accept=".ics,.csv" required>
+                            <small class="form-text text-muted">Supported formats: ICS (iCalendar), CSV</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Target Calendar</label>
+                            <select class="form-select" id="importTargetCalendar" required>
+                                <option value="">Select Calendar</option>
+                                <option value="factory">Factory Calendar</option>
+                                <option value="personal">Personal Calendar</option>
+                                <option value="meeting">Meeting Calendar</option>
+                                <option value="training">Training Calendar</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Import Options</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="importOverwrite" checked>
+                                <label class="form-check-label">Overwrite existing events</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="importDuplicates">
+                                <label class="form-check-label">Allow duplicate events</label>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Importing will add events to the selected calendar. Existing events may be modified if overwrite is enabled.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="importCalendarBtn">Import Calendar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Calendar Modal -->
+    <div class="modal fade" id="exportCalendarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Calendar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="exportCalendarForm">
+                        <div class="mb-3">
+                            <label class="form-label">Calendar</label>
+                            <select class="form-select" id="exportCalendar" required>
+                                <option value="">Select Calendar</option>
+                                <option value="factory">Factory Calendar</option>
+                                <option value="personal">Personal Calendar</option>
+                                <option value="meeting">Meeting Calendar</option>
+                                <option value="training">Training Calendar</option>
+                                <option value="all">All Calendars</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date Range</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="exportStartDate" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="exportEndDate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Export Format</label>
+                            <select class="form-select" id="exportFormat" required>
+                                <option value="ics">ICS (iCalendar)</option>
+                                <option value="csv">CSV</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Export Options</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="exportIncludeDescription" checked>
+                                <label class="form-check-label">Include event descriptions</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="exportIncludeAttendees" checked>
+                                <label class="form-check-label">Include attendee information</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="exportIncludeReminders">
+                                <label class="form-check-label">Include reminder settings</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="exportCalendarBtn">Export Calendar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Calendar Source Modal -->
+    <div class="modal fade" id="addCalendarSourceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Calendar Source</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCalendarSourceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Source Type</label>
+                            <select class="form-select" id="sourceType" required>
+                                <option value="">Select Source Type</option>
+                                <option value="google">Google Calendar</option>
+                                <option value="outlook">Outlook/Office 365</option>
+                                <option value="ics">ICS URL</option>
+                                <option value="csv">CSV File</option>
+                                <option value="manual">Manual Entry</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Calendar Name</label>
+                            <input type="text" class="form-control" id="sourceName" placeholder="Enter calendar name" required>
+                        </div>
+                        <div class="mb-3" id="sourceUrlSection" style="display: none;">
+                            <label class="form-label">Calendar URL</label>
+                            <input type="url" class="form-control" id="sourceUrl" placeholder="https://calendar.google.com/...">
+                        </div>
+                        <div class="mb-3" id="sourceFileSection" style="display: none;">
+                            <label class="form-label">Calendar File</label>
+                            <input type="file" class="form-control" id="sourceFile" accept=".ics,.csv">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sync Frequency</label>
+                            <select class="form-select" id="syncFrequency">
+                                <option value="manual">Manual Sync</option>
+                                <option value="hourly">Every Hour</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Color</label>
+                            <input type="color" class="form-control form-control-color" id="sourceColor" value="#28a745">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveCalendarSourceBtn">Add Source</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Holiday Modal -->
+    <div class="modal fade" id="addHolidayModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Holiday</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addHolidayForm">
+                        <div class="mb-3">
+                            <label class="form-label">Holiday Name</label>
+                            <input type="text" class="form-control" id="holidayName" placeholder="e.g., New Year's Day" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" id="holidayDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="holidayType">
+                                <option value="public">Public Holiday</option>
+                                <option value="company">Company Holiday</option>
+                                <option value="regional">Regional Holiday</option>
+                                <option value="religious">Religious Holiday</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="holidayDescription" rows="2" placeholder="Optional description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Recurring</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="holidayRecurring">
+                                <label class="form-check-label">This holiday repeats annually</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveHolidayBtn">Add Holiday</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <script src="../../assets/js/training-meetings/calendar-sync.js"></script>
+</body>
+</html>

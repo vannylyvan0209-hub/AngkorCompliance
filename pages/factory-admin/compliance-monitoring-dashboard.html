@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Monitoring Dashboard - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="shield-check"></i> Compliance Monitoring Dashboard</h1>
+                    <p>Monitor compliance status and track violations</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Compliance Overview -->
+            <section class="compliance-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Overall Compliance</h3>
+                            <div class="card-value">87%</div>
+                            <div class="card-change positive">+2% this month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Active Violations</h3>
+                            <div class="card-value">12</div>
+                            <div class="card-change negative">3 critical</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clipboard-list"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Open CAPs</h3>
+                            <div class="card-value">8</div>
+                            <div class="card-change">Due this week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Next Audit</h3>
+                            <div class="card-value">15 days</div>
+                            <div class="card-change">External audit</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Compliance Status Chart -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="bar-chart-3"></i> Compliance Status</h2>
+                            <div class="card-actions">
+                                <select id="complianceFilter" class="form-select">
+                                    <option value="all">All Standards</option>
+                                    <option value="iso9001">ISO 9001</option>
+                                    <option value="iso14001">ISO 14001</option>
+                                    <option value="ohsas18001">OHSAS 18001</option>
+                                    <option value="custom">Custom Standards</option>
+                                </select>
+                                <button class="btn btn-outline" onclick="exportComplianceReport()">
+                                    <i data-lucide="download"></i> Export Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="complianceChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Violations Table -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="alert-triangle"></i> Active Violations</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="createCAP()">
+                                    <i data-lucide="plus"></i> Create CAP
+                                </button>
+                                <button class="btn btn-outline" onclick="bulkUpdateViolations()">
+                                    <i data-lucide="edit"></i> Bulk Update
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Violation</th>
+                                            <th>Standard</th>
+                                            <th>Severity</th>
+                                            <th>Status</th>
+                                            <th>Due Date</th>
+                                            <th>Assigned To</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="violationsTable">
+                                        <!-- Violations will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Corrective Action Plans -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="clipboard-list"></i> Corrective Action Plans</h2>
+                            <div class="card-actions">
+                                <select id="capFilter" class="form-select">
+                                    <option value="all">All CAPs</option>
+                                    <option value="open">Open</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="caps-grid" id="capsGrid">
+                                <!-- CAPs will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Compliance Standards -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="shield"></i> Compliance Standards</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="standards-list" id="standardsList">
+                                <!-- Standards will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="activity"></i> Recent Activities</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="recent-activities" id="recentActivities">
+                                <!-- Recent activities will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="scheduleAudit()">
+                                    <i data-lucide="calendar"></i>
+                                    <span>Schedule Audit</span>
+                                </button>
+                                <button class="action-btn" onclick="generateReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Generate Report</span>
+                                </button>
+                                <button class="action-btn" onclick="reviewViolations()">
+                                    <i data-lucide="eye"></i>
+                                    <span>Review Violations</span>
+                                </button>
+                                <button class="action-btn" onclick="updateStandards()">
+                                    <i data-lucide="edit"></i>
+                                    <span>Update Standards</span>
+                                </button>
+                                <button class="action-btn" onclick="complianceTraining()">
+                                    <i data-lucide="graduation-cap"></i>
+                                    <span>Training Schedule</span>
+                                </button>
+                                <button class="action-btn" onclick="riskAssessment()">
+                                    <i data-lucide="alert-octagon"></i>
+                                    <span>Risk Assessment</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Deadlines -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="clock"></i> Upcoming Deadlines</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="deadlines-list" id="deadlinesList">
+                                <!-- Deadlines will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create CAP Modal -->
+    <div id="createCAPModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="clipboard-list"></i> Create Corrective Action Plan</h2>
+                <button class="modal-close" onclick="closeModal('createCAPModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="capTitle">CAP Title</label>
+                    <input type="text" id="capTitle" class="form-input" placeholder="e.g., Address safety violation in production area">
+                </div>
+                
+                <div class="form-group">
+                    <label for="capDescription">Description</label>
+                    <textarea id="capDescription" class="form-textarea" rows="3" 
+                        placeholder="Describe the corrective action plan..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="capStandard">Related Standard</label>
+                        <select id="capStandard" class="form-select">
+                            <option value="">Select Standard</option>
+                            <option value="iso9001">ISO 9001</option>
+                            <option value="iso14001">ISO 14001</option>
+                            <option value="ohsas18001">OHSAS 18001</option>
+                            <option value="custom">Custom Standard</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="capSeverity">Severity</label>
+                        <select id="capSeverity" class="form-select">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="capAssignedTo">Assigned To</label>
+                        <select id="capAssignedTo" class="form-select">
+                            <option value="">Select User</option>
+                            <option value="user1">John Doe</option>
+                            <option value="user2">Jane Smith</option>
+                            <option value="user3">Mike Johnson</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="capDueDate">Due Date</label>
+                        <input type="date" id="capDueDate" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="capActions">Required Actions</label>
+                    <textarea id="capActions" class="form-textarea" rows="4" 
+                        placeholder="List the specific actions required to address this issue..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="capResources">Required Resources</label>
+                    <textarea id="capResources" class="form-textarea" rows="2" 
+                        placeholder="List any resources, budget, or support needed..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createCAPModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCAP()">Create CAP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Violation Details Modal -->
+    <div id="violationDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="alert-triangle"></i> Violation Details</h2>
+                <button class="modal-close" onclick="closeModal('violationDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="violation-details" id="violationDetails">
+                    <!-- Violation details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('violationDetailsModal')">Close</button>
+                <button class="btn btn-warning" onclick="createCAPFromViolation()">Create CAP</button>
+                <button class="btn btn-success" onclick="markViolationResolved()">Mark Resolved</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAP Details Modal -->
+    <div id="capDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="clipboard-list"></i> CAP Details</h2>
+                <button class="modal-close" onclick="closeModal('capDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="cap-details" id="capDetails">
+                    <!-- CAP details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('capDetailsModal')">Close</button>
+                <button class="btn btn-primary" onclick="updateCAP()">Update CAP</button>
+                <button class="btn btn-success" onclick="completeCAP()">Mark Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/compliance-monitoring-dashboard.js"></script>
+</body>
+</html>

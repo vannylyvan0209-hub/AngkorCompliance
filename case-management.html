@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/grievance-committee/case-management.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="case-management-container">
+        <!-- Header Section -->
+        <header class="case-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="folder-open"></i>
+                        Case Management
+                    </h1>
+                    <p class="page-subtitle">Manage and track grievance cases</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Active Cases</span>
+                            <span class="stat-value" id="activeCasesCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Today's Cases</span>
+                            <span class="stat-value" id="todayCasesCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg. Resolution Time</span>
+                            <span class="stat-value" id="avgResolutionTime">0 days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-left">
+                <button class="btn btn-primary" onclick="openNewCaseModal()">
+                    <i data-lucide="plus"></i>
+                    New Case
+                </button>
+                <button class="btn btn-outline" onclick="importCases()">
+                    <i data-lucide="upload"></i>
+                    Import Cases
+                </button>
+                <button class="btn btn-outline" onclick="exportCases()">
+                    <i data-lucide="download"></i>
+                    Export Cases
+                </button>
+            </div>
+            <div class="action-right">
+                <button class="btn btn-outline" onclick="refreshCases()">
+                    <i data-lucide="refresh-cw"></i>
+                    Refresh
+                </button>
+                <button class="btn btn-outline" onclick="openBulkActions()">
+                    <i data-lucide="settings"></i>
+                    Bulk Actions
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="filters-section">
+            <div class="filters-left">
+                <div class="filter-group">
+                    <label class="filter-label">Status:</label>
+                    <select id="statusFilter" class="filter-select" onchange="filterCases()">
+                        <option value="all">All Status</option>
+                        <option value="new">New</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="investigating">Investigating</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Priority:</label>
+                    <select id="priorityFilter" class="filter-select" onchange="filterCases()">
+                        <option value="all">All Priorities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Category:</label>
+                    <select id="categoryFilter" class="filter-select" onchange="filterCases()">
+                        <option value="all">All Categories</option>
+                        <option value="harassment">Harassment</option>
+                        <option value="discrimination">Discrimination</option>
+                        <option value="safety">Safety</option>
+                        <option value="wages">Wages</option>
+                        <option value="working_conditions">Working Conditions</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date Range:</label>
+                    <select id="dateFilter" class="filter-select" onchange="filterCases()">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="quarter">This Quarter</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filters-right">
+                <div class="search-group">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search cases..." onkeyup="searchCases()">
+                    <i data-lucide="search" class="search-icon"></i>
+                </div>
+                <button class="btn btn-outline" onclick="clearFilters()">
+                    <i data-lucide="x"></i>
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Cases Table -->
+        <div class="cases-table-container">
+            <table class="cases-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        </th>
+                        <th>Case ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Created Date</th>
+                        <th>Last Updated</th>
+                        <th>SLA Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="casesTableBody">
+                    <!-- Cases will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="paginationInfo">Showing 0 of 0 cases</span>
+            </div>
+            <div class="pagination-controls">
+                <button class="btn btn-outline" onclick="previousPage()" id="prevBtn" disabled>
+                    <i data-lucide="chevron-left"></i>
+                    Previous
+                </button>
+                <div class="page-numbers" id="pageNumbers">
+                    <!-- Page numbers will be generated here -->
+                </div>
+                <button class="btn btn-outline" onclick="nextPage()" id="nextBtn" disabled>
+                    Next
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Case Modal -->
+    <div id="newCaseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Case</h2>
+                <button class="modal-close" onclick="closeModal('newCaseModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newCaseForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Case Title *</label>
+                            <input type="text" id="caseTitle" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select id="caseCategory" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="harassment">Harassment</option>
+                                <option value="discrimination">Discrimination</option>
+                                <option value="safety">Safety</option>
+                                <option value="wages">Wages</option>
+                                <option value="working_conditions">Working Conditions</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Priority *</label>
+                            <select id="casePriority" class="form-select" required>
+                                <option value="">Select Priority</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Assigned To</label>
+                            <select id="caseAssignee" class="form-select">
+                                <option value="">Select Investigator</option>
+                                <!-- Investigators will be populated here -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description *</label>
+                        <textarea id="caseDescription" class="form-textarea" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Initial Notes</label>
+                        <textarea id="caseNotes" class="form-textarea" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Worker ID (if known)</label>
+                            <input type="text" id="workerId" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <input type="text" id="department" class="form-input">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('newCaseModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveNewCase()">Create Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Details Modal -->
+    <div id="caseDetailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Case Details</h2>
+                <button class="modal-close" onclick="closeModal('caseDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="case-details-content">
+                    <!-- Case details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div id="bulkActionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Bulk Actions</h2>
+                <button class="modal-close" onclick="closeModal('bulkActionsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-actions-content">
+                    <div class="form-group">
+                        <label class="form-label">Action</label>
+                        <select id="bulkAction" class="form-select">
+                            <option value="">Select Action</option>
+                            <option value="assign">Assign to Investigator</option>
+                            <option value="change_status">Change Status</option>
+                            <option value="change_priority">Change Priority</option>
+                            <option value="export">Export Selected</option>
+                            <option value="delete">Delete Cases</option>
+                        </select>
+                    </div>
+                    <div id="bulkActionOptions" class="bulk-action-options">
+                        <!-- Dynamic options will be shown here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('bulkActionsModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="executeBulkAction()">Execute Action</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Loading cases...</p>
+        </div>
+    </div>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/grievance-committee/case-management.js"></script>
+</body>
+</html>

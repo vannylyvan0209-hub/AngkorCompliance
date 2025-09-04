@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLA Management - Grievance Committee</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Role-specific styling for grievance_committee */
+        body.role-grievance-committee {
+            --role-primary: var(--grievance-primary);
+            --role-secondary: var(--grievance-secondary);
+            --role-accent: var(--grievance-accent);
+        }
+
+        
+        .sla-layout { display: flex; min-height: 100vh; background: var(--neutral-50); }
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: var(--space-8); }
+        .page-title h1 { font-size: var(--text-4xl); font-weight: 800; margin: 0; display: flex; align-items: center; gap: var(--space-3); }
+        .sla-container { padding: var(--space-8); }
+        
+        /* SLA Overview Cards */
+        .sla-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8); }
+        .sla-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .sla-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .sla-title { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); }
+        .sla-status { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
+        .sla-good { background: var(--success-100); color: var(--success-700); }
+        .sla-warning { background: var(--warning-100); color: var(--warning-700); }
+        .sla-critical { background: var(--error-100); color: var(--error-700); }
+        
+        /* SLA Configuration */
+        .sla-config { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); margin-bottom: var(--space-8); }
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6); }
+        .config-item { display: flex; flex-direction: column; gap: var(--space-2); }
+        .config-label { font-weight: 600; color: var(--neutral-700); }
+        .config-input { padding: var(--space-3); border: 1px solid var(--neutral-300); border-radius: var(--radius-lg); font-size: var(--text-sm); }
+        .config-select { padding: var(--space-3); border: 1px solid var(--neutral-300); border-radius: var(--radius-lg); font-size: var(--text-sm); background: white; }
+        
+        /* SLA Monitoring */
+        .sla-monitoring { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); margin-bottom: var(--space-8); }
+        .monitoring-chart { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); }
+        .chart-title { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); }
+        
+        /* SLA Alerts */
+        .sla-alerts { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .alert-item { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) 0; border-bottom: 1px solid var(--neutral-100); }
+        .alert-item:last-child { border-bottom: none; }
+        .alert-icon { width: 40px; height: 40px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; }
+        .alert-content { flex: 1; }
+        .alert-title { font-weight: 600; color: var(--neutral-900); margin-bottom: var(--space-1); }
+        .alert-description { font-size: var(--text-sm); color: var(--neutral-600); margin-bottom: var(--space-2); }
+        .alert-time { font-size: var(--text-xs); color: var(--neutral-500); }
+        
+        /* SLA Reports */
+        .sla-reports { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .report-filters { display: flex; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap; }
+        .filter-group { display: flex; flex-direction: column; gap: var(--space-2); }
+        .filter-label { font-size: var(--text-sm); font-weight: 600; color: var(--neutral-700); }
+        .filter-input { padding: var(--space-2) var(--space-3); border: 1px solid var(--neutral-300); border-radius: var(--radius-lg); font-size: var(--text-sm); }
+        
+        /* Buttons */
+        .btn { padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; transition: all 0.2s; border: none; font-size: var(--text-sm); }
+        .btn-primary { background: var(--primary-600); color: white; }
+        .btn-primary:hover { background: var(--primary-700); }
+        .btn-outline { background: transparent; color: var(--neutral-700); border: 1px solid var(--neutral-300); }
+        .btn-outline:hover { background: var(--neutral-50); }
+        .btn-sm { padding: var(--space-2) var(--space-4); font-size: var(--text-xs); }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content { margin-left: 0; }
+            .sla-monitoring { grid-template-columns: 1fr; }
+            .sla-overview { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-6) var(--space-4); }
+            .page-title h1 { font-size: var(--text-2xl); }
+            .sla-container { padding: var(--space-4); }
+            .sla-overview { grid-template-columns: 1fr; }
+            .config-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="role-grievance-committee">
+    <div class="sla-layout">
+        <div id="sidebarContainer"></div>
+        <script>
+            fetch('../../assets/html/sidebar-template.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('sidebarContainer').innerHTML = html;
+                    const el = document.querySelector('.brand-subtitle');
+                    if (el) el.textContent = 'Grievance Committee Portal';
+                });
+        </script>
+        
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="clock"></i> SLA Management</h1>
+                        <p>Monitor and configure Service Level Agreements for grievance cases</p>
+                    </div>
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-outline" onclick="exportSLAReport()">
+                            <i data-lucide="download"></i> Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="openSLAConfig()">
+                            <i data-lucide="settings"></i> Configure SLA
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="sla-container">
+                <!-- SLA Overview -->
+                <section class="sla-overview">
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Overall SLA Compliance</h3>
+                            <span class="sla-status sla-good" id="overallStatus">95% Compliant</span>
+                        </div>
+                        <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--success-600); margin-bottom: var(--space-2);" id="overallPercentage">95%</div>
+                        <div style="font-size: var(--text-sm); color: var(--neutral-600);">Cases meeting SLA targets</div>
+                    </div>
+                    
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Average Response Time</h3>
+                            <span class="sla-status sla-good" id="responseStatus">Within Target</span>
+                        </div>
+                        <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--success-600); margin-bottom: var(--space-2);" id="avgResponseTime">2.3 days</div>
+                        <div style="font-size: var(--text-sm); color: var(--neutral-600);">Target: 3 days</div>
+                    </div>
+                    
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Average Resolution Time</h3>
+                            <span class="sla-status sla-warning" id="resolutionStatus">Near Limit</span>
+                        </div>
+                        <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--warning-600); margin-bottom: var(--space-2);" id="avgResolutionTime">6.8 days</div>
+                        <div style="font-size: var(--text-sm); color: var(--neutral-600);">Target: 7 days</div>
+                    </div>
+                    
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">SLA Violations</h3>
+                            <span class="sla-status sla-critical" id="violationStatus">5 Cases</span>
+                        </div>
+                        <div style="font-size: var(--text-3xl); font-weight: 700; color: var(--error-600); margin-bottom: var(--space-2);" id="violationCount">5</div>
+                        <div style="font-size: var(--text-sm); color: var(--neutral-600);">Cases exceeding SLA</div>
+                    </div>
+                </section>
+                
+                <!-- SLA Configuration -->
+                <section class="sla-config">
+                    <div class="chart-header">
+                        <h3 class="chart-title">SLA Configuration</h3>
+                        <button class="btn btn-primary btn-sm" onclick="saveSLAConfig()">Save Configuration</button>
+                    </div>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label class="config-label">Initial Response Time (hours)</label>
+                            <input type="number" class="config-input" id="initialResponseTime" value="24" min="1" max="168">
+                        </div>
+                        <div class="config-item">
+                            <label class="config-label">Investigation Time (days)</label>
+                            <input type="number" class="config-input" id="investigationTime" value="7" min="1" max="30">
+                        </div>
+                        <div class="config-item">
+                            <label class="config-label">Resolution Time (days)</label>
+                            <input type="number" class="config-input" id="resolutionTime" value="14" min="1" max="60">
+                        </div>
+                        <div class="config-item">
+                            <label class="config-label">Escalation Threshold (hours)</label>
+                            <input type="number" class="config-input" id="escalationThreshold" value="48" min="1" max="168">
+                        </div>
+                        <div class="config-item">
+                            <label class="config-label">Priority Level</label>
+                            <select class="config-select" id="priorityLevel">
+                                <option value="low">Low Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="critical">Critical Priority</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label class="config-label">Notification Frequency</label>
+                            <select class="config-select" id="notificationFrequency">
+                                <option value="immediate">Immediate</option>
+                                <option value="hourly">Hourly</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- SLA Monitoring -->
+                <section class="sla-monitoring">
+                    <div class="monitoring-chart">
+                        <div class="chart-header">
+                            <h3 class="chart-title">SLA Performance Trends</h3>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <button class="btn btn-outline btn-sm" onclick="updateChartPeriod('week')">Week</button>
+                                <button class="btn btn-outline btn-sm" onclick="updateChartPeriod('month')">Month</button>
+                                <button class="btn btn-outline btn-sm" onclick="updateChartPeriod('quarter')">Quarter</button>
+                            </div>
+                        </div>
+                        <canvas id="slaTrendChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="sla-alerts">
+                        <div class="chart-header">
+                            <h3 class="chart-title">SLA Alerts</h3>
+                            <button class="btn btn-outline btn-sm" onclick="loadAllAlerts()">View All</button>
+                        </div>
+                        <div id="alertsList">
+                            <div class="alert-item">
+                                <div class="alert-icon" style="background: var(--error-500);">
+                                    <i data-lucide="alert-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">SLA Violation: Case GC-2024-002</div>
+                                    <div class="alert-description">Resolution time exceeded by 2 days</div>
+                                    <div class="alert-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-icon" style="background: var(--warning-500);">
+                                    <i data-lucide="clock"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">SLA Warning: Case GC-2024-003</div>
+                                    <div class="alert-description">Approaching resolution deadline</div>
+                                    <div class="alert-time">4 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-icon" style="background: var(--info-500);">
+                                    <i data-lucide="check-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">SLA Met: Case GC-2024-001</div>
+                                    <div class="alert-description">Successfully resolved within target time</div>
+                                    <div class="alert-time">6 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- SLA Reports -->
+                <section class="sla-reports">
+                    <div class="chart-header">
+                        <h3 class="chart-title">SLA Reports</h3>
+                        <button class="btn btn-primary btn-sm" onclick="generateSLAReport()">Generate Report</button>
+                    </div>
+                    <div class="report-filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <select class="filter-input" id="dateRange">
+                                <option value="last7days">Last 7 Days</option>
+                                <option value="last30days">Last 30 Days</option>
+                                <option value="last90days">Last 90 Days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Case Type</label>
+                            <select class="filter-input" id="caseType">
+                                <option value="all">All Types</option>
+                                <option value="harassment">Harassment</option>
+                                <option value="safety">Safety</option>
+                                <option value="wages">Wages</option>
+                                <option value="discrimination">Discrimination</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Priority</label>
+                            <select class="filter-input" id="priority">
+                                <option value="all">All Priorities</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Investigator</label>
+                            <select class="filter-input" id="investigator">
+                                <option value="all">All Investigators</option>
+                                <option value="jane-smith">Jane Smith</option>
+                                <option value="mike-johnson">Mike Johnson</option>
+                                <option value="sarah-wilson">Sarah Wilson</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="reportResults">
+                        <!-- Report results will be populated here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/sla-management.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+
+        
+        /* User Management Specific Styles */
+        .user-management {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .management-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .management-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-right {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-8);
+        }
+        
+        .users-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .search-filters {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            background: white;
+        }
+        
+        .filter-select {
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            background: white;
+            cursor: pointer;
+        }
+        
+        .users-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            background: var(--neutral-50);
+            margin-bottom: var(--space-3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .user-card:hover {
+            background: var(--primary-50);
+            transform: translateY(-1px);
+        }
+        
+        .user-card.selected {
+            background: var(--primary-100);
+            border: 2px solid var(--primary-500);
+        }
+        
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        
+        .user-info-card {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .user-email {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .user-role {
+            display: inline-block;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-active {
+            background: var(--success-500);
+        }
+        
+        .status-inactive {
+            background: var(--neutral-400);
+        }
+        
+        .status-pending {
+            background: var(--warning-500);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .user-details {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: var(--text-xl);
+        }
+        
+        .detail-info h3 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .detail-info p {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-2);
+        }
+        
+        .detail-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+        }
+        
+        .detail-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-4);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .detail-btn.primary {
+            background: var(--primary-500);
+            color: white;
+        }
+        
+        .detail-btn.secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .detail-btn.danger {
+            background: var(--error-500);
+            color: white;
+        }
+        
+        .detail-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .user-stats {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            background: var(--neutral-50);
+        }
+        
+        .stat-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .stat-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+        }
+        
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xs);
+            flex-shrink: 0;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .activity-time {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .user-management {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .search-filters {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="role-super-admin">
+    <div class="user-management">
+        <div class="management-container">
+            <!-- Management Header -->
+            <div class="management-header fade-in">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>User Management</h1>
+                        <p>Manage users, roles, and permissions across the platform</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">
+                                <span>SA</span>
+                            </div>
+                            <div>
+                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">Super Admin</div>
+                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">System Administrator</div>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <button onclick="addNewUser()" class="action-btn secondary">
+                                <i data-lucide="user-plus"></i>
+                                Add User
+                            </button>
+                            <button onclick="exportUsers()" class="action-btn">
+                                <i data-lucide="download"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content fade-in">
+                <div class="users-section">
+                    <h2 class="section-title">
+                        <i data-lucide="users"></i>
+                        Users List
+                    </h2>
+                    
+                    <div class="search-filters">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search users by name or email...">
+                        <select class="filter-select" id="roleFilter">
+                            <option value="all">All Roles</option>
+                            <option value="worker">Worker</option>
+                            <option value="factory_admin">Factory Admin</option>
+                            <option value="hr_staff">HR Staff</option>
+                            <option value="analytics_user">Analytics User</option>
+                            <option value="auditor">Auditor</option>
+                            <option value="super_admin">Super Admin</option>
+                        </select>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    
+                    <div class="users-list" id="usersList">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <div class="user-details" id="userDetails">
+                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
+                            <i data-lucide="user"></i>
+                            User Details
+                        </h3>
+                        <div style="text-align: center; color: var(--neutral-500); padding: var(--space-8);">
+                            Select a user to view details
+                        </div>
+                    </div>
+                    
+                    <div class="user-stats">
+                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
+                            <i data-lucide="bar-chart-2"></i>
+                            User Statistics
+                        </h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalUsers">0</div>
+                                <div class="stat-label">Total Users</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="activeUsers">0</div>
+                                <div class="stat-label">Active Users</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="pendingUsers">0</div>
+                                <div class="stat-label">Pending</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="newUsers">0</div>
+                                <div class="stat-label">New This Month</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity">
+                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
+                            <i data-lucide="clock"></i>
+                            Recent Activity
+                        </h3>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Recent activity will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/user-management.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function addNewUser() {
+            if (window.userManagement) {
+                window.userManagement.showAddUserModal();
+            }
+        }
+        
+        function exportUsers() {
+            if (window.userManagement) {
+                window.userManagement.exportUsers();
+            }
+        }
+    </script>
+</body>
+</html>

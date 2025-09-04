@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Export - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/auditor/evidence-export.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-content">
+                <h1><i data-lucide="download"></i> Evidence Export</h1>
+                <p>Export evidence for reports, compliance documentation, and external sharing</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEvidence">0</div>
+                    <div class="stat-label">Total Evidence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="exportedToday">0</div>
+                    <div class="stat-label">Exported Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingExports">0</div>
+                    <div class="stat-label">Pending Exports</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Export Configuration Panel -->
+            <section class="export-config-panel">
+                <div class="panel-header">
+                    <h2><i data-lucide="settings"></i> Export Configuration</h2>
+                    <button class="btn btn-primary" id="quickExportBtn">
+                        <i data-lucide="zap"></i> Quick Export
+                    </button>
+                </div>
+                
+                <div class="config-grid">
+                    <!-- Format Selection -->
+                    <div class="config-section">
+                        <h3>Export Format</h3>
+                        <div class="format-options">
+                            <label class="format-option">
+                                <input type="radio" name="format" value="pdf" checked>
+                                <div class="format-card">
+                                    <i data-lucide="file-text"></i>
+                                    <span>PDF Report</span>
+                                </div>
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="excel">
+                                <div class="format-card">
+                                    <i data-lucide="table"></i>
+                                    <span>Excel Spreadsheet</span>
+                                </div>
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="zip">
+                                <div class="format-card">
+                                    <i data-lucide="archive"></i>
+                                    <span>ZIP Archive</span>
+                                </div>
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="json">
+                                <div class="format-card">
+                                    <i data-lucide="code"></i>
+                                    <span>JSON Data</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Content Selection -->
+                    <div class="config-section">
+                        <h3>Content Selection</h3>
+                        <div class="content-filters">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="includeMetadata" checked>
+                                <span>Include metadata and timestamps</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="includeThumbnails" checked>
+                                <span>Include file thumbnails</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="includeLinks" checked>
+                                <span>Include evidence links</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="includeAuditTrail">
+                                <span>Include audit trail</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="config-section">
+                        <h3>Date Range</h3>
+                        <div class="date-inputs">
+                            <div class="input-group">
+                                <label>From Date</label>
+                                <input type="date" id="fromDate" class="form-input">
+                            </div>
+                            <div class="input-group">
+                                <label>To Date</label>
+                                <input type="date" id="toDate" class="form-input">
+                            </div>
+                        </div>
+                        <div class="quick-dates">
+                            <button class="btn btn-sm btn-outline" data-days="7">Last 7 days</button>
+                            <button class="btn btn-sm btn-outline" data-days="30">Last 30 days</button>
+                            <button class="btn btn-sm btn-outline" data-days="90">Last 90 days</button>
+                            <button class="btn btn-sm btn-outline" data-days="365">Last year</button>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Filters -->
+                    <div class="config-section">
+                        <h3>Evidence Filters</h3>
+                        <div class="filter-controls">
+                            <div class="input-group">
+                                <label>Category</label>
+                                <select id="categoryFilter" class="form-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Status</label>
+                                <select id="statusFilter" class="form-select">
+                                    <option value="">All Statuses</option>
+                                    <option value="pending">Pending Review</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>File Type</label>
+                                <select id="fileTypeFilter" class="form-select">
+                                    <option value="">All File Types</option>
+                                    <option value="image">Images</option>
+                                    <option value="document">Documents</option>
+                                    <option value="video">Videos</option>
+                                    <option value="audio">Audio</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-actions">
+                    <button class="btn btn-primary" id="generateExportBtn">
+                        <i data-lucide="download"></i> Generate Export
+                    </button>
+                    <button class="btn btn-outline" id="saveTemplateBtn">
+                        <i data-lucide="save"></i> Save as Template
+                    </button>
+                    <button class="btn btn-outline" id="loadTemplateBtn">
+                        <i data-lucide="folder-open"></i> Load Template
+                    </button>
+                </div>
+            </section>
+
+            <!-- Export History -->
+            <section class="export-history">
+                <div class="section-header">
+                    <h2><i data-lucide="history"></i> Export History</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-outline" id="refreshHistoryBtn">
+                            <i data-lucide="refresh-cw"></i> Refresh
+                        </button>
+                        <button class="btn btn-sm btn-outline" id="clearHistoryBtn">
+                            <i data-lucide="trash-2"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="history-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Export Date</th>
+                                <th>Format</th>
+                                <th>Content</th>
+                                <th>Status</th>
+                                <th>File Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exportHistoryBody">
+                            <!-- Export history rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Export Templates -->
+            <section class="export-templates">
+                <div class="section-header">
+                    <h2><i data-lucide="bookmark"></i> Export Templates</h2>
+                    <button class="btn btn-primary" id="createTemplateBtn">
+                        <i data-lucide="plus"></i> Create Template
+                    </button>
+                </div>
+                
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- Template cards will be populated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Export Progress Modal -->
+    <div class="modal" id="exportProgressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export in Progress</h3>
+                <button class="modal-close" data-lucide="x"></button>
+            </div>
+            <div class="modal-body">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="exportProgressFill"></div>
+                    </div>
+                    <div class="progress-text" id="exportProgressText">Preparing export...</div>
+                </div>
+                <div class="export-steps">
+                    <div class="step" id="step1">
+                        <i data-lucide="check-circle" class="step-icon"></i>
+                        <span>Collecting evidence</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <i data-lucide="circle" class="step-icon"></i>
+                        <span>Processing files</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <i data-lucide="circle" class="step-icon"></i>
+                        <span>Generating report</span>
+                    </div>
+                    <div class="step" id="step4">
+                        <i data-lucide="circle" class="step-icon"></i>
+                        <span>Finalizing export</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal" id="templateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="templateModalTitle">Create Export Template</h3>
+                <button class="modal-close" data-lucide="x"></button>
+            </div>
+            <div class="modal-body">
+                <form id="templateForm">
+                    <div class="form-group">
+                        <label for="templateName">Template Name</label>
+                        <input type="text" id="templateName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateDescription">Description</label>
+                        <textarea id="templateDescription" class="form-textarea" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Default Settings</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="defaultMetadata" checked>
+                                <span>Include metadata by default</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="defaultThumbnails" checked>
+                                <span>Include thumbnails by default</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="defaultLinks" checked>
+                                <span>Include links by default</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelTemplateBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveTemplateBtn">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Details Modal -->
+    <div class="modal" id="exportDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Details</h3>
+                <button class="modal-close" data-lucide="x"></button>
+            </div>
+            <div class="modal-body">
+                <div class="export-details" id="exportDetailsContent">
+                    <!-- Export details will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeDetailsBtn">Close</button>
+                <button class="btn btn-primary" id="downloadExportBtn">
+                    <i data-lucide="download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/auditor/evidence-export.js"></script>
+</body>
+</html>

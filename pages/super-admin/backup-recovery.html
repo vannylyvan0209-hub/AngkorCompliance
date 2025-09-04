@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup & Recovery - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="role-super-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="database"></i> Backup & Recovery</h1>
+                    <p>Manage data backup, restoration, and disaster recovery</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Super Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Backup Overview -->
+            <section class="backup-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Last Backup</h3>
+                            <div class="card-value">2 hours ago</div>
+                            <div class="card-change positive">Successful</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="hard-drive"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Backup Size</h3>
+                            <div class="card-value">2.4 GB</div>
+                            <div class="card-change">Compressed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Recovery Time</h3>
+                            <div class="card-value">15 min</div>
+                            <div class="card-change">Estimated</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Backup Health</h3>
+                            <div class="card-value">98%</div>
+                            <div class="card-change positive">Excellent</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Backup Management -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="settings"></i> Backup Configuration</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="saveBackupSettings()">
+                                    <i data-lucide="save"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="backupSettingsForm">
+                                <div class="settings-section">
+                                    <h3>Backup Schedule</h3>
+                                    <div class="form-group">
+                                        <label for="backupFrequency">Backup Frequency</label>
+                                        <select id="backupFrequency" class="form-select">
+                                            <option value="hourly">Hourly</option>
+                                            <option value="daily" selected>Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                        <p class="form-help">How often to perform automated backups</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="backupTime">Backup Time</label>
+                                        <input type="time" id="backupTime" class="form-input" value="02:00">
+                                        <p class="form-help">Time to perform daily backups (UTC)</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="retentionDays">Retention Period (Days)</label>
+                                        <input type="number" id="retentionDays" class="form-input" value="30" min="1" max="365">
+                                        <p class="form-help">How long to keep backup files</p>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3>Backup Scope</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="backupUserData" class="form-checkbox" checked>
+                                            User Data & Profiles
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="backupDocuments" class="form-checkbox" checked>
+                                            Documents & Files
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="backupSettings" class="form-checkbox" checked>
+                                            System Settings
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="backupLogs" class="form-checkbox">
+                                            Audit Logs
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="settings-section">
+                                    <h3>Storage Configuration</h3>
+                                    <div class="form-group">
+                                        <label for="storageLocation">Storage Location</label>
+                                        <select id="storageLocation" class="form-select">
+                                            <option value="firebase">Firebase Storage</option>
+                                            <option value="aws">AWS S3</option>
+                                            <option value="gcp">Google Cloud Storage</option>
+                                            <option value="azure">Azure Blob Storage</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enableEncryption" class="form-checkbox" checked>
+                                            Encrypt Backups
+                                        </label>
+                                        <p class="form-help">Encrypt backup files for security</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="enableCompression" class="form-checkbox" checked>
+                                            Compress Backups
+                                        </label>
+                                        <p class="form-help">Reduce backup file size</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Backup History -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="history"></i> Backup History</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" onclick="refreshBackupHistory()">
+                                    <i data-lucide="refresh-cw"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Backup Date</th>
+                                            <th>Type</th>
+                                            <th>Size</th>
+                                            <th>Status</th>
+                                            <th>Duration</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="backupHistoryTable">
+                                        <!-- Backup history will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="createManualBackup()">
+                                    <i data-lucide="download"></i>
+                                    <span>Create Backup</span>
+                                </button>
+                                <button class="action-btn" onclick="testRestore()">
+                                    <i data-lucide="refresh-cw"></i>
+                                    <span>Test Restore</span>
+                                </button>
+                                <button class="action-btn" onclick="exportBackupData()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Export Data</span>
+                                </button>
+                                <button class="action-btn" onclick="validateBackups()">
+                                    <i data-lucide="check-circle"></i>
+                                    <span>Validate Backups</span>
+                                </button>
+                                <button class="action-btn" onclick="cleanupOldBackups()">
+                                    <i data-lucide="trash-2"></i>
+                                    <span>Cleanup Old</span>
+                                </button>
+                                <button class="action-btn" onclick="configureDisasterRecovery()">
+                                    <i data-lucide="shield"></i>
+                                    <span>Disaster Recovery</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup Status -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="activity"></i> Backup Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="status-indicators">
+                                <div class="status-item">
+                                    <div class="status-icon status-success">
+                                        <i data-lucide="check-circle"></i>
+                                    </div>
+                                    <div class="status-content">
+                                        <div class="status-title">Automated Backup</div>
+                                        <div class="status-details">Running normally</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="status-item">
+                                    <div class="status-icon status-warning">
+                                        <i data-lucide="clock"></i>
+                                    </div>
+                                    <div class="status-content">
+                                        <div class="status-title">Next Backup</div>
+                                        <div class="status-details">In 22 hours</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="status-item">
+                                    <div class="status-icon status-success">
+                                        <i data-lucide="shield"></i>
+                                    </div>
+                                    <div class="status-content">
+                                        <div class="status-title">Encryption</div>
+                                        <div class="status-details">Enabled</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="status-item">
+                                    <div class="status-icon status-info">
+                                        <i data-lucide="hard-drive"></i>
+                                    </div>
+                                    <div class="status-content">
+                                        <div class="status-title">Storage</div>
+                                        <div class="status-details">2.4 GB used</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recovery Points -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="rotate-ccw"></i> Recovery Points</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="recovery-points" id="recoveryPoints">
+                                <!-- Recovery points will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup Analytics -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="bar-chart-3"></i> Backup Analytics</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="backupAnalyticsChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Restore Modal -->
+    <div id="restoreModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="refresh-cw"></i> Restore Data</h2>
+                <button class="modal-close" onclick="closeModal('restoreModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="restore-options">
+                    <div class="form-group">
+                        <label for="restorePoint">Select Restore Point</label>
+                        <select id="restorePoint" class="form-select">
+                            <option value="">Choose a backup to restore from</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="restoreScope">Restore Scope</label>
+                        <select id="restoreScope" class="form-select">
+                            <option value="full">Full System Restore</option>
+                            <option value="partial">Partial Restore</option>
+                            <option value="factory">Factory-Specific</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="overwriteExisting" class="form-checkbox">
+                            Overwrite existing data
+                        </label>
+                        <p class="form-help">Warning: This will replace current data</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="restoreNotes">Restore Notes</label>
+                        <textarea id="restoreNotes" class="form-textarea" rows="3" placeholder="Reason for restore..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('restoreModal')">Cancel</button>
+                <button class="btn btn-warning" onclick="confirmRestore()">Confirm Restore</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Details Modal -->
+    <div id="backupDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="info"></i> Backup Details</h2>
+                <button class="modal-close" onclick="closeModal('backupDetailsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="backupDetailsContent">
+                <!-- Backup details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('backupDetailsModal')">Close</button>
+                <button class="btn btn-primary" onclick="downloadBackup()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/backup-recovery.js"></script>
+</body>
+</html>

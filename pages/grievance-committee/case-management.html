@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management - Grievance Committee</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for grievance_committee */
+        body.role-grievance-committee {
+            --role-primary: var(--grievance-primary);
+            --role-secondary: var(--grievance-secondary);
+            --role-accent: var(--grievance-accent);
+        }
+
+        
+        .case-management-layout { display: flex; min-height: 100vh; background: var(--neutral-50); }
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: var(--space-8); }
+        .page-title h1 { font-size: var(--text-4xl); font-weight: 800; margin: 0; display: flex; align-items: center; gap: var(--space-3); }
+        .quick-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); margin: var(--space-8); }
+        .stat-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); }
+        .stat-value { font-size: var(--text-3xl); font-weight: 700; color: var(--neutral-900); }
+        .case-table-card { background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); margin: 0 var(--space-8) var(--space-8); }
+        .table-header { background: var(--neutral-50); padding: var(--space-6); border-bottom: 1px solid var(--neutral-200); display: flex; align-items: center; justify-content: space-between; }
+        .table-filters { background: var(--neutral-50); padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--neutral-200); display: flex; gap: var(--space-4); align-items: center; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { background: var(--neutral-50); padding: var(--space-4); text-align: left; border-bottom: 1px solid var(--neutral-200); font-size: var(--text-sm); color: var(--neutral-700); }
+        .table td { padding: var(--space-4); border-bottom: 1px solid var(--neutral-100); }
+        .status-badge { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; }
+        .status-new { background: var(--info-100); color: var(--info-700); }
+        .status-assigned { background: var(--warning-100); color: var(--warning-700); }
+        .status-investigating { background: var(--primary-100); color: var(--primary-700); }
+        .status-resolved { background: var(--success-100); color: var(--success-700); }
+        .status-closed { background: var(--neutral-100); color: var(--neutral-700); }
+        .severity-badge { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; }
+        .severity-low { background: var(--success-100); color: var(--success-700); }
+        .severity-medium { background: var(--warning-100); color: var(--warning-700); }
+        .severity-high { background: var(--error-100); color: var(--error-700); }
+        .severity-critical { background: var(--error-200); color: var(--error-800); }
+        .action-buttons { display: flex; gap: var(--space-2); }
+        .action-btn { padding: var(--space-2); border: none; border-radius: var(--radius-md); background: var(--neutral-100); color: var(--neutral-700); cursor: pointer; }
+        .action-btn.view { background: var(--info-100); color: var(--info-700); }
+        .action-btn.assign { background: var(--primary-100); color: var(--primary-700); }
+        .action-btn.resolve { background: var(--success-100); color: var(--success-700); }
+        .pagination { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-6); background: var(--neutral-50); border-top: 1px solid var(--neutral-200); }
+        .pagination-controls { display: flex; gap: var(--space-2); }
+        .pagination-btn { padding: var(--space-2) var(--space-3); border: 1px solid var(--neutral-300); border-radius: var(--radius-md); background: white; color: var(--neutral-700); cursor: pointer; }
+        .pagination-btn.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+        .empty-state { text-align: center; padding: var(--space-12); color: var(--neutral-500); }
+        @media (max-width: 768px) { .main-content { margin-left: 0; } .quick-stats { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body class="role-grievance-committee">
+    <div class="case-management-layout">
+        <div id="sidebarContainer"></div>
+        <script>
+            fetch('../../assets/html/sidebar-template.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('sidebarContainer').innerHTML = html;
+                    const el = document.querySelector('.brand-subtitle');
+                    if (el) el.textContent = 'Grievance Committee Portal';
+                });
+        </script>
+        
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="file-text"></i> Case Management</h1>
+                        <p>Manage grievance cases and investigations</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline btn-white" onclick="openNewCaseModal()">
+                            <i data-lucide="plus"></i> New Case
+                        </button>
+                        <button class="btn btn-outline btn-white" onclick="exportCases()">
+                            <i data-lucide="download"></i> Export
+                        </button>
+                        <button class="btn btn-primary" onclick="refreshCases()" id="refreshBtn">
+                            <i data-lucide="refresh-cw"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="case-management-container">
+                <section class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCases">0</div>
+                        <div class="stat-label">Total Cases</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingCases">0</div>
+                        <div class="stat-label">Pending Cases</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="investigatingCases">0</div>
+                        <div class="stat-label">Under Investigation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="resolvedCases">0</div>
+                        <div class="stat-label">Resolved Cases</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="criticalCases">0</div>
+                        <div class="stat-label">Critical Cases</div>
+                    </div>
+                </section>
+                
+                <section class="case-table-card">
+                    <div class="table-header">
+                        <h3>Grievance Cases</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-primary" onclick="openNewCaseModal()">
+                                <i data-lucide="plus"></i> New Case
+                            </button>
+                            <button class="btn btn-outline" onclick="exportCases()">
+                                <i data-lucide="download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-filters">
+                        <input type="text" id="caseSearch" placeholder="Search cases..." onkeyup="filterCases()">
+                        <select id="statusFilter" onchange="filterCases()">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="investigating">Investigating</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                        <select id="severityFilter" onchange="filterCases()">
+                            <option value="">All Severity</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                        <button class="btn btn-outline" onclick="clearFilters()">
+                            <i data-lucide="x"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Case #</th>
+                                    <th>Category</th>
+                                    <th>Severity</th>
+                                    <th>Status</th>
+                                    <th>Assigned To</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="casesTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-state">
+                                        <i data-lucide="file-text"></i>
+                                        <div>Loading cases...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <div class="pagination-info">
+                            Showing <span id="startIndex">0</span> to <span id="endIndex">0</span> of <span id="totalCount">0</span> cases
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="pagination-btn" onclick="previousPage()" id="prevBtn">
+                                <i data-lucide="chevron-left"></i> Previous
+                            </button>
+                            <button class="pagination-btn active" onclick="goToPage(1)">1</button>
+                            <button class="pagination-btn" onclick="nextPage()" id="nextBtn">
+                                Next <i data-lucide="chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/case-management.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

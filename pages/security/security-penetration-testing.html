@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Penetration Testing - Angkor Compliance</title>
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css">
+    <style>
+        .security-status {
+            border-left: 4px solid #28a745;
+            padding-left: 15px;
+        }
+        .security-status.critical {
+            border-left-color: #dc3545;
+        }
+        .security-status.high {
+            border-left-color: #fd7e14;
+        }
+        .security-status.medium {
+            border-left-color: #ffc107;
+        }
+        .security-status.low {
+            border-left-color: #17a2b8;
+        }
+        .test-progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        .vulnerability-card {
+            transition: transform 0.2s;
+        }
+        .vulnerability-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .security-metrics {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>
+                Angkor Compliance - Security Testing
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../../index.html">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+                <a class="nav-link" href="../system-admin/system-hardening-dashboard.html">
+                    <i class="fas fa-cogs me-1"></i>System Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-3">
+                    <i class="fas fa-bug text-danger me-2"></i>
+                    Security Penetration Testing Dashboard
+                </h1>
+                <p class="text-muted">Comprehensive security validation and penetration testing for enterprise deployment readiness</p>
+            </div>
+        </div>
+
+        <!-- Security Metrics Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card security-metrics">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                        <h4 class="mb-1" id="securityScore">98%</h4>
+                        <small>Security Score</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card security-metrics">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                        <h4 class="mb-1" id="criticalVulns">0</h4>
+                        <small>Critical Vulnerabilities</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card security-metrics">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 class="mb-1" id="testsPassed">156</h4>
+                        <small>Tests Passed</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card security-metrics">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <h4 class="mb-1" id="lastTest">2h ago</h4>
+                        <small>Last Test Run</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Testing Tabs -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="securityTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="owasp-tab" data-bs-toggle="tab" data-bs-target="#owasp" type="button" role="tab">
+                                    <i class="fas fa-list-ol me-2"></i>OWASP Top 10
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="authentication-tab" data-bs-toggle="tab" data-bs-target="#authentication" type="button" role="tab">
+                                    <i class="fas fa-key me-2"></i>Authentication
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="authorization-tab" data-bs-toggle="tab" data-bs-target="#authorization" type="button" role="tab">
+                                    <i class="fas fa-user-shield me-2"></i>Authorization
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="data-protection-tab" data-bs-toggle="tab" data-bs-target="#data-protection" type="button" role="tab">
+                                    <i class="fas fa-database me-2"></i>Data Protection
+                                </button>
+                            </li>
+                            <li class="nav-item" role="button">
+                                <button class="nav-link" id="api-security-tab" data-bs-toggle="tab" data-bs-target="#api-security" type="button" role="tab">
+                                    <i class="fas fa-code me-2"></i>API Security
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+                                    <i class="fas fa-chart-bar me-2"></i>Reports
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="securityTabContent">
+                            <!-- OWASP Top 10 Tab -->
+                            <div class="tab-pane fade show active" id="owasp" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>OWASP Top 10 Security Testing</h5>
+                                        <p class="text-muted">Comprehensive testing against OWASP Top 10 vulnerabilities</p>
+                                    </div>
+                                </div>
+                                <div class="row" id="owaspTests">
+                                    <!-- OWASP tests will be populated here -->
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" id="runOwaspTests">
+                                            <i class="fas fa-play me-2"></i>Run OWASP Tests
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="exportOwaspReport">
+                                            <i class="fas fa-download me-2"></i>Export Report
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Authentication Tab -->
+                            <div class="tab-pane fade" id="authentication" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>Authentication Security Testing</h5>
+                                        <p class="text-muted">Test authentication mechanisms and session management</p>
+                                    </div>
+                                </div>
+                                <div class="row" id="authTests">
+                                    <!-- Authentication tests will be populated here -->
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" id="runAuthTests">
+                                            <i class="fas fa-play me-2"></i>Run Authentication Tests
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Authorization Tab -->
+                            <div class="tab-pane fade" id="authorization" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>Authorization & Access Control Testing</h5>
+                                        <p class="text-muted">Validate RBAC/ABAC controls and privilege escalation prevention</p>
+                                    </div>
+                                </div>
+                                <div class="row" id="authzTests">
+                                    <!-- Authorization tests will be populated here -->
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" id="runAuthzTests">
+                                            <i class="fas fa-play me-2"></i>Run Authorization Tests
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Protection Tab -->
+                            <div class="tab-pane fade" id="data-protection" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>Data Protection & Privacy Testing</h5>
+                                        <p class="text-muted">Validate data encryption, PII protection, and tenant isolation</p>
+                                    </div>
+                                </div>
+                                <div class="row" id="dataTests">
+                                    <!-- Data protection tests will be populated here -->
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" id="runDataTests">
+                                            <i class="fas fa-play me-2"></i>Run Data Protection Tests
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API Security Tab -->
+                            <div class="tab-pane fade" id="api-security" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>API Security Testing</h5>
+                                        <p class="text-muted">Test API endpoints, rate limiting, and input validation</p>
+                                    </div>
+                                </div>
+                                <div class="row" id="apiTests">
+                                    <!-- API security tests will be populated here -->
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" id="runApiTests">
+                                            <i class="fas fa-play me-2"></i>Run API Security Tests
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reports Tab -->
+                            <div class="tab-pane fade" id="reports" role="tabpanel">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h5>Security Testing Reports</h5>
+                                        <p class="text-muted">Comprehensive security assessment reports and recommendations</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="securityReportsTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Test Date</th>
+                                                        <th>Test Type</th>
+                                                        <th>Status</th>
+                                                        <th>Vulnerabilities</th>
+                                                        <th>Score</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="securityReportsBody">
+                                                    <!-- Reports will be populated here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vulnerability Management -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                            Vulnerability Management
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="vulnerabilityCards">
+                            <!-- Vulnerability cards will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="testDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Test Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="testDetailsContent">
+                    <!-- Test details will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="vulnerabilityDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Vulnerability Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="vulnerabilityDetailsContent">
+                    <!-- Vulnerability details will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="markAsResolved">Mark as Resolved</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="../../assets/js/security/security-penetration-testing.js"></script>
+</body>
+</html>

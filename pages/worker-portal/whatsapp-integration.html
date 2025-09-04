@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Integration - Worker Portal</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/worker-portal.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Role-specific styling for worker */
+        body.role-worker {
+            --role-primary: var(--worker-primary);
+            --role-secondary: var(--worker-secondary);
+            --role-accent: var(--worker-accent);
+        }
+
+        
+        .whatsapp-container {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .whatsapp-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .whatsapp-header {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .whatsapp-content {
+            padding: 30px;
+        }
+        
+        .whatsapp-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            height: 75vh;
+        }
+        
+        .whatsapp-sidebar {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .whatsapp-main {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-item:hover {
+            border-color: #25D366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chat-item.active {
+            border-color: #25D366;
+            background: #e8f5e8;
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .chat-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .chat-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .chat-status.online {
+            background: #25D366;
+        }
+        
+        .chat-status.offline {
+            background: #6c757d;
+        }
+        
+        .chat-preview {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .chat-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .chat-actions button {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .chat-actions .btn-primary {
+            background: #25D366;
+            color: white;
+        }
+        
+        .chat-actions .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .message-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message.sent {
+            align-items: flex-end;
+        }
+        
+        .message.received {
+            align-items: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .message.sent .message-bubble {
+            background: #25D366;
+            color: white;
+        }
+        
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .message-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .message-input input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .message-input button {
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .template-section {
+            margin-top: 20px;
+        }
+        
+        .template-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-item:hover {
+            border-color: #25D366;
+            background: #f8f9fa;
+        }
+        
+        .template-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .template-content {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #25D366;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quick-actions button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quick-actions .btn-primary {
+            background: #25D366;
+            color: white;
+        }
+        
+        .quick-actions .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .quick-actions .btn-outline {
+            background: transparent;
+            color: #25D366;
+            border: 1px solid #25D366;
+        }
+    </style>
+</head>
+<body class="role-worker">
+    <div class="whatsapp-container">
+        <!-- Header -->
+        <header class="whatsapp-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i class="fab fa-whatsapp"></i> WhatsApp Integration</h1>
+                    <p>Connect with workers through WhatsApp Business API</p>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status">
+                        <span class="status-indicator" id="connectionStatus">Connected</span>
+                        <i class="fas fa-circle" id="statusIcon"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="whatsapp-content">
+            <div class="row">
+                <!-- Left Panel - Chat List & Templates -->
+                <div class="col-lg-4">
+                    <!-- Statistics -->
+                    <div class="whatsapp-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-bar"></i> WhatsApp Statistics</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="totalChats">0</div>
+                                    <div class="stat-label">Active Chats</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="messagesSent">0</div>
+                                    <div class="stat-label">Messages Sent</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="messagesReceived">0</div>
+                                    <div class="stat-label">Messages Received</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="responseRate">0%</div>
+                                    <div class="stat-label">Response Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="whatsapp-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="btn btn-primary" id="sendBroadcast">
+                                    <i class="fas fa-broadcast-tower"></i> Broadcast
+                                </button>
+                                <button class="btn btn-secondary" id="syncContacts">
+                                    <i class="fas fa-sync"></i> Sync Contacts
+                                </button>
+                                <button class="btn btn-outline" id="exportChats">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat List -->
+                    <div class="whatsapp-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-comments"></i> Active Chats</h4>
+                            <div class="card-actions">
+                                <button class="btn btn-outline-primary btn-sm" id="refreshChats">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="chatList" class="chat-list">
+                                <!-- Chats will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Templates -->
+                    <div class="whatsapp-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-file-alt"></i> Message Templates</h4>
+                            <div class="card-actions">
+                                <button class="btn btn-outline-primary btn-sm" id="addTemplate">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="templateList" class="template-list">
+                                <!-- Templates will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Chat Interface -->
+                <div class="col-lg-8">
+                    <div class="whatsapp-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-comment"></i> Chat Interface</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" id="sendTemplate">
+                                    <i class="fas fa-file-alt"></i> Send Template
+                                </button>
+                                <button class="btn btn-primary" id="sendMessage">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="chatInterface">
+                                <!-- Chat Interface -->
+                                <div class="chat-info">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label>Worker Name:</label>
+                                                <span id="workerName">-</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label>Phone Number:</label>
+                                                <span id="workerPhone">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label>Status:</label>
+                                                <span id="workerStatus">-</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label>Last Active:</label>
+                                                <span id="lastActive">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Message Container -->
+                                <div id="messageContainer" class="message-container">
+                                    <div class="message-placeholder">
+                                        <i class="fas fa-comments"></i>
+                                        <p>Select a chat to start messaging</p>
+                                    </div>
+                                </div>
+
+                                <!-- Message Input -->
+                                <div class="message-input">
+                                    <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+                                    <button id="sendButton" disabled>
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/enhanced-rbac-system.js"></script>
+    <script src="../assets/js/worker-portal/whatsapp-integration.js"></script>
+</body>
+</html>

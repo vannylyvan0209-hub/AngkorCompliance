@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP Management - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="assets/css/main-modern.css">
+    <link rel="stylesheet" href="assets/css/super-admin-navigation.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Navigation System -->
+    <script src="assets/js/navigation-config.js"></script>
+    <script src="assets/js/navigation-template.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+
+    <style>
+        .cap-layout {
+            display: flex;
+            min-height: 100vh;
+            background: var(--neutral-50);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--neutral-200);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+            color: var(--neutral-900);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: var(--space-4) 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-6);
+            text-decoration: none;
+            color: var(--neutral-700);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-nav-item:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+        }
+        
+        .sidebar-nav-item.active {
+            background: var(--primary-50);
+            color: var(--primary-700);
+            border-right: 3px solid var(--primary-500);
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white;
+            padding: var(--space-8) var(--space-8);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-title h1 {
+            font-size: var(--text-4xl);
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page-title h1 i {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .page-title p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: var(--text-lg);
+            margin: var(--space-2) 0 0 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid currentColor;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-white {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-white:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quick-stat {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .quick-stat:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quick-stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 800;
+            color: white;
+            margin-bottom: var(--space-1);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .quick-stat-label {
+            font-size: var(--text-sm);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .filters-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .filter-label {
+            font-weight: 500;
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+        }
+        
+        .filter-input,
+        .filter-select {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .search-input {
+            position: relative;
+        }
+        
+        .search-input input {
+            padding-left: 2.5rem;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neutral-400);
+        }
+        
+        .caps-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-200);
+            overflow: hidden;
+        }
+        
+        .caps-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .caps-stats {
+            display: flex;
+            gap: var(--space-6);
+            margin-left: auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .caps-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .caps-table th {
+            background: var(--neutral-50);
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .caps-table td {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--neutral-100);
+            vertical-align: middle;
+        }
+        
+        .caps-table tr:hover {
+            background: var(--neutral-25);
+        }
+        
+        .cap-row {
+            cursor: pointer;
+        }
+        
+        .cap-id {
+            font-weight: 600;
+            color: var(--primary-600);
+        }
+        
+        .cap-title {
+            font-weight: 500;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .cap-description {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-badge.draft {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .status-badge.pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-badge.in-progress {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .status-badge.completed {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-badge.overdue {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .priority-badge.low {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .priority-badge.medium {
+            background: var(--warning-100);
+            color: var(--warning-600);
+        }
+        
+        .priority-badge.high {
+            background: var(--danger-100);
+            color: var(--danger-600);
+        }
+        
+        .due-date {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+        }
+        
+        .due-date.overdue {
+            color: var(--danger-600);
+            font-weight: 500;
+        }
+        
+        .due-date.due-soon {
+            color: var(--warning-600);
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--neutral-200);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-500);
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--neutral-600);
+            margin-top: var(--space-1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12);
+            color: var(--neutral-600);
+        }
+        
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-4);
+            color: var(--neutral-400);
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--space-8);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--neutral-300);
+            border-top: 3px solid var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-4);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            left: var(--space-4);
+            z-index: 1001;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .mobile-overlay.open {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--space-4);
+            }
+            
+            .page-header {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                align-items: flex-start;
+            }
+            
+            .caps-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cap-layout">
+        <!-- Navigation will be loaded dynamically -->
+        <div id="sidebarContainer"></div>
+        <script>
+        // Load sidebar template and initialize navigation
+        fetch('assets/html/sidebar-template.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebarContainer').innerHTML = html;
+                // Navigation will auto-initialize via navigation-template.js
+            })
+            .catch(error => console.error('Error loading sidebar template:', error));
+        </script>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="clipboard-check"></i> CAP Management</h1>
+                        <p>Corrective Action Plans - Track and manage compliance improvements</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="cap-analytics.html" class="btn btn-outline btn-white">
+                            <i data-lucide="trending-up"></i>
+                            Analytics
+                        </a>
+                        <button class="btn btn-outline btn-white" onclick="exportCAPs()">
+                            <i data-lucide="download"></i>
+                            Export Data
+                        </button>
+                        <a href="new-cap.html" class="btn btn-primary" id="newCapBtn">
+                            <i data-lucide="plus"></i>
+                            New CAP
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="totalCAPs">-</div>
+                        <div class="quick-stat-label">Total CAPs</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="pendingCAPs">-</div>
+                        <div class="quick-stat-label">Pending</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="overdueCAPs">-</div>
+                        <div class="quick-stat-label">Overdue</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="completedCAPs">-</div>
+                        <div class="quick-stat-label">Completed</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="inProgressCAPs">-</div>
+                        <div class="quick-stat-label">In Progress</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="complianceRate">-</div>
+                        <div class="quick-stat-label">Compliance Rate</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="avgCompletionTime">-</div>
+                        <div class="quick-stat-label">Avg Completion</div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Filters Section -->
+            <section class="filters-section" style="margin: var(--space-6);">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Search CAPs</label>
+                        <div class="search-input">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="searchInput" class="filter-input" placeholder="Search by ID, title, or description...">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Priority</label>
+                        <select id="priorityFilter" class="filter-select">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Factory</label>
+                        <select id="factoryFilter" class="filter-select">
+                            <option value="">All Factories</option>
+                            <!-- Factories will be loaded dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Due Date</label>
+                        <select id="dueDateFilter" class="filter-select">
+                            <option value="">All Dates</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="due-soon">Due Soon (7 days)</option>
+                            <option value="this-month">This Month</option>
+                            <option value="next-month">Next Month</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Standard</label>
+                        <select id="standardFilter" class="filter-select">
+                            <option value="">All Standards</option>
+                            <option value="ILO">ILO/Better Work</option>
+                            <option value="SMETA">SMETA/SEDEX</option>
+                            <option value="Primark">Primark</option>
+                            <option value="BSCI">BSCI</option>
+                            <option value="Higg">Higg Index</option>
+                            <option value="Local">Local Regulations</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="btn btn-secondary" onclick="clearAllFilters()">
+                        <i data-lucide="x"></i>
+                        Clear Filters
+                    </button>
+                    <span id="resultsCount" class="text-sm text-neutral-600">Loading CAPs...</span>
+                </div>
+            </section>
+            
+            <!-- CAPs Section -->
+            <section class="caps-section">
+                <div class="caps-header">
+                    <h2 class="font-semibold text-neutral-900">Corrective Action Plans</h2>
+                </div>
+                
+                <div id="capsTableContainer">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Loading CAPs...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase and Auth Scripts -->
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script type="module">
+    
+        // CAP Management System
+        let allCAPs = [];
+        let filteredCAPs = [];
+        let factories = [];
+        let auth, db, doc, getDoc, collection, query, orderBy, where, onSnapshot, addDoc, updateDoc, deleteDoc, writeBatch, serverTimestamp, EmailAuthProvider, getDocs;
+        
+        // Initialize Firebase
+        async function initializeFirebase() {
+            try {
+                // Check if Firebase is available
+                if (window.Firebase) {
+                    auth = window.Firebase.auth;
+                    db = window.Firebase.db;
+                    
+                    // Load Firebase functions from the global Firebase object
+                    doc = window.Firebase.doc;
+                    getDoc = window.Firebase.getDoc;
+                    collection = window.Firebase.collection;
+                    query = window.Firebase.query;
+                    orderBy = window.Firebase.orderBy;
+                    where = window.Firebase.where;
+                    onSnapshot = window.Firebase.onSnapshot;
+                    addDoc = window.Firebase.addDoc;
+                    updateDoc = window.Firebase.updateDoc;
+                    deleteDoc = window.Firebase.deleteDoc;
+                    writeBatch = window.Firebase.writeBatch;
+                    serverTimestamp = window.Firebase.serverTimestamp;
+                    EmailAuthProvider = window.Firebase.EmailAuthProvider;
+                    getDocs = window.Firebase.getDocs;
+                    
+                    console.log('✅ Firebase instances and functions loaded successfully');
+                    return true;
+                } else {
+                    console.log('⚠️ Firebase not available, using local mode');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error initializing Firebase:', error);
+                return false;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 CAP Management page loading... (v3.0 - Firebase v10+ compatible)');
+            
+            // Initialize Firebase first
+            const firebaseReady = await initializeFirebase();
+            if (!firebaseReady) {
+                console.log('⚠️ Firebase not ready, loading sample data');
+                loadSampleCAPs();
+                return;
+            }
+            
+            // Check authentication
+            await checkAuthentication();
+            
+            // Initialize page
+            await initializePage();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            console.log('✅ CAP Management page fully loaded');
+        });
+        
+        async function checkAuthentication() {
+            return new Promise((resolve) => {
+                auth.onAuthStateChanged(async function(user) {
+                    if (!user) {
+                        console.log('❌ No authenticated user, redirecting to login');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    try {
+                        const userDocRef = doc(db, 'users', user.uid);
+                        const userDoc = await getDoc(userDocRef);
+                        
+                        if (!userDoc.exists()) {
+                            console.log('❌ No user profile found, redirecting to login');
+                            window.location.href = 'login.html';
+                            return;
+                        }
+                        
+                        const userData = userDoc.data();
+
+                        // Persist role/name and expose factory scope for navigation and queries
+                        try {
+                            if (typeof localStorage !== 'undefined') {
+                                localStorage.setItem('userRole', userData.role || 'user');
+                                localStorage.setItem('userName', userData.name || user.displayName || '');
+                            }
+                        } catch (e) { /* noop */ }
+                        window.currentUserRole = userData.role;
+                        window.currentUserFactoryId = userData.factoryId || null;
+                        
+                        // Allow super_admin and factory_admin to access CAP management
+                        if (!['super_admin', 'factory_admin'].includes(userData.role)) {
+                            console.log('⚠️ Access denied - insufficient permissions');
+                            window.location.href = 'dashboard.html';
+                            return;
+                        }
+                        
+                        console.log('✅ CAP Management access granted for:', userData.role);
+                        resolve();
+                        
+                    } catch (error) {
+                        console.error('❌ Error loading user profile:', error);
+                        window.location.href = 'login.html';
+                    }
+                });
+            });
+        }
+        
+        async function initializePage() {
+            try {
+                // Load data in parallel
+                await Promise.all([
+                    loadFactories(),
+                    loadCAPs()
+                ]);
+                
+                // Update UI
+                updateCAPsTable();
+                updateStats();
+                
+            } catch (error) {
+                console.error('❌ Error initializing page:', error);
+                showError('Failed to load CAP data. Please refresh the page.');
+            }
+        }
+        
+        async function loadFactories() {
+            try {
+                const factoriesRef = collection(db, 'factories');
+                const snapshot = await getDocs(factoriesRef);
+                factories = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                
+                // Populate factory filter
+                const factoryFilter = document.getElementById('factoryFilter');
+                factories.forEach(factory => {
+                    const option = document.createElement('option');
+                    option.value = factory.id;
+                    option.textContent = factory.name || factory.id;
+                    factoryFilter.appendChild(option);
+                });
+                
+                console.log('✅ Factories loaded:', factories.length);
+                
+            } catch (error) {
+                console.error('❌ Error loading factories:', error);
+            }
+        }
+        
+        // Helper function to safely convert dates (v2.0 - Fixed date handling)
+        function safeToDate(dateValue) {
+            if (!dateValue) return null;
+            
+            // If it's already a Date object
+            if (dateValue instanceof Date) {
+                return dateValue;
+            }
+            
+            // If it's a Firestore Timestamp with toDate method
+            if (dateValue && typeof dateValue.toDate === 'function') {
+                return dateValue.toDate();
+            }
+            
+            // If it's a string, try to parse it
+            if (typeof dateValue === 'string') {
+                const parsed = new Date(dateValue);
+                return isNaN(parsed.getTime()) ? null : parsed;
+            }
+            
+            // If it's a number (timestamp)
+            if (typeof dateValue === 'number') {
+                return new Date(dateValue);
+            }
+            
+            // If it has seconds property (Firestore Timestamp object)
+            if (dateValue && typeof dateValue.seconds === 'number') {
+                return new Date(dateValue.seconds * 1000);
+            }
+            
+            return null;
+        }
+
+        async function loadCAPs() {
+            try {
+                console.log('👥 Loading CAPs...');
+                let capsRef = collection(db, 'caps');
+                let q;
+                
+                // Factory Admins must be scoped to their assigned factory per Firestore rules
+                if (window.currentUserRole === 'factory_admin' && window.currentUserFactoryId) {
+                    try {
+                        q = query(capsRef, 
+                            where('factoryId', '==', window.currentUserFactoryId), 
+                            orderBy('createdAt', 'desc')
+                        );
+                    } catch (error) {
+                        console.log('⚠️ Cannot order by createdAt, using simple query');
+                        q = query(capsRef, where('factoryId', '==', window.currentUserFactoryId));
+                    }
+                } else {
+                    try {
+                        q = query(capsRef, orderBy('createdAt', 'desc'));
+                    } catch (error) {
+                        console.log('⚠️ Cannot order by createdAt, using simple query');
+                        q = query(capsRef);
+                    }
+                }
+                
+                const snapshot = await getDocs(q);
+                allCAPs = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        createdAt: safeToDate(data.createdAt) || new Date(),
+                        dueDate: safeToDate(data.dueDate),
+                        updatedAt: safeToDate(data.updatedAt) || new Date()
+                    };
+                });
+                
+                // Sort by creation date (newest first)
+                allCAPs.sort((a, b) => b.createdAt - a.createdAt);
+                
+                // Apply initial filtering
+                applyFilters();
+                
+                console.log('✅ CAPs loaded:', allCAPs.length);
+                
+            } catch (error) {
+                console.error('❌ Error loading CAPs:', error);
+                console.log('⚠️ Using sample CAPs due to Firebase error');
+                loadSampleCAPs();
+            }
+        }
+        
+        function loadSampleCAPs() {
+            console.log('📋 Loading sample CAPs for demonstration...');
+            
+            // Sample CAPs data
+            allCAPs = [
+                {
+                    id: 'cap-001',
+                    capId: 'CAP-2024-001',
+                    title: 'Safety Equipment Compliance',
+                    description: 'Ensure all workers have proper safety equipment',
+                    status: 'in-progress',
+                    priority: 'high',
+                    progress: 75,
+                    factoryId: 'factory-001',
+                    dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+                    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+                    updatedAt: new Date(),
+                    category: 'Safety',
+                    standard: 'ISO 45001'
+                },
+                {
+                    id: 'cap-002',
+                    capId: 'CAP-2024-002',
+                    title: 'Environmental Waste Management',
+                    description: 'Improve waste disposal procedures',
+                    status: 'pending',
+                    priority: 'medium',
+                    progress: 25,
+                    factoryId: 'factory-002',
+                    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+                    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+                    updatedAt: new Date(),
+                    category: 'Environmental',
+                    standard: 'ISO 14001'
+                },
+                {
+                    id: 'cap-003',
+                    capId: 'CAP-2024-003',
+                    title: 'Quality Control Procedures',
+                    description: 'Update quality control documentation',
+                    status: 'completed',
+                    priority: 'low',
+                    progress: 100,
+                    factoryId: 'factory-001',
+                    dueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+                    createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
+                    updatedAt: new Date(),
+                    category: 'Quality',
+                    standard: 'ISO 9001'
+                }
+            ];
+            
+            // Apply initial filtering
+            applyFilters();
+            
+            console.log('✅ Sample CAPs loaded:', allCAPs.length);
+        }
+        
+        function setupEventListeners() {
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+            
+            // Filter selects
+            ['statusFilter', 'priorityFilter', 'factoryFilter', 'dueDateFilter', 'standardFilter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+            });
+        }
+        
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            const factoryFilter = document.getElementById('factoryFilter').value;
+            const dueDateFilter = document.getElementById('dueDateFilter').value;
+            const standardFilter = document.getElementById('standardFilter').value;
+            
+            filteredCAPs = allCAPs.filter(cap => {
+                // Search filter
+                if (searchTerm && !matchesSearch(cap, searchTerm)) {
+                    return false;
+                }
+                
+                // Status filter
+                if (statusFilter && cap.status !== statusFilter) {
+                    return false;
+                }
+                
+                // Priority filter
+                if (priorityFilter && cap.priority !== priorityFilter) {
+                    return false;
+                }
+                
+                // Factory filter
+                if (factoryFilter && cap.factoryId !== factoryFilter) {
+                    return false;
+                }
+                
+                // Due date filter
+                if (dueDateFilter && !matchesDueDateFilter(cap, dueDateFilter)) {
+                    return false;
+                }
+                
+                // Standard filter
+                if (standardFilter && cap.standard !== standardFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            updateCAPsTable();
+            updateResultsCount();
+        }
+        
+        function matchesSearch(cap, searchTerm) {
+            const searchFields = [
+                cap.id,
+                cap.title,
+                cap.description,
+                cap.issueDescription,
+                cap.capId
+            ].filter(Boolean).map(field => field.toLowerCase());
+            
+            return searchFields.some(field => field.includes(searchTerm));
+        }
+        
+        function matchesDueDateFilter(cap, filter) {
+            if (!cap.dueDate) return filter === '';
+            
+            const now = new Date();
+            const dueDate = cap.dueDate;
+            const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+            
+            switch (filter) {
+                case 'overdue':
+                    return diffDays < 0;
+                case 'due-soon':
+                    return diffDays >= 0 && diffDays <= 7;
+                case 'this-month':
+                    return dueDate.getMonth() === now.getMonth() && dueDate.getFullYear() === now.getFullYear();
+                case 'next-month':
+                    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1);
+                    return dueDate.getMonth() === nextMonth.getMonth() && dueDate.getFullYear() === nextMonth.getFullYear();
+                default:
+                    return true;
+            }
+        }
+        
+        function updateCAPsTable() {
+            const container = document.getElementById('capsTableContainer');
+            
+            if (filteredCAPs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i data-lucide="clipboard-list"></i>
+                        </div>
+                        <h3 class="font-semibold text-neutral-900 mb-2">No CAPs found</h3>
+                        <p class="text-neutral-600 mb-4">Try adjusting your filters or create a new CAP.</p>
+                        <a href="new-cap.html" class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            Create New CAP
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tableHTML = `
+                <table class="caps-table">
+                    <thead>
+                        <tr>
+                            <th>CAP ID</th>
+                            <th>Title & Description</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Factory</th>
+                            <th>Progress</th>
+                            <th>Due Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredCAPs.map(cap => createCAPRow(cap)).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        function createCAPRow(cap) {
+            const factory = factories.find(f => f.id === cap.factoryId);
+            const factoryName = factory ? factory.name : cap.factoryId || 'Unknown';
+            
+            const progress = cap.progress || 0;
+            const status = getStatusWithOverdue(cap);
+            
+            return `
+                <tr class="cap-row" onclick="viewCAP('${cap.id}')">
+                    <td>
+                        <div class="cap-id">${cap.capId || cap.id.substring(0, 8)}</div>
+                    </td>
+                    <td>
+                        <div class="cap-title">${cap.title || 'Untitled CAP'}</div>
+                        <div class="cap-description">${truncateText(cap.description || cap.issueDescription || '', 60)}</div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${status}">
+                            ${getStatusIcon(status)}
+                            ${formatStatus(status)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="priority-badge ${cap.priority || 'medium'}">
+                            ${getPriorityIcon(cap.priority)}
+                            ${formatPriority(cap.priority)}
+                        </span>
+                    </td>
+                    <td>${factoryName}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="progress-text">${progress}% complete</div>
+                    </td>
+                    <td>
+                        <div class="due-date ${getDueDateClass(cap.dueDate)}">
+                            ${formatDueDate(cap.dueDate)}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation(); editCAP('${cap.id}')" style="padding: var(--space-2);">
+                            <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+        
+        function getStatusWithOverdue(cap) {
+            if (cap.status === 'completed') return 'completed';
+            
+            if (cap.dueDate && cap.dueDate < new Date() && cap.status !== 'completed') {
+                return 'overdue';
+            }
+            
+            return cap.status || 'pending';
+        }
+        
+        function getStatusIcon(status) {
+            const icons = {
+                draft: '<i data-lucide="edit-3" style="width: 12px; height: 12px;"></i>',
+                pending: '<i data-lucide="clock" style="width: 12px; height: 12px;"></i>',
+                'in-progress': '<i data-lucide="play" style="width: 12px; height: 12px;"></i>',
+                completed: '<i data-lucide="check" style="width: 12px; height: 12px;"></i>',
+                overdue: '<i data-lucide="alert-triangle" style="width: 12px; height: 12px;"></i>'
+            };
+            return icons[status] || '';
+        }
+        
+        function getPriorityIcon(priority) {
+            const icons = {
+                low: '<i data-lucide="minus" style="width: 12px; height: 12px;"></i>',
+                medium: '<i data-lucide="equal" style="width: 12px; height: 12px;"></i>',
+                high: '<i data-lucide="arrow-up" style="width: 12px; height: 12px;"></i>'
+            };
+            return icons[priority] || icons.medium;
+        }
+        
+        function formatStatus(status) {
+            const statusMap = {
+                draft: 'Draft',
+                pending: 'Pending',
+                'in-progress': 'In Progress',
+                completed: 'Completed',
+                overdue: 'Overdue'
+            };
+            return statusMap[status] || 'Unknown';
+        }
+        
+        function formatPriority(priority) {
+            const priorityMap = {
+                low: 'Low',
+                medium: 'Medium',
+                high: 'High'
+            };
+            return priorityMap[priority] || 'Medium';
+        }
+        
+        function getDueDateClass(dueDate) {
+            if (!dueDate) return '';
+            
+            const now = new Date();
+            const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) return 'overdue';
+            if (diffDays <= 7) return 'due-soon';
+            return '';
+        }
+        
+        function formatDueDate(dueDate) {
+            if (!dueDate) return 'No due date';
+            
+            const now = new Date();
+            const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                return `${Math.abs(diffDays)} days overdue`;
+            } else if (diffDays === 0) {
+                return 'Due today';
+            } else if (diffDays === 1) {
+                return 'Due tomorrow';
+            } else if (diffDays <= 7) {
+                return `Due in ${diffDays} days`;
+            } else {
+                return dueDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            }
+        }
+        
+        function updateStats() {
+            const total = allCAPs.length;
+            const pending = allCAPs.filter(cap => cap.status === 'pending').length;
+            const overdue = allCAPs.filter(cap => {
+                return cap.dueDate && cap.dueDate < new Date() && cap.status !== 'completed';
+            }).length;
+            const completed = allCAPs.filter(cap => cap.status === 'completed').length;
+            const inProgress = allCAPs.filter(cap => cap.status === 'in-progress').length;
+            
+            // Calculate compliance rate (completed vs total)
+            const complianceRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            // Calculate average completion time (simplified - using 30 days as default)
+            const avgCompletionTime = '30d';
+            
+            document.getElementById('totalCAPs').textContent = total;
+            document.getElementById('pendingCAPs').textContent = pending;
+            document.getElementById('overdueCAPs').textContent = overdue;
+            document.getElementById('completedCAPs').textContent = completed;
+            document.getElementById('inProgressCAPs').textContent = inProgress;
+            document.getElementById('complianceRate').textContent = complianceRate + '%';
+            document.getElementById('avgCompletionTime').textContent = avgCompletionTime;
+        }
+        
+        function updateResultsCount() {
+            const count = filteredCAPs.length;
+            const total = allCAPs.length;
+            const resultsText = count === total ? 
+                `Showing ${count} CAPs` : 
+                `Showing ${count} of ${total} CAPs`;
+            
+            document.getElementById('resultsCount').textContent = resultsText;
+        }
+        
+        function clearAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('priorityFilter').value = '';
+            document.getElementById('factoryFilter').value = '';
+            document.getElementById('dueDateFilter').value = '';
+            document.getElementById('standardFilter').value = '';
+            
+            applyFilters();
+        }
+        
+        function viewCAP(capId) {
+            window.location.href = `cap-detail.html?id=${capId}`;
+        }
+        
+        function editCAP(capId) {
+            window.location.href = `new-cap.html?edit=${capId}`;
+        }
+        
+        function exportCAPs() {
+            // Implement CSV export
+            try {
+                if (filteredCAPs.length === 0) {
+                    alert('No CAPs to export.');
+                    return;
+                }
+                
+                // Prepare CSV data
+                const csvData = filteredCAPs.map(cap => ({
+                    ID: cap.id,
+                    Title: cap.title || 'Untitled',
+                    Description: cap.description || '',
+                    Status: cap.status || 'pending',
+                    Priority: cap.priority || 'medium',
+                    Progress: cap.progress || 0,
+                    Category: cap.category || '',
+                    Factory: cap.factoryName || '',
+                    AssignedTo: cap.assignedTo || '',
+                    CreatedDate: cap.createdAt ? new Date(cap.createdAt.toDate ? cap.createdAt.toDate() : cap.createdAt).toLocaleDateString() : '',
+                    DueDate: cap.dueDate ? new Date(cap.dueDate.toDate ? cap.dueDate.toDate() : cap.dueDate).toLocaleDateString() : '',
+                    CompletedDate: cap.completedAt ? new Date(cap.completedAt.toDate ? cap.completedAt.toDate() : cap.completedAt).toLocaleDateString() : '',
+                    ActionSteps: cap.actionSteps || ''
+                }));
+                
+                // Convert to CSV
+                const headers = Object.keys(csvData[0]);
+                const csvContent = [
+                    headers.join(','),
+                    ...csvData.map(row => 
+                        headers.map(header => {
+                            const value = row[header];
+                            if (value === null || value === undefined) return '';
+                            if (typeof value === 'object') return JSON.stringify(value);
+                            return String(value).replace(/"/g, '""');
+                        }).join(',')
+                    )
+                ].join('\n');
+                
+                // Download CSV file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `caps_export_${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('✅ CAPs exported successfully');
+                
+            } catch (error) {
+                console.error('❌ Error exporting CAPs:', error);
+                alert('Failed to export CAPs. Please try again.');
+            }
+        }
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'login.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                    window.location.href = 'login.html';
+                });
+            }
+        }
+        
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+        
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+        }
+        
+        // Utility functions
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        function showError(message) {
+            // Simple error display - could be enhanced with a proper notification system
+            alert('Error: ' + message);
+        }
+    </script>
+</body>
+</html>

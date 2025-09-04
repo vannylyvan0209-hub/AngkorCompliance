@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Approval Dashboard - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="assets/css/main-modern.css">
+    <link rel="stylesheet" href="assets/css/super-admin-navigation.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Navigation System -->
+    <script src="assets/js/navigation-config.js"></script>
+    <script src="assets/js/navigation-template.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    
+    <!-- Custom Styles for Approval Dashboard -->
+    <style>
+        .approval-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--neutral-50);
+            min-height: 100vh;
+        }
+        
+        .approval-header {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: white;
+            padding: var(--space-8) var(--space-8);
+            margin-bottom: var(--space-8);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .approval-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-title h1 {
+            font-size: var(--text-4xl);
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page-title h1 i {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .page-title p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: var(--text-lg);
+            margin: var(--space-2) 0 0 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .btn-white {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-white:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quick-stat {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .quick-stat:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quick-stat-value {
+            font-size: var(--text-2xl);
+            font-weight: 800;
+            color: white;
+            margin-bottom: var(--space-1);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .quick-stat-label {
+            font-size: var(--text-sm);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .approval-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .stat-card {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-2xl);
+        }
+        
+        .stat-icon.pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .stat-icon.approved {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .stat-icon.rejected {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .stat-icon.draft {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .approval-filters {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .filter-label {
+            font-weight: 500;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+        }
+        
+        .filter-select {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+        
+        .approval-list {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--neutral-200);
+            overflow: hidden;
+        }
+        
+        .approval-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .approval-item:hover {
+            background: var(--neutral-50);
+        }
+        
+        .approval-item:last-child {
+            border-bottom: none;
+        }
+        
+        .document-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .document-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            background: var(--primary-100);
+            color: var(--primary-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+        }
+        
+        .document-details {
+            flex: 1;
+        }
+        
+        .document-title {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .document-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .approval-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-approved {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-rejected {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .status-draft {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .approval-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .btn-approve {
+            background: var(--success-600);
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-approve:hover {
+            background: var(--success-700);
+        }
+        
+        .btn-reject {
+            background: var(--danger-600);
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-reject:hover {
+            background: var(--danger-700);
+        }
+        
+        .btn-view {
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-view:hover {
+            background: var(--primary-700);
+        }
+        
+        .approval-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .approval-modal.open {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .modal-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            color: var(--neutral-500);
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .approval-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+        
+        .form-textarea {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--neutral-200);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12);
+            color: var(--neutral-500);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-4);
+            color: var(--neutral-400);
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            left: var(--space-4);
+            z-index: 1001;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .mobile-overlay.open {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .approval-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-4);
+            }
+            
+            .approval-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+    <div id="sidebarContainer"></div>
+    <script>
+    // Load sidebar template and initialize navigation
+    fetch('assets/html/sidebar-template.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('sidebarContainer').innerHTML = html;
+            // Navigation will auto-initialize via navigation-template.js
+        })
+        .catch(error => console.error('Error loading sidebar template:', error));
+    </script>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="approval-header">
+            <div class="page-title">
+                <div>
+                    <h1><i data-lucide="check-square"></i> Document Approval Dashboard</h1>
+                    <p>Review and approve pending documents for compliance</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline btn-white" onclick="exportApprovalData()">
+                        <i data-lucide="download"></i>
+                        Export Data
+                    </button>
+                    <button class="btn btn-outline btn-white" onclick="refreshApprovalData()">
+                        <i data-lucide="refresh-cw"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="pendingCount">-</div>
+                    <div class="quick-stat-label">Pending Approval</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="approvedCount">-</div>
+                    <div class="quick-stat-label">Approved Today</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="rejectedCount">-</div>
+                    <div class="quick-stat-label">Rejected Today</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="draftCount">-</div>
+                    <div class="quick-stat-label">Draft Documents</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="totalReviewed">-</div>
+                    <div class="quick-stat-label">Total Reviewed</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="approvalRate">-</div>
+                    <div class="quick-stat-label">Approval Rate</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value" id="avgReviewTime">-</div>
+                    <div class="quick-stat-label">Avg Review Time</div>
+                </div>
+            </div>
+        </header>
+        
+        
+        
+        <div class="container">
+            
+            <!-- Filters -->
+            <div class="approval-filters">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select id="statusFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending Approval</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Factory</label>
+                        <select id="factoryFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Factories</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Category</label>
+                        <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                            <option value="business-license">Business License</option>
+                            <option value="safety-certificate">Safety Certificate</option>
+                            <option value="environmental-permit">Environmental Permit</option>
+                            <option value="labor-compliance">Labor Compliance</option>
+                            <option value="quality-certificate">Quality Certificate</option>
+                            <option value="insurance-policy">Insurance Policy</option>
+                            <option value="audit-report">Audit Report</option>
+                            <option value="training-record">Training Record</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <select id="dateFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Approval List -->
+            <div class="approval-list" id="approvalList">
+                <!-- Approval items will be loaded here -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- Approval Modal -->
+    <div class="approval-modal" id="approvalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Review Document</h2>
+                <button class="modal-close" onclick="closeApprovalModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="approval-form">
+                <div class="form-group">
+                    <label class="form-label">Document Information</label>
+                    <div id="documentInfo">
+                        <!-- Document info will be displayed here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Comments (Optional)</label>
+                    <textarea id="approvalComments" class="form-textarea" placeholder="Add your comments about this document..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeApprovalModal()">Cancel</button>
+                    <button class="btn-reject" onclick="rejectDocument()">Reject</button>
+                    <button class="btn-approve" onclick="approveDocument()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script type="module" src="assets/js/approval-dashboard.js"></script>
+</body>
+</html>

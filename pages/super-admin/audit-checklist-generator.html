@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Checklist Generator - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+
+        
+        .audit-checklist-generator {
+            padding: var(--space-4);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .generator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-4);
+        }
+
+        .checklist-builder {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .builder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: var(--space-4);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: var(--space-1);
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-2);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--background-color);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .standards-selection {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .standard-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-2);
+            background: var(--surface-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .standard-item:hover {
+            background: var(--hover-color);
+        }
+
+        .standard-item.selected {
+            border-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .standard-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        .standard-info {
+            flex: 1;
+        }
+
+        .standard-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .standard-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .requirements-preview {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-3);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .requirement-item:last-child {
+            border-bottom: none;
+        }
+
+        .requirement-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+        }
+
+        .requirement-info {
+            flex: 1;
+        }
+
+        .requirement-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .requirement-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .requirement-meta {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .tag-type {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tag-priority {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .tag-category {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .checklist-preview {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            height: fit-content;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-2);
+            background: var(--background-color);
+        }
+
+        .checklist-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .checklist-content {
+            flex: 1;
+        }
+
+        .checklist-question {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .checklist-guidance {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .checklist-options {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: 14px;
+        }
+
+        .option-item input[type="radio"] {
+            width: 14px;
+            height: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .templates-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .template-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-2);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .template-item:hover {
+            background: var(--hover-color);
+        }
+
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .template-info {
+            flex: 1;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .template-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .stats-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .quick-actions {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .action-item:hover {
+            background: var(--hover-color);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .checklist-summary {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-3);
+            margin-top: var(--space-3);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .summary-value {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="role-super-admin">
+    <div class="audit-checklist-generator">
+        <div class="generator-header">
+            <div>
+                <h1><i data-lucide="check-square"></i> Audit Checklist Generator</h1>
+                <p>Create comprehensive audit checklists based on compliance standards</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="saveTemplate()">
+                    <i data-lucide="save"></i> Save Template
+                </button>
+                <button class="btn btn-outline" onclick="exportChecklist()">
+                    <i data-lucide="download"></i> Export
+                </button>
+                <button class="btn btn-primary" onclick="generateChecklist()">
+                    <i data-lucide="play"></i> Generate Checklist
+                </button>
+            </div>
+        </div>
+
+        <div class="generator-grid">
+            <div class="checklist-builder">
+                <div class="builder-header">
+                    <h3><i data-lucide="edit"></i> Checklist Builder</h3>
+                    <button class="btn btn-sm btn-outline" onclick="clearBuilder()">
+                        <i data-lucide="refresh-cw"></i> Clear
+                    </button>
+                </div>
+
+                <form id="checklistBuilderForm">
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="info"></i>
+                            Basic Information
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="checklistName">Checklist Name *</label>
+                                <input type="text" id="checklistName" required placeholder="e.g., ISO 9001 Quality Audit Checklist">
+                            </div>
+                            <div class="form-group">
+                                <label for="checklistType">Checklist Type *</label>
+                                <select id="checklistType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="internal">Internal Audit</option>
+                                    <option value="external">External Audit</option>
+                                    <option value="supplier">Supplier Audit</option>
+                                    <option value="certification">Certification Audit</option>
+                                    <option value="surveillance">Surveillance Audit</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="auditScope">Audit Scope</label>
+                                <input type="text" id="auditScope" placeholder="e.g., Quality Management System">
+                            </div>
+                            <div class="form-group">
+                                <label for="auditDuration">Estimated Duration (hours)</label>
+                                <input type="number" id="auditDuration" min="1" placeholder="8">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="checklistDescription">Description</label>
+                                <textarea id="checklistDescription" rows="3" placeholder="Brief description of the audit checklist"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="shield"></i>
+                            Standards Selection
+                        </div>
+                        <div class="standards-selection" id="standardsSelection">
+                            <div class="standard-item">
+                                <input type="checkbox" class="standard-checkbox" id="iso9001" value="iso9001">
+                                <div class="standard-info">
+                                    <div class="standard-name">ISO 9001:2015 - Quality Management</div>
+                                    <div class="standard-description">Quality management system requirements</div>
+                                </div>
+                            </div>
+                            <div class="standard-item">
+                                <input type="checkbox" class="standard-checkbox" id="iso14001" value="iso14001">
+                                <div class="standard-info">
+                                    <div class="standard-name">ISO 14001:2015 - Environmental Management</div>
+                                    <div class="standard-description">Environmental management system requirements</div>
+                                </div>
+                            </div>
+                            <div class="standard-item">
+                                <input type="checkbox" class="standard-checkbox" id="iso45001" value="iso45001">
+                                <div class="standard-info">
+                                    <div class="standard-name">ISO 45001:2018 - Occupational Health & Safety</div>
+                                    <div class="standard-description">Occupational health and safety management</div>
+                                </div>
+                            </div>
+                            <div class="standard-item">
+                                <input type="checkbox" class="standard-checkbox" id="sa8000" value="sa8000">
+                                <div class="standard-info">
+                                    <div class="standard-name">SA 8000:2014 - Social Accountability</div>
+                                    <div class="standard-description">Social accountability requirements</div>
+                                </div>
+                            </div>
+                            <div class="standard-item">
+                                <input type="checkbox" class="standard-checkbox" id="bsci" value="bsci">
+                                <div class="standard-info">
+                                    <div class="standard-name">BSCI - Business Social Compliance Initiative</div>
+                                    <div class="standard-description">Social compliance and ethical trade</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="settings"></i>
+                            Configuration Options
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="requirementFilter">Requirement Filter</label>
+                                <select id="requirementFilter">
+                                    <option value="all">All Requirements</option>
+                                    <option value="mandatory">Mandatory Only</option>
+                                    <option value="high-priority">High Priority Only</option>
+                                    <option value="active">Active Requirements</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="questionFormat">Question Format</label>
+                                <select id="questionFormat">
+                                    <option value="yes-no">Yes/No Questions</option>
+                                    <option value="compliance-level">Compliance Level</option>
+                                    <option value="evidence-based">Evidence-Based</option>
+                                    <option value="rating-scale">Rating Scale (1-5)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="includeGuidance">
+                            <label for="includeGuidance">Include guidance notes</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="includeEvidence">
+                            <label for="includeEvidence">Include evidence requirements</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="includeRisk">
+                            <label for="includeRisk">Include risk assessment</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="includeCorrective">
+                            <label for="includeCorrective">Include corrective action fields</label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <i data-lucide="list-check"></i>
+                            Requirements Preview
+                        </div>
+                        <div class="requirements-preview" id="requirementsPreview">
+                            <div class="empty-state">
+                                <i data-lucide="list-check"></i>
+                                <h4>No requirements selected</h4>
+                                <p>Select standards above to see requirements</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="previewChecklist()">
+                            <i data-lucide="eye"></i> Preview
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="saveDraft()">
+                            <i data-lucide="save"></i> Save Draft
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="play"></i> Generate Checklist
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="sidebar">
+                <div class="checklist-preview">
+                    <div class="preview-header">
+                        <h3><i data-lucide="eye"></i> Checklist Preview</h3>
+                        <button class="btn btn-sm btn-outline" onclick="refreshPreview()">
+                            <i data-lucide="refresh-cw"></i> Refresh
+                        </button>
+                    </div>
+                    <div id="checklistPreview">
+                        <div class="empty-state">
+                            <i data-lucide="check-square"></i>
+                            <h4>No checklist generated</h4>
+                            <p>Configure and generate a checklist to see preview</p>
+                        </div>
+                    </div>
+                    <div class="checklist-summary" id="checklistSummary" style="display: none;">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Questions:</span>
+                            <span class="summary-value" id="totalQuestions">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Estimated Time:</span>
+                            <span class="summary-value" id="estimatedTime">0 hours</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Standards Covered:</span>
+                            <span class="summary-value" id="standardsCovered">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="templates-card">
+                    <h3><i data-lucide="file-text"></i> Templates</h3>
+                    <div class="template-item" onclick="loadTemplate('iso9001')">
+                        <div class="template-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-name">ISO 9001 Template</div>
+                            <div class="template-details">Quality management audit</div>
+                        </div>
+                    </div>
+                    <div class="template-item" onclick="loadTemplate('iso14001')">
+                        <div class="template-icon">
+                            <i data-lucide="leaf"></i>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-name">ISO 14001 Template</div>
+                            <div class="template-details">Environmental audit</div>
+                        </div>
+                    </div>
+                    <div class="template-item" onclick="loadTemplate('iso45001')">
+                        <div class="template-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-name">ISO 45001 Template</div>
+                            <div class="template-details">Health & safety audit</div>
+                        </div>
+                    </div>
+                    <div class="template-item" onclick="loadTemplate('sa8000')">
+                        <div class="template-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-name">SA 8000 Template</div>
+                            <div class="template-details">Social accountability audit</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3><i data-lucide="bar-chart-3"></i> Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalTemplates">12</div>
+                            <div class="stat-label">Templates</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalChecklists">45</div>
+                            <div class="stat-label">Generated</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="activeStandards">8</div>
+                            <div class="stat-label">Standards</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalRequirements">156</div>
+                            <div class="stat-label">Requirements</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                    <div class="action-list">
+                        <div class="action-item" onclick="importTemplate()">
+                            <div class="action-icon">
+                                <i data-lucide="upload"></i>
+                            </div>
+                            <div>
+                                <div>Import Template</div>
+                                <small>Import from file</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="exportTemplate()">
+                            <div class="action-icon">
+                                <i data-lucide="download"></i>
+                            </div>
+                            <div>
+                                <div>Export Template</div>
+                                <small>Save as file</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="shareTemplate()">
+                            <div class="action-icon">
+                                <i data-lucide="share-2"></i>
+                            </div>
+                            <div>
+                                <div>Share Template</div>
+                                <small>Share with team</small>
+                            </div>
+                        </div>
+                        <div class="action-item" onclick="templateAnalytics()">
+                            <div class="action-icon">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+                            <div>
+                                <div>Template Analytics</div>
+                                <small>Usage statistics</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/super-admin/audit-checklist-generator.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

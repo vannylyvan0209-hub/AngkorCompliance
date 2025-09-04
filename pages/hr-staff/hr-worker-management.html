@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Worker Management - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <style>
+        /* Role-specific styling for hr_staff */
+        body.role-hr-staff {
+            --role-primary: var(--hr-staff-primary);
+            --role-secondary: var(--hr-staff-secondary);
+            --role-accent: var(--hr-staff-accent);
+        }
+
+        
+        /* HR Worker Management Specific Styles */
+        .worker-management {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .management-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .management-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-right {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .search-filters {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: var(--space-3);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+        
+        .filter-select {
+            padding: var(--space-3);
+            border: 2px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+        
+        .filter-btn {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .filter-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+        }
+        
+        .filter-btn.secondary:hover {
+            background: white;
+            color: var(--neutral-900);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-8);
+        }
+        
+        .workers-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .add-worker-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .add-worker-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .workers-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .worker-card {
+            background: var(--neutral-50);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-4);
+            border-left: 4px solid var(--primary-500);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .worker-card:hover {
+            background: var(--primary-50);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .worker-card.selected {
+            background: var(--primary-100);
+            border-left-color: var(--primary-700);
+        }
+        
+        .worker-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .worker-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            font-weight: 600;
+            font-size: var(--text-lg);
+        }
+        
+        .worker-info {
+            flex: 1;
+        }
+        
+        .worker-name {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .worker-details {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .worker-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-inactive {
+            background: var(--error-100);
+            color: var(--error-700);
+        }
+        
+        .worker-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-top: var(--space-4);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+        
+        .stat-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            margin-top: var(--space-1);
+        }
+        
+        .worker-details-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            height: fit-content;
+        }
+        
+        .details-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--neutral-200);
+        }
+        
+        .details-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            font-weight: 600;
+            font-size: var(--text-xl);
+        }
+        
+        .details-info h3 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .details-info p {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .details-tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+            border-bottom: 2px solid var(--neutral-200);
+            padding-bottom: var(--space-4);
+        }
+        
+        .detail-tab {
+            background: none;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .detail-tab.active {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .detail-tab:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-800);
+        }
+        
+        .detail-content {
+            display: none;
+        }
+        
+        .detail-content.active {
+            display: block;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+        }
+        
+        .detail-value {
+            font-size: var(--text-sm);
+            color: var(--neutral-900);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-top: var(--space-6);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+        }
+        
+        .action-btn.secondary:hover {
+            background: white;
+            color: var(--neutral-900);
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--error-600), var(--error-700));
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .worker-management {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .worker-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="role-hr-staff">
+    <div class="worker-management">
+        <div class="management-container">
+            <!-- Management Header -->
+            <div class="management-header fade-in">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>Worker Management</h1>
+                        <p>Manage worker profiles, performance, and compliance</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">
+                                <span>HR</span>
+                            </div>
+                            <div>
+                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">HR Staff</div>
+                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">Human Resources</div>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="action-btn secondary" style="padding: var(--space-2) var(--space-4);">
+                            <i data-lucide="log-out"></i>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search and Filters -->
+            <div class="search-filters fade-in">
+                <div class="filter-row">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search workers by name, ID, or department...">
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <select class="filter-select" id="departmentFilter">
+                        <option value="">All Departments</option>
+                        <option value="production">Production</option>
+                        <option value="quality">Quality Control</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="packaging">Packaging</option>
+                        <option value="warehouse">Warehouse</option>
+                    </select>
+                    <button onclick="applyFilters()" class="filter-btn">
+                        <i data-lucide="search"></i>
+                        Search
+                    </button>
+                    <button onclick="clearFilters()" class="filter-btn secondary">
+                        <i data-lucide="refresh-cw"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Workers List -->
+                <div class="workers-section">
+                    <h2 class="section-title">
+                        <span>
+                            <i data-lucide="users"></i>
+                            Workers
+                        </span>
+                        <button onclick="addNewWorker()" class="add-worker-btn">
+                            <i data-lucide="user-plus"></i>
+                            Add Worker
+                        </button>
+                    </h2>
+                    
+                    <div class="workers-list" id="workersList">
+                        <!-- Worker cards will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Worker Details -->
+                <div class="worker-details-section" id="workerDetails">
+                    <div class="details-header">
+                        <div class="details-avatar" id="selectedWorkerAvatar">
+                            <span>W</span>
+                        </div>
+                        <div class="details-info">
+                            <h3 id="selectedWorkerName">Select a Worker</h3>
+                            <p id="selectedWorkerRole">Click on a worker card to view details</p>
+                        </div>
+                    </div>
+                    
+                    <div class="details-tabs">
+                        <button class="detail-tab active" onclick="switchDetailTab('profile')">
+                            <i data-lucide="user"></i>
+                            Profile
+                        </button>
+                        <button class="detail-tab" onclick="switchDetailTab('performance')">
+                            <i data-lucide="activity"></i>
+                            Performance
+                        </button>
+                        <button class="detail-tab" onclick="switchDetailTab('training')">
+                            <i data-lucide="book-open"></i>
+                            Training
+                        </button>
+                        <button class="detail-tab" onclick="switchDetailTab('compliance')">
+                            <i data-lucide="shield-check"></i>
+                            Compliance
+                        </button>
+                    </div>
+                    
+                    <!-- Profile Tab -->
+                    <div id="profile-tab" class="detail-content active">
+                        <div class="detail-item">
+                            <span class="detail-label">Worker ID</span>
+                            <span class="detail-value" id="workerId">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Department</span>
+                            <span class="detail-value" id="workerDepartment">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Position</span>
+                            <span class="detail-value" id="workerPosition">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Join Date</span>
+                            <span class="detail-value" id="workerJoinDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value" id="workerEmail">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value" id="workerPhone">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address</span>
+                            <span class="detail-value" id="workerAddress">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Tab -->
+                    <div id="performance-tab" class="detail-content">
+                        <div class="detail-item">
+                            <span class="detail-label">Attendance Rate</span>
+                            <span class="detail-value" id="attendanceRate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Performance Score</span>
+                            <span class="detail-value" id="performanceScore">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Overtime Hours</span>
+                            <span class="detail-value" id="overtimeHours">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Last Review</span>
+                            <span class="detail-value" id="lastReview">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Review</span>
+                            <span class="detail-value" id="nextReview">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Training Tab -->
+                    <div id="training-tab" class="detail-content">
+                        <div class="detail-item">
+                            <span class="detail-label">Completed Training</span>
+                            <span class="detail-value" id="completedTraining">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Pending Training</span>
+                            <span class="detail-value" id="pendingTraining">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Certifications</span>
+                            <span class="detail-value" id="certifications">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Last Training</span>
+                            <span class="detail-value" id="lastTraining">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Compliance Tab -->
+                    <div id="compliance-tab" class="detail-content">
+                        <div class="detail-item">
+                            <span class="detail-label">Compliance Status</span>
+                            <span class="detail-value" id="complianceStatus">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Safety Violations</span>
+                            <span class="detail-value" id="safetyViolations">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Last Audit</span>
+                            <span class="detail-value" id="lastAudit">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Next Audit</span>
+                            <span class="detail-value" id="nextAudit">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button onclick="editWorker()" class="action-btn">
+                            <i data-lucide="edit"></i>
+                            Edit Worker
+                        </button>
+                        <button onclick="scheduleTraining()" class="action-btn secondary">
+                            <i data-lucide="calendar"></i>
+                            Schedule Training
+                        </button>
+                        <button onclick="viewPerformance()" class="action-btn secondary">
+                            <i data-lucide="bar-chart"></i>
+                            View Performance
+                        </button>
+                        <button onclick="generateReport()" class="action-btn secondary">
+                            <i data-lucide="file-text"></i>
+                            Generate Report
+                        </button>
+                        <button onclick="deactivateWorker()" class="action-btn danger">
+                            <i data-lucide="user-x"></i>
+                            Deactivate Worker
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/hr/hr-worker-management.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Tab switching function
+        function switchDetailTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.detail-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.detail-tab');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

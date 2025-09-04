@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Management - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="assets/css/main-modern.css">
+    <link rel="stylesheet" href="assets/css/super-admin-navigation.css">
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Navigation System -->
+    <script src="assets/js/navigation-config.js"></script>
+    <script src="assets/js/navigation-template.js"></script>
+    
+    <!-- Custom Styles for Enhanced Factory Management -->
+    <style>
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--neutral-50);
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+            color: white;
+            padding: var(--space-8) var(--space-8);
+            margin-bottom: var(--space-8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-title h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .page-title p {
+            font-size: var(--text-lg);
+            opacity: 0.9;
+            margin: var(--space-2) 0 0 0;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-500);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .stat-icon.primary { background: var(--primary-500); }
+        .stat-icon.success { background: var(--success-500); }
+        .stat-icon.warning { background: var(--warning-500); }
+        .stat-icon.info { background: var(--info-500); }
+        .stat-icon.danger { background: var(--danger-500); }
+        
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+        
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+        
+        .stat-change.positive { color: var(--success-600); }
+        .stat-change.negative { color: var(--danger-600); }
+        .stat-change.neutral { color: var(--neutral-600); }
+        
+        .analytics-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chart-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .chart-body {
+            padding: var(--space-6);
+            height: 300px;
+            position: relative;
+        }
+        
+        .controls-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .controls-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+        }
+        
+        .search-filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: var(--space-4);
+            align-items: end;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .form-label {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+        
+        .form-input, .form-select {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+        
+        .search-input {
+            position: relative;
+        }
+        
+        .search-input input {
+            padding-left: var(--space-10);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neutral-400);
+        }
+        
+        .factories-table-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .factories-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .factories-table th {
+            background: var(--neutral-50);
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+            font-size: var(--text-sm);
+        }
+        
+        .factories-table td {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--neutral-100);
+            vertical-align: middle;
+        }
+        
+        .factories-table tr:hover {
+            background: var(--neutral-25);
+        }
+        
+        .factories-table tr.selected {
+            background: var(--primary-50);
+        }
+        
+        .factory-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .factory-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary-700);
+            font-size: var(--text-lg);
+        }
+        
+        .factory-details h4 {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+            font-size: var(--text-sm);
+        }
+        
+        .factory-details p {
+            color: var(--neutral-600);
+            font-size: var(--text-xs);
+            margin: 0;
+        }
+        
+        .compliance-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+        }
+        
+        .compliance-excellent {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .compliance-good {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .compliance-fair {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .compliance-poor {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .status-suspended {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .factory-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .action-btn {
+            padding: var(--space-2);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .action-btn.view {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .action-btn.view:hover {
+            background: var(--info-200);
+        }
+        
+        .action-btn.edit {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .action-btn.edit:hover {
+            background: var(--primary-200);
+        }
+        
+        .action-btn.toggle {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .action-btn.toggle:hover {
+            background: var(--warning-200);
+        }
+        
+        .action-btn.delete {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .action-btn.delete:hover {
+            background: var(--danger-200);
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-top: 1px solid var(--neutral-200);
+        }
+        
+        .pagination-info {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .pagination-controls {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .pagination-btn {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-300);
+            background: white;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--neutral-50);
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-btn.active {
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+            color: white;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--space-4);
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .modal-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+        
+        .modal-close {
+            padding: var(--space-2);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--neutral-500);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-5);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            padding: var(--space-6);
+            border-top: 1px solid var(--neutral-200);
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--neutral-200);
+            border-top: 3px solid var(--primary-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12) var(--space-6);
+            color: var(--neutral-500);
+        }
+        
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-4);
+            color: var(--neutral-300);
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .quick-stat {
+            text-align: center;
+            padding: var(--space-3);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .quick-stat-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-1);
+        }
+        
+        .quick-stat-label {
+            font-size: var(--text-xs);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+        
+        /* Enhanced Analytics Cards */
+        .analytics-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .analytics-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            text-align: center;
+        }
+        
+        .analytics-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-3);
+            color: white;
+        }
+        
+        .analytics-card-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .analytics-card-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            left: var(--space-4);
+            z-index: 1001;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .mobile-overlay.open {
+            display: block;
+        }
+        
+        /* Mobile Sidebar Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                height: 100vh;
+                z-index: 100;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-actions {
+                flex-direction: column;
+            }
+            
+            .factories-table {
+                font-size: var(--text-xs);
+            }
+            
+            .factories-table th,
+            .factories-table td {
+                padding: var(--space-2);
+            }
+            
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-4);
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+            
+            .header-actions .btn {
+                flex: 1;
+            }
+            
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Navigation will be loaded dynamically -->
+        <div id="sidebarContainer"></div>
+        <script>
+        // Load sidebar template and initialize navigation
+        fetch('assets/html/sidebar-template.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebarContainer').innerHTML = html;
+                // Navigation will auto-initialize via navigation-template.js
+            })
+            .catch(error => console.error('Error loading sidebar template:', error));
+        </script>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="building-2"></i> Factory Management</h1>
+                        <p>Comprehensive oversight of factory registrations, compliance monitoring, and operational analytics</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline btn-white" onclick="exportFactories()">
+                            <i data-lucide="download"></i>
+                            Export Data
+                        </button>
+                        <button class="btn btn-primary" onclick="openCreateFactoryModal();" id="addFactoryBtn">
+                            <i data-lucide="building"></i>
+                            Add New Factory
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="totalFactories">-</div>
+                        <div class="quick-stat-label">Total Factories</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="activeFactories">-</div>
+                        <div class="quick-stat-label">Active</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="compliantFactories">-</div>
+                        <div class="quick-stat-label">Compliant</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="totalEmployees">-</div>
+                        <div class="quick-stat-label">Total Employees</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="newThisMonth">-</div>
+                        <div class="quick-stat-label">New This Month</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="avgCompliance">-</div>
+                        <div class="quick-stat-label">Avg Compliance</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="pendingIssues">-</div>
+                        <div class="quick-stat-label">Pending Issues</div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="container">
+                
+
+                
+                <!-- Analytics Section -->
+                <div class="analytics-section">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Factory Compliance Trends</h3>
+                            <select class="form-select" id="chartPeriod" onchange="updateComplianceChart()">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                            </select>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="complianceChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Industry Distribution</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="industryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search and Filters -->
+                <div class="controls-section">
+                    <div class="controls-header">
+                        <h3 class="font-semibold text-neutral-900">Factory Directory</h3>
+                        <div class="flex gap-3">
+                            <button class="btn btn-outline" onclick="bulkActions()">
+                                <i data-lucide="layers"></i>
+                                Bulk Actions
+                            </button>
+                            <button class="btn btn-outline" onclick="refreshData()">
+                                <i data-lucide="refresh-cw"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-filters">
+                        <div class="form-group">
+                            <label class="form-label">Search Factories</label>
+                            <div class="search-input">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" class="form-input" id="searchInput" 
+                                       placeholder="Search by name, location, or industry..." 
+                                       onkeyup="handleSearch()">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Industry</label>
+                            <select class="form-select" id="industryFilter" onchange="handleFilterChange()">
+                                <option value="">All Industries</option>
+                                <option value="garment">Garment & Textiles</option>
+                                <option value="footwear">Footwear</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="food">Food Processing</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="statusFilter" onchange="handleFilterChange()">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Compliance</label>
+                            <select class="form-select" id="complianceFilter" onchange="handleFilterChange()">
+                                <option value="">All Levels</option>
+                                <option value="excellent">Excellent (90%+)</option>
+                                <option value="good">Good (75-89%)</option>
+                                <option value="fair">Fair (60-74%)</option>
+                                <option value="poor">Poor (<60%)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn btn-outline" onclick="clearFilters()">
+                                <i data-lucide="x"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Factories Table -->
+                <div class="factories-table-container" id="factoriesTableContainer">
+                    <div class="table-header">
+                        <h3 class="font-semibold text-neutral-900">Factories List</h3>
+                        <div class="table-actions">
+                            <select class="form-select" id="pageSize" onchange="handlePageSizeChange()">
+                                <option value="10">10 per page</option>
+                                <option value="25" selected>25 per page</option>
+                                <option value="50">50 per page</option>
+                                <option value="100">100 per page</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="position: relative;">
+                        <div class="loading-overlay" id="tableLoading" style="display: none;">
+                            <div class="loading-spinner"></div>
+                        </div>
+                        
+                        <table class="factories-table" id="factoriesTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll" onchange="handleSelectAll()">
+                                    </th>
+                                    <th>Factory</th>
+                                    <th>Industry</th>
+                                    <th>Location</th>
+                                    <th>Employees</th>
+                                    <th>Compliance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="factoriesTableBody">
+                                <!-- Factories will be loaded here -->
+                            </tbody>
+                        </table>
+                        
+                        <div class="pagination" id="pagination">
+                            <div class="pagination-info" id="paginationInfo">
+                                Loading factories...
+                            </div>
+                            <div class="pagination-controls" id="paginationControls">
+                                <!-- Pagination controls will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Create/Edit Factory Modal -->
+    <div class="modal-overlay" id="factoryModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Factory</h2>
+                <button class="modal-close" onclick="closeFactoryModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form class="modal-form" id="factoryForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Factory Name *</label>
+                            <input type="text" class="form-input" id="factoryName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Industry *</label>
+                            <select class="form-select" id="industry" required>
+                                <option value="">Select Industry</option>
+                                <option value="garment">Garment & Textiles</option>
+                                <option value="footwear">Footwear</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="food">Food Processing</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Registration Number *</label>
+                            <input type="text" class="form-input" id="registrationNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tax ID</label>
+                            <input type="text" class="form-input" id="taxId">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Address *</label>
+                            <textarea class="form-input" id="address" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">City *</label>
+                            <input type="text" class="form-input" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Province/State *</label>
+                            <input type="text" class="form-input" id="province" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-input" id="postalCode">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Country *</label>
+                            <input type="text" class="form-input" id="country" value="Cambodia" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-input" id="phoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-input" id="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Number of Employees</label>
+                            <input type="number" class="form-input" id="employeeCount" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Established Year</label>
+                            <input type="number" class="form-input" id="establishedYear" min="1900" max="2024">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-input" id="description" rows="3" 
+                                      placeholder="Brief description of factory operations and products..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeFactoryModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="saveFactory()" id="saveFactoryBtn">
+                    <i data-lucide="building"></i>
+                    Create Factory
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module" src="firebase-config.js"></script>
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/factory-management.js"></script>
+    
+    <script>
+        // Initialize Enhanced Factory Management page
+        
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Fallback function definitions to prevent errors
+        window.openCreateFactoryModal = window.openCreateFactoryModal || function() {
+            const modal = document.getElementById('factoryModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        };
+        window.closeFactoryModal = window.closeFactoryModal || function() {};
+        window.saveFactory = window.saveFactory || function() {};
+        window.editFactory = window.editFactory || function() {};
+        window.viewFactory = window.viewFactory || function() {};
+        window.toggleFactoryStatus = window.toggleFactoryStatus || function() {};
+        window.deleteFactory = window.deleteFactory || function() {};
+        window.handleSearch = window.handleSearch || function() {};
+        window.handleFilterChange = window.handleFilterChange || function() {};
+        window.clearFilters = window.clearFilters || function() {};
+        window.handleFactorySelect = window.handleFactorySelect || function() {};
+        window.handleSelectAll = window.handleSelectAll || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.changePage = window.changePage || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.handlePageSizeChange = window.handlePageSizeChange || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.bulkActions = window.bulkActions || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.exportFactories = window.exportFactories || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.exportSelectedFactories = window.exportSelectedFactories || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.refreshData = window.refreshData || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.updateComplianceChart = window.updateComplianceChart || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.toggleMobileMenu = window.toggleMobileMenu || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.closeMobileMenu = window.closeMobileMenu || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+        window.logout = window.logout || function() {
+            console.log('⏳ Factory management module not loaded yet...');
+        };
+    </script>
+</body>
+</html>

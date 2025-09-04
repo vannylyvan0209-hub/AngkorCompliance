@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Checklist Generator - Auditor</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for auditor */
+        body.role-auditor {
+            --role-primary: var(--auditor-primary);
+            --role-secondary: var(--auditor-secondary);
+            --role-accent: var(--auditor-accent);
+        }
+
+        
+        .checklist-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: var(--space-6);
+            background: var(--color-background);
+        }
+        
+        .checklist-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+        }
+        
+        .checklist-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+        
+        .checklist-card h3 {
+            margin: 0 0 var(--space-4) 0;
+            color: var(--color-foreground);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .checklist-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--color-foreground);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-background);
+            color: var(--color-foreground);
+            font-size: var(--text-sm);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .checklist-items {
+            margin-top: var(--space-4);
+        }
+        
+        .checklist-item {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            margin-bottom: var(--space-2);
+            background: var(--color-background);
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+        
+        .item-title {
+            font-weight: 600;
+            color: var(--color-foreground);
+        }
+        
+        .item-category {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            background: var(--color-muted-100);
+            color: var(--color-muted-700);
+        }
+        
+        .item-description {
+            font-size: var(--text-sm);
+            color: var(--color-muted);
+            margin-bottom: var(--space-2);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .btn-icon {
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            border: none;
+            background: transparent;
+            color: var(--color-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background: var(--color-muted-50);
+            color: var(--color-foreground);
+        }
+        
+        .checklist-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .checklist-item-list {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            margin-bottom: var(--space-2);
+            background: var(--color-background);
+            transition: all 0.2s ease;
+        }
+        
+        .checklist-item-list:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .checklist-item-info {
+            flex: 1;
+        }
+        
+        .checklist-item-title {
+            font-weight: 600;
+            color: var(--color-foreground);
+            margin-bottom: var(--space-1);
+        }
+        
+        .checklist-item-details {
+            font-size: var(--text-sm);
+            color: var(--color-muted);
+        }
+        
+        .checklist-item-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .status-badge {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-draft {
+            background: var(--color-blue-50);
+            color: var(--color-blue-700);
+        }
+        
+        .status-published {
+            background: var(--color-green-50);
+            color: var(--color-green-700);
+        }
+        
+        .status-archived {
+            background: var(--color-muted-50);
+            color: var(--color-muted-700);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--color-muted);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+            opacity: 0.5;
+        }
+        
+        .template-selector {
+            margin-bottom: var(--space-4);
+        }
+        
+        .template-selector select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-background);
+            color: var(--color-foreground);
+            font-size: var(--text-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .checklist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="role-auditor">
+    <div class="checklist-layout">
+        <div id="sidebarContainer"></div>
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="list-checks"></i> Audit Checklist Generator</h1>
+                        <p>Create and manage standardized audit checklists</p>
+                    </div>
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-outline" onclick="exportChecklist()">
+                            <i data-lucide="download"></i> Export Checklist
+                        </button>
+                        <button class="btn btn-primary" onclick="createNewChecklist()">
+                            <i data-lucide="plus"></i> New Checklist
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="checklist-container">
+                <div class="checklist-grid">
+                    <!-- Checklist Creation -->
+                    <div class="checklist-card">
+                        <h3><i data-lucide="edit-3"></i> Create Checklist</h3>
+                        
+                        <div class="template-selector">
+                            <label for="templateSelect">Start with Template</label>
+                            <select id="templateSelect" onchange="loadTemplate()">
+                                <option value="">Choose a template...</option>
+                                <option value="compliance">Compliance Audit Template</option>
+                                <option value="grievance">Grievance Process Template</option>
+                                <option value="safety">Safety Standards Template</option>
+                                <option value="quality">Quality Management Template</option>
+                                <option value="financial">Financial Controls Template</option>
+                            </select>
+                        </div>
+                        
+                        <form class="checklist-form" id="checklistForm">
+                            <div class="form-group">
+                                <label for="checklistTitle">Checklist Title</label>
+                                <input type="text" id="checklistTitle" name="checklistTitle" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="checklistType">Checklist Type</label>
+                                <select id="checklistType" name="checklistType" required>
+                                    <option value="">Select checklist type</option>
+                                    <option value="compliance">Compliance Audit</option>
+                                    <option value="grievance">Grievance Process</option>
+                                    <option value="safety">Safety Standards</option>
+                                    <option value="quality">Quality Management</option>
+                                    <option value="financial">Financial Controls</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="checklistDescription">Description</label>
+                                <textarea id="checklistDescription" name="checklistDescription" placeholder="Describe the purpose and scope of this checklist..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="checklistVersion">Version</label>
+                                <input type="text" id="checklistVersion" name="checklistVersion" placeholder="1.0" value="1.0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="checklistNotes">Additional Notes</label>
+                                <textarea id="checklistNotes" name="checklistNotes" placeholder="Any additional notes or instructions..."></textarea>
+                            </div>
+                        </form>
+                        
+                        <div class="checklist-items">
+                            <h4>Checklist Items</h4>
+                            <div id="checklistItemsList">
+                                <div class="empty-state">
+                                    <i data-lucide="list-checks"></i>
+                                    <p>No checklist items added yet</p>
+                                    <button class="btn btn-outline" onclick="addChecklistItem()">
+                                        <i data-lucide="plus"></i> Add Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Checklists List -->
+                    <div class="checklist-card">
+                        <h3><i data-lucide="list"></i> Checklists</h3>
+                        <div class="checklist-list" id="checklistsList">
+                            <div class="empty-state">
+                                <i data-lucide="list-checks"></i>
+                                <p>No checklists created yet</p>
+                                <p>Create your first checklist to get started</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/auditor/audit-checklist-generator.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

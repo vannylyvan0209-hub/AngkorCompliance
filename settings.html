@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="assets/css/main-modern.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+    <link rel="stylesheet" href="assets/css/super-admin-navigation.css">
+
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Navigation System -->
+    <script src="assets/js/navigation-config.js"></script>
+    <script src="assets/js/navigation-template.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Navigation will be loaded dynamically -->
+        <div id="sidebarContainer"></div>
+        <script>
+        // Load sidebar template and initialize navigation
+        fetch('assets/html/sidebar-template.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebarContainer').innerHTML = html;
+                // Navigation will auto-initialize via navigation-template.js
+            })
+            .catch(error => console.error('Error loading sidebar template:', error));
+        </script>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="settings"></i> System Settings</h1>
+                        <p>Configure system-wide settings, manage users, and monitor system status</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline btn-white" onclick="exportSettings()">
+                            <i data-lucide="download"></i>
+                            Export Settings
+                        </button>
+                        <button class="btn btn-outline btn-white" onclick="backupSystem()">
+                            <i data-lucide="database"></i>
+                            Backup System
+                        </button>
+                        <button class="btn btn-primary" onclick="saveAllSettings()" id="saveSettingsBtn">
+                            <i data-lucide="save"></i>
+                            Save All Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="totalUsers">-</div>
+                        <div class="quick-stat-label">Total Users</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="totalFactories">-</div>
+                        <div class="quick-stat-label">Total Factories</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="systemUptime">-</div>
+                        <div class="quick-stat-label">System Uptime</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-label">Active Sessions</div>
+                        <div class="quick-stat-value" id="activeSessions">-</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="storageUsed">-</div>
+                        <div class="quick-stat-label">Storage Used</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="lastBackup">-</div>
+                        <div class="quick-stat-label">Last Backup</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="systemHealth">-</div>
+                        <div class="quick-stat-label">System Health</div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="container">
+                <!-- Settings Navigation Tabs -->
+            <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="general" onclick="switchTab('general')">
+                        <i data-lucide="settings"></i>
+                        General
+                    </button>
+                    <button class="tab-btn" data-tab="users" onclick="switchTab('users')">
+                        <i data-lucide="users"></i>
+                        User Management
+                    </button>
+                    <button class="tab-btn" data-tab="factories" onclick="switchTab('factories')">
+                        <i data-lucide="building-2"></i>
+                        Factory Settings
+                    </button>
+                    <button class="tab-btn" data-tab="compliance" onclick="switchTab('compliance')">
+                        <i data-lucide="shield-check"></i>
+                        Compliance Standards
+                    </button>
+                    <button class="tab-btn" data-tab="notifications" onclick="switchTab('notifications')">
+                        <i data-lucide="bell"></i>
+                        Notifications
+                    </button>
+                    <button class="tab-btn" data-tab="audit" onclick="switchTab('audit')">
+                        <i data-lucide="file-search"></i>
+                        Audit Log
+                    </button>
+                    <button class="tab-btn" data-tab="status" onclick="switchTab('status')">
+                        <i data-lucide="activity"></i>
+                        System Status
+                    </button>
+            </div>
+
+            <!-- General Settings Tab -->
+            <div class="tab-content active" id="general-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="globe"></i>
+                            System Configuration
+                        </h3>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Platform Settings</h4>
+                                    <p>Configure basic platform settings and preferences</p>
+                                </div>
+                                <div class="setting-body">
+                    <div class="form-group">
+                                        <label class="form-label">Platform Name</label>
+                                        <input type="text" class="form-input" id="platformName" value="Angkor Compliance Platform">
+                    </div>
+                    <div class="form-group">
+                                        <label class="form-label">Default Language</label>
+                                        <select class="form-select" id="defaultLanguage">
+                            <option value="en">English</option>
+                                            <option value="km">Khmer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                                        <label class="form-label">Time Zone</label>
+                                        <select class="form-select" id="timeZone">
+                                            <option value="Asia/Phnom_Penh">Asia/Phnom Penh (GMT+7)</option>
+                                            <option value="Asia/Bangkok">Asia/Bangkok (GMT+7)</option>
+                                            <option value="UTC">UTC (GMT+0)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="maintenanceMode">
+                                            <span class="checkmark"></span>
+                                            Enable Maintenance Mode
+                                        </label>
+                                    </div>
+                                </div>
+                    </div>
+
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Security Settings</h4>
+                                    <p>Configure security and authentication options</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Session Timeout (minutes)</label>
+                                        <input type="number" class="form-input" id="sessionTimeout" value="30" min="5" max="480">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Password Minimum Length</label>
+                                        <input type="number" class="form-input" id="passwordMinLength" value="8" min="6" max="32">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="requireStrongPassword" checked>
+                                            <span class="checkmark"></span>
+                                            Require Strong Passwords
+                                        </label>
+                                    </div>
+                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="enableTwoFactor">
+                                            <span class="checkmark"></span>
+                                            Enable Two-Factor Authentication
+                                        </label>
+                                    </div>
+                                </div>
+                    </div>
+
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Data & Storage</h4>
+                                    <p>Configure data retention and storage settings</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Data Retention Period (days)</label>
+                                        <input type="number" class="form-input" id="dataRetention" value="2555" min="30" max="3650">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Auto Backup Frequency</label>
+                                        <select class="form-select" id="backupFrequency">
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="enableBackup" checked>
+                                            <span class="checkmark"></span>
+                                            Enable Automatic Backups
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+            </div>
+
+            <!-- User Management Tab -->
+            <div class="tab-content" id="users-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="users"></i>
+                            User Management
+                        </h3>
+                        
+                        <div class="user-management-section">
+                            <div class="user-stats">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="totalUsers">-</div>
+                                    <div class="stat-label">Total Users</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="activeUsers">-</div>
+                                    <div class="stat-label">Active Users</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="pendingUsers">-</div>
+                                    <div class="stat-label">Pending Approval</div>
+                </div>
+                </div>
+
+                <div class="user-actions">
+                                <button class="btn btn-primary" onclick="openCreateUserModal()">
+                                    <i data-lucide="user-plus"></i>
+                                    Add New User
+                                </button>
+                                <button class="btn btn-outline" onclick="exportUsers()">
+                                    <i data-lucide="download"></i>
+                                    Export Users
+                                </button>
+                                <button class="btn btn-outline" onclick="bulkUserAction()">
+                                    <i data-lucide="users"></i>
+                                    Bulk Actions
+                                </button>
+                            </div>
+                            
+                            <div class="user-table-container">
+                                <div class="table-controls">
+                                    <div class="search-input">
+                                        <i data-lucide="search" class="search-icon"></i>
+                                        <input type="text" class="form-input" id="userSearchInput" placeholder="Search users..." onkeyup="searchUsers()">
+                                    </div>
+                                    <select class="form-select" id="userRoleFilter" onchange="filterUsers()">
+                                        <option value="">All Roles</option>
+                                        <option value="super_admin">Super Admin</option>
+                                        <option value="factory_admin">Factory Admin</option>
+                                        <option value="hr_staff">HR Staff</option>
+                                        <option value="auditor">Auditor</option>
+                                        <option value="worker">Worker</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="users-table-wrapper">
+                                    <table class="users-table">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" id="selectAllUsers"></th>
+                                                <th>User</th>
+                                                <th>Role</th>
+                                                <th>Factory</th>
+                                                <th>Status</th>
+                                                <th>Last Login</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="usersTableBody">
+                                            <!-- Users will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="pagination" id="usersPagination">
+                                    <!-- Pagination will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+                <!-- Factory Settings Tab -->
+            <div class="tab-content" id="factories-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="building-2"></i>
+                            Factory Settings
+                        </h3>
+                        
+                        <div class="factory-settings-section">
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Factory Registration</h4>
+                                    <p>Configure factory registration and approval settings</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="autoApproveFactories">
+                                            <span class="checkmark"></span>
+                                            Auto-approve new factory registrations
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="requireFactoryDocuments" checked>
+                                            <span class="checkmark"></span>
+                                            Require supporting documents for registration
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Maximum factories per admin</label>
+                                        <input type="number" class="form-input" id="maxFactoriesPerAdmin" value="5" min="1" max="50">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="factory-list">
+                                <div class="factory-list-header">
+                                    <h4>Registered Factories</h4>
+                                    <button class="btn btn-primary" onclick="openAddFactoryModal()">
+                                        <i data-lucide="plus"></i>
+                                        Add Factory
+                                    </button>
+                </div>
+
+                                <div class="factories-grid" id="factoriesGrid">
+                    <!-- Factories will be loaded here -->
+                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Compliance Standards Tab -->
+            <div class="tab-content" id="compliance-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="shield-check"></i>
+                            Compliance Standards
+                        </h3>
+                        
+                        <div class="compliance-settings">
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Document Requirements</h4>
+                                    <p>Configure required documents and expiration policies</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Document expiration warning (days)</label>
+                                        <input type="number" class="form-input" id="docExpirationWarning" value="30" min="1" max="365">
+                                    </div>
+                    <div class="form-group">
+                            <label class="checkbox-label">
+                                            <input type="checkbox" id="requireDocumentApproval" checked>
+                                <span class="checkmark"></span>
+                                            Require admin approval for document uploads
+                            </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Maximum file size (MB)</label>
+                                        <input type="number" class="form-input" id="maxFileSize" value="50" min="1" max="500">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>CAP Management</h4>
+                                    <p>Configure Corrective Action Plan policies</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Default CAP duration (days)</label>
+                                        <input type="number" class="form-input" id="defaultCAPDuration" value="90" min="1" max="365">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">CAP overdue warning (days before)</label>
+                                        <input type="number" class="form-input" id="capOverdueWarning" value="7" min="1" max="30">
+                                    </div>
+                                    <div class="form-group">
+                            <label class="checkbox-label">
+                                            <input type="checkbox" id="autoEscalateCAP" checked>
+                                <span class="checkmark"></span>
+                                            Auto-escalate overdue CAPs
+                            </label>
+                                    </div>
+                        </div>
+                    </div>
+
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Grievance Handling</h4>
+                                    <p>Configure grievance management policies</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Maximum resolution time (days)</label>
+                                        <input type="number" class="form-input" id="maxGrievanceResolution" value="30" min="1" max="180">
+                                    </div>
+                    <div class="form-group">
+                            <label class="checkbox-label">
+                                            <input type="checkbox" id="allowAnonymousGrievances" checked>
+                                <span class="checkmark"></span>
+                                            Allow anonymous grievance reporting
+                            </label>
+                                    </div>
+                                    <div class="form-group">
+                            <label class="checkbox-label">
+                                            <input type="checkbox" id="autoAssignGrievances">
+                                <span class="checkmark"></span>
+                                            Auto-assign grievances to appropriate staff
+                            </label>
+                        </div>
+                    </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div class="tab-content" id="notifications-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="bell"></i>
+                            Notification Settings
+                        </h3>
+                        
+                        <div class="notification-settings">
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Email Notifications</h4>
+                                    <p>Configure automated email notifications</p>
+                </div>
+                                <div class="setting-body">
+                                    <div class="form-group">
+                                        <label class="form-label">SMTP Server</label>
+                                        <input type="text" class="form-input" id="smtpServer" placeholder="smtp.gmail.com">
+                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">SMTP Port</label>
+                                        <input type="number" class="form-input" id="smtpPort" value="587" min="1" max="65535">
+                </div>
+                                    <div class="form-group">
+                                        <label class="form-label">From Email Address</label>
+                                        <input type="email" class="form-input" id="fromEmail" placeholder="noreply@angkorcompliance.com">
+                        </div>
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="enableEmailNotifications" checked>
+                                            <span class="checkmark"></span>
+                                            Enable email notifications
+                                        </label>
+                        </div>
+                    </div>
+                </div>
+
+                            <div class="setting-card">
+                                <div class="setting-header">
+                                    <h4>Notification Types</h4>
+                                    <p>Configure which events trigger notifications</p>
+                                </div>
+                                <div class="setting-body">
+                                    <div class="notification-types">
+                                        <div class="notification-type">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="notifyDocExpiration" checked>
+                                                <span class="checkmark"></span>
+                                                Document expiration warnings
+                                            </label>
+                                        </div>
+                                        <div class="notification-type">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="notifyNewCAP" checked>
+                                                <span class="checkmark"></span>
+                                                New CAP assignments
+                                            </label>
+                        </div>
+                                        <div class="notification-type">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="notifyOverdueCAP" checked>
+                                                <span class="checkmark"></span>
+                                                Overdue CAP notifications
+                                            </label>
+                                </div>
+                                        <div class="notification-type">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="notifyNewGrievance" checked>
+                                                <span class="checkmark"></span>
+                                                New grievance reports
+                                            </label>
+                            </div>
+                                        <div class="notification-type">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="notifyUserRegistration" checked>
+                                                <span class="checkmark"></span>
+                                                New user registrations
+                                            </label>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log Tab -->
+            <div class="tab-content" id="audit-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="file-search"></i>
+                            Audit Log
+                        </h3>
+                        
+                        <div class="audit-section">
+                            <div class="audit-controls">
+                    <div class="audit-filters">
+                                    <select class="form-select" id="auditTypeFilter">
+                            <option value="">All Activities</option>
+                                        <option value="user_login">User Logins</option>
+                                        <option value="user_creation">User Creation</option>
+                                        <option value="cap_creation">CAP Creation</option>
+                                        <option value="document_upload">Document Upload</option>
+                                        <option value="grievance_report">Grievance Report</option>
+                                        <option value="settings_change">Settings Change</option>
+                        </select>
+                                    <input type="date" class="form-input" id="auditDateFrom">
+                                    <input type="date" class="form-input" id="auditDateTo">
+                                    <button class="btn btn-outline" onclick="filterAuditLog()">
+                                        <i data-lucide="filter"></i>
+                                        Filter
+                                    </button>
+                                </div>
+                                <div class="audit-actions">
+                                    <button class="btn btn-outline" onclick="exportAuditLog()">
+                                        <i data-lucide="download"></i>
+                                        Export Log
+                                    </button>
+                                    <button class="btn btn-danger" onclick="clearAuditLog()">
+                                        <i data-lucide="trash-2"></i>
+                                        Clear Log
+                                    </button>
+                    </div>
+                </div>
+
+                            <div class="audit-log-container">
+                                <div class="audit-log-list" id="auditLogList">
+                    <!-- Audit log entries will be loaded here -->
+                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <!-- System Status Tab -->
+            <div class="tab-content" id="status-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">
+                            <i data-lucide="activity"></i>
+                            System Status
+                        </h3>
+                        
+                        <div class="system-status">
+                <div class="status-overview">
+                                <div class="status-card">
+                                    <div class="status-header">
+                                        <h4>System Health</h4>
+                                        <div class="status-indicator good" id="systemHealthIndicator">
+                                            <i data-lucide="check-circle"></i>
+                        </div>
+                    </div>
+                                    <div class="status-details">
+                                        <div class="status-item">
+                                            <span>Database</span>
+                                            <span class="status-value good" id="databaseStatus">Connected</span>
+                    </div>
+                                        <div class="status-item">
+                                            <span>Authentication</span>
+                                            <span class="status-value good" id="authStatus">Active</span>
+                    </div>
+                                        <div class="status-item">
+                                            <span>File Storage</span>
+                                            <span class="status-value good" id="storageStatus">Available</span>
+                </div>
+                                        <div class="status-item">
+                                            <span>Email Service</span>
+                                            <span class="status-value warning" id="emailStatus">Limited</span>
+                            </div>
+                        </div>
+                    </div>
+                                
+                    <div class="status-card">
+                                    <div class="status-header">
+                                        <h4>System Metrics</h4>
+                                        <button class="btn btn-sm btn-outline" onclick="refreshSystemMetrics()">
+                                            <i data-lucide="refresh-cw"></i>
+                                            Refresh
+                                        </button>
+                            </div>
+                                    <div class="status-details">
+                                        <div class="status-item">
+                                            <span>Active Sessions</span>
+                                            <span class="status-value" id="activeSessions">-</span>
+                            </div>
+                                        <div class="status-item">
+                                            <span>Total Storage Used</span>
+                                            <span class="status-value" id="storageUsed">-</span>
+                        </div>
+                                        <div class="status-item">
+                                            <span>Database Size</span>
+                                            <span class="status-value" id="databaseSize">-</span>
+                    </div>
+                                        <div class="status-item">
+                                            <span>Last Backup</span>
+                                            <span class="status-value" id="lastBackup">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                            <div class="system-logs">
+                                <div class="logs-header">
+                                    <h4>Recent System Events</h4>
+                                    <button class="btn btn-sm btn-outline" onclick="refreshSystemLogs()">
+                                        <i data-lucide="refresh-cw"></i>
+                                        Refresh
+                                    </button>
+                        </div>
+                                <div class="logs-list" id="systemLogsList">
+                                    <!-- System logs will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                        </div>
+                    </div>
+                </div>
+        </main>
+            </div>
+
+    <!-- Create User Modal -->
+    <div class="modal-overlay" id="createUserModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New User</h2>
+                <button class="modal-close" onclick="closeCreateUserModal()">
+                    <i data-lucide="x"></i>
+                </button>
+                    </div>
+
+            <div class="modal-body">
+                <form class="enhanced-user-form" id="createUserForm">
+                    <div class="form-row">
+                    <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-input" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-input" id="userEmail" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                <div class="form-group">
+                            <label class="form-label">Role *</label>
+                            <select class="form-select" id="userRole" required>
+                        <option value="">Select Role</option>
+                        <option value="factory_admin">Factory Admin</option>
+                        <option value="hr_staff">HR Staff</option>
+                        <option value="auditor">Auditor</option>
+                                <option value="worker">Worker</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                            <label class="form-label">Factory Assignment</label>
+                            <select class="form-select" id="userFactory">
+                        <option value="">Select Factory</option>
+                                <!-- Factory options will be loaded dynamically -->
+                    </select>
+        </div>
+    </div>
+
+                    <div class="form-row">
+                <div class="form-group">
+                            <label class="form-label">Temporary Password *</label>
+                            <div class="password-input-container">
+                                <input type="password" class="form-input" id="userPassword" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('userPassword')">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                                <button type="button" class="password-generate" onclick="generatePassword('userPassword')">
+                                    <i data-lucide="refresh-cw"></i>
+                                </button>
+                </div>
+                            <div class="password-strength" id="passwordStrength"></div>
+                </div>
+                <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" id="userPhone">
+        </div>
+    </div>
+
+                    <div class="form-row full">
+                <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sendWelcomeEmail" checked>
+                                <span class="checkmark"></span>
+                                Send welcome email with login instructions
+                            </label>
+                </div>
+                </div>
+            </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeCreateUserModal()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="saveUser()" id="saveUserBtn">
+                    <i data-lucide="user-plus"></i>
+                    Create User
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add CAP Modal -->
+    <div class="modal-overlay" id="add-cap-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New CAP</h2>
+                <button class="modal-close" onclick="closeModal('add-cap-modal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="addCapForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">CAP Title *</label>
+                            <input type="text" class="form-input" id="capTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority *</label>
+                            <select class="form-select" id="capPriority" required>
+                                <option value="">Select Priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Factory *</label>
+                            <select class="form-select" id="capFactory" required>
+                                <option value="">Select Factory</option>
+                                <!-- Factory options will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Due Date *</label>
+                            <input type="date" class="form-input" id="capDueDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="capCategory">
+                                <option value="">Select Category</option>
+                                <option value="safety">Safety</option>
+                                <option value="environmental">Environmental</option>
+                                <option value="labor">Labor</option>
+                                <option value="quality">Quality</option>
+                                <option value="compliance">Compliance</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Assigned To</label>
+                            <select class="form-select" id="capAssignedTo">
+                                <option value="">Select User</option>
+                                <!-- User options will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" id="capDescription" rows="4" placeholder="Describe the compliance issue and required actions..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Action Steps</label>
+                            <textarea class="form-textarea" id="capActionSteps" rows="4" placeholder="List the specific action steps required to resolve this issue..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('add-cap-modal')">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="saveCAP()" id="saveCapBtn">
+                    <i data-lucide="plus"></i>
+                    Create CAP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal-overlay" id="edit-user-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit User</h2>
+                <button class="modal-close" onclick="closeModal('edit-user-modal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-input" id="editUserFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-input" id="editUserLastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-input" id="editUserEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="editUserStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Role *</label>
+                            <select class="form-select" id="editUserRole" required>
+                                <option value="">Select Role</option>
+                                <option value="factory_admin">Factory Admin</option>
+                                <option value="hr_staff">HR Staff</option>
+                                <option value="auditor">Auditor</option>
+                                <option value="worker">Worker</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Factory Assignment</label>
+                            <select class="form-select" id="editUserFactory">
+                                <option value="">Select Factory</option>
+                                <!-- Factory options will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" id="editUserPhone">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-input" id="editUserDepartment">
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-textarea" id="editUserNotes" rows="3" placeholder="Additional notes about this user..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('edit-user-modal')">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updateUser()" id="updateUserBtn">
+                    <i data-lucide="save"></i>
+                    Update User
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Factory Modal -->
+    <div class="modal-overlay" id="edit-factory-modal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Factory</h2>
+                <button class="modal-close" onclick="closeModal('edit-factory-modal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="editFactoryForm">
+                    <input type="hidden" id="editFactoryId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Factory Name *</label>
+                            <input type="text" class="form-input" id="editFactoryName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Factory Code</label>
+                            <input type="text" class="form-input" id="editFactoryCode">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Admin *</label>
+                            <select class="form-select" id="editFactoryAdmin" required>
+                                <option value="">Select Admin</option>
+                                <!-- Admin options will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="editFactoryStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Worker Count</label>
+                            <input type="number" class="form-input" id="editFactoryWorkerCount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Industry Type</label>
+                            <select class="form-select" id="editFactoryIndustry">
+                                <option value="">Select Industry</option>
+                                <option value="textiles">Textiles</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="food">Food & Beverage</option>
+                                <option value="chemicals">Chemicals</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-textarea" id="editFactoryAddress" rows="3" placeholder="Factory address..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Contact Email</label>
+                            <input type="email" class="form-input" id="editFactoryEmail">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Phone</label>
+                            <input type="tel" class="form-input" id="editFactoryPhone">
+                        </div>
+                    </div>
+
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-textarea" id="editFactoryNotes" rows="3" placeholder="Additional notes about this factory..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('edit-factory-modal')">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="updateFactory()" id="updateFactoryBtn">
+                    <i data-lucide="save"></i>
+                    Update Factory
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/settings.js"></script>
+    
+    <script>
+        // Initialize Settings page
+        console.log('⚙️ System Settings page loading...');
+        
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            // Handle URL hash navigation
+            const hash = window.location.hash;
+            if (hash) {
+                const tabName = hash.substring(1);
+                const tabButton = document.querySelector(`[data-tab="${tabName}"]`);
+                if (tabButton) {
+                    switchTab(tabName);
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

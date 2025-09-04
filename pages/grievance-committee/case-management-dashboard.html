@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management Dashboard - Grievance Committee</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Role-specific styling for grievance_committee */
+        body.role-grievance-committee {
+            --role-primary: var(--grievance-primary);
+            --role-secondary: var(--grievance-secondary);
+            --role-accent: var(--grievance-accent);
+        }
+
+        
+        .dashboard-layout { display: flex; min-height: 100vh; background: var(--neutral-50); }
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: var(--space-8); }
+        .page-title h1 { font-size: var(--text-4xl); font-weight: 800; margin: 0; display: flex; align-items: center; gap: var(--space-3); }
+        .dashboard-container { padding: var(--space-8); }
+        
+        /* KPI Cards */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8); }
+        .kpi-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .kpi-icon { width: 48px; height: 48px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; }
+        .kpi-value { font-size: var(--text-3xl); font-weight: 700; color: var(--neutral-900); margin-bottom: var(--space-1); }
+        .kpi-label { font-size: var(--text-sm); color: var(--neutral-600); font-weight: 500; }
+        .kpi-trend { font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-1); }
+        .trend-up { color: var(--success-600); }
+        .trend-down { color: var(--error-600); }
+        
+        /* Charts Section */
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); margin-bottom: var(--space-8); }
+        .chart-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); }
+        .chart-title { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); }
+        .chart-actions { display: flex; gap: var(--space-2); }
+        
+        /* SLA Monitoring */
+        .sla-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8); }
+        .sla-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .sla-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .sla-title { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); }
+        .sla-status { padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
+        .sla-good { background: var(--success-100); color: var(--success-700); }
+        .sla-warning { background: var(--warning-100); color: var(--warning-700); }
+        .sla-critical { background: var(--error-100); color: var(--error-700); }
+        .sla-progress { margin: var(--space-4) 0; }
+        .progress-bar { width: 100%; height: 8px; background: var(--neutral-200); border-radius: var(--radius-full); overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.3s ease; }
+        .progress-good { background: var(--success-500); }
+        .progress-warning { background: var(--warning-500); }
+        .progress-critical { background: var(--error-500); }
+        
+        /* Performance Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6); }
+        .metric-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); text-align: center; }
+        .metric-value { font-size: var(--text-2xl); font-weight: 700; color: var(--neutral-900); margin-bottom: var(--space-2); }
+        .metric-label { font-size: var(--text-sm); color: var(--neutral-600); }
+        
+        /* Recent Activity */
+        .activity-card { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .activity-item { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--neutral-100); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 32px; height: 32px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; }
+        .activity-content { flex: 1; }
+        .activity-title { font-weight: 600; color: var(--neutral-900); margin-bottom: var(--space-1); }
+        .activity-time { font-size: var(--text-sm); color: var(--neutral-500); }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content { margin-left: 0; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-6) var(--space-4); }
+            .page-title h1 { font-size: var(--text-2xl); }
+            .dashboard-container { padding: var(--space-4); }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .sla-grid { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body class="role-grievance-committee">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="sidebar"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content"><div class="dashboard-layout">
+        <div id="sidebarContainer"></div></main>
+        <script>
+            fetch('../../assets/html/sidebar-template.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('sidebarContainer').innerHTML = html;
+                    const el = document.querySelector('.brand-subtitle');
+                    if (el) el.textContent = 'Grievance Committee Portal';
+                });
+        </script>
+        
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="bar-chart-3"></i> Case Management Dashboard</h1>
+                        <p>Advanced analytics and performance metrics for grievance case management</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline btn-white" onclick="refreshDashboard()" id="refreshBtn">
+                            <i data-lucide="refresh-cw"></i> Refresh
+                        </button>
+                        <button class="btn btn-outline btn-white" onclick="exportDashboard()">
+                            <i data-lucide="download"></i> Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="generateReport()">
+                            <i data-lucide="file-text"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="dashboard-container">
+                <!-- KPI Cards -->
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon" style="background: var(--primary-500);">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="totalCasesKPI">0</div>
+                        <div class="kpi-label">Total Cases</div>
+                        <div class="kpi-trend trend-up">
+                            <i data-lucide="trending-up"></i>
+                            <span id="casesTrend">+12% this month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon" style="background: var(--success-500);">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="resolvedCasesKPI">0</div>
+                        <div class="kpi-label">Resolved Cases</div>
+                        <div class="kpi-trend trend-up">
+                            <i data-lucide="trending-up"></i>
+                            <span id="resolvedTrend">+8% this month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon" style="background: var(--warning-500);">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="avgResolutionTime">0</div>
+                        <div class="kpi-label">Avg Resolution Time (Days)</div>
+                        <div class="kpi-trend trend-down">
+                            <i data-lucide="trending-down"></i>
+                            <span id="resolutionTrend">-2 days</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon" style="background: var(--error-500);">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="slaBreaches">0</div>
+                        <div class="kpi-label">SLA Breaches</div>
+                        <div class="kpi-trend trend-down">
+                            <i data-lucide="trending-down"></i>
+                            <span id="slaTrend">-15% this month</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Charts Section -->
+                <section class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Case Status Distribution</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm" onclick="updateChartPeriod('week')">Week</button>
+                                <button class="btn btn-outline btn-sm" onclick="updateChartPeriod('month')">Month</button>
+                                <button class="btn btn-primary btn-sm" onclick="updateChartPeriod('quarter')">Quarter</button>
+                            </div>
+                        </div>
+                        <canvas id="statusChart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Case Categories</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-outline btn-sm" onclick="updateCategoryChart()">Refresh</button>
+                            </div>
+                        </div>
+                        <canvas id="categoryChart" width="300" height="200"></canvas>
+                    </div>
+                </section>
+                
+                <!-- SLA Monitoring -->
+                <section class="sla-grid">
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Response Time SLA</h3>
+                            <span class="sla-status sla-good" id="responseSlaStatus">Good</span>
+                        </div>
+                        <div class="sla-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-good" id="responseSlaProgress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="sla-metrics">
+                            <div class="metric-value" id="responseTime">2.3 days</div>
+                            <div class="metric-label">Average Response Time</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Resolution Time SLA</h3>
+                            <span class="sla-status sla-warning" id="resolutionSlaStatus">Warning</span>
+                        </div>
+                        <div class="sla-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-warning" id="resolutionSlaProgress" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="sla-metrics">
+                            <div class="metric-value" id="resolutionTime">7.2 days</div>
+                            <div class="metric-label">Average Resolution Time</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sla-card">
+                        <div class="sla-header">
+                            <h3 class="sla-title">Investigation SLA</h3>
+                            <span class="sla-status sla-good" id="investigationSlaStatus">Good</span>
+                        </div>
+                        <div class="sla-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-good" id="investigationSlaProgress" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="sla-metrics">
+                            <div class="metric-value" id="investigationTime">4.1 days</div>
+                            <div class="metric-label">Average Investigation Time</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Performance Metrics -->
+                <section class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="caseLoad">15</div>
+                        <div class="metric-label">Cases per Investigator</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="satisfactionRate">94%</div>
+                        <div class="metric-label">Worker Satisfaction</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="repeatCases">3%</div>
+                        <div class="metric-label">Repeat Cases</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="escalationRate">8%</div>
+                        <div class="metric-label">Escalation Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="complianceScore">96%</div>
+                        <div class="metric-label">Compliance Score</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="teamEfficiency">87%</div>
+                        <div class="metric-label">Team Efficiency</div>
+                    </div>
+                </section>
+                
+                <!-- Recent Activity -->
+                <section class="activity-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Recent Activity</h3>
+                        <button class="btn btn-outline btn-sm" onclick="loadRecentActivity()">View All</button>
+                    </div>
+                    <div id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--success-500);">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Case GC-2024-004 resolved</div>
+                                <div class="activity-time">2 hours ago by Mike Johnson</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--primary-500);">
+                                <i data-lucide="user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Case GC-2024-003 assigned to Jane Smith</div>
+                                <div class="activity-time">4 hours ago by Committee Lead</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--warning-500);">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">SLA warning for Case GC-2024-002</div>
+                                <div class="activity-time">6 hours ago by System</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--info-500);">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New case GC-2024-005 received</div>
+                                <div class="activity-time">8 hours ago by Anonymous Worker</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/case-dashboard.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

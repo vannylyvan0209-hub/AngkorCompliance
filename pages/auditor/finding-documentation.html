@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Documentation - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/auditor.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="role-auditor">
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i class="fas fa-clipboard-list"></i> Finding Documentation</h1>
+                    <p>Document audit findings and recommendations</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span class="user-name">Auditor</span>
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="row">
+                <!-- Left Panel - Finding Form -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-edit"></i> Document New Finding</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-secondary" id="saveDraft">
+                                    <i class="fas fa-save"></i> Save Draft
+                                </button>
+                                <button class="btn btn-primary" id="submitFinding">
+                                    <i class="fas fa-paper-plane"></i> Submit Finding
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="findingForm">
+                                <!-- Basic Information -->
+                                <div class="form-section">
+                                    <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="findingTitle">Finding Title *</label>
+                                                <input type="text" id="findingTitle" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="findingCategory">Category *</label>
+                                                <select id="findingCategory" class="form-control" required>
+                                                    <option value="">Select Category</option>
+                                                    <option value="compliance">Compliance</option>
+                                                    <option value="safety">Safety</option>
+                                                    <option value="quality">Quality</option>
+                                                    <option value="environmental">Environmental</option>
+                                                    <option value="social">Social Responsibility</option>
+                                                    <option value="management">Management System</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="findingSeverity">Severity Level *</label>
+                                                <select id="findingSeverity" class="form-control" required>
+                                                    <option value="">Select Severity</option>
+                                                    <option value="critical">Critical</option>
+                                                    <option value="major">Major</option>
+                                                    <option value="minor">Minor</option>
+                                                    <option value="observation">Observation</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="findingPriority">Priority *</label>
+                                                <select id="findingPriority" class="form-control" required>
+                                                    <option value="">Select Priority</option>
+                                                    <option value="immediate">Immediate</option>
+                                                    <option value="high">High</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="low">Low</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Finding Details -->
+                                <div class="form-section">
+                                    <h4><i class="fas fa-search"></i> Finding Details</h4>
+                                    <div class="form-group">
+                                        <label for="findingDescription">Description *</label>
+                                        <textarea id="findingDescription" class="form-control" rows="4" placeholder="Describe the finding in detail..." required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="findingCriteria">Non-Conformity Criteria</label>
+                                        <textarea id="findingCriteria" class="form-control" rows="3" placeholder="Reference to specific standard requirements or criteria..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="findingEvidence">Evidence</label>
+                                        <textarea id="findingEvidence" class="form-control" rows="3" placeholder="Document the evidence that supports this finding..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Impact Assessment -->
+                                <div class="form-section">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> Impact Assessment</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="businessImpact">Business Impact</label>
+                                                <select id="businessImpact" class="form-control">
+                                                    <option value="">Select Impact</option>
+                                                    <option value="high">High - Significant business disruption</option>
+                                                    <option value="medium">Medium - Moderate business impact</option>
+                                                    <option value="low">Low - Minimal business impact</option>
+                                                    <option value="none">None - No direct business impact</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="riskLevel">Risk Level</label>
+                                                <select id="riskLevel" class="form-control">
+                                                    <option value="">Select Risk Level</option>
+                                                    <option value="extreme">Extreme</option>
+                                                    <option value="high">High</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="low">Low</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="impactDescription">Impact Description</label>
+                                        <textarea id="impactDescription" class="form-control" rows="3" placeholder="Describe the potential impact of this finding..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Recommendations -->
+                                <div class="form-section">
+                                    <h4><i class="fas fa-lightbulb"></i> Recommendations</h4>
+                                    <div class="form-group">
+                                        <label for="recommendations">Recommended Actions *</label>
+                                        <textarea id="recommendations" class="form-control" rows="4" placeholder="Provide specific, actionable recommendations..." required></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="targetDate">Target Completion Date</label>
+                                                <input type="date" id="targetDate" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="responsibleParty">Responsible Party</label>
+                                                <input type="text" id="responsibleParty" class="form-control" placeholder="Department or person responsible">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Attachments -->
+                                <div class="form-section">
+                                    <h4><i class="fas fa-paperclip"></i> Attachments</h4>
+                                    <div class="form-group">
+                                        <label for="fileUpload">Upload Supporting Documents</label>
+                                        <div class="file-upload-area" id="fileUpload">
+                                            <div class="file-upload-content">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <p>Drag and drop files here or click to browse</p>
+                                                <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                            </div>
+                                        </div>
+                                        <div id="fileList" class="file-list"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Finding List & Statistics -->
+                <div class="col-lg-4">
+                    <!-- Statistics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-bar"></i> Finding Statistics</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="totalFindings">0</div>
+                                    <div class="stat-label">Total Findings</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="criticalFindings">0</div>
+                                    <div class="stat-label">Critical</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="majorFindings">0</div>
+                                    <div class="stat-label">Major</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="minorFindings">0</div>
+                                    <div class="stat-label">Minor</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Findings -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-history"></i> Recent Findings</h4>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentFindings" class="finding-list">
+                                <!-- Recent findings will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="btn btn-outline-primary btn-sm" id="loadTemplate">
+                                    <i class="fas fa-file-alt"></i> Load Template
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" id="exportFindings">
+                                    <i class="fas fa-download"></i> Export Findings
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" id="generateReport">
+                                    <i class="fas fa-file-pdf"></i> Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/enhanced-rbac-system.js"></script>
+    <script src="../assets/js/auditor/finding-documentation.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Intake Screen - Grievance Committee</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for grievance_committee */
+        body.role-grievance-committee {
+            --role-primary: var(--grievance-primary);
+            --role-secondary: var(--grievance-secondary);
+            --role-accent: var(--grievance-accent);
+        }
+
+        
+        .intake-layout { display: flex; min-height: 100vh; background: var(--neutral-50); }
+        .main-content { flex: 1; margin-left: 280px; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: var(--space-8); }
+        .page-title h1 { font-size: var(--text-4xl); font-weight: 800; margin: 0; display: flex; align-items: center; gap: var(--space-3); }
+        .intake-container { padding: var(--space-8); max-width: 1200px; margin: 0 auto; }
+        
+        /* Form Layout */
+        .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); }
+        .form-section { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); }
+        .form-header { margin-bottom: var(--space-6); }
+        .form-title { font-size: var(--text-xl); font-weight: 600; color: var(--neutral-900); margin-bottom: var(--space-2); }
+        .form-subtitle { color: var(--neutral-600); font-size: var(--text-sm); }
+        
+        /* Form Fields */
+        .form-group { margin-bottom: var(--space-6); }
+        .form-label { display: block; font-weight: 600; color: var(--neutral-700); margin-bottom: var(--space-2); }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: var(--space-3); border: 1px solid var(--neutral-300); border-radius: var(--radius-md); font-size: var(--text-sm); transition: border-color 0.2s; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px var(--primary-100); }
+        .form-textarea { min-height: 120px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+        
+        /* Severity Assessment */
+        .severity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); margin-top: var(--space-3); }
+        .severity-option { padding: var(--space-4); border: 2px solid var(--neutral-200); border-radius: var(--radius-lg); text-align: center; cursor: pointer; transition: all 0.2s; }
+        .severity-option:hover { border-color: var(--primary-300); background: var(--primary-50); }
+        .severity-option.selected { border-color: var(--primary-500); background: var(--primary-100); }
+        .severity-option.low.selected { border-color: var(--success-500); background: var(--success-100); }
+        .severity-option.medium.selected { border-color: var(--warning-500); background: var(--warning-100); }
+        .severity-option.high.selected { border-color: var(--error-500); background: var(--error-100); }
+        .severity-option.critical.selected { border-color: var(--error-600); background: var(--error-200); }
+        .severity-icon { font-size: var(--text-2xl); margin-bottom: var(--space-2); }
+        .severity-label { font-weight: 600; font-size: var(--text-sm); }
+        .severity-description { font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1); }
+        
+        /* Category Selection */
+        .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-3); }
+        .category-option { padding: var(--space-4); border: 2px solid var(--neutral-200); border-radius: var(--radius-lg); text-align: center; cursor: pointer; transition: all 0.2s; }
+        .category-option:hover { border-color: var(--primary-300); background: var(--primary-50); }
+        .category-option.selected { border-color: var(--primary-500); background: var(--primary-100); }
+        .category-icon { font-size: var(--text-xl); margin-bottom: var(--space-2); }
+        .category-label { font-weight: 600; font-size: var(--text-sm); }
+        
+        /* Anonymous Option */
+        .anonymous-toggle { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+        .toggle-switch { position: relative; width: 48px; height: 24px; background: var(--neutral-300); border-radius: 12px; cursor: pointer; transition: background 0.2s; }
+        .toggle-switch.active { background: var(--primary-500); }
+        .toggle-slider { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.2s; }
+        .toggle-switch.active .toggle-slider { transform: translateX(24px); }
+        
+        /* Preview Panel */
+        .preview-panel { background: white; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200); position: sticky; top: var(--space-8); }
+        .preview-header { margin-bottom: var(--space-6); }
+        .preview-title { font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); margin-bottom: var(--space-2); }
+        .preview-subtitle { color: var(--neutral-600); font-size: var(--text-sm); }
+        
+        .preview-item { margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--neutral-100); }
+        .preview-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .preview-label { font-weight: 600; color: var(--neutral-700); font-size: var(--text-sm); margin-bottom: var(--space-1); }
+        .preview-value { color: var(--neutral-900); font-size: var(--text-sm); }
+        .preview-value.empty { color: var(--neutral-400); font-style: italic; }
+        
+        /* Action Buttons */
+        .form-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--neutral-200); }
+        .btn-secondary { background: var(--neutral-100); color: var(--neutral-700); border: 1px solid var(--neutral-300); }
+        .btn-secondary:hover { background: var(--neutral-200); }
+        
+        /* Progress Indicator */
+        .progress-bar { width: 100%; height: 4px; background: var(--neutral-200); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-6); }
+        .progress-fill { height: 100%; background: var(--primary-500); border-radius: var(--radius-full); transition: width 0.3s ease; }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content { margin-left: 0; }
+            .form-grid { grid-template-columns: 1fr; }
+            .preview-panel { position: static; }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-6) var(--space-4); }
+            .page-title h1 { font-size: var(--text-2xl); }
+            .intake-container { padding: var(--space-4); }
+            .form-row { grid-template-columns: 1fr; }
+            .severity-grid { grid-template-columns: repeat(2, 1fr); }
+            .category-grid { grid-template-columns: 1fr; }
+            .form-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="role-grievance-committee">
+    <div class="intake-layout">
+        <div id="sidebarContainer"></div>
+        <script>
+            fetch('../../assets/html/sidebar-template.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('sidebarContainer').innerHTML = html;
+                    const el = document.querySelector('.brand-subtitle');
+                    if (el) el.textContent = 'Grievance Committee Portal';
+                });
+        </script>
+        
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="file-plus"></i> Case Intake Screen</h1>
+                        <p>Submit and process new grievance cases with initial assessment</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline btn-white" onclick="saveDraft()">
+                            <i data-lucide="save"></i> Save Draft
+                        </button>
+                        <button class="btn btn-outline btn-white" onclick="loadDraft()">
+                            <i data-lucide="folder-open"></i> Load Draft
+                        </button>
+                        <button class="btn btn-primary" onclick="submitCase()" id="submitBtn">
+                            <i data-lucide="send"></i> Submit Case
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="intake-container">
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                
+                <div class="form-grid">
+                    <!-- Main Form -->
+                    <div class="form-section">
+                        <div class="form-header">
+                            <h2 class="form-title">Grievance Case Information</h2>
+                            <p class="form-subtitle">Complete the form below to submit a new grievance case</p>
+                        </div>
+                        
+                        <!-- Anonymous Toggle -->
+                        <div class="anonymous-toggle">
+                            <div class="toggle-switch" id="anonymousToggle" onclick="toggleAnonymous()">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <div>
+                                <div class="form-label">Submit Anonymously</div>
+                                <div class="form-subtitle">Hide worker identity for sensitive cases</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Worker Information (Hidden if Anonymous) -->
+                        <div id="workerInfo" class="form-group">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Worker ID</label>
+                                    <input type="text" class="form-input" id="workerId" placeholder="Enter worker ID">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Worker Name</label>
+                                    <input type="text" class="form-input" id="workerName" placeholder="Enter worker name">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Department</label>
+                                    <input type="text" class="form-input" id="department" placeholder="Enter department">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Number</label>
+                                    <input type="tel" class="form-input" id="contactNumber" placeholder="Enter contact number">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Case Details -->
+                        <div class="form-group">
+                            <label class="form-label">Case Title</label>
+                            <input type="text" class="form-input" id="caseTitle" placeholder="Brief description of the grievance" oninput="updatePreview()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Detailed Description</label>
+                            <textarea class="form-textarea" id="description" placeholder="Provide a detailed description of the grievance, including dates, locations, and any relevant details..." oninput="updatePreview()"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Incident Date</label>
+                                <input type="date" class="form-input" id="incidentDate" onchange="updatePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-input" id="location" placeholder="Where did the incident occur?" oninput="updatePreview()">
+                            </div>
+                        </div>
+                        
+                        <!-- Category Selection -->
+                        <div class="form-group">
+                            <label class="form-label">Grievance Category</label>
+                            <div class="category-grid">
+                                <div class="category-option" data-category="harassment" onclick="selectCategory('harassment')">
+                                    <div class="category-icon">🚫</div>
+                                    <div class="category-label">Harassment</div>
+                                </div>
+                                <div class="category-option" data-category="wage" onclick="selectCategory('wage')">
+                                    <div class="category-icon">💰</div>
+                                    <div class="category-label">Wage Issues</div>
+                                </div>
+                                <div class="category-option" data-category="safety" onclick="selectCategory('safety')">
+                                    <div class="category-icon">⚠️</div>
+                                    <div class="category-label">Safety Concerns</div>
+                                </div>
+                                <div class="category-option" data-category="discrimination" onclick="selectCategory('discrimination')">
+                                    <div class="category-icon">⚖️</div>
+                                    <div class="category-label">Discrimination</div>
+                                </div>
+                                <div class="category-option" data-category="working_conditions" onclick="selectCategory('working_conditions')">
+                                    <div class="category-icon">🏭</div>
+                                    <div class="category-label">Working Conditions</div>
+                                </div>
+                                <div class="category-option" data-category="other" onclick="selectCategory('other')">
+                                    <div class="category-icon">📋</div>
+                                    <div class="category-label">Other</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Severity Assessment -->
+                        <div class="form-group">
+                            <label class="form-label">Severity Assessment</label>
+                            <div class="severity-grid">
+                                <div class="severity-option low" data-severity="low" onclick="selectSeverity('low')">
+                                    <div class="severity-icon">🟢</div>
+                                    <div class="severity-label">Low</div>
+                                    <div class="severity-description">Minor issue, no immediate risk</div>
+                                </div>
+                                <div class="severity-option medium" data-severity="medium" onclick="selectSeverity('medium')">
+                                    <div class="severity-icon">🟡</div>
+                                    <div class="severity-label">Medium</div>
+                                    <div class="severity-description">Moderate concern, needs attention</div>
+                                </div>
+                                <div class="severity-option high" data-severity="high" onclick="selectSeverity('high')">
+                                    <div class="severity-icon">🟠</div>
+                                    <div class="severity-label">High</div>
+                                    <div class="severity-description">Serious issue, urgent action needed</div>
+                                </div>
+                                <div class="severity-option critical" data-severity="critical" onclick="selectSeverity('critical')">
+                                    <div class="severity-icon">🔴</div>
+                                    <div class="severity-label">Critical</div>
+                                    <div class="severity-description">Emergency situation, immediate response</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Information -->
+                        <div class="form-group">
+                            <label class="form-label">Additional Information</label>
+                            <textarea class="form-textarea" id="additionalInfo" placeholder="Any additional context, witnesses, or supporting information..." oninput="updatePreview()"></textarea>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-actions">
+                            <button class="btn btn-secondary" onclick="clearForm()">
+                                <i data-lucide="refresh-cw"></i> Clear Form
+                            </button>
+                            <button class="btn btn-secondary" onclick="saveDraft()">
+                                <i data-lucide="save"></i> Save Draft
+                            </button>
+                            <button class="btn btn-primary" onclick="submitCase()" id="submitBtn">
+                                <i data-lucide="send"></i> Submit Case
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Panel -->
+                    <div class="preview-panel">
+                        <div class="preview-header">
+                            <h3 class="preview-title">Case Preview</h3>
+                            <p class="preview-subtitle">Review the case details before submission</p>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Case Title</div>
+                            <div class="preview-value" id="previewTitle">Not provided</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Category</div>
+                            <div class="preview-value" id="previewCategory">Not selected</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Severity</div>
+                            <div class="preview-value" id="previewSeverity">Not assessed</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Worker Information</div>
+                            <div class="preview-value" id="previewWorker">Anonymous submission</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Incident Date</div>
+                            <div class="preview-value" id="previewDate">Not specified</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Location</div>
+                            <div class="preview-value" id="previewLocation">Not specified</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Description</div>
+                            <div class="preview-value" id="previewDescription">No description provided</div>
+                        </div>
+                        
+                        <div class="preview-item">
+                            <div class="preview-label">Form Completion</div>
+                            <div class="preview-value" id="previewCompletion">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/case-intake.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

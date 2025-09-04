@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-background">
+            <img src="angkor-bg.jpg" alt="Angkor Background" class="bg-image">
+            <div class="bg-overlay"></div>
+        </div>
+        
+        <div class="auth-content">
+            <div class="auth-header">
+                <div class="logo">
+                    <img src="logo.png" alt="Angkor Compliance Logo">
+                    <h1 data-translate="angkor_compliance">Angkor Compliance</h1>
+                </div>
+                
+                <div class="language-toggle" id="language-toggle">
+                    <img src="enflag.png" alt="English" class="en-flag" style="display: block;">
+                    <img src="khmerflag.png" alt="Khmer" class="km-flag" style="display: none;">
+                    <span class="lang-text">English</span>
+                </div>
+            </div>
+            
+            <div class="auth-card">
+                <div class="card-header">
+                    <h2 data-translate="sign_up">Sign Up</h2>
+                    <p data-translate="create_account">Create your account for Angkor Compliance Platform</p>
+                </div>
+                
+                <!-- Access Restriction Notice -->
+                <div class="access-restricted">
+                    <div class="restriction-icon">🔒</div>
+                    <h3 data-translate="access_restricted">Access Restricted</h3>
+                    <p data-translate="registration_restricted_message">User accounts are created by system administrators only. Contact your administrator to request access to the Angkor Compliance Platform.</p>
+                    
+                    <div class="contact-admin">
+                        <h4 data-translate="need_access">Need Access?</h4>
+                        <div class="contact-methods">
+                            <div class="contact-item">
+                                <span class="contact-icon">📧</span>
+                                <span>Email: admin@angkorcompliance.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">📞</span>
+                                <span>Phone: +855 23 123 456</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="auth-links">
+                        <a href="login.html" class="btn btn-primary" data-translate="back_to_login">Back to Login</a>
+                        <a href="index.html" class="btn btn-secondary" data-translate="back_to_home">Back to Home</a>
+                    </div>
+                </div>
+                
+                <div id="errorMessage" class="error-message d-none"></div>
+                <div id="successMessage" class="success-message d-none"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTerms()">&times;</span>
+            <h2>Terms and Conditions</h2>
+            <div class="terms-content">
+                <h3>1. Platform Usage</h3>
+                <p>By using Angkor Compliance Platform, you agree to use the service responsibly and in compliance with all applicable laws and regulations.</p>
+                
+                <h3>2. Data Privacy</h3>
+                <p>We are committed to protecting your data. All information is stored securely using Firebase infrastructure with encryption.</p>
+                
+                <h3>3. User Responsibilities</h3>
+                <p>Users are responsible for maintaining the confidentiality of their account credentials and for all activities under their account.</p>
+                
+                <h3>4. Compliance Standards</h3>
+                <p>The platform supports various compliance standards including ILO, SMETA, Primark, and Cambodian Ministry requirements.</p>
+                
+                <h3>5. Service Availability</h3>
+                <p>We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service.</p>
+                
+                <h3>6. Updates and Changes</h3>
+                <p>We may update these terms from time to time. Continued use of the platform constitutes acceptance of updated terms.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="closeTerms()">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="firebase-config.js"></script>
+    <script src="assets/js/lang.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        // Public registration is disabled - admin-controlled user creation only
+        console.log('Angkor Compliance Platform - Admin-controlled user creation system');
+        
+        // Initialize language system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality still works
+            const languageToggle = document.getElementById('language-toggle');
+            if (languageToggle) {
+                languageToggle.addEventListener('click', function() {
+                    toggleLanguage();
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

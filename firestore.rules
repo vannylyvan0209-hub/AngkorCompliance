@@ -1,0 +1,346 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions for multi-tenant security
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isSuperAdmin() {
+      return isAuthenticated() && 
+        request.auth.token.role == 'super_admin';
+    }
+    
+    function isFactoryAdmin(factoryId) {
+      return isAuthenticated() && 
+        request.auth.token.role == 'factory_admin' && 
+        request.auth.token.factoryId == factoryId;
+    }
+    
+    function isHRStaff(factoryId) {
+      return isAuthenticated() && 
+        request.auth.token.role == 'hr_staff' && 
+        request.auth.token.factoryId == factoryId;
+    }
+    
+    function isAuditor() {
+      return isAuthenticated() && 
+        request.auth.token.role == 'auditor';
+    }
+    
+    function isWorker(factoryId) {
+      return isAuthenticated() && 
+        request.auth.token.role == 'worker' && 
+        request.auth.token.factoryId == factoryId;
+    }
+    
+    function hasReadAccess(factoryId) {
+      return isSuperAdmin() || 
+        isFactoryAdmin(factoryId) || 
+        isHRStaff(factoryId) || 
+        isAuditor();
+    }
+    
+    function hasWriteAccess(factoryId) {
+      return isSuperAdmin() || 
+        isFactoryAdmin(factoryId) || 
+        isHRStaff(factoryId);
+    }
+    
+    // Organizations (Super Admin only)
+    match /organizations/{orgId} {
+      allow read, write: if isSuperAdmin();
+    }
+    
+    // Factories with multi-tenant isolation
+    match /factories/{factoryId} {
+      allow read: if hasReadAccess(factoryId);
+      allow create: if isSuperAdmin();
+      allow update, delete: if isSuperAdmin() || isFactoryAdmin(factoryId);
+    }
+    
+    // Users with role-based access
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == userId || 
+        isSuperAdmin() || 
+        (isFactoryAdmin(resource.data.factoryId) && resource.data.factoryId == request.auth.token.factoryId)
+      );
+      allow create: if isSuperAdmin() || isFactoryAdmin(resource.data.factoryId);
+      allow update: if isAuthenticated() && (
+        request.auth.uid == userId || 
+        isSuperAdmin() || 
+        (isFactoryAdmin(resource.data.factoryId) && resource.data.factoryId == request.auth.token.factoryId)
+      );
+      allow delete: if isSuperAdmin();
+    }
+    
+    // Documents with factory isolation
+    match /documents/{docId} {
+      allow read: if hasReadAccess(resource.data.factoryId);
+      allow create: if hasWriteAccess(resource.data.factoryId);
+      allow update, delete: if hasWriteAccess(resource.data.factoryId);
+    }
+    
+    // CAPs with factory isolation
+    match /caps/{capId} {
+      allow read: if hasReadAccess(resource.data.factoryId);
+      allow create: if hasWriteAccess(resource.data.factoryId);
+      allow update, delete: if hasWriteAccess(resource.data.factoryId);
+    }
+    
+    // Grievance cases with privacy protection
+    match /grievance_cases/{caseId} {
+      allow read: if isAuthenticated() && (
+        isSuperAdmin() || 
+        isFactoryAdmin(resource.data.factoryId) || 
+        isHRStaff(resource.data.factoryId) || 
+        isAuditor() ||
+        (isWorker(resource.data.factoryId) && resource.data.workerId == request.auth.uid)
+      );
+      allow create: if isAuthenticated();
+      allow update: if isSuperAdmin() || 
+        isFactoryAdmin(resource.data.factoryId) || 
+        isHRStaff(resource.data.factoryId);
+    }
+    
+    // Permits and certificates
+    match /permits/{permitId} {
+      allow read: if hasReadAccess(resource.data.factoryId);
+      allow create, update, delete: if hasWriteAccess(resource.data.factoryId);
+    }
+    
+    // Training records
+    match /training/{trainingId} {
+      allow read: if hasReadAccess(resource.data.factoryId);
+      allow create, update, delete: if hasWriteAccess(resource.data.factoryId);
+    }
+    
+    // Standards Registry (readable by all authenticated users, writable by Super Admin)
+    match /standards/{standardId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+    
+    // Requirements (readable by all authenticated users, writable by Super Admin)
+    match /requirements/{requirementId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+    
+    // System configuration (Super Admin only)
+    match /system_config/{configId} {
+      allow read, write: if isSuperAdmin();
+    }
+    
+    // AI usage logs (Super Admin only)
+    match /ai_usage_logs/{logId} {
+      allow read, write: if isSuperAdmin();
+    }
+    
+    // Licenses and billing
+    match /licenses/{licenseId} {
+      allow read: if isSuperAdmin() || 
+        (isFactoryAdmin(resource.data.factoryId) && resource.data.factoryId == request.auth.token.factoryId);
+      allow write: if isSuperAdmin();
+    }
+    
+    // Audit logs (immutable)
+    match /audit_logs/{logId} {
+      allow read: if isSuperAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Immutable
+    }
+    
+    // Document search index
+    match /document_search_index/{docId} {
+      allow read: if hasReadAccess(resource.data.metadata.factoryId);
+      allow create, update, delete: if hasWriteAccess(resource.data.metadata.factoryId);
+    }
+    
+    // Document graph connections
+    match /document_graph/{connectionId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // Grievance confirmations (anonymous access for workers)
+    match /grievance_confirmations/{caseId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isSuperAdmin() || isFactoryAdmin(resource.data.factoryId);
+    }
+    
+    // SLA tracking
+    match /sla_tracking/{caseId} {
+      allow read: if isAuthenticated() && (
+        isSuperAdmin() || 
+        isFactoryAdmin(resource.data.factoryId) || 
+        isHRStaff(resource.data.factoryId)
+      );
+      allow create, update: if isAuthenticated();
+      allow delete: if isSuperAdmin();
+    }
+    
+    // Case timeline
+    match /case_timeline/{timelineId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isSuperAdmin();
+    }
+    
+              // Investigations
+          match /investigations/{caseId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow delete: if isSuperAdmin();
+          }
+          
+          // Training Management (Phase 3)
+          match /training_matrices/{matrixId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /training_sessions/{sessionId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /training_agendas/{agendaId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /attendance_records/{recordId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /certificates/{certificateId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId) ||
+              resource.data.userId == request.auth.uid
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+          
+          match /training_quizzes/{quizId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /quiz_submissions/{submissionId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId) ||
+              resource.data.userId == request.auth.uid
+            );
+            allow create: if isAuthenticated();
+            allow update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          // Task Management (Phase 3)
+          match /tasks/{taskId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          // Calendar Management (Phase 3)
+          match /calendar_events/{eventId} {
+            allow read: if isAuthenticated() && (
+              hasReadAccess(resource.data.factoryId) ||
+              resource.data.visibility == 'public' ||
+              (resource.data.visibility == 'personal' && resource.data.organizer == request.auth.uid)
+            );
+            allow create, update, delete: if isAuthenticated() && (
+              hasWriteAccess(resource.data.factoryId) ||
+              resource.data.organizer == request.auth.uid
+            );
+          }
+          
+          match /holidays/{holidayId} {
+            allow read: if isAuthenticated();
+            allow create, update, delete: if isSuperAdmin();
+          }
+          
+          // Analytics & Exports (Phase 4)
+          match /risk_assessments/{assessmentId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /kpi_dashboards/{dashboardId} {
+            allow read: if isAuthenticated() && hasReadAccess(resource.data.factoryId);
+            allow create, update, delete: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+          }
+          
+          match /buyer_exports/{exportId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+          
+          match /export_templates/{templateId} {
+            allow read: if isAuthenticated();
+            allow create, update, delete: if isSuperAdmin();
+          }
+          
+          // Hardening & Go-Live (Phase 5)
+          match /security_tests/{testId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+          
+          match /performance_tests/{testId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+          
+          match /dr_drills/{drillId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+          
+          match /documentation/{docId} {
+            allow read: if isAuthenticated() && (
+              isSuperAdmin() || 
+              isFactoryAdmin(resource.data.factoryId) || 
+              isHRStaff(resource.data.factoryId)
+            );
+            allow create, update: if isAuthenticated() && hasWriteAccess(resource.data.factoryId);
+            allow delete: if isSuperAdmin();
+          }
+  }
+}

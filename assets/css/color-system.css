@@ -1,0 +1,495 @@
+/* ========================================
+   ANGKOR COMPLIANCE PLATFORM - COLOR SYSTEM
+   ======================================== */
+
+/* CSS Custom Properties for Color System */
+:root {
+    /* ========================================
+       PRIMARY COLOR PALETTE - GOLD THEME
+       ======================================== */
+    
+    /* Primary Gold Colors - Brand Identity */
+    --primary-gold: #D4AF37;
+    --primary-gold-dark: #B8941F;
+    --primary-gold-light: #F4E4BC;
+    --primary-gold-lighter: #FDF8E8;
+    --primary-gold-darker: #8B6914;
+    
+    /* Secondary Gold Colors - Supporting Elements */
+    --secondary-gold: #F4E4BC;
+    --accent-gold: #B8860B;
+    --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    --gold-gradient-light: linear-gradient(135deg, #F4E4BC 0%, #D4AF37 100%);
+    
+    /* ========================================
+       SEMANTIC COLORS - STATUS & FEEDBACK
+       ======================================== */
+    
+    /* Success Colors - Positive Actions & Status */
+    --success-50: #f0fdf4;
+    --success-100: #dcfce7;
+    --success-200: #bbf7d0;
+    --success-300: #86efac;
+    --success-400: #4ade80;
+    --success-500: #22c55e;
+    --success-600: #16a34a;
+    --success-700: #15803d;
+    --success-800: #166534;
+    --success-900: #14532d;
+    --success-950: #052e16;
+    
+    /* Warning Colors - Caution & Alerts */
+    --warning-50: #fffbeb;
+    --warning-100: #fef3c7;
+    --warning-200: #fde68a;
+    --warning-300: #fcd34d;
+    --warning-400: #fbbf24;
+    --warning-500: #f59e0b;
+    --warning-600: #d97706;
+    --warning-700: #b45309;
+    --warning-800: #92400e;
+    --warning-900: #78350f;
+    --warning-950: #451a03;
+    
+    /* Danger Colors - Errors & Critical Actions */
+    --danger-50: #fef2f2;
+    --danger-100: #fee2e2;
+    --danger-200: #fecaca;
+    --danger-300: #fca5a5;
+    --danger-400: #f87171;
+    --danger-500: #ef4444;
+    --danger-600: #dc2626;
+    --danger-700: #b91c1c;
+    --danger-800: #991b1b;
+    --danger-900: #7f1d1d;
+    --danger-950: #450a0a;
+    
+    /* Info Colors - Informational Content */
+    --info-50: #eff6ff;
+    --info-100: #dbeafe;
+    --info-200: #bfdbfe;
+    --info-300: #93c5fd;
+    --info-400: #60a5fa;
+    --info-500: #3b82f6;
+    --info-600: #2563eb;
+    --info-700: #1d4ed8;
+    --info-800: #1e40af;
+    --info-900: #1e3a8a;
+    --info-950: #172554;
+    
+    /* ========================================
+       NEUTRAL COLORS - TEXT & BACKGROUNDS
+       ======================================== */
+    
+    /* Neutral Grays */
+    --neutral-50: #f9fafb;
+    --neutral-100: #f3f4f6;
+    --neutral-200: #e5e7eb;
+    --neutral-300: #d1d5db;
+    --neutral-400: #9ca3af;
+    --neutral-500: #6b7280;
+    --neutral-600: #4b5563;
+    --neutral-700: #374151;
+    --neutral-800: #1f2937;
+    --neutral-900: #111827;
+    --neutral-950: #030712;
+    
+    /* Pure Colors */
+    --white: #ffffff;
+    --black: #000000;
+    --transparent: transparent;
+    
+    /* ========================================
+       ROLE-SPECIFIC COLORS
+       ======================================== */
+    
+    /* Worker Role */
+    --role-worker: #D4AF37;
+    --role-worker-light: #F4E4BC;
+    --role-worker-dark: #B8941F;
+    
+    /* Factory Admin Role */
+    --role-factory-admin: #B8941F;
+    --role-factory-admin-light: #F4E4BC;
+    --role-factory-admin-dark: #8B6914;
+    
+    /* HR Staff Role */
+    --role-hr-staff: #22c55e;
+    --role-hr-staff-light: #dcfce7;
+    --role-hr-staff-dark: #16a34a;
+    
+    /* Grievance Committee Role */
+    --role-grievance-committee: #f59e0b;
+    --role-grievance-committee-light: #fef3c7;
+    --role-grievance-committee-dark: #d97706;
+    
+    /* Auditor Role */
+    --role-auditor: #3b82f6;
+    --role-auditor-light: #dbeafe;
+    --role-auditor-dark: #2563eb;
+    
+    /* Analytics User Role */
+    --role-analytics-user: #8b5cf6;
+    --role-analytics-user-light: #ede9fe;
+    --role-analytics-user-dark: #7c3aed;
+    
+    /* Super Admin Role */
+    --role-super-admin: #ef4444;
+    --role-super-admin-light: #fee2e2;
+    --role-super-admin-dark: #dc2626;
+    
+    /* ========================================
+       STATUS COLORS
+       ======================================== */
+    
+    /* Case Status Colors */
+    --status-pending: #f59e0b;
+    --status-in-progress: #3b82f6;
+    --status-resolved: #22c55e;
+    --status-closed: #6b7280;
+    --status-urgent: #ef4444;
+    
+    /* Audit Status Colors */
+    --audit-status-planned: #3b82f6;
+    --audit-status-in-progress: #f59e0b;
+    --audit-status-completed: #22c55e;
+    --audit-status-failed: #ef4444;
+    
+    /* Compliance Status Colors */
+    --compliance-compliant: #22c55e;
+    --compliance-non-compliant: #ef4444;
+    --compliance-pending: #f59e0b;
+    --compliance-review: #3b82f6;
+    
+    /* ========================================
+       BACKGROUND GRADIENTS
+       ======================================== */
+    
+    /* Primary Gradients */
+    --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    --gradient-primary-light: linear-gradient(135deg, #F4E4BC 0%, #D4AF37 100%);
+    --gradient-primary-dark: linear-gradient(135deg, #B8941F 0%, #8B6914 100%);
+    
+    /* Role-specific Gradients */
+    --gradient-worker: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    --gradient-factory-admin: linear-gradient(135deg, #B8941F 0%, #8B6914 100%);
+    --gradient-hr-staff: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    --gradient-grievance-committee: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --gradient-auditor: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    --gradient-analytics-user: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    --gradient-super-admin: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    
+    /* ========================================
+       SHADOW COLORS
+       ======================================== */
+    
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-color-light: rgba(0, 0, 0, 0.05);
+    --shadow-color-dark: rgba(0, 0, 0, 0.2);
+    --shadow-gold: rgba(212, 175, 55, 0.2);
+    
+    /* ========================================
+       BORDER COLORS
+       ======================================== */
+    
+    --border-light: #e5e7eb;
+    --border-medium: #d1d5db;
+    --border-dark: #9ca3af;
+    --border-focus: #D4AF37;
+    --border-error: #ef4444;
+    --border-success: #22c55e;
+    
+    /* ========================================
+       TEXT COLORS
+       ======================================== */
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --text-disabled: #9ca3af;
+    --text-inverse: #ffffff;
+    
+    /* ========================================
+       OVERLAY COLORS
+       ======================================== */
+    
+    --overlay-light: rgba(255, 255, 255, 0.9);
+    --overlay-medium: rgba(255, 255, 255, 0.7);
+    --overlay-dark: rgba(0, 0, 0, 0.5);
+    --overlay-darker: rgba(0, 0, 0, 0.7);
+    
+    /* ========================================
+       GLASSMORPHISM EFFECTS
+       ======================================== */
+    
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --glass-blur: blur(10px);
+}
+
+/* ========================================
+   COLOR UTILITY CLASSES
+   ======================================== */
+
+/* Background Colors */
+.bg-primary-gold { background-color: var(--primary-gold); }
+.bg-primary-gold-dark { background-color: var(--primary-gold-dark); }
+.bg-primary-gold-light { background-color: var(--primary-gold-light); }
+.bg-primary-gold-lighter { background-color: var(--primary-gold-lighter); }
+
+.bg-success { background-color: var(--success-500); }
+.bg-success-light { background-color: var(--success-100); }
+.bg-warning { background-color: var(--warning-500); }
+.bg-warning-light { background-color: var(--warning-100); }
+.bg-danger { background-color: var(--danger-500); }
+.bg-danger-light { background-color: var(--danger-100); }
+.bg-info { background-color: var(--info-500); }
+.bg-info-light { background-color: var(--info-100); }
+
+/* Text Colors */
+.text-primary-gold { color: var(--primary-gold); }
+.text-primary-gold-dark { color: var(--primary-gold-dark); }
+.text-success { color: var(--success-600); }
+.text-warning { color: var(--warning-600); }
+.text-danger { color: var(--danger-600); }
+.text-info { color: var(--info-600); }
+
+.text-neutral-900 { color: var(--neutral-900); }
+.text-neutral-700 { color: var(--neutral-700); }
+.text-neutral-500 { color: var(--neutral-500); }
+.text-neutral-400 { color: var(--neutral-400); }
+
+/* Border Colors */
+.border-primary-gold { border-color: var(--primary-gold); }
+.border-success { border-color: var(--success-500); }
+.border-warning { border-color: var(--warning-500); }
+.border-danger { border-color: var(--danger-500); }
+.border-info { border-color: var(--info-500); }
+
+/* ========================================
+   ROLE-SPECIFIC STYLES
+   ======================================== */
+
+/* Worker Role Styles */
+.role-worker {
+    --role-color: var(--role-worker);
+    --role-color-light: var(--role-worker-light);
+    --role-color-dark: var(--role-worker-dark);
+}
+
+/* Factory Admin Role Styles */
+.role-factory-admin {
+    --role-color: var(--role-factory-admin);
+    --role-color-light: var(--role-factory-admin-light);
+    --role-color-dark: var(--role-factory-admin-dark);
+}
+
+/* HR Staff Role Styles */
+.role-hr-staff {
+    --role-color: var(--role-hr-staff);
+    --role-color-light: var(--role-hr-staff-light);
+    --role-color-dark: var(--role-hr-staff-dark);
+}
+
+/* Grievance Committee Role Styles */
+.role-grievance-committee {
+    --role-color: var(--role-grievance-committee);
+    --role-color-light: var(--role-grievance-committee-light);
+    --role-color-dark: var(--role-grievance-committee-dark);
+}
+
+/* Auditor Role Styles */
+.role-auditor {
+    --role-color: var(--role-auditor);
+    --role-color-light: var(--role-auditor-light);
+    --role-color-dark: var(--role-auditor-dark);
+}
+
+/* Analytics User Role Styles */
+.role-analytics-user {
+    --role-color: var(--role-analytics-user);
+    --role-color-light: var(--role-analytics-user-light);
+    --role-color-dark: var(--role-analytics-user-dark);
+}
+
+/* Super Admin Role Styles */
+.role-super-admin {
+    --role-color: var(--role-super-admin);
+    --role-color-light: var(--role-super-admin-light);
+    --role-color-dark: var(--role-super-admin-dark);
+}
+
+/* ========================================
+   STATUS INDICATORS
+   ======================================== */
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-pending { background-color: var(--status-pending); }
+.status-in-progress { background-color: var(--status-in-progress); }
+.status-resolved { background-color: var(--status-resolved); }
+.status-closed { background-color: var(--status-closed); }
+.status-urgent { background-color: var(--status-urgent); }
+
+/* ========================================
+   GRADIENT UTILITIES
+   ======================================== */
+
+.gradient-primary { background: var(--gradient-primary); }
+.gradient-primary-light { background: var(--gradient-primary-light); }
+.gradient-primary-dark { background: var(--gradient-primary-dark); }
+
+.gradient-worker { background: var(--gradient-worker); }
+.gradient-factory-admin { background: var(--gradient-factory-admin); }
+.gradient-hr-staff { background: var(--gradient-hr-staff); }
+.gradient-grievance-committee { background: var(--gradient-grievance-committee); }
+.gradient-auditor { background: var(--gradient-auditor); }
+.gradient-analytics-user { background: var(--gradient-analytics-user); }
+.gradient-super-admin { background: var(--gradient-super-admin); }
+
+/* ========================================
+   GLASSMORPHISM UTILITIES
+   ======================================== */
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.glass-light {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   HOVER EFFECTS
+   ======================================== */
+
+.hover-gold:hover {
+    background-color: var(--primary-gold);
+    color: var(--white);
+    transition: all 0.2s ease;
+}
+
+.hover-gold-light:hover {
+    background-color: var(--primary-gold-light);
+    transition: all 0.2s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+/* ========================================
+   FOCUS STATES
+   ======================================== */
+
+.focus-gold:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+.focus-ring:focus {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+    outline: none;
+}
+
+/* ========================================
+   ANIMATION UTILITIES
+   ======================================== */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+.scale-in {
+    animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ========================================
+   RESPONSIVE COLOR ADJUSTMENTS
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark mode color adjustments */
+        --glass-bg: rgba(0, 0, 0, 0.8);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --text-primary: #ffffff;
+        --text-secondary: #d1d5db;
+        --text-tertiary: #9ca3af;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Mobile-specific color adjustments */
+    :root {
+        --glass-blur: blur(5px);
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-gold: #B8860B;
+        --success-500: #15803d;
+        --warning-500: #d97706;
+        --danger-500: #dc2626;
+        --info-500: #2563eb;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

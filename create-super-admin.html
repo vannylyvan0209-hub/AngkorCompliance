@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Super Admin - Angkor Compliance</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Background with overlay -->
+        <div class="auth-background">
+            <img src="angkor-bg.jpg" alt="Angkor Background" class="bg-image">
+            <div class="bg-overlay"></div>
+        </div>
+        
+        <div class="auth-content">
+            <!-- Header Section -->
+            <div class="auth-header">
+                <div class="logo">
+                    <img src="logo.png" alt="Angkor Compliance Logo" class="auth-logo">
+                    <h1>Angkor Compliance</h1>
+                </div>
+                <h2>Create Super Admin Account</h2>
+                <p>Set up the initial super administrator account</p>
+            </div>
+            
+            <!-- Super Admin Creation Form -->
+            <div class="auth-card">
+                <form id="superAdminForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="fullName">
+                            <i class="fas fa-user"></i>
+                            Full Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            name="fullName" 
+                            placeholder="Enter full name"
+                            required
+                            autocomplete="name"
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter email address"
+                            required
+                            autocomplete="email"
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <div class="password-input-container">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Enter password (min 6 characters)"
+                                required
+                                minlength="6"
+                                autocomplete="new-password"
+                            >
+                            <button type="button" class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">
+                            <i class="fas fa-lock"></i>
+                            Confirm Password
+                        </label>
+                        <div class="password-input-container">
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                name="confirmPassword" 
+                                placeholder="Confirm password"
+                                required
+                                autocomplete="new-password"
+                            >
+                            <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i>
+                            Phone Number
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            placeholder="Enter phone number"
+                            autocomplete="tel"
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="organization">
+                            <i class="fas fa-building"></i>
+                            Organization
+                        </label>
+                        <input 
+                            type="text" 
+                            id="organization" 
+                            name="organization" 
+                            placeholder="Enter organization name"
+                            value="Angkor Compliance"
+                            required
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            I agree to the terms and conditions
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-button" id="createButton">
+                        <span class="button-text">
+                            <i class="fas fa-user-shield"></i>
+                            Create Super Admin Account
+                        </span>
+                        <span class="loading-spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Creating account...
+                        </span>
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? 
+                        <a href="login.html" class="signup-link">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign in
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Messages -->
+            <div id="errorMessage" class="message error-message" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="message-text"></span>
+            </div>
+            
+            <div id="successMessage" class="message success-message" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span class="message-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module" src="firebase-config.js"></script>
+    
+    <!-- Authentication -->
+    <script type="module" src="assets/js/auth.js"></script>
+    
+    <script type="module">
+        // Super Admin Creation Controller
+        class SuperAdminController {
+            constructor() {
+                this.initializeElements();
+                this.setupEventListeners();
+                this.initializeAuth();
+            }
+            
+            initializeElements() {
+                this.form = document.getElementById('superAdminForm');
+                this.fullNameInput = document.getElementById('fullName');
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.confirmPasswordInput = document.getElementById('confirmPassword');
+                this.phoneInput = document.getElementById('phone');
+                this.organizationInput = document.getElementById('organization');
+                this.agreeTermsCheckbox = document.getElementById('agreeTerms');
+                this.createButton = document.getElementById('createButton');
+                this.buttonText = this.createButton.querySelector('.button-text');
+                this.loadingSpinner = this.createButton.querySelector('.loading-spinner');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
+                this.passwordToggle = document.getElementById('passwordToggle');
+                this.confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+            }
+            
+            setupEventListeners() {
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleCreateAccount(e));
+                
+                // Password toggles
+                this.passwordToggle.addEventListener('click', () => this.togglePassword(this.passwordInput, this.passwordToggle));
+                this.confirmPasswordToggle.addEventListener('click', () => this.togglePassword(this.confirmPasswordInput, this.confirmPasswordToggle));
+                
+                // Input focus effects
+                this.setupFocusEffects();
+                
+                // Real-time password validation
+                this.confirmPasswordInput.addEventListener('input', () => this.validatePasswords());
+            }
+            
+            setupFocusEffects() {
+                const inputs = [this.fullNameInput, this.emailInput, this.passwordInput, this.confirmPasswordInput, this.phoneInput, this.organizationInput];
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => this.addFocusClass(input));
+                    input.addEventListener('blur', () => this.removeFocusClass(input));
+                });
+            }
+            
+            async initializeAuth() {
+                console.log('🔍 Initializing super admin creation...');
+                
+                // Wait for Firebase to be available
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                while (!window.Firebase && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                    console.log(`⏳ Waiting for Firebase... Attempt ${attempts}`);
+                }
+                
+                if (!window.Firebase) {
+                    this.showError('Firebase initialization failed. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ Firebase found:', window.Firebase);
+                
+                // Wait for AuthManager to be available
+                attempts = 0;
+                while (!window.authManager && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                    console.log(`⏳ Waiting for AuthManager... Attempt ${attempts}`);
+                }
+                
+                if (!window.authManager) {
+                    this.showError('Authentication system not ready. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ AuthManager found:', window.authManager);
+            }
+            
+            async handleCreateAccount(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = {
+                    fullName: this.fullNameInput.value.trim(),
+                    email: this.emailInput.value.trim(),
+                    password: this.passwordInput.value,
+                    confirmPassword: this.confirmPasswordInput.value,
+                    phone: this.phoneInput.value.trim(),
+                    organization: this.organizationInput.value.trim(),
+                    agreeTerms: this.agreeTermsCheckbox.checked
+                };
+                
+                // Validation
+                const validation = this.validateForm(formData);
+                if (!validation.isValid) {
+                    this.showError(validation.message);
+                    return;
+                }
+                
+                // Show loading state
+                this.setLoadingState(true);
+                this.hideMessages();
+                
+                try {
+                    console.log('🔍 Creating super admin account...');
+                    
+                    // Create user data object
+                    const userData = {
+                        name: formData.fullName,
+                        displayName: formData.fullName,
+                        email: formData.email,
+                        phone: formData.phone,
+                        organization: formData.organization,
+                        role: 'super_admin',
+                        permissions: ['all'],
+                        isActive: true,
+                        createdAt: new Date(),
+                        lastLogin: new Date(),
+                        profileComplete: true
+                    };
+                    
+                    // Register the user
+                    const result = await window.authManager.register(formData.email, formData.password, userData);
+                    
+                    if (result.success) {
+                        console.log('✅ Super admin account created successfully');
+                        this.showSuccess('Super admin account created successfully! Redirecting to login...');
+                        
+                        // Clear form
+                        this.form.reset();
+                        
+                        // Redirect to login after delay
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        console.error('❌ Account creation failed:', result.error);
+                        this.showError(this.getUserFriendlyError(result.error));
+                    }
+                } catch (error) {
+                    console.error('❌ Account creation error:', error);
+                    this.showError('An unexpected error occurred. Please try again.');
+                } finally {
+                    this.setLoadingState(false);
+                }
+            }
+            
+            validateForm(data) {
+                // Check required fields
+                if (!data.fullName || !data.email || !data.password || !data.confirmPassword || !data.organization) {
+                    return { isValid: false, message: 'Please fill in all required fields.' };
+                }
+                
+                // Validate email
+                if (!this.isValidEmail(data.email)) {
+                    return { isValid: false, message: 'Please enter a valid email address.' };
+                }
+                
+                // Validate password length
+                if (data.password.length < 6) {
+                    return { isValid: false, message: 'Password must be at least 6 characters long.' };
+                }
+                
+                // Validate password confirmation
+                if (data.password !== data.confirmPassword) {
+                    return { isValid: false, message: 'Passwords do not match.' };
+                }
+                
+                // Validate terms agreement
+                if (!data.agreeTerms) {
+                    return { isValid: false, message: 'You must agree to the terms and conditions.' };
+                }
+                
+                return { isValid: true };
+            }
+            
+            validatePasswords() {
+                const password = this.passwordInput.value;
+                const confirmPassword = this.confirmPasswordInput.value;
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    this.confirmPasswordInput.style.borderColor = 'var(--error-red)';
+                } else {
+                    this.confirmPasswordInput.style.borderColor = '';
+                }
+            }
+            
+            togglePassword(input, toggle) {
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+                const icon = toggle.querySelector('i');
+                icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+            }
+            
+            setLoadingState(loading) {
+                this.createButton.disabled = loading;
+                this.buttonText.style.display = loading ? 'none' : 'inline-flex';
+                this.loadingSpinner.style.display = loading ? 'inline-flex' : 'none';
+            }
+            
+            showError(message) {
+                this.errorMessage.querySelector('.message-text').textContent = message;
+                this.errorMessage.style.display = 'flex';
+                this.successMessage.style.display = 'none';
+            }
+            
+            showSuccess(message) {
+                this.successMessage.querySelector('.message-text').textContent = message;
+                this.successMessage.style.display = 'flex';
+                this.errorMessage.style.display = 'none';
+            }
+            
+            hideMessages() {
+                this.errorMessage.style.display = 'none';
+                this.successMessage.style.display = 'none';
+            }
+            
+            addFocusClass(element) {
+                element.parentElement.classList.add('focused');
+            }
+            
+            removeFocusClass(element) {
+                if (!element.value) {
+                    element.parentElement.classList.remove('focused');
+                }
+            }
+            
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            getUserFriendlyError(error) {
+                if (error.includes('email-already-in-use')) {
+                    return 'An account with this email already exists.';
+                } else if (error.includes('weak-password')) {
+                    return 'Password is too weak. Please choose a stronger password.';
+                } else if (error.includes('invalid-email')) {
+                    return 'Please enter a valid email address.';
+                } else if (error.includes('operation-not-allowed')) {
+                    return 'Email/password accounts are not enabled. Please contact support.';
+                } else {
+                    return error || 'Account creation failed. Please try again.';
+                }
+            }
+        }
+        
+        // Initialize controller when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new SuperAdminController();
+        });
+    </script>
+</body>
+</html>

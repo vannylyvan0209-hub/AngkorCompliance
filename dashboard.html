@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Redirecting to your dashboard...</title>
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="stylesheet" href="assets/css/main-modern.css">
+	<style>
+		body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--neutral-50); }
+		.loader { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); color: var(--neutral-700); }
+		.spinner { width: 36px; height: 36px; border: 3px solid var(--neutral-200); border-top: 3px solid var(--primary-500); border-radius: 50%; animation: spin 1s linear infinite; }
+		@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+	</style>
+</head>
+<body>
+	<div class="loader">
+		<div class="spinner"></div>
+		<div>Loading your dashboard...</div>
+	</div>
+
+	<script type="module" src="firebase-config.js"></script>
+	<script type="module">
+		// Wait for Firebase to be initialized
+		document.addEventListener('DOMContentLoaded', function() {
+			// Wait a bit for the module to load
+			setTimeout(() => {
+				routeUser();
+			}, 100);
+		});
+
+		function routeUser() {
+			// Check if Firebase is available
+			if (!window.Firebase) {
+				console.log('⏳ Waiting for Firebase to initialize...');
+				setTimeout(routeUser, 100);
+				return;
+			}
+
+			const { auth, db } = window.Firebase;
+			const { doc, getDoc, onAuthStateChanged } = window.Firebase;
+			
+			if (!auth || !db) {
+				console.error('Firebase not initialized properly');
+				window.location.href = 'login.html';
+				return;
+			}
+
+			onAuthStateChanged(auth, async function(user) {
+				if (!user) {
+					window.location.href = 'login.html';
+					return;
+				}
+				try {
+					const userDocRef = doc(db, 'users', user.uid);
+					const userDoc = await getDoc(userDocRef);
+					if (!userDoc.exists()) {
+						window.location.href = 'login.html';
+						return;
+					}
+					const data = userDoc.data();
+					const role = data.role;
+					localStorage.setItem('userRole', role);
+					localStorage.setItem('userName', data.name || data.displayName || '');
+					// Define role-based redirects with enhanced logic
+					const roleRedirects = {
+						            'super_admin': 'super-admin-dashboard.html',
+						'factory_admin': data.factoryId ? `factory-dashboard.html?id=${encodeURIComponent(data.factoryId)}` : 'factory-management.html',
+						'hr_staff': 'hr-dashboard.html',
+						'hr': 'hr-dashboard.html',
+						'auditor': 'auditor-dashboard.html',
+						'user': 'user-dashboard.html',
+						'staff': 'user-dashboard.html',
+						'employee': 'user-dashboard.html'
+					};
+
+					const targetUrl = roleRedirects[role];
+					
+					if (targetUrl) {
+						console.log(`✅ Redirecting ${role} user to: ${targetUrl}`);
+						window.location.href = targetUrl;
+					} else {
+						console.log(`⚠️ Unknown role '${role}', redirecting to documents`);
+						window.location.href = 'documents.html';
+					}
+				} catch (e) {
+					console.error('Routing error:', e);
+					window.location.href = 'login.html';
+				}
+			});
+		}
+	</script>
+</body>
+</html>
+
+
+
+

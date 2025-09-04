@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Binder Creation - Angkor Compliance</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../assets/css/custom-styles.css">
+    <link rel="stylesheet" href="../assets/css/auditor.css">
+    <style>
+        /* Role-specific styling for auditor */
+        body.role-auditor {
+            --role-primary: var(--auditor-primary);
+            --role-secondary: var(--auditor-secondary);
+            --role-accent: var(--auditor-accent);
+        }
+
+        
+        .binder-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .binder-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .binder-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .binder-content {
+            padding: 30px;
+        }
+        
+        .binder-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            height: 75vh;
+        }
+        
+        .binder-sidebar {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .binder-main {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .binder-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .binder-item:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .binder-item.active {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .binder-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .binder-preview {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .binder-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .binder-status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .binder-status-draft { background: #fff3cd; color: #856404; }
+        .binder-status-in-progress { background: #cce5ff; color: #004085; }
+        .binder-status-completed { background: #d4edda; color: #155724; }
+        .binder-status-archived { background: #f8d7da; color: #721c24; }
+        
+        .binder-editor {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .editor-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .binder-form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        
+        .evidence-sections {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .sections-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .sections-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .section-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-section {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit { background: #ffc107; color: #212529; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-add-evidence { background: #28a745; color: white; }
+        
+        .btn-section:hover {
+            transform: scale(1.05);
+        }
+        
+        .evidence-list {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        
+        .evidence-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .evidence-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+        
+        .evidence-info {
+            flex: 1;
+        }
+        
+        .evidence-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .evidence-meta {
+            font-size: 10px;
+            color: #6c757d;
+        }
+        
+        .evidence-actions {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .btn-evidence {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view { background: #007bff; color: white; }
+        .btn-remove { background: #dc3545; color: white; }
+        
+        .btn-evidence:hover {
+            transform: scale(1.05);
+        }
+        
+        .add-section-form {
+            background: white;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .add-section-form:hover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+        
+        .binder-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .binder-templates {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .template-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-card:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .template-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .template-description {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h4 {
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+        
+        .binder-preview-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .preview-section-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .preview-evidence-item {
+            background: white;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .preview-evidence-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: white;
+        }
+        
+        .preview-evidence-name {
+            font-size: 12px;
+            flex: 1;
+        }
+        
+        .binder-export {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .export-option {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .export-option:hover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .export-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        
+        .export-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .export-description {
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body class="role-auditor">
+    <div class="binder-container">
+        <div class="binder-card">
+            <div class="binder-header">
+                <h2><i class="fas fa-folder-open"></i> Evidence Binder Creation</h2>
+                <p class="mb-0">Organize and structure evidence for comprehensive audit documentation</p>
+            </div>
+            
+            <div class="binder-content">
+                <!-- Binder Statistics -->
+                <div class="binder-stats" id="binderStats">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary" id="totalBinders">0</div>
+                        <div class="stat-label">Total Binders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number text-success" id="activeBinders">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number text-info" id="completedBinders">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number text-warning" id="draftBinders">0</div>
+                        <div class="stat-label">Drafts</div>
+                    </div>
+                </div>
+                
+                <!-- Binder Templates -->
+                <div class="binder-templates" id="binderTemplates">
+                    <h5><i class="fas fa-layer-group"></i> Quick Start Templates</h5>
+                    <div class="template-grid">
+                        <div class="template-card" data-template="compliance">
+                            <div class="template-icon" style="background: #1976d2;">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="template-title">Compliance Binder</div>
+                            <div class="template-description">Standard compliance evidence organization</div>
+                        </div>
+                        <div class="template-card" data-template="safety">
+                            <div class="template-icon" style="background: #388e3c;">
+                                <i class="fas fa-hard-hat"></i>
+                            </div>
+                            <div class="template-title">Safety Binder</div>
+                            <div class="template-description">Safety audit evidence structure</div>
+                        </div>
+                        <div class="template-card" data-template="quality">
+                            <div class="template-icon" style="background: #f57c00;">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="template-title">Quality Binder</div>
+                            <div class="template-description">Quality management evidence</div>
+                        </div>
+                        <div class="template-card" data-template="custom">
+                            <div class="template-icon" style="background: #7b1fa2;">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="template-title">Custom Binder</div>
+                            <div class="template-description">Create from scratch</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Binder Layout -->
+                <div class="binder-layout" id="binderLayout" style="display: none;">
+                    <!-- Binder Sidebar -->
+                    <div class="binder-sidebar">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">My Binders</h6>
+                            <button class="btn btn-sm btn-primary" id="newBinderBtn">
+                                <i class="fas fa-plus"></i> New
+                            </button>
+                        </div>
+                        
+                        <div class="binder-list" id="binderList">
+                            <!-- Binders will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Binder Main Area -->
+                    <div class="binder-main">
+                        <div class="binder-editor" id="binderEditor">
+                            <div class="editor-header">
+                                <div class="editor-title" id="editorTitle">Select a binder or create a new one</div>
+                                <div class="editor-actions">
+                                    <button class="btn btn-outline-secondary btn-sm" id="deleteBinderBtn" style="display: none;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" id="saveBinderBtn" style="display: none;">
+                                        <i class="fas fa-save"></i> Save
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="binder-form" id="binderForm" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Binder Title</label>
+                                        <input type="text" class="form-control" id="binderTitle" placeholder="Enter binder title...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Binder Type</label>
+                                        <select class="form-control" id="binderType">
+                                            <option value="compliance">Compliance</option>
+                                            <option value="safety">Safety</option>
+                                            <option value="quality">Quality</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Audit Standard</label>
+                                        <select class="form-control" id="auditStandard">
+                                            <option value="">Select standard...</option>
+                                            <option value="iso9001">ISO 9001</option>
+                                            <option value="iso14001">ISO 14001</option>
+                                            <option value="ohsas18001">OHSAS 18001</option>
+                                            <option value="custom">Custom Standard</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Version</label>
+                                        <input type="text" class="form-control" id="binderVersion" value="1.0">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" id="binderDescription" rows="3" placeholder="Describe the purpose and scope of this evidence binder..."></textarea>
+                                </div>
+                                
+                                <div class="evidence-sections">
+                                    <div class="sections-header">
+                                        <h6>Evidence Sections</h6>
+                                        <button class="btn btn-sm btn-primary" id="addSectionBtn">
+                                            <i class="fas fa-plus"></i> Add Section
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="sections-list" id="sectionsList">
+                                        <!-- Sections will be populated here -->
+                                    </div>
+                                    
+                                    <div class="add-section-form" id="addSectionForm" style="display: none;">
+                                        <h6>Add New Section</h6>
+                                        <div class="form-group">
+                                            <label>Section Title</label>
+                                            <input type="text" class="form-control" id="sectionTitle" placeholder="Enter section title...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Section Description</label>
+                                            <textarea class="form-control" id="sectionDescription" rows="2" placeholder="Describe what evidence this section will contain..."></textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label>Category</label>
+                                                <select class="form-control" id="sectionCategory">
+                                                    <option value="general">General</option>
+                                                    <option value="documentation">Documentation</option>
+                                                    <option value="process">Process</option>
+                                                    <option value="training">Training</option>
+                                                    <option value="equipment">Equipment</option>
+                                                    <option value="safety">Safety</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Priority</label>
+                                                <select class="form-control" id="sectionPriority">
+                                                    <option value="low">Low</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="high">High</option>
+                                                    <option value="critical">Critical</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-primary btn-sm" id="saveSectionBtn">
+                                                <i class="fas fa-save"></i> Save Section
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" id="cancelSectionBtn">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="empty-state" id="emptyState">
+                                <i class="fas fa-folder-open"></i>
+                                <h4>No Binder Selected</h4>
+                                <p>Select a binder from the sidebar or create a new one to get started.</p>
+                                <button class="btn btn-primary" id="createFirstBinderBtn">
+                                    <i class="fas fa-plus"></i> Create First Binder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Binder Preview -->
+                <div class="binder-preview-panel" id="binderPreview" style="display: none;">
+                    <div class="preview-header">
+                        <h5><i class="fas fa-eye"></i> Binder Preview</h5>
+                        <div class="preview-actions">
+                            <button class="btn btn-outline-primary btn-sm" id="exportPdfBtn">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" id="exportExcelBtn">
+                                <i class="fas fa-file-excel"></i> Export Excel
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" id="shareBinderBtn">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-content" id="previewContent">
+                        <!-- Preview content will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Export Options -->
+                <div class="binder-export" id="binderExport" style="display: none;">
+                    <h5><i class="fas fa-download"></i> Export Options</h5>
+                    <div class="export-options">
+                        <div class="export-option" data-format="pdf">
+                            <div class="export-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="export-title">PDF Report</div>
+                            <div class="export-description">Professional PDF format</div>
+                        </div>
+                        <div class="export-option" data-format="excel">
+                            <div class="export-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <div class="export-title">Excel Spreadsheet</div>
+                            <div class="export-description">Editable Excel format</div>
+                        </div>
+                        <div class="export-option" data-format="word">
+                            <div class="export-icon">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <div class="export-title">Word Document</div>
+                            <div class="export-description">Editable Word format</div>
+                        </div>
+                        <div class="export-option" data-format="json">
+                            <div class="export-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="export-title">JSON Data</div>
+                            <div class="export-description">Raw data format</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/firebase-app.js"></script>
+    <script src="../assets/js/firebase-auth.js"></script>
+    <script src="../assets/js/firebase-firestore.js"></script>
+    <script src="../assets/js/auditor/evidence-binder-creation.js"></script>
+</body>
+</html>
+
+
+

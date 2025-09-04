@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Tracking Portal - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for worker */
+        body.role-worker {
+            --role-primary: var(--worker-primary);
+            --role-secondary: var(--worker-secondary);
+            --role-accent: var(--worker-accent);
+        }
+
+        
+        .tracking-portal {
+            padding: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portal-header {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .portal-header h1 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: 2rem;
+        }
+
+        .portal-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .tracking-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-6);
+        }
+
+        .tracking-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .tracking-main {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-300);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        .btn-track {
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-track:hover {
+            background: var(--primary-700);
+        }
+
+        .btn-track:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+        }
+
+        .cases-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .case-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .case-item:hover {
+            border-color: var(--primary-300);
+            background: var(--primary-50);
+        }
+
+        .case-item.active {
+            border-color: var(--primary-500);
+            background: var(--primary-100);
+        }
+
+        .case-info {
+            flex: 1;
+        }
+
+        .case-id {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .case-category {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-1);
+        }
+
+        .case-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .case-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-new { background: var(--blue-100); color: var(--blue-700); }
+        .status-assigned { background: var(--yellow-100); color: var(--yellow-700); }
+        .status-investigating { background: var(--orange-100); color: var(--orange-700); }
+        .status-resolved { background: var(--green-100); color: var(--green-700); }
+        .status-closed { background: var(--gray-100); color: var(--gray-700); }
+
+        .case-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .case-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .overview-item {
+            padding: var(--space-3);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .overview-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-1);
+        }
+
+        .overview-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: var(--space-3);
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            bottom: -15px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-600);
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-bottom: var(--space-3);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .timeline-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-1);
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .communications {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .communication-item {
+            padding: var(--space-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+
+        .communication-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+        }
+
+        .communication-sender {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .communication-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .communication-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 var(--space-2) 0;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            margin: 0 0 var(--space-4) 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--space-8);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-3) auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .tracking-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .case-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="role-worker">
+    <div class="tracking-portal">
+        <!-- Portal Header -->
+        <div class="portal-header">
+            <h1><i data-lucide="search"></i> Case Tracking Portal</h1>
+            <p>Track the status and progress of your submitted grievances</p>
+        </div>
+
+        <!-- Tracking Container -->
+        <div class="tracking-container">
+            <!-- Sidebar -->
+            <div class="tracking-sidebar">
+                <!-- Search Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i data-lucide="search"></i> Track Your Case</h3>
+                    </div>
+                    <form class="search-form" id="trackingForm">
+                        <div class="form-group">
+                            <label for="caseId">Case ID</label>
+                            <input type="text" id="caseId" placeholder="Enter your case ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" placeholder="Enter your phone number">
+                        </div>
+                        <button type="submit" class="btn-track" id="trackButton">
+                            <i data-lucide="search"></i> Track Case
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Your Cases -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i data-lucide="list"></i> Your Cases</h3>
+                    </div>
+                    <div class="cases-list" id="casesList">
+                        <div class="empty-state">
+                            <i data-lucide="file-text"></i>
+                            <h3>No cases found</h3>
+                            <p>Enter your case ID and phone number to track your case</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="tracking-main">
+                <!-- Case Details -->
+                <div class="card" id="caseDetailsCard" style="display: none;">
+                    <div class="card-header">
+                        <h3><i data-lucide="file-text"></i> Case Details</h3>
+                        <button class="btn btn-outline" onclick="submitNewGrievance()">
+                            <i data-lucide="plus"></i> Submit New Case
+                        </button>
+                    </div>
+                    <div class="case-details" id="caseDetails">
+                        <!-- Case overview -->
+                        <div class="case-overview" id="caseOverview">
+                            <!-- Overview items will be populated here -->
+                        </div>
+
+                        <!-- Timeline -->
+                        <div>
+                            <h4><i data-lucide="clock"></i> Case Timeline</h4>
+                            <div class="timeline" id="caseTimeline">
+                                <!-- Timeline items will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Communications -->
+                        <div>
+                            <h4><i data-lucide="message-circle"></i> Communications</h4>
+                            <div class="communications" id="caseCommunications">
+                                <!-- Communication items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="card" id="welcomeCard">
+                    <div class="empty-state">
+                        <i data-lucide="search"></i>
+                        <h3>Track Your Case</h3>
+                        <p>Enter your case ID and phone number in the sidebar to view detailed information about your grievance case.</p>
+                        <div style="display: flex; gap: var(--space-3); justify-content: center;">
+                            <button class="btn btn-primary" onclick="submitNewGrievance()">
+                                <i data-lucide="plus"></i> Submit New Grievance
+                            </button>
+                            <button class="btn btn-outline" onclick="goToDashboard()">
+                                <i data-lucide="home"></i> Back to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="card" id="loadingCard" style="display: none;">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading case information...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/worker-portal/case-tracking-portal.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

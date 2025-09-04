@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Generator - Angkor Compliance</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/training-meetings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="agenda-generator-container">
+        <!-- Header -->
+        <header class="agenda-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i class="fas fa-calendar-alt"></i> Agenda Generator</h1>
+                    <p>Automated meeting and training agenda creation with smart scheduling</p>
+                </div>
+                <div class="header-right">
+                    <button id="language-toggle" class="btn btn-secondary">
+                        <i class="fas fa-globe"></i> ខ្មែរ
+                    </button>
+                    <button id="export-agenda-btn" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Export Agenda
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Agenda Creation Controls -->
+        <div class="agenda-controls">
+            <div class="control-section">
+                <h3><i class="fas fa-cog"></i> Agenda Settings</h3>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label for="agenda-type">Agenda Type:</label>
+                        <select id="agenda-type">
+                            <option value="">Select Type</option>
+                            <option value="training">Training Session</option>
+                            <option value="meeting">Team Meeting</option>
+                            <option value="audit">Audit Review</option>
+                            <option value="compliance">Compliance Review</option>
+                            <option value="safety">Safety Meeting</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="agenda-duration">Duration:</label>
+                        <select id="agenda-duration">
+                            <option value="">Select Duration</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="180">3 hours</option>
+                            <option value="240">4 hours</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="agenda-date">Date:</label>
+                        <input type="date" id="agenda-date">
+                    </div>
+                    <div class="control-group">
+                        <label for="agenda-time">Start Time:</label>
+                        <input type="time" id="agenda-time">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><i class="fas fa-users"></i> Participants</h3>
+                <div class="participants-controls">
+                    <div class="control-group">
+                        <label for="participant-department">Department:</label>
+                        <select id="participant-department">
+                            <option value="">All Departments</option>
+                            <option value="production">Production</option>
+                            <option value="quality">Quality Control</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="management">Management</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="participant-role">Role:</label>
+                        <select id="participant-role">
+                            <option value="">All Roles</option>
+                            <option value="worker">Worker</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="manager">Manager</option>
+                            <option value="specialist">Specialist</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="max-participants">Max Participants:</label>
+                        <input type="number" id="max-participants" min="1" max="100" value="20">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Agenda Generation -->
+        <div class="agenda-generation-section">
+            <div class="section-header">
+                <h2><i class="fas fa-magic"></i> Smart Agenda Generation</h2>
+                <button id="generate-agenda-btn" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Generate Agenda
+                </button>
+            </div>
+            
+            <div class="generation-options">
+                <div class="option-group">
+                    <h4>Content Options:</h4>
+                    <div class="checkbox-options">
+                        <label><input type="checkbox" value="icebreaker" checked> Ice Breaker Activity</label>
+                        <label><input type="checkbox" value="objectives" checked> Meeting Objectives</label>
+                        <label><input type="checkbox" value="updates" checked> Status Updates</label>
+                        <label><input type="checkbox" value="discussion" checked> Open Discussion</label>
+                        <label><input type="checkbox" value="action-items" checked> Action Items</label>
+                        <label><input type="checkbox" value="next-steps" checked> Next Steps</label>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <h4>Training Elements:</h4>
+                    <div class="checkbox-options">
+                        <label><input type="checkbox" value="presentation"> Presentation</label>
+                        <label><input type="checkbox" value="interactive"> Interactive Activities</label>
+                        <label><input type="checkbox" value="group-work"> Group Work</label>
+                        <label><input type="checkbox" value="assessment"> Assessment/Quiz</label>
+                        <label><input type="checkbox" value="feedback"> Feedback Session</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Agenda Preview -->
+        <div class="agenda-preview-section">
+            <div class="section-header">
+                <h2><i class="fas fa-eye"></i> Agenda Preview</h2>
+                <div class="preview-actions">
+                    <button id="edit-agenda-btn" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button id="save-agenda-btn" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Agenda
+                    </button>
+                </div>
+            </div>
+            
+            <div class="agenda-preview" id="agenda-preview">
+                <div class="agenda-header-info">
+                    <div class="agenda-title">
+                        <h3>Generated Agenda</h3>
+                        <p>Click "Generate Agenda" to create a new agenda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agenda Templates -->
+        <div class="agenda-templates-section">
+            <div class="section-header">
+                <h2><i class="fas fa-layer-group"></i> Agenda Templates</h2>
+                <button id="create-template-btn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Template
+                </button>
+            </div>
+            
+            <div class="templates-grid" id="templates-grid">
+                <!-- Templates will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Recent Agendas -->
+        <div class="recent-agendas-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Recent Agendas</h2>
+                <button id="view-all-btn" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> View All
+                </button>
+            </div>
+            
+            <div class="recent-agendas-list" id="recent-agendas-list">
+                <!-- Recent agendas will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Create Template Modal -->
+        <div id="create-template-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Create Agenda Template</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="create-template-form">
+                        <div class="form-group">
+                            <label for="template-name">Template Name:</label>
+                            <input type="text" id="template-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="template-description">Description:</label>
+                            <textarea id="template-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="template-type">Type:</label>
+                                <select id="template-type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="training">Training Session</option>
+                                    <option value="meeting">Team Meeting</option>
+                                    <option value="audit">Audit Review</option>
+                                    <option value="compliance">Compliance Review</option>
+                                    <option value="safety">Safety Meeting</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="template-duration">Default Duration:</label>
+                                <select id="template-duration" required>
+                                    <option value="">Select Duration</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="90">1.5 hours</option>
+                                    <option value="120">2 hours</option>
+                                    <option value="180">3 hours</option>
+                                    <option value="240">4 hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Default Content Structure:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="icebreaker" checked> Ice Breaker</label>
+                                <label><input type="checkbox" value="objectives" checked> Objectives</label>
+                                <label><input type="checkbox" value="updates" checked> Updates</label>
+                                <label><input type="checkbox" value="discussion" checked> Discussion</label>
+                                <label><input type="checkbox" value="action-items" checked> Action Items</label>
+                                <label><input type="checkbox" value="next-steps" checked> Next Steps</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('create-template-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Agenda Modal -->
+        <div id="edit-agenda-modal" class="modal">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3>Edit Agenda</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="agenda-editor" id="agenda-editor">
+                        <!-- Agenda editor will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('edit-agenda-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAgendaChanges()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/training-meetings/agenda-generator.js"></script>
+</body>
+</html>

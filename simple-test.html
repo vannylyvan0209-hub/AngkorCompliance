@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Firebase Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: white;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background-color: #22c55e; }
+        .error { background-color: #ef4444; }
+        .warning { background-color: #f59e0b; }
+        .info { background-color: #3b82f6; }
+        button {
+            background: #B8941F;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #8B6914; }
+        .log {
+            background: rgba(0,0,0,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Firebase & Services Test</h1>
+    
+    <div id="firebaseStatus" class="status info">⏳ Checking Firebase...</div>
+    <div id="authStatus" class="status info">⏳ Checking Auth Service...</div>
+    <div id="userStatus" class="status info">⏳ Checking User Management...</div>
+    <div id="navStatus" class="status info">⏳ Checking Navigation Service...</div>
+    
+    <div style="margin: 20px 0;">
+        <button onclick="testFirebase()">Test Firebase</button>
+        <button onclick="testServices()">Test Services</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div class="log" id="log"></div>
+
+    <!-- Load Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Load Firebase and Services -->
+    <script src="firebase-config.js"></script>
+    <script src="assets/js/services/auth-service.js"></script>
+    <script src="assets/js/services/user-management.js"></script>
+    <script src="assets/js/services/navigation-service.js"></script>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(id, status, message) {
+            const element = document.getElementById(id);
+            element.className = `status ${status}`;
+            element.textContent = message;
+        }
+
+        function testFirebase() {
+            log('🧪 Testing Firebase availability...');
+            
+            if (window.Firebase) {
+                log('✅ Firebase object found');
+                
+                if (window.Firebase.auth) {
+                    log('✅ Firebase Auth available');
+                } else {
+                    log('❌ Firebase Auth not available');
+                }
+                
+                if (window.Firebase.db) {
+                    log('✅ Firebase Firestore available');
+                } else {
+                    log('❌ Firebase Firestore not available');
+                }
+                
+                if (window.Firebase.storage) {
+                    log('✅ Firebase Storage available');
+                } else {
+                    log('❌ Firebase Storage not available');
+                }
+                
+                updateStatus('firebaseStatus', 'success', '✅ Firebase Available');
+            } else {
+                log('❌ Firebase object not found');
+                updateStatus('firebaseStatus', 'error', '❌ Firebase Not Available');
+            }
+        }
+
+        function testServices() {
+            log('🧪 Testing Services...');
+            
+            // Test Auth Service
+            if (window.AuthService) {
+                log('✅ AuthService class available');
+                if (window.authService) {
+                    log('✅ AuthService instance available');
+                    updateStatus('authStatus', 'success', '✅ Auth Service Available');
+                } else {
+                    log('⏳ AuthService instance not yet created (waiting for Firebase)');
+                    updateStatus('authStatus', 'warning', '⏳ Auth Service Waiting for Firebase');
+                }
+            } else {
+                log('❌ AuthService class not available');
+                updateStatus('authStatus', 'error', '❌ Auth Service Not Available');
+            }
+            
+            // Test User Management Service
+            if (window.UserManagementService) {
+                log('✅ UserManagementService class available');
+                if (window.userManagementService) {
+                    log('✅ UserManagementService instance available');
+                    updateStatus('userStatus', 'success', '✅ User Management Available');
+                } else {
+                    log('⏳ UserManagementService instance not yet created (waiting for Firebase)');
+                    updateStatus('userStatus', 'warning', '⏳ User Management Waiting for Firebase');
+                }
+            } else {
+                log('❌ UserManagementService class not available');
+                updateStatus('userStatus', 'error', '❌ User Management Not Available');
+            }
+            
+            // Test Navigation Service
+            if (window.NavigationService) {
+                log('✅ NavigationService class available');
+                if (window.navigationService) {
+                    log('✅ NavigationService instance available');
+                    updateStatus('navStatus', 'success', '✅ Navigation Service Available');
+                } else {
+                    log('⏳ NavigationService instance not yet created (waiting for Firebase)');
+                    updateStatus('navStatus', 'warning', '⏳ Navigation Service Waiting for Firebase');
+                }
+            } else {
+                log('❌ NavigationService class not available');
+                updateStatus('navStatus', 'error', '❌ Navigation Service Not Available');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Auto-test when page loads
+        window.addEventListener('load', () => {
+            log('🚀 Page loaded, starting tests...');
+            
+            // Wait a bit for Firebase to initialize
+            setTimeout(() => {
+                testFirebase();
+                testServices();
+            }, 1000);
+            
+            // Test again after a longer delay to see if services initialize
+            setTimeout(() => {
+                log('🔄 Re-testing services after delay...');
+                testServices();
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

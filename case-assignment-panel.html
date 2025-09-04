@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Assignment - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/grievance-committee/case-assignment.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="assignment-container">
+        <!-- Header Section -->
+        <header class="assignment-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="page-title">
+                        <i data-lucide="users"></i>
+                        Case Assignment
+                    </h1>
+                    <p class="page-subtitle">Assign cases to investigators and manage workload</p>
+                </div>
+                <div class="header-right">
+                    <div class="assignment-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Unassigned Cases</span>
+                            <span class="stat-value" id="unassignedCases">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Active Investigators</span>
+                            <span class="stat-value" id="activeInvestigators">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg. Workload</span>
+                            <span class="stat-value" id="avgWorkload">0 cases</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Assignment Dashboard -->
+        <div class="assignment-dashboard">
+            <!-- Investigator Overview -->
+            <div class="investigator-overview-section">
+                <div class="section-header">
+                    <h2>Investigator Overview</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-outline" onclick="refreshData()">
+                            <i data-lucide="refresh-cw"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="openBulkAssignment()">
+                            <i data-lucide="users"></i>
+                            Bulk Assignment
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="investigator-grid" id="investigatorGrid">
+                    <!-- Investigators will be populated here -->
+                </div>
+            </div>
+
+            <!-- Unassigned Cases -->
+            <div class="unassigned-cases-section">
+                <div class="section-header">
+                    <h2>Unassigned Cases</h2>
+                    <div class="case-filters">
+                        <select id="caseFilter" class="filter-select" onchange="filterUnassignedCases()">
+                            <option value="all">All Cases</option>
+                            <option value="critical">Critical Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <select id="categoryFilter" class="filter-select" onchange="filterUnassignedCases()">
+                            <option value="all">All Categories</option>
+                            <option value="harassment">Harassment</option>
+                            <option value="discrimination">Discrimination</option>
+                            <option value="safety">Safety</option>
+                            <option value="wages">Wages</option>
+                            <option value="working_conditions">Working Conditions</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="unassigned-cases-grid" id="unassignedCasesGrid">
+                    <!-- Unassigned cases will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div id="assignmentModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Assign Case</h2>
+                <div class="case-info-header">
+                    <span class="case-number" id="assignmentCaseNumber">GC-XXXXXX-XXXXX</span>
+                    <span class="case-priority" id="assignmentCasePriority">Medium</span>
+                </div>
+                <button class="modal-close" onclick="closeAssignmentModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="assignment-content">
+                    <!-- Case Summary -->
+                    <div class="case-summary-section">
+                        <h3>Case Summary</h3>
+                        <div class="case-summary-grid">
+                            <div class="summary-item">
+                                <label>Title:</label>
+                                <span id="assignmentCaseTitle">Loading...</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Category:</label>
+                                <span id="assignmentCaseCategory">Loading...</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Priority:</label>
+                                <span id="assignmentCasePriorityText">Loading...</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Created:</label>
+                                <span id="assignmentCaseCreated">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="case-description">
+                            <label>Description:</label>
+                            <p id="assignmentCaseDescription">Loading...</p>
+                        </div>
+                    </div>
+
+                    <!-- Investigator Selection -->
+                    <div class="investigator-selection-section">
+                        <h3>Select Investigator</h3>
+                        
+                        <!-- Assignment Method -->
+                        <div class="assignment-method-section">
+                            <h4>Assignment Method</h4>
+                            <div class="assignment-methods">
+                                <label class="method-option">
+                                    <input type="radio" name="assignmentMethod" value="manual" checked>
+                                    <div class="method-content">
+                                        <div class="method-icon">
+                                            <i data-lucide="user-check"></i>
+                                        </div>
+                                        <div class="method-details">
+                                            <h5>Manual Assignment</h5>
+                                            <p>Select investigator manually</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="method-option">
+                                    <input type="radio" name="assignmentMethod" value="workload">
+                                    <div class="method-content">
+                                        <div class="method-icon">
+                                            <i data-lucide="scale"></i>
+                                        </div>
+                                        <div class="method-details">
+                                            <h5>Workload-based</h5>
+                                            <p>Auto-assign to least busy investigator</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="method-option">
+                                    <input type="radio" name="assignmentMethod" value="expertise">
+                                    <div class="method-content">
+                                        <div class="method-icon">
+                                            <i data-lucide="award"></i>
+                                        </div>
+                                        <div class="method-details">
+                                            <h5>Expertise-based</h5>
+                                            <p>Assign based on category expertise</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="method-option">
+                                    <input type="radio" name="assignmentMethod" value="round_robin">
+                                    <div class="method-content">
+                                        <div class="method-icon">
+                                            <i data-lucide="rotate-ccw"></i>
+                                        </div>
+                                        <div class="method-details">
+                                            <h5>Round Robin</h5>
+                                            <p>Distribute cases evenly</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Investigator List -->
+                        <div class="investigator-list-section">
+                            <h4>Available Investigators</h4>
+                            <div class="investigator-list" id="investigatorList">
+                                <!-- Investigators will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Assignment Notes -->
+                        <div class="assignment-notes-section">
+                            <h4>Assignment Notes</h4>
+                            <textarea id="assignmentNotes" class="form-textarea" rows="3" 
+                                      placeholder="Add any notes about this assignment..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAssignmentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="completeAssignment()">Assign Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Assignment Modal -->
+    <div id="bulkAssignmentModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Bulk Assignment</h2>
+                <button class="modal-close" onclick="closeBulkAssignmentModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-assignment-content">
+                    <!-- Case Selection -->
+                    <div class="case-selection-section">
+                        <h3>Select Cases</h3>
+                        <div class="case-selection-filters">
+                            <div class="filter-group">
+                                <label>Priority:</label>
+                                <select id="bulkPriorityFilter" class="form-select" onchange="filterBulkCases()">
+                                    <option value="all">All Priorities</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Category:</label>
+                                <select id="bulkCategoryFilter" class="form-select" onchange="filterBulkCases()">
+                                    <option value="all">All Categories</option>
+                                    <option value="harassment">Harassment</option>
+                                    <option value="discrimination">Discrimination</option>
+                                    <option value="safety">Safety</option>
+                                    <option value="wages">Wages</option>
+                                    <option value="working_conditions">Working Conditions</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="bulk-cases-list" id="bulkCasesList">
+                            <!-- Cases will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Assignment Strategy -->
+                    <div class="assignment-strategy-section">
+                        <h3>Assignment Strategy</h3>
+                        <div class="strategy-options">
+                            <div class="strategy-option">
+                                <label class="strategy-radio">
+                                    <input type="radio" name="bulkStrategy" value="workload" checked>
+                                    <div class="strategy-content">
+                                        <h4>Workload Balancing</h4>
+                                        <p>Distribute cases to balance investigator workloads</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="strategy-option">
+                                <label class="strategy-radio">
+                                    <input type="radio" name="bulkStrategy" value="expertise">
+                                    <div class="strategy-content">
+                                        <h4>Expertise Matching</h4>
+                                        <p>Assign based on investigator expertise areas</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="strategy-option">
+                                <label class="strategy-radio">
+                                    <input type="radio" name="bulkStrategy" value="round_robin">
+                                    <div class="strategy-content">
+                                        <h4>Round Robin</h4>
+                                        <p>Distribute cases in rotation order</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeBulkAssignmentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="executeBulkAssignment()">Execute Bulk Assignment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing assignment...</p>
+        </div>
+    </div>
+
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/grievance-committee/case-assignment.js"></script>
+</body>
+</html>

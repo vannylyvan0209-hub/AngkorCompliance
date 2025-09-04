@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Management Dashboard - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="graduation-cap"></i> Training Management Dashboard</h1>
+                    <p>Manage employee training programs and certifications</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Training Overview -->
+            <section class="training-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Employees</h3>
+                            <div class="card-value">156</div>
+                            <div class="card-change">Enrolled in training</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Certified</h3>
+                            <div class="card-value">142</div>
+                            <div class="card-change positive">91% completion rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>In Progress</h3>
+                            <div class="card-value">14</div>
+                            <div class="card-change">Due this month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Expired</h3>
+                            <div class="card-value">8</div>
+                            <div class="card-change negative">Requires renewal</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Training Programs -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="book-open"></i> Training Programs</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="createTrainingProgram()">
+                                    <i data-lucide="plus"></i> Create Program
+                                </button>
+                                <button class="btn btn-outline" onclick="importTrainingData()">
+                                    <i data-lucide="upload"></i> Import
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="programs-grid" id="programsGrid">
+                                <!-- Training programs will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employee Training Status -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="user-check"></i> Employee Training Status</h2>
+                            <div class="card-actions">
+                                <div class="search-box">
+                                    <input type="text" id="employeeSearch" class="form-input" placeholder="Search employees...">
+                                    <i data-lucide="search"></i>
+                                </div>
+                                <select id="trainingFilter" class="form-select">
+                                    <option value="all">All Status</option>
+                                    <option value="certified">Certified</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="expired">Expired</option>
+                                    <option value="not_started">Not Started</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Employee</th>
+                                            <th>Training Program</th>
+                                            <th>Status</th>
+                                            <th>Progress</th>
+                                            <th>Completion Date</th>
+                                            <th>Expiry Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employeeTrainingTable">
+                                        <!-- Employee training data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Calendar -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="calendar"></i> Training Calendar</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="scheduleTraining()">
+                                    <i data-lucide="plus"></i> Schedule Training
+                                </button>
+                                <button class="btn btn-outline" onclick="exportCalendar()">
+                                    <i data-lucide="download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="calendar-container" id="trainingCalendar">
+                                <!-- Training calendar will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Training Categories -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="folder"></i> Training Categories</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="categories-list" id="categoriesList">
+                                <!-- Training categories will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Trainings -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="clock"></i> Upcoming Trainings</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upcoming-trainings" id="upcomingTrainings">
+                                <!-- Upcoming trainings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="bulkAssignTraining()">
+                                    <i data-lucide="users"></i>
+                                    <span>Bulk Assign</span>
+                                </button>
+                                <button class="action-btn" onclick="generateReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Training Report</span>
+                                </button>
+                                <button class="action-btn" onclick="certificationAudit()">
+                                    <i data-lucide="shield-check"></i>
+                                    <span>Certification Audit</span>
+                                </button>
+                                <button class="action-btn" onclick="trainingAnalytics()">
+                                    <i data-lucide="bar-chart-3"></i>
+                                    <span>Training Analytics</span>
+                                </button>
+                                <button class="action-btn" onclick="complianceCheck()">
+                                    <i data-lucide="check-square"></i>
+                                    <span>Compliance Check</span>
+                                </button>
+                                <button class="action-btn" onclick="trainingResources()">
+                                    <i data-lucide="folder-open"></i>
+                                    <span>Training Resources</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Statistics -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="trending-up"></i> Training Statistics</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="training-stats" id="trainingStats">
+                                <!-- Training statistics will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Training Program Modal -->
+    <div id="createTrainingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="book-open"></i> Create Training Program</h2>
+                <button class="modal-close" onclick="closeModal('createTrainingModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="programName">Program Name</label>
+                    <input type="text" id="programName" class="form-input" placeholder="e.g., Safety Training Level 1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="programDescription">Description</label>
+                    <textarea id="programDescription" class="form-textarea" rows="3" 
+                        placeholder="Describe the training program..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="programCategory">Category</label>
+                        <select id="programCategory" class="form-select">
+                            <option value="">Select Category</option>
+                            <option value="safety">Safety Training</option>
+                            <option value="compliance">Compliance Training</option>
+                            <option value="technical">Technical Training</option>
+                            <option value="soft_skills">Soft Skills</option>
+                            <option value="management">Management Training</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="programDuration">Duration (Hours)</label>
+                        <input type="number" id="programDuration" class="form-input" min="1" max="100">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="programType">Training Type</label>
+                        <select id="programType" class="form-select">
+                            <option value="online">Online Training</option>
+                            <option value="classroom">Classroom Training</option>
+                            <option value="hybrid">Hybrid Training</option>
+                            <option value="on_the_job">On-the-Job Training</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="certificationValidity">Certification Validity (Months)</label>
+                        <input type="number" id="certificationValidity" class="form-input" min="1" max="60">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="programObjectives">Learning Objectives</label>
+                    <textarea id="programObjectives" class="form-textarea" rows="4" 
+                        placeholder="List the learning objectives for this training program..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prerequisites">Prerequisites</label>
+                    <textarea id="prerequisites" class="form-textarea" rows="2" 
+                        placeholder="List any prerequisites for this training..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="isMandatory" class="form-checkbox">
+                        This training is mandatory for compliance
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createTrainingModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTrainingProgram()">Create Program</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Training Modal -->
+    <div id="scheduleTrainingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="calendar"></i> Schedule Training</h2>
+                <button class="modal-close" onclick="closeModal('scheduleTrainingModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="scheduledProgram">Training Program</label>
+                    <select id="scheduledProgram" class="form-select">
+                        <option value="">Select Program</option>
+                        <option value="safety_level_1">Safety Training Level 1</option>
+                        <option value="compliance_basics">Compliance Basics</option>
+                        <option value="technical_skills">Technical Skills Training</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trainingDate">Training Date</label>
+                        <input type="date" id="trainingDate" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="trainingTime">Training Time</label>
+                        <input type="time" id="trainingTime" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trainingLocation">Location</label>
+                    <input type="text" id="trainingLocation" class="form-input" placeholder="e.g., Training Room A">
+                </div>
+                
+                <div class="form-group">
+                    <label for="trainingInstructor">Instructor</label>
+                    <select id="trainingInstructor" class="form-select">
+                        <option value="">Select Instructor</option>
+                        <option value="instructor1">John Smith</option>
+                        <option value="instructor2">Jane Doe</option>
+                        <option value="instructor3">Mike Johnson</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="maxParticipants">Maximum Participants</label>
+                    <input type="number" id="maxParticipants" class="form-input" min="1" max="50">
+                </div>
+                
+                <div class="form-group">
+                    <label for="trainingNotes">Notes</label>
+                    <textarea id="trainingNotes" class="form-textarea" rows="3" 
+                        placeholder="Additional notes for this training session..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('scheduleTrainingModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveScheduledTraining()">Schedule Training</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Training Details Modal -->
+    <div id="employeeTrainingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="user-check"></i> Employee Training Details</h2>
+                <button class="modal-close" onclick="closeModal('employeeTrainingModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="employee-training-details" id="employeeTrainingDetails">
+                    <!-- Employee training details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('employeeTrainingModal')">Close</button>
+                <button class="btn btn-primary" onclick="updateEmployeeTraining()">Update Training</button>
+                <button class="btn btn-success" onclick="markTrainingComplete()">Mark Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/training-management-dashboard.js"></script>
+</body>
+</html>

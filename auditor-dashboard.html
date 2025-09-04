@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Auditor Dashboard - Angkor Compliance</title>
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="stylesheet" href="assets/css/main-modern.css">
+	<link rel="stylesheet" href="assets/css/super-admin-navigation.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+	<script src="assets/js/navigation-config.js"></script>
+	<script src="assets/js/navigation-template.js"></script>
+	<style>
+		.dashboard-layout { display:flex; min-height: 100vh; }
+		.main-content { flex:1; margin-left: 280px; background: var(--neutral-50); min-height: 100vh; }
+		.page-header { background: white; border-bottom: 1px solid var(--neutral-200); padding: var(--space-6) var(--space-8); }
+		.grid { display:grid; gap: var(--space-6); padding: var(--space-8); grid-template-columns: 2fr 1fr; }
+		.card { background:white; border:1px solid var(--neutral-200); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
+		.card-header { display:flex; align-items:center; justify-content: space-between; padding: var(--space-6); border-bottom: 1px solid var(--neutral-200); }
+		.card-body { padding: var(--space-6); }
+		.table { width:100%; border-collapse: collapse; }
+		.table th { background: var(--neutral-50); padding: var(--space-4); text-align:left; border-bottom: 1px solid var(--neutral-200); font-size: var(--text-sm); color: var(--neutral-700); }
+		.table td { padding: var(--space-4); border-bottom: 1px solid var(--neutral-100); }
+		@media (max-width: 1024px){ .grid { grid-template-columns: 1fr; } .main-content { margin-left: 0; } }
+	</style>
+</head>
+<body>
+	<div class="dashboard-layout">
+		<div id="sidebarContainer"></div>
+		<script>fetch('assets/html/sidebar-template.html').then(r=>r.text()).then(html=>{document.getElementById('sidebarContainer').innerHTML=html; const el=document.querySelector('.brand-subtitle'); if(el) el.textContent='Auditor Portal';});</script>
+		<main class="main-content">
+			<header class="page-header">
+				<h1 class="text-2xl font-bold">Auditor Dashboard</h1>
+				<p class="text-neutral-600">Read-only view of compliance, CAPs, and documents.</p>
+			</header>
+			<section class="grid">
+				<div class="card">
+					<div class="card-header"><h3 class="font-semibold">Compliance Trend</h3></div>
+					<div class="card-body"><canvas id="complianceTrend"></canvas></div>
+				</div>
+				<div class="card">
+					<div class="card-header"><h3 class="font-semibold">Quick Stats</h3></div>
+					<div class="card-body">
+						<div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+							<div class="card" style="padding: var(--space-4);"><div class="text-neutral-500 text-sm">Open CAPs</div><div id="statOpenCaps" class="text-2xl font-bold">-</div></div>
+							<div class="card" style="padding: var(--space-4);"><div class="text-neutral-500 text-sm">Expiring Docs (30d)</div><div id="statExpiring" class="text-2xl font-bold">-</div></div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="card" style="margin: 0 var(--space-8) var(--space-8);">
+				<div class="card-header">
+					<h3 class="font-semibold">Recent CAPs</h3>
+					<button class="btn btn-outline" onclick="auditor.exportCaps()"><i data-lucide="download"></i>Export</button>
+				</div>
+				<div class="card-body" style="overflow-x:auto;">
+					<table class="table">
+						<thead><tr><th>Title</th><th>Factory</th><th>Status</th><th>Created</th></tr></thead>
+						<tbody id="auditorCaps"><tr><td colspan="4">Loading...</td></tr></tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+	    <script type="module" src="firebase-config.js"></script>
+	<script src="assets/js/lang.js"></script>
+	<script src="assets/js/auth.js"></script>
+	<script src="assets/js/auditor-dashboard.js"></script>
+	<script>document.addEventListener('DOMContentLoaded',()=>{ if(window.lucide){ lucide.createIcons(); }});</script>
+</body>
+</html>
+

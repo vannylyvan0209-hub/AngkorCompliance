@@ -1,0 +1,52 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Document files stored under documents/{factoryId}/{category}/{fileName}
+    match /documents/{factoryId}/{category}/{fileName} {
+      allow read: if request.auth != null;
+      // Enforce per-factory writes using custom claims
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'super_admin' ||
+        (request.auth.token.role == 'factory_admin' && request.auth.token.factoryId == factoryId)
+      );
+    }
+    
+    // Allow authenticated users to read version files
+    match /documents/{factoryId}/versions/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'super_admin' ||
+        (request.auth.token.role == 'factory_admin' && request.auth.token.factoryId == factoryId)
+      );
+    }
+    
+    // Allow authenticated users to read user avatars
+    match /avatars/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow authenticated users to read profile images
+    match /profiles/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow authenticated users to upload CAP files
+    match /caps/{capId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    // Diagnostics path used by diagnostics page to check access without uploading
+    match /_diagnostics/{fileName} {
+      // Allow any authenticated user; diagnostics page itself restricts to super_admin via UI/Firestore rules
+      allow read, write: if request.auth != null;
+    }
+
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

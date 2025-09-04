@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Management Dashboard - Angkor Compliance Platform</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="role-factory-admin">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1><i data-lucide="shield"></i> Permission Management Dashboard</h1>
+                    <p>Manage user permissions and access controls</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span class="user-name">Factory Admin</span>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Permission Overview -->
+            <section class="permission-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Users</h3>
+                            <div class="card-value">156</div>
+                            <div class="card-change">With active permissions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="key"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Permission Sets</h3>
+                            <div class="card-value">12</div>
+                            <div class="card-change">Custom permission sets</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Access Violations</h3>
+                            <div class="card-value">3</div>
+                            <div class="card-change negative">Last 30 days</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon">
+                            <i data-lucide="check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Compliance Score</h3>
+                            <div class="card-value">97%</div>
+                            <div class="card-change positive">Permission compliance</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Grid -->
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="main-column">
+                    <!-- Permission Matrix -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="grid"></i> Permission Matrix</h2>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="createPermissionSet()">
+                                    <i data-lucide="plus"></i> Create Permission Set
+                                </button>
+                                <button class="btn btn-outline" onclick="exportPermissions()">
+                                    <i data-lucide="download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="permission-matrix-container">
+                                <table class="permission-matrix" id="permissionMatrix">
+                                    <thead>
+                                        <tr>
+                                            <th>Role/Permission</th>
+                                            <th>View Documents</th>
+                                            <th>Upload Documents</th>
+                                            <th>Approve Documents</th>
+                                            <th>View Compliance</th>
+                                            <th>Manage CAPs</th>
+                                            <th>View Audits</th>
+                                            <th>View Users</th>
+                                            <th>Invite Users</th>
+                                            <th>Manage Roles</th>
+                                            <th>View Reports</th>
+                                            <th>Export Data</th>
+                                            <th>View Analytics</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="permissionMatrixBody">
+                                        <!-- Permission matrix will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Access Logs -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i data-lucide="activity"></i> Access Logs</h2>
+                            <div class="card-actions">
+                                <select id="logFilter" class="form-select">
+                                    <option value="all">All Activities</option>
+                                    <option value="login">Login Events</option>
+                                    <option value="permission">Permission Changes</option>
+                                    <option value="access">Access Attempts</option>
+                                    <option value="violation">Violations</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Resource</th>
+                                            <th>Result</th>
+                                            <th>IP Address</th>
+                                            <th>Timestamp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="accessLogsTable">
+                                        <!-- Access logs will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Permission Sets -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="shield"></i> Permission Sets</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="permission-sets" id="permissionSets">
+                                <!-- Permission sets will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Policies -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="lock"></i> Security Policies</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="security-policies" id="securityPolicies">
+                                <!-- Security policies will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="action-btn" onclick="bulkPermissionUpdate()">
+                                    <i data-lucide="users"></i>
+                                    <span>Bulk Update</span>
+                                </button>
+                                <button class="action-btn" onclick="permissionAudit()">
+                                    <i data-lucide="shield-check"></i>
+                                    <span>Permission Audit</span>
+                                </button>
+                                <button class="action-btn" onclick="accessReview()">
+                                    <i data-lucide="eye"></i>
+                                    <span>Access Review</span>
+                                </button>
+                                <button class="action-btn" onclick="securityReport()">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Security Report</span>
+                                </button>
+                                <button class="action-btn" onclick="complianceCheck()">
+                                    <i data-lucide="check-square"></i>
+                                    <span>Compliance Check</span>
+                                </button>
+                                <button class="action-btn" onclick="backupPermissions()">
+                                    <i data-lucide="save"></i>
+                                    <span>Backup Permissions</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Alerts -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="bell"></i> Recent Alerts</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="recent-alerts" id="recentAlerts">
+                                <!-- Recent alerts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Permission Set Modal -->
+    <div id="permissionSetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="shield"></i> Create Permission Set</h2>
+                <button class="modal-close" onclick="closeModal('permissionSetModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="permissionSetName">Permission Set Name</label>
+                    <input type="text" id="permissionSetName" class="form-input" placeholder="e.g., Production Supervisor">
+                </div>
+                
+                <div class="form-group">
+                    <label for="permissionSetDescription">Description</label>
+                    <textarea id="permissionSetDescription" class="form-textarea" rows="3" 
+                        placeholder="Describe this permission set..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Permissions</label>
+                    <div class="permissions-grid">
+                        <div class="permission-group">
+                            <h4>Document Management</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewDocuments" class="form-checkbox">
+                                    View Documents
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permUploadDocuments" class="form-checkbox">
+                                    Upload Documents
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permApproveDocuments" class="form-checkbox">
+                                    Approve Documents
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-group">
+                            <h4>Compliance Management</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewCompliance" class="form-checkbox">
+                                    View Compliance Status
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permManageCAPs" class="form-checkbox">
+                                    Manage CAPs
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewAudits" class="form-checkbox">
+                                    View Audit Results
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-group">
+                            <h4>User Management</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewUsers" class="form-checkbox">
+                                    View Users
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permInviteUsers" class="form-checkbox">
+                                    Invite Users
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permManageRoles" class="form-checkbox">
+                                    Manage Roles
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-group">
+                            <h4>Reports & Analytics</h4>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewReports" class="form-checkbox">
+                                    View Reports
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permExportData" class="form-checkbox">
+                                    Export Data
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="form-label">
+                                    <input type="checkbox" id="permViewAnalytics" class="form-checkbox">
+                                    View Analytics
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('permissionSetModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="savePermissionSet()">Save Permission Set</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Permission Update Modal -->
+    <div id="bulkPermissionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="users"></i> Bulk Permission Update</h2>
+                <button class="modal-close" onclick="closeModal('bulkPermissionModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="bulkUsers">Select Users</label>
+                    <div class="user-selection" id="bulkUserSelection">
+                        <!-- User checkboxes will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkPermissionSet">Permission Set</label>
+                    <select id="bulkPermissionSet" class="form-select">
+                        <option value="">Select Permission Set</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="worker">Worker</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bulkReason">Reason for Update</label>
+                    <textarea id="bulkReason" class="form-textarea" rows="3" 
+                        placeholder="Explain the reason for this bulk permission update..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('bulkPermissionModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmBulkPermissionUpdate()">Update Permissions</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Violation Modal -->
+    <div id="accessViolationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i data-lucide="alert-triangle"></i> Access Violation Details</h2>
+                <button class="modal-close" onclick="closeModal('accessViolationModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="violation-details" id="violationDetails">
+                    <!-- Violation details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('accessViolationModal')">Close</button>
+                <button class="btn btn-warning" onclick="investigateViolation()">Investigate</button>
+                <button class="btn btn-danger" onclick="blockUser()">Block User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/factory-admin/permission-management-dashboard.js"></script>
+</body>
+</html>

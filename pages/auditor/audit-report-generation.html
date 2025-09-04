@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Report Generation - Auditor</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for auditor */
+        body.role-auditor {
+            --role-primary: var(--auditor-primary);
+            --role-secondary: var(--auditor-secondary);
+            --role-accent: var(--auditor-accent);
+        }
+
+        
+        .report-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: var(--space-6);
+            background: var(--color-background);
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+        }
+        
+        .report-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+        
+        .report-card h3 {
+            margin: 0 0 var(--space-4) 0;
+            color: var(--color-foreground);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .audit-selector {
+            margin-bottom: var(--space-4);
+        }
+        
+        .audit-selector select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-background);
+            color: var(--color-foreground);
+            font-size: var(--text-sm);
+        }
+        
+        .report-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--color-foreground);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-background);
+            color: var(--color-foreground);
+            font-size: var(--text-sm);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .findings-section {
+            margin-top: var(--space-4);
+        }
+        
+        .finding-item {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-3);
+            background: var(--color-background);
+        }
+        
+        .finding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+        
+        .finding-title {
+            font-weight: 600;
+            color: var(--color-foreground);
+        }
+        
+        .finding-severity {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .severity-critical {
+            background: var(--color-red-50);
+            color: var(--color-red-700);
+        }
+        
+        .severity-high {
+            background: var(--color-orange-50);
+            color: var(--color-orange-700);
+        }
+        
+        .severity-medium {
+            background: var(--color-yellow-50);
+            color: var(--color-yellow-700);
+        }
+        
+        .severity-low {
+            background: var(--color-green-50);
+            color: var(--color-green-700);
+        }
+        
+        .finding-description {
+            font-size: var(--text-sm);
+            color: var(--color-muted);
+            margin-bottom: var(--space-2);
+        }
+        
+        .finding-recommendation {
+            font-size: var(--text-sm);
+            color: var(--color-foreground);
+            font-style: italic;
+        }
+        
+        .report-preview {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--color-border);
+        }
+        
+        .report-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-foreground);
+            margin-bottom: var(--space-2);
+        }
+        
+        .report-meta {
+            color: var(--color-muted);
+            font-size: var(--text-sm);
+        }
+        
+        .report-section {
+            margin-bottom: var(--space-6);
+        }
+        
+        .report-section h4 {
+            color: var(--color-foreground);
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-2);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .report-section p {
+            color: var(--color-foreground);
+            line-height: 1.6;
+            margin-bottom: var(--space-3);
+        }
+        
+        .compliance-score {
+            display: inline-block;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: var(--text-lg);
+        }
+        
+        .score-excellent {
+            background: var(--color-green-100);
+            color: var(--color-green-700);
+        }
+        
+        .score-good {
+            background: var(--color-blue-100);
+            color: var(--color-blue-700);
+        }
+        
+        .score-fair {
+            background: var(--color-yellow-100);
+            color: var(--color-yellow-700);
+        }
+        
+        .score-poor {
+            background: var(--color-red-100);
+            color: var(--color-red-700);
+        }
+        
+        .btn-icon {
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            border: none;
+            background: transparent;
+            color: var(--color-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background: var(--color-muted-50);
+            color: var(--color-foreground);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--color-muted);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="role-auditor">
+    <div class="report-layout">
+        <div id="sidebarContainer"></div>
+        <main class="main-content">
+            <header class="page-header">
+                <div class="page-title">
+                    <div>
+                        <h1><i data-lucide="file-text"></i> Audit Report Generation</h1>
+                        <p>Create comprehensive audit reports with findings and recommendations</p>
+                    </div>
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-outline" onclick="exportReport()">
+                            <i data-lucide="download"></i> Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="generateReport()">
+                            <i data-lucide="file-text"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="report-container">
+                <div class="report-grid">
+                    <!-- Report Creation -->
+                    <div class="report-card">
+                        <h3><i data-lucide="edit-3"></i> Create Report</h3>
+                        
+                        <div class="audit-selector">
+                            <label for="auditSelect">Select Audit</label>
+                            <select id="auditSelect" onchange="loadAuditData()">
+                                <option value="">Choose an audit...</option>
+                            </select>
+                        </div>
+                        
+                        <form class="report-form" id="reportForm">
+                            <div class="form-group">
+                                <label for="reportTitle">Report Title</label>
+                                <input type="text" id="reportTitle" name="reportTitle" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reportType">Report Type</label>
+                                <select id="reportType" name="reportType" required>
+                                    <option value="">Select report type</option>
+                                    <option value="compliance">Compliance Report</option>
+                                    <option value="grievance">Grievance Process Report</option>
+                                    <option value="safety">Safety Standards Report</option>
+                                    <option value="quality">Quality Management Report</option>
+                                    <option value="financial">Financial Controls Report</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="auditPeriod">Audit Period</label>
+                                <input type="text" id="auditPeriod" name="auditPeriod" placeholder="e.g., January 1 - March 31, 2024">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="executiveSummary">Executive Summary</label>
+                                <textarea id="executiveSummary" name="executiveSummary" placeholder="Provide a high-level summary of the audit findings..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="auditScope">Audit Scope</label>
+                                <textarea id="auditScope" name="auditScope" placeholder="Describe what was audited and the methodology used..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="complianceScore">Overall Compliance Score (%)</label>
+                                <input type="number" id="complianceScore" name="complianceScore" min="0" max="100" placeholder="85">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="keyFindings">Key Findings</label>
+                                <textarea id="keyFindings" name="keyFindings" placeholder="Summarize the main findings from the audit..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="recommendations">Recommendations</label>
+                                <textarea id="recommendations" name="recommendations" placeholder="Provide actionable recommendations for improvement..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nextSteps">Next Steps</label>
+                                <textarea id="nextSteps" name="nextSteps" placeholder="Outline the follow-up actions and timeline..."></textarea>
+                            </div>
+                        </form>
+                        
+                        <div class="findings-section">
+                            <h4>Detailed Findings</h4>
+                            <div id="findingsList">
+                                <div class="empty-state">
+                                    <i data-lucide="alert-circle"></i>
+                                    <p>No findings added yet</p>
+                                    <button class="btn btn-outline" onclick="addFinding()">
+                                        <i data-lucide="plus"></i> Add Finding
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Report Preview -->
+                    <div class="report-card">
+                        <h3><i data-lucide="eye"></i> Report Preview</h3>
+                        <div class="report-preview" id="reportPreview">
+                            <div class="empty-state">
+                                <i data-lucide="file-text"></i>
+                                <p>Select an audit to preview the report</p>
+                                <p>Fill in the form to see the report content</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/auditor/audit-report-generation.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

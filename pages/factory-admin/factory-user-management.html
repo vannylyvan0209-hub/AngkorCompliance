@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory User Management - Angkor Compliance</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../assets/css/main-modern.css">
+    <link rel="stylesheet" href="../../assets/css/color-system.css">
+    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Role-specific styling for factory_admin */
+        body.role-factory-admin {
+            --role-primary: var(--factory-admin-primary);
+            --role-secondary: var(--factory-admin-secondary);
+            --role-accent: var(--factory-admin-accent);
+        }
+
+        
+        .user-management {
+            padding: var(--space-4);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: var(--space-4);
+        }
+
+        .users-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .filters-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: var(--space-3);
+            align-items: end;
+        }
+
+        .users-table {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: var(--primary-color);
+            color: white;
+            padding: var(--space-3) var(--space-4);
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 1fr 120px 100px 120px;
+            gap: var(--space-3);
+            align-items: center;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 1fr 120px 100px 120px;
+            gap: var(--space-3);
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .table-row:hover {
+            background: var(--hover-color);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .role-manager {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .role-staff {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .role-viewer {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-inactive {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .stats-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: var(--space-3);
+            opacity: 0.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--space-4);
+            min-width: 400px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="role-factory-admin">
+    <div class="user-management">
+        <div class="management-header">
+            <div>
+                <h1><i data-lucide="users"></i> Factory User Management</h1>
+                <p>Manage users, roles, and access permissions for your factory</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="exportUserData()">
+                    <i data-lucide="download"></i> Export
+                </button>
+                <button class="btn btn-primary" onclick="inviteNewUser()">
+                    <i data-lucide="user-plus"></i> Invite User
+                </button>
+            </div>
+        </div>
+
+        <div class="management-grid">
+            <div class="users-section">
+                <div class="filters-card">
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="searchUsers">Search Users</label>
+                            <input type="text" id="searchUsers" placeholder="Search by name or email">
+                        </div>
+                        <div class="form-group">
+                            <label for="roleFilter">Filter by Role</label>
+                            <select id="roleFilter">
+                                <option value="">All Roles</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                                <option value="staff">Staff</option>
+                                <option value="viewer">Viewer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusFilter">Filter by Status</label>
+                            <select id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline" onclick="applyFilters()">
+                            <i data-lucide="filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+
+                <div class="users-table">
+                    <div class="table-header">
+                        <div></div>
+                        <div>User</div>
+                        <div>Role</div>
+                        <div>Department</div>
+                        <div>Status</div>
+                        <div>Last Active</div>
+                        <div>Actions</div>
+                    </div>
+                    <div id="usersTableBody">
+                        <div class="empty-state">
+                            <i data-lucide="users"></i>
+                            <h3>No users found</h3>
+                            <p>Start by inviting users to your factory</p>
+                            <button class="btn btn-primary" onclick="inviteNewUser()">
+                                <i data-lucide="user-plus"></i> Invite First User
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="stats-card">
+                    <h3><i data-lucide="bar-chart-3"></i> User Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="activeUsers">0</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="pendingUsers">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="adminUsers">0</div>
+                            <div class="stat-label">Admins</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="btn btn-outline" onclick="inviteNewUser()">
+                            <i data-lucide="user-plus"></i> Invite User
+                        </button>
+                        <button class="btn btn-outline" onclick="bulkRoleUpdate()">
+                            <i data-lucide="users"></i> Bulk Role Update
+                        </button>
+                        <button class="btn btn-outline" onclick="exportUserData()">
+                            <i data-lucide="download"></i> Export Data
+                        </button>
+                        <button class="btn btn-outline" onclick="viewAccessLogs()">
+                            <i data-lucide="activity"></i> Access Logs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite User Modal -->
+    <div id="inviteUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="user-plus"></i> Invite New User</h3>
+                <button class="modal-close" onclick="closeModal('inviteUserModal')">&times;</button>
+            </div>
+            <form id="inviteUserForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="inviteFirstName">First Name</label>
+                        <input type="text" id="inviteFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inviteLastName">Last Name</label>
+                        <input type="text" id="inviteLastName" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="inviteEmail">Email Address</label>
+                        <input type="email" id="inviteEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inviteRole">Role</label>
+                        <select id="inviteRole" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                            <option value="staff">Staff</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inviteDepartment">Department</label>
+                        <select id="inviteDepartment" required>
+                            <option value="">Select Department</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="operations">Operations</option>
+                            <option value="quality">Quality Control</option>
+                            <option value="safety">Safety & Compliance</option>
+                            <option value="management">Management</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="inviteMessage">Personal Message (Optional)</label>
+                        <textarea id="inviteMessage" rows="3" placeholder="Add a personal message to the invitation email"></textarea>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('inviteUserModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="send"></i> Send Invitation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="edit"></i> Edit User</h3>
+                <button class="modal-close" onclick="closeModal('editUserModal')">&times;</button>
+            </div>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="editEmail">Email Address</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editRole">Role</label>
+                        <select id="editRole" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                            <option value="staff">Staff</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDepartment">Department</label>
+                        <select id="editDepartment" required>
+                            <option value="">Select Department</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="operations">Operations</option>
+                            <option value="quality">Quality Control</option>
+                            <option value="safety">Safety & Compliance</option>
+                            <option value="management">Management</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editUserModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-lucide="save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/factory-admin/factory-user-management.js"></script>
+    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation system
+            const navigation = new NavigationComponent();
+            navigation.init();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
