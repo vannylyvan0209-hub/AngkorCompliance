@@ -75,3 +75,7 @@ out/
 # Temporary files
 tmp/
 temp/
+# Ignore stray command outputs
+h -u origin main
+h origin main
+tatus
