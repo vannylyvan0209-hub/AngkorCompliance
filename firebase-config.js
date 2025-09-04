@@ -1,5 +1,35 @@
-// Firebase v9+ Configuration using CDN scripts
-// This file should be loaded with <script type="module">
+// Firebase v12+ Configuration using ES6 modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged, 
+  updateProfile, 
+  sendPasswordResetEmail, 
+  EmailAuthProvider, 
+  reauthenticateWithCredential, 
+  updatePassword 
+} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js';
+import { 
+  getFirestore, 
+  doc, 
+  setDoc, 
+  getDoc, 
+  updateDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  serverTimestamp, 
+  orderBy, 
+  onSnapshot, 
+  addDoc, 
+  deleteDoc, 
+  writeBatch 
+} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js';
+import { getStorage } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js';
 
 // Firebase configuration object
 const firebaseConfig = {
@@ -12,44 +42,50 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase services
-const auth = firebase.auth(app);
-const db = firebase.firestore(app);
-const storage = firebase.storage(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-// Export Firebase services and functions to global object
-window.Firebase = {
+// Export Firebase services and functions
+export const Firebase = {
+  // Services
   auth,
   db,
   storage,
   app,
-  // Auth functions - bind the functions to the auth instance
-  signInWithEmailAndPassword: (email, password) => firebase.auth.signInWithEmailAndPassword(auth, email, password),
-  createUserWithEmailAndPassword: (email, password) => firebase.auth.createUserWithEmailAndPassword(auth, email, password),
-  signOut: () => firebase.auth.signOut(auth),
-  onAuthStateChanged: (callback) => firebase.auth.onAuthStateChanged(auth, callback),
-  updateProfile: (user, profile) => firebase.auth.updateProfile(user, profile),
-  sendPasswordResetEmail: (email) => firebase.auth.sendPasswordResetEmail(auth, email),
-  EmailAuthProvider: firebase.auth.EmailAuthProvider,
-  reauthenticateWithCredential: (user, credential) => firebase.auth.reauthenticateWithCredential(user, credential),
-  updatePassword: (user, password) => firebase.auth.updatePassword(user, password),
-  // Firestore functions - bind the functions to the db instance
-  doc: (collectionRef, path) => firebase.firestore.doc(collectionRef, path),
-  setDoc: (docRef, data) => firebase.firestore.setDoc(docRef, data),
-  getDoc: (docRef) => firebase.firestore.getDoc(docRef),
-  updateDoc: (docRef, data) => firebase.firestore.updateDoc(docRef, data),
-  collection: (db, path) => firebase.firestore.collection(db, path),
-  query: (collectionRef, ...queryConstraints) => firebase.firestore.query(collectionRef, ...queryConstraints),
-  where: (fieldPath, opStr, value) => firebase.firestore.where(fieldPath, opStr, value),
-  getDocs: (query) => firebase.firestore.getDocs(query),
-  serverTimestamp: () => firebase.firestore.FieldValue.serverTimestamp(),
-  orderBy: (fieldPath, directionStr) => firebase.firestore.orderBy(fieldPath, directionStr),
-  onSnapshot: (query, observer) => firebase.firestore.onSnapshot(query, observer),
-  addDoc: (collectionRef, data) => firebase.firestore.addDoc(collectionRef, data),
-  deleteDoc: (docRef) => firebase.firestore.deleteDoc(docRef),
-  writeBatch: (db) => firebase.firestore.writeBatch(db)
+  
+  // Auth functions
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  sendPasswordResetEmail,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  
+  // Firestore functions
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  serverTimestamp,
+  orderBy,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  writeBatch
 };
 
-console.log('✅ Firebase initialized successfully');
+// Also export individual services for direct import
+export { auth, db, storage, app };
+
+console.log('✅ Firebase v12 initialized successfully with ES6 modules');

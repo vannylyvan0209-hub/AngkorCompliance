@@ -62,7 +62,7 @@ class AuthService {
     async handleUserSignIn(user) {
         try {
             // Get user data from Firestore
-            const userDoc = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), user.uid);
+            const userDoc = window.Firebase.doc(window.Firebase.collection('users'), user.uid);
             const userData = await window.Firebase.getDoc(userDoc);
             
             if (userData.exists()) {
@@ -163,7 +163,7 @@ class AuthService {
                 }
             };
             
-            await window.Firebase.setDoc(window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), user.uid), userDoc);
+            await window.Firebase.setDoc(window.Firebase.doc(window.Firebase.collection('users'), user.uid), userDoc);
             
             console.log('✅ User registered successfully:', userDoc);
             return userDoc;
@@ -226,7 +226,7 @@ class AuthService {
                 throw new Error('No user is currently authenticated');
             }
             
-            const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), this.currentUser.uid);
+            const userRef = window.Firebase.doc(window.Firebase.collection('users'), this.currentUser.uid);
             await window.Firebase.updateDoc(userRef, {
                 ...updates,
                 updatedAt: window.Firebase.serverTimestamp()
@@ -286,7 +286,7 @@ class AuthService {
      */
     async updateLastLogin(userId) {
         try {
-            const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), userId);
+            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
             await window.Firebase.updateDoc(userRef, {
                 lastLogin: window.Firebase.serverTimestamp()
             });
@@ -390,11 +390,11 @@ class AuthService {
             
             if (this.currentUser.role === 'super_admin') {
                 // Super admin can see all factories
-                const factoriesSnapshot = await window.Firebase.getDocs(window.Firebase.collection(window.Firebase.db, 'factories'));
+                const factoriesSnapshot = await window.Firebase.getDocs(window.Firebase.collection('factories'));
                 return factoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             } else if (this.currentUser.factoryId) {
                 // Other users can only see their assigned factory
-                const factoryDoc = await window.Firebase.getDoc(window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'factories'), this.currentUser.factoryId));
+                const factoryDoc = await window.Firebase.getDoc(window.Firebase.doc(window.Firebase.collection('factories'), this.currentUser.factoryId));
                 if (factoryDoc.exists()) {
                     return [{ id: factoryDoc.id, ...factoryDoc.data() }];
                 }

@@ -94,7 +94,7 @@ class UserManagementService {
             };
 
             // Add to Firestore
-            const userRef = await window.Firebase.addDoc(window.Firebase.collection(window.Firebase.db, 'users'), userDoc);
+            const userRef = await window.Firebase.addDoc(window.Firebase.collection('users'), userDoc);
             
             console.log('✅ User created successfully:', { id: userRef.id, ...userDoc });
             return { id: userRef.id, ...userDoc };
@@ -114,7 +114,7 @@ class UserManagementService {
                 throw new Error('User ID is required');
             }
 
-            const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), userId);
+            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
             
             // Get current user data
             const currentUser = await window.Firebase.getDoc(userRef);
@@ -158,7 +158,7 @@ class UserManagementService {
             await this.deactivateUser(userId);
             
             // Add deletion metadata
-            const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), userId);
+            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
             await window.Firebase.updateDoc(userRef, {
                 deletedAt: window.Firebase.serverTimestamp(),
                 deletedBy: window.authService?.getCurrentUser()?.uid || 'system',
@@ -183,7 +183,7 @@ class UserManagementService {
                 throw new Error('User ID is required');
             }
 
-            const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), userId);
+            const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
             const userDoc = await window.Firebase.getDoc(userRef);
             
             if (!userDoc.exists()) {
@@ -212,7 +212,7 @@ class UserManagementService {
                 searchTerm = null
             } = options;
 
-            let query = window.Firebase.collection(window.Firebase.db, 'users');
+            let query = window.Firebase.collection('users');
 
             // Apply filters
             if (role) {
@@ -379,7 +379,7 @@ class UserManagementService {
             const results = [];
 
             for (const userId of userIds) {
-                const userRef = window.Firebase.doc(window.Firebase.collection(window.Firebase.db, 'users'), userId);
+                const userRef = window.Firebase.doc(window.Firebase.collection('users'), userId);
                 batch.update(userRef, {
                     ...updates,
                     updatedAt: window.Firebase.serverTimestamp(),
@@ -483,7 +483,7 @@ class UserManagementService {
      */
     async getUserStatistics() {
         try {
-            const usersSnapshot = await window.Firebase.getDocs(window.Firebase.collection(window.Firebase.db, 'users'));
+            const usersSnapshot = await window.Firebase.getDocs(window.Firebase.collection('users'));
             const users = usersSnapshot.docs.map(doc => doc.data());
 
             const stats = {
