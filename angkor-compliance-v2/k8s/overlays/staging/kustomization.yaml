@@ -1,0 +1,161 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: angkor-compliance-staging
+  namespace: angkor-compliance-staging
+
+resources:
+  - ../../base
+
+namespace: angkor-compliance-staging
+
+namePrefix: staging-
+
+commonLabels:
+  app.kubernetes.io/instance: staging
+  environment: staging
+
+commonAnnotations:
+  environment: staging
+  managed-by: kustomize
+
+images:
+  - name: ghcr.io/your-username/angkor-compliance-backend
+    newTag: staging
+  - name: ghcr.io/your-username/angkor-compliance-frontend
+    newTag: staging
+
+replicas:
+  - name: staging-backend
+    count: 2
+  - name: staging-frontend
+    count: 2
+
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: staging-backend
+      namespace: angkor-compliance-staging
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backend
+            env:
+            - name: NODE_ENV
+              value: "staging"
+            - name: LOG_LEVEL
+              value: "debug"
+            - name: FRONTEND_URL
+              value: "https://staging.angkor-compliance.com"
+            - name: CORS_ORIGIN
+              value: "https://staging.angkor-compliance.com"
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "250m"
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: staging-frontend
+      namespace: angkor-compliance-staging
+    spec:
+      template:
+        spec:
+          containers:
+          - name: frontend
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "128Mi"
+                cpu: "100m"
+  - |-
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: staging-angkor-compliance-ingress
+      namespace: angkor-compliance-staging
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    spec:
+      tls:
+      - hosts:
+        - staging.angkor-compliance.com
+        secretName: staging-angkor-compliance-tls
+      rules:
+      - host: staging.angkor-compliance.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: staging-frontend-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: staging-backend-service
+                port:
+                  number: 3001
+
+configMapGenerator:
+  - name: staging-angkor-compliance-config
+    literals:
+      - NODE_ENV=staging
+      - PORT=3001
+      - LOG_LEVEL=debug
+      - DATABASE_HOST=staging-postgres-service
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=angkor_compliance_staging
+      - REDIS_HOST=staging-redis-service
+      - REDIS_PORT=6379
+      - FRONTEND_URL=https://staging.angkor-compliance.com
+      - CORS_ORIGIN=https://staging.angkor-compliance.com
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=200
+      - MAX_FILE_SIZE=10485760
+      - ALLOWED_FILE_TYPES=pdf,doc,docx,xls,xlsx,jpg,jpeg,png
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - BACKUP_SCHEDULE=0 2 * * *
+      - BACKUP_RETENTION_DAYS=7
+
+secretGenerator:
+  - name: staging-postgres-secret
+    literals:
+      - POSTGRES_USER=angkor_user
+      - POSTGRES_PASSWORD=staging_postgres_password
+      - POSTGRES_DB=angkor_compliance_staging
+  - name: staging-redis-secret
+    literals:
+      - REDIS_PASSWORD=staging_redis_password
+  - name: staging-backend-secret
+    literals:
+      - JWT_SECRET=staging_jwt_secret
+      - JWT_REFRESH_SECRET=staging_jwt_refresh_secret
+      - POSTGRES_PASSWORD=staging_postgres_password
+      - REDIS_PASSWORD=staging_redis_password
+      - AWS_ACCESS_KEY_ID=staging_aws_access_key
+      - AWS_SECRET_ACCESS_KEY=staging_aws_secret_key
+      - SMTP_PASSWORD=staging_smtp_password
+  - name: staging-backup-secret
+    literals:
+      - POSTGRES_PASSWORD=staging_postgres_password
+      - REDIS_PASSWORD=staging_redis_password
+      - AWS_ACCESS_KEY_ID=staging_aws_access_key
+      - AWS_SECRET_ACCESS_KEY=staging_aws_secret_key
+      - SMTP_PASSWORD=staging_smtp_password

@@ -1,0 +1,124 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: angkor-compliance-base
+  namespace: angkor-compliance
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - redis.yaml
+  - backend.yaml
+  - frontend.yaml
+  - ingress.yaml
+  - backup.yaml
+
+commonLabels:
+  app.kubernetes.io/name: angkor-compliance
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/component: platform
+  app.kubernetes.io/part-of: compliance-management
+
+commonAnnotations:
+  managed-by: kustomize
+  created-by: angkor-compliance-team
+
+images:
+  - name: ghcr.io/your-username/angkor-compliance-backend
+    newTag: latest
+  - name: ghcr.io/your-username/angkor-compliance-frontend
+    newTag: latest
+
+replicas:
+  - name: backend
+    count: 3
+  - name: frontend
+    count: 3
+
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: backend
+      namespace: angkor-compliance
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backend
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+              limits:
+                memory: "1Gi"
+                cpu: "500m"
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: frontend
+      namespace: angkor-compliance
+    spec:
+      template:
+        spec:
+          containers:
+          - name: frontend
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+
+configMapGenerator:
+  - name: angkor-compliance-config
+    literals:
+      - NODE_ENV=production
+      - PORT=3001
+      - LOG_LEVEL=info
+      - DATABASE_HOST=postgres-service
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=angkor_compliance
+      - REDIS_HOST=redis-service
+      - REDIS_PORT=6379
+      - FRONTEND_URL=https://angkor-compliance.com
+      - CORS_ORIGIN=https://angkor-compliance.com
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - MAX_FILE_SIZE=10485760
+      - ALLOWED_FILE_TYPES=pdf,doc,docx,xls,xlsx,jpg,jpeg,png
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - BACKUP_SCHEDULE=0 2 * * *
+      - BACKUP_RETENTION_DAYS=30
+
+secretGenerator:
+  - name: postgres-secret
+    literals:
+      - POSTGRES_USER=angkor_user
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=angkor_compliance
+  - name: redis-secret
+    literals:
+      - REDIS_PASSWORD=redis_password
+  - name: backend-secret
+    literals:
+      - JWT_SECRET=jwt_secret
+      - JWT_REFRESH_SECRET=jwt_refresh_secret
+      - POSTGRES_PASSWORD=postgres_password
+      - REDIS_PASSWORD=redis_password
+      - AWS_ACCESS_KEY_ID=aws_access_key
+      - AWS_SECRET_ACCESS_KEY=aws_secret_key
+      - SMTP_PASSWORD=smtp_password
+  - name: backup-secret
+    literals:
+      - POSTGRES_PASSWORD=postgres_password
+      - REDIS_PASSWORD=redis_password
+      - AWS_ACCESS_KEY_ID=aws_access_key
+      - AWS_SECRET_ACCESS_KEY=aws_secret_key
+      - SMTP_PASSWORD=smtp_password

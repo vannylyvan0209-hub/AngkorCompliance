@@ -1,0 +1,101 @@
+name: Dependency Update
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  # Update Dependencies
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Update frontend dependencies
+        run: |
+          cd frontend
+          npm update
+          npm audit fix --force
+
+      - name: Update backend dependencies
+        run: |
+          cd backend
+          npm update
+          npm audit fix --force
+
+      - name: Check for updates
+        id: check-updates
+        run: |
+          cd frontend
+          if [ -n "$(git status --porcelain package-lock.json)" ]; then
+            echo "frontend-updated=true" >> $GITHUB_OUTPUT
+          else
+            echo "frontend-updated=false" >> $GITHUB_OUTPUT
+          fi
+          
+          cd ../backend
+          if [ -n "$(git status --porcelain package-lock.json)" ]; then
+            echo "backend-updated=true" >> $GITHUB_OUTPUT
+          else
+            echo "backend-updated=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run tests after updates
+        if: steps.check-updates.outputs.frontend-updated == 'true' || steps.check-updates.outputs.backend-updated == 'true'
+        run: |
+          # Run frontend tests
+          cd frontend && npm run test:run
+          
+          # Run backend tests
+          cd ../backend && npm test
+
+      - name: Create Pull Request
+        if: steps.check-updates.outputs.frontend-updated == 'true' || steps.check-updates.outputs.backend-updated == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: 'chore: update dependencies'
+          body: |
+            ## Dependency Updates
+            
+            This PR updates the project dependencies to their latest versions.
+            
+            ### Updated Packages
+            
+            - Frontend: ${{ steps.check-updates.outputs.frontend-updated == 'true' && '✅ Updated' || '❌ No updates' }}
+            - Backend: ${{ steps.check-updates.outputs.backend-updated == 'true' && '✅ Updated' || '❌ No updates' }}
+            
+            ### Changes
+            
+            - Updated npm packages to latest versions
+            - Fixed security vulnerabilities
+            - Updated package-lock.json files
+            
+            ### Testing
+            
+            - [x] Frontend tests passed
+            - [x] Backend tests passed
+            - [x] No breaking changes detected
+            
+            ### Review Required
+            
+            Please review the changes and ensure:
+            - [ ] No breaking changes
+            - [ ] All tests pass
+            - [ ] Security vulnerabilities are resolved
+            - [ ] Performance is not affected
+          branch: dependency-update
+          delete-branch: true

@@ -1,0 +1,442 @@
+# Default values for angkor-compliance
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global configuration
+global:
+  imageRegistry: ghcr.io
+  imagePullSecrets: []
+  storageClass: fast-ssd
+
+# Application configuration
+app:
+  name: angkor-compliance
+  version: "1.0.0"
+  environment: production
+  domain: angkor-compliance.com
+  subdomain: www
+
+# Image configuration
+image:
+  registry: ghcr.io
+  repository: your-username/angkor-compliance
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+# Backend configuration
+backend:
+  enabled: true
+  image:
+    repository: your-username/angkor-compliance-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 3
+  service:
+    type: ClusterIP
+    port: 3001
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext:
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1001
+    capabilities:
+      drop:
+        - ALL
+  env:
+    NODE_ENV: production
+    PORT: "3001"
+    LOG_LEVEL: info
+    FRONTEND_URL: "https://angkor-compliance.com"
+    CORS_ORIGIN: "https://angkor-compliance.com"
+    RATE_LIMIT_WINDOW_MS: "900000"
+    RATE_LIMIT_MAX_REQUESTS: "100"
+    MAX_FILE_SIZE: "10485760"
+    ALLOWED_FILE_TYPES: "pdf,doc,docx,xls,xlsx,jpg,jpeg,png"
+    SMTP_PORT: "587"
+    SMTP_SECURE: "false"
+    BACKUP_SCHEDULE: "0 2 * * *"
+    BACKUP_RETENTION_DAYS: "30"
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 3001
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 3001
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  startupProbe:
+    httpGet:
+      path: /health
+      port: 3001
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 10
+
+# Frontend configuration
+frontend:
+  enabled: true
+  image:
+    repository: your-username/angkor-compliance-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 3
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext:
+    runAsUser: 101
+    runAsGroup: 101
+    fsGroup: 101
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 101
+    capabilities:
+      drop:
+        - ALL
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 80
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  startupProbe:
+    httpGet:
+      path: /health
+      port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 10
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "postgres_password"
+    username: "angkor_user"
+    password: "postgres_password"
+    database: "angkor_compliance"
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: fast-ssd
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: "redis_password"
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+      storageClass: fast-ssd
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/ssl-prefer-server-ciphers: "false"
+    nginx.ingress.kubernetes.io/ssl-session-cache: "shared:SSL:10m"
+    nginx.ingress.kubernetes.io/ssl-session-timeout: "10m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://angkor-compliance.com"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-max-age: "1728000"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: angkor-compliance.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: angkor-compliance-frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: angkor-compliance-backend
+            port: 3001
+    - host: www.angkor-compliance.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: angkor-compliance-frontend
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: angkor-compliance-backend
+            port: 3001
+  tls:
+    - secretName: angkor-compliance-tls
+      hosts:
+        - angkor-compliance.com
+        - www.angkor-compliance.com
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: 30  # days
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  storage:
+    size: 10Gi
+    storageClass: fast-ssd
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+    adminPassword: "admin_password"
+    dashboards:
+      - name: angkor-compliance
+        url: "https://grafana.com/dashboards/angkor-compliance"
+
+# Security configuration
+security:
+  podSecurityPolicy:
+    enabled: true
+  networkPolicy:
+    enabled: true
+  rbac:
+    enabled: true
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+# Secrets configuration
+secrets:
+  jwt:
+    secret: "jwt_secret"
+    refreshSecret: "jwt_refresh_secret"
+  aws:
+    accessKeyId: "aws_access_key"
+    secretAccessKey: "aws_secret_key"
+    region: "us-east-1"
+    s3Bucket: "angkor-compliance-files"
+  smtp:
+    host: "smtp.gmail.com"
+    port: "587"
+    user: "noreply@angkor-compliance.com"
+    password: "smtp_password"
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+# Persistence configuration
+persistence:
+  enabled: true
+  storageClass: fast-ssd
+  accessMode: ReadWriteOnce
+  size: 20Gi
+
+# Node configuration
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Horizontal Pod Autoscaler
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Vertical Pod Autoscaler
+vpa:
+  enabled: false
+  updatePolicy: "Auto"
+  resourcePolicy:
+    cpu:
+      min: "100m"
+      max: "1"
+    memory:
+      min: "128Mi"
+      max: "1Gi"
+
+# Pod Security Standards
+podSecurityStandards:
+  enabled: true
+  level: "restricted"
+  version: "latest"
+
+# Network Policies
+networkPolicies:
+  enabled: true
+  ingress:
+    enabled: true
+  egress:
+    enabled: true
+
+# Resource Quotas
+resourceQuotas:
+  enabled: true
+  limits:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    persistentvolumeclaims: "10"
+    services: "10"
+    secrets: "20"
+    configmaps: "20"
+
+# Limit Ranges
+limitRanges:
+  enabled: true
+  limits:
+    default:
+      cpu: "1"
+      memory: "2Gi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "256Mi"
+    type: Container
+  storage:
+    max: "50Gi"
+    min: "1Gi"
+    type: PersistentVolumeClaim

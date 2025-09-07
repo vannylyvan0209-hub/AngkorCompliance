@@ -1,0 +1,183 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+type: Opaque
+data:
+  # Base64 encoded values - replace with actual values
+  POSTGRES_USER: YW5na29yX3VzZXI=  # angkor_user
+  POSTGRES_PASSWORD: cG9zdGdyZXNfcGFzc3dvcmQ=  # postgres_password
+  POSTGRES_DB: YW5na29yX2NvbXBsaWFuY2U=  # angkor_compliance
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: fast-ssd
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+spec:
+  serviceName: postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: angkor-compliance
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: angkor-compliance
+        app.kubernetes.io/component: database
+    spec:
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-init
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - $(POSTGRES_USER)
+            - -d
+            - $(POSTGRES_DB)
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - $(POSTGRES_USER)
+            - -d
+            - $(POSTGRES_DB)
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+      - name: postgres-init
+        configMap:
+          name: postgres-init
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+      storageClassName: fast-ssd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+spec:
+  selector:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+  ports:
+  - port: 5432
+    targetPort: 5432
+    name: postgres
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: database
+data:
+  01-init.sql: |
+    -- Create extensions
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+    CREATE EXTENSION IF NOT EXISTS "btree_gin";
+    
+    -- Create indexes for better performance
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users(email);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_role ON users(role);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_factories_name ON factories(name);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_documents_type ON documents(type);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_audits_status ON audits(status);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_grievances_priority ON grievances(priority);
+    
+    -- Create full-text search indexes
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_documents_content_fts ON documents USING gin(to_tsvector('english', content));
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_grievances_description_fts ON grievances USING gin(to_tsvector('english', description));
+    
+    -- Create composite indexes for common queries
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_audits_factory_status ON audits(factory_id, status);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_grievances_factory_priority ON grievances(factory_id, priority);
+    CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_documents_factory_type ON documents(factory_id, type);

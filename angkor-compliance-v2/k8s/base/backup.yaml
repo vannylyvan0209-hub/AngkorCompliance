@@ -1,0 +1,240 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backup-secret
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: backup
+type: Opaque
+data:
+  # Base64 encoded values - replace with actual values
+  POSTGRES_PASSWORD: cG9zdGdyZXNfcGFzc3dvcmQ=  # postgres_password
+  REDIS_PASSWORD: cmVkaXNfcGFzc3dvcmQ=  # redis_password
+  AWS_ACCESS_KEY_ID: YXdzX2FjY2Vzc19rZXk=  # aws_access_key
+  AWS_SECRET_ACCESS_KEY: YXdzX3NlY3JldF9rZXk=  # aws_secret_key
+  SMTP_PASSWORD: c210cF9wYXNzd29yZA==  # smtp_password
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backup-pvc
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: backup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast-ssd
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: database-backup
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: backup
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+          containers:
+          - name: backup
+            image: postgres:15-alpine
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              
+              # Create backup directory
+              mkdir -p /backup/$(date +%Y%m%d_%H%M%S)
+              BACKUP_DIR="/backup/$(date +%Y%m%d_%H%M%S)"
+              
+              # Database backup
+              echo "Starting database backup..."
+              pg_dump -h postgres-service -U angkor_user -d angkor_compliance \
+                --verbose --clean --no-owner --no-privileges \
+                --format=custom --file="$BACKUP_DIR/database.dump"
+              
+              # Redis backup
+              echo "Starting Redis backup..."
+              redis-cli -h redis-service -a $REDIS_PASSWORD --rdb "$BACKUP_DIR/redis.rdb" || echo "Redis backup failed (optional)"
+              
+              # Create compressed archive
+              echo "Creating compressed archive..."
+              tar -czf "/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz" -C /backup "$(basename $BACKUP_DIR)"
+              
+              # Upload to S3
+              if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ] && [ -n "$AWS_S3_BUCKET" ]; then
+                echo "Uploading backup to S3..."
+                aws s3 cp "/backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz" \
+                  "s3://$AWS_S3_BUCKET/backups/backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+              fi
+              
+              # Clean up old backups (keep last 30 days)
+              echo "Cleaning up old backups..."
+              find /backup -name "backup_*.tar.gz" -mtime +30 -delete
+              find /backup -name "20*" -type d -mtime +30 -exec rm -rf {} \;
+              
+              echo "Backup completed successfully!"
+            env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: REDIS_PASSWORD
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: AWS_S3_BUCKET
+              value: "angkor-compliance-backups"
+            - name: SMTP_HOST
+              value: "smtp.gmail.com"
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_USER
+              value: "noreply@angkor-compliance.com"
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: SMTP_PASSWORD
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "250m"
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: backup-pvc
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: file-backup
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: backup
+spec:
+  schedule: "0 3 * * *"  # Daily at 3 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+          containers:
+          - name: file-backup
+            image: alpine:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              
+              # Install required packages
+              apk add --no-cache aws-cli
+              
+              # Create backup directory
+              mkdir -p /backup/files/$(date +%Y%m%d_%H%M%S)
+              BACKUP_DIR="/backup/files/$(date +%Y%m%d_%H%M%S)"
+              
+              # Backup uploaded files (if any)
+              echo "Starting file backup..."
+              if [ -d "/uploads" ] && [ "$(ls -A /uploads)" ]; then
+                tar -czf "$BACKUP_DIR/files.tar.gz" -C /uploads .
+                echo "Files backed up successfully"
+              else
+                echo "No files to backup"
+                touch "$BACKUP_DIR/files.tar.gz"
+              fi
+              
+              # Upload to S3
+              if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ] && [ -n "$AWS_S3_BUCKET" ]; then
+                echo "Uploading file backup to S3..."
+                aws s3 cp "$BACKUP_DIR/files.tar.gz" \
+                  "s3://$AWS_S3_BUCKET/file-backups/files_$(date +%Y%m%d_%H%M%S).tar.gz"
+              fi
+              
+              # Clean up old backups (keep last 30 days)
+              echo "Cleaning up old file backups..."
+              find /backup/files -name "files_*.tar.gz" -mtime +30 -delete
+              find /backup/files -name "20*" -type d -mtime +30 -exec rm -rf {} \;
+              
+              echo "File backup completed successfully!"
+            env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: AWS_S3_BUCKET
+              value: "angkor-compliance-backups"
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+            - name: uploads-storage
+              mountPath: /uploads
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "50m"
+              limits:
+                memory: "256Mi"
+                cpu: "100m"
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: backup-pvc
+          - name: uploads-storage
+            emptyDir: {}

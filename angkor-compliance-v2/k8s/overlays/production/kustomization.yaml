@@ -1,0 +1,324 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: angkor-compliance-production
+  namespace: angkor-compliance
+
+resources:
+  - ../../base
+
+namespace: angkor-compliance
+
+namePrefix: prod-
+
+commonLabels:
+  app.kubernetes.io/instance: production
+  environment: production
+
+commonAnnotations:
+  environment: production
+  managed-by: kustomize
+
+images:
+  - name: ghcr.io/your-username/angkor-compliance-backend
+    newTag: v1.0.0
+  - name: ghcr.io/your-username/angkor-compliance-frontend
+    newTag: v1.0.0
+
+replicas:
+  - name: prod-backend
+    count: 5
+  - name: prod-frontend
+    count: 5
+
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: prod-backend
+      namespace: angkor-compliance
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backend
+            env:
+            - name: NODE_ENV
+              value: "production"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: FRONTEND_URL
+              value: "https://angkor-compliance.com"
+            - name: CORS_ORIGIN
+              value: "https://angkor-compliance.com"
+            resources:
+              requests:
+                memory: "1Gi"
+                cpu: "500m"
+              limits:
+                memory: "2Gi"
+                cpu: "1"
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3001
+              initialDelaySeconds: 60
+              periodSeconds: 30
+              timeoutSeconds: 10
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3001
+              initialDelaySeconds: 30
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 3
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3001
+              initialDelaySeconds: 30
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 10
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: prod-frontend
+      namespace: angkor-compliance
+    spec:
+      template:
+        spec:
+          containers:
+          - name: frontend
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "200m"
+              limits:
+                memory: "512Mi"
+                cpu: "400m"
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 80
+              initialDelaySeconds: 60
+              periodSeconds: 30
+              timeoutSeconds: 10
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 80
+              initialDelaySeconds: 30
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 3
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 80
+              initialDelaySeconds: 30
+              periodSeconds: 10
+              timeoutSeconds: 5
+              failureThreshold: 10
+  - |-
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: prod-backend-hpa
+      namespace: angkor-compliance
+    spec:
+      minReplicas: 5
+      maxReplicas: 20
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 60
+      - type: Resource
+        resource:
+          name: memory
+          target:
+            type: Utilization
+            averageUtilization: 70
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+        scaleUp:
+          stabilizationWindowSeconds: 120
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 60
+          - type: Pods
+            value: 3
+            periodSeconds: 60
+          selectPolicy: Max
+  - |-
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: prod-frontend-hpa
+      namespace: angkor-compliance
+    spec:
+      minReplicas: 5
+      maxReplicas: 20
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 60
+      - type: Resource
+        resource:
+          name: memory
+          target:
+            type: Utilization
+            averageUtilization: 70
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+        scaleUp:
+          stabilizationWindowSeconds: 120
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 60
+          - type: Pods
+            value: 3
+            periodSeconds: 60
+          selectPolicy: Max
+  - |-
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: prod-angkor-compliance-ingress
+      namespace: angkor-compliance
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384"
+        nginx.ingress.kubernetes.io/ssl-prefer-server-ciphers: "false"
+        nginx.ingress.kubernetes.io/ssl-session-cache: "shared:SSL:10m"
+        nginx.ingress.kubernetes.io/ssl-session-timeout: "10m"
+        nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+        nginx.ingress.kubernetes.io/rate-limit: "100"
+        nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-origin: "https://angkor-compliance.com"
+        nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+        nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type"
+        nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+        nginx.ingress.kubernetes.io/cors-max-age: "1728000"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    spec:
+      tls:
+      - hosts:
+        - angkor-compliance.com
+        - www.angkor-compliance.com
+        secretName: prod-angkor-compliance-tls
+      rules:
+      - host: angkor-compliance.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prod-frontend-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: prod-backend-service
+                port:
+                  number: 3001
+      - host: www.angkor-compliance.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prod-frontend-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: prod-backend-service
+                port:
+                  number: 3001
+
+configMapGenerator:
+  - name: prod-angkor-compliance-config
+    literals:
+      - NODE_ENV=production
+      - PORT=3001
+      - LOG_LEVEL=info
+      - DATABASE_HOST=prod-postgres-service
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=angkor_compliance
+      - REDIS_HOST=prod-redis-service
+      - REDIS_PORT=6379
+      - FRONTEND_URL=https://angkor-compliance.com
+      - CORS_ORIGIN=https://angkor-compliance.com
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - MAX_FILE_SIZE=10485760
+      - ALLOWED_FILE_TYPES=pdf,doc,docx,xls,xlsx,jpg,jpeg,png
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - BACKUP_SCHEDULE=0 2 * * *
+      - BACKUP_RETENTION_DAYS=30
+
+secretGenerator:
+  - name: prod-postgres-secret
+    literals:
+      - POSTGRES_USER=angkor_user
+      - POSTGRES_PASSWORD=production_postgres_password
+      - POSTGRES_DB=angkor_compliance
+  - name: prod-redis-secret
+    literals:
+      - REDIS_PASSWORD=production_redis_password
+  - name: prod-backend-secret
+    literals:
+      - JWT_SECRET=production_jwt_secret
+      - JWT_REFRESH_SECRET=production_jwt_refresh_secret
+      - POSTGRES_PASSWORD=production_postgres_password
+      - REDIS_PASSWORD=production_redis_password
+      - AWS_ACCESS_KEY_ID=production_aws_access_key
+      - AWS_SECRET_ACCESS_KEY=production_aws_secret_key
+      - SMTP_PASSWORD=production_smtp_password
+  - name: prod-backup-secret
+    literals:
+      - POSTGRES_PASSWORD=production_postgres_password
+      - REDIS_PASSWORD=production_redis_password
+      - AWS_ACCESS_KEY_ID=production_aws_access_key
+      - AWS_SECRET_ACCESS_KEY=production_aws_secret_key
+      - SMTP_PASSWORD=production_smtp_password

@@ -1,0 +1,325 @@
+# Angkor Compliance Platform Alerting Rules
+groups:
+  - name: angkor-compliance-backend
+    rules:
+      # Backend service down
+      - alert: BackendServiceDown
+        expr: up{job="angkor-compliance-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Backend service is down"
+          description: "Backend service has been down for more than 1 minute"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/backend-down"
+
+      # High backend error rate
+      - alert: HighBackendErrorRate
+        expr: rate(http_requests_total{job="angkor-compliance-backend",status=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High backend error rate"
+          description: "Backend error rate is {{ $value }} errors per second"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-error-rate"
+
+      # High backend response time
+      - alert: HighBackendResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="angkor-compliance-backend"}[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High backend response time"
+          description: "95th percentile response time is {{ $value }} seconds"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-response-time"
+
+      # Backend memory usage high
+      - alert: BackendMemoryUsageHigh
+        expr: (container_memory_usage_bytes{container="backend"} / container_spec_memory_limit_bytes{container="backend"}) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Backend memory usage is high"
+          description: "Backend memory usage is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-memory-usage"
+
+      # Backend CPU usage high
+      - alert: BackendCPUUsageHigh
+        expr: (rate(container_cpu_usage_seconds_total{container="backend"}[5m]) / container_spec_cpu_quota{container="backend"} * container_spec_cpu_period{container="backend"}) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Backend CPU usage is high"
+          description: "Backend CPU usage is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-cpu-usage"
+
+  - name: angkor-compliance-frontend
+    rules:
+      # Frontend service down
+      - alert: FrontendServiceDown
+        expr: up{job="angkor-compliance-frontend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "Frontend service is down"
+          description: "Frontend service has been down for more than 1 minute"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/frontend-down"
+
+      # High frontend error rate
+      - alert: HighFrontendErrorRate
+        expr: rate(http_requests_total{job="angkor-compliance-frontend",status=~"5.."}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          service: frontend
+        annotations:
+          summary: "High frontend error rate"
+          description: "Frontend error rate is {{ $value }} errors per second"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-error-rate"
+
+      # Frontend memory usage high
+      - alert: FrontendMemoryUsageHigh
+        expr: (container_memory_usage_bytes{container="frontend"} / container_spec_memory_limit_bytes{container="frontend"}) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: frontend
+        annotations:
+          summary: "Frontend memory usage is high"
+          description: "Frontend memory usage is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-memory-usage"
+
+  - name: angkor-compliance-database
+    rules:
+      # PostgreSQL down
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL database has been down for more than 1 minute"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/database-down"
+
+      # High database connections
+      - alert: HighDatabaseConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "High database connections"
+          description: "Database connections are {{ $value | humanizePercentage }} of max"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-db-connections"
+
+      # Database disk usage high
+      - alert: DatabaseDiskUsageHigh
+        expr: (pg_database_size_bytes / pg_database_size_bytes) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Database disk usage is high"
+          description: "Database disk usage is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-disk-usage"
+
+      # Slow database queries
+      - alert: SlowDatabaseQueries
+        expr: rate(pg_stat_statements_total{state="active"}[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Slow database queries detected"
+          description: "{{ $value }} slow queries per second"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/slow-queries"
+
+  - name: angkor-compliance-cache
+    rules:
+      # Redis down
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: cache
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis cache has been down for more than 1 minute"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/redis-down"
+
+      # High Redis memory usage
+      - alert: HighRedisMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-redis-memory"
+
+      # High Redis hit rate
+      - alert: LowRedisHitRate
+        expr: redis_keyspace_hits_total / (redis_keyspace_hits_total + redis_keyspace_misses_total) < 0.8
+        for: 10m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Low Redis hit rate"
+          description: "Redis hit rate is {{ $value | humanizePercentage }}"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/low-hit-rate"
+
+  - name: angkor-compliance-infrastructure
+    rules:
+      # Node down
+      - alert: NodeDown
+        expr: up{job="node-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: infrastructure
+        annotations:
+          summary: "Node is down"
+          description: "Node {{ $labels.instance }} has been down for more than 1 minute"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/node-down"
+
+      # High node CPU usage
+      - alert: HighNodeCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High node CPU usage"
+          description: "Node {{ $labels.instance }} CPU usage is {{ $value }}%"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-cpu-usage"
+
+      # High node memory usage
+      - alert: HighNodeMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High node memory usage"
+          description: "Node {{ $labels.instance }} memory usage is {{ $value }}%"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-memory-usage"
+
+      # High node disk usage
+      - alert: HighNodeDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High node disk usage"
+          description: "Node {{ $labels.instance }} disk usage is {{ $value }}%"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-disk-usage"
+
+      # Pod restarting frequently
+      - alert: PodRestartingFrequently
+        expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "Pod restarting frequently"
+          description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is restarting frequently"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/pod-restarting"
+
+  - name: angkor-compliance-business
+    rules:
+      # High number of failed logins
+      - alert: HighFailedLogins
+        expr: rate(auth_failed_logins_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High number of failed logins"
+          description: "{{ $value }} failed logins per second"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-failed-logins"
+
+      # High number of API errors
+      - alert: HighAPIErrors
+        expr: rate(api_errors_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "High number of API errors"
+          description: "{{ $value }} API errors per second"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-api-errors"
+
+      # Database backup failed
+      - alert: DatabaseBackupFailed
+        expr: backup_status{type="database"} == 0
+        for: 0m
+        labels:
+          severity: critical
+          service: backup
+        annotations:
+          summary: "Database backup failed"
+          description: "Database backup has failed"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/backup-failed"
+
+      # File backup failed
+      - alert: FileBackupFailed
+        expr: backup_status{type="files"} == 0
+        for: 0m
+        labels:
+          severity: warning
+          service: backup
+        annotations:
+          summary: "File backup failed"
+          description: "File backup has failed"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/backup-failed"
+
+      # High number of pending grievances
+      - alert: HighPendingGrievances
+        expr: grievances_pending_total > 100
+        for: 10m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "High number of pending grievances"
+          description: "{{ $value }} grievances are pending"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-pending-grievances"
+
+      # High number of overdue CAPs
+      - alert: HighOverdueCAPs
+        expr: caps_overdue_total > 50
+        for: 10m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "High number of overdue CAPs"
+          description: "{{ $value }} CAPs are overdue"
+          runbook_url: "https://docs.angkor-compliance.com/runbooks/high-overdue-caps"

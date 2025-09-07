@@ -1,0 +1,41 @@
+# Elasticsearch configuration for Angkor Compliance Platform
+cluster.name: "angkor-compliance"
+node.name: "elasticsearch-node-1"
+node.roles: ["master", "data", "ingest"]
+
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+discovery.seed_hosts: ["elasticsearch-node-1", "elasticsearch-node-2", "elasticsearch-node-3"]
+cluster.initial_master_nodes: ["elasticsearch-node-1", "elasticsearch-node-2", "elasticsearch-node-3"]
+
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+
+bootstrap.memory_lock: true
+
+# Security settings
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certs/elasticsearch.key
+xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certs/elasticsearch.crt
+xpack.security.transport.ssl.certificate_authorities: ["/usr/share/elasticsearch/config/certs/ca.crt"]
+
+# Monitoring settings
+xpack.monitoring.collection.enabled: true
+xpack.monitoring.elasticsearch.collection.enabled: true
+
+# Index settings
+action.auto_create_index: true
+action.destructive_requires_name: true
+
+# Memory settings
+indices.memory.index_buffer_size: 20%
+indices.queries.cache.size: 10%
+indices.fielddata.cache.size: 20%
+
+# Logging settings
+logger.level: INFO
+logger.org.elasticsearch.deprecation: WARN

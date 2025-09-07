@@ -1,0 +1,203 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: angkor-compliance-config
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: config
+data:
+  # Application Configuration
+  NODE_ENV: "production"
+  PORT: "3001"
+  LOG_LEVEL: "info"
+  
+  # Database Configuration
+  DATABASE_HOST: "postgres-service"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "angkor_compliance"
+  
+  # Redis Configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  
+  # Frontend Configuration
+  FRONTEND_URL: "https://angkor-compliance.com"
+  
+  # Security Configuration
+  CORS_ORIGIN: "https://angkor-compliance.com"
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  
+  # File Upload Configuration
+  MAX_FILE_SIZE: "10485760"  # 10MB
+  ALLOWED_FILE_TYPES: "pdf,doc,docx,xls,xlsx,jpg,jpeg,png"
+  
+  # Email Configuration
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
+  
+  # Backup Configuration
+  BACKUP_SCHEDULE: "0 2 * * *"
+  BACKUP_RETENTION_DAYS: "30"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: angkor-compliance
+  labels:
+    app.kubernetes.io/name: angkor-compliance
+    app.kubernetes.io/component: nginx
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+        
+        # Logging
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+        
+        access_log /var/log/nginx/access.log main;
+        error_log /var/log/nginx/error.log;
+        
+        # Gzip compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_proxied any;
+        gzip_comp_level 6;
+        gzip_types
+            text/plain
+            text/css
+            text/xml
+            text/javascript
+            application/json
+            application/javascript
+            application/xml+rss
+            application/atom+xml
+            image/svg+xml;
+        
+        # Rate limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
+        
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self';" always;
+        
+        # Upstream servers
+        upstream frontend {
+            server frontend-service:80;
+        }
+        
+        upstream backend {
+            server backend-service:3001;
+        }
+        
+        # HTTP to HTTPS redirect
+        server {
+            listen 80;
+            server_name _;
+            return 301 https://$host$request_uri;
+        }
+        
+        # HTTPS server
+        server {
+            listen 443 ssl http2;
+            server_name _;
+            
+            # SSL configuration
+            ssl_certificate /etc/nginx/ssl/tls.crt;
+            ssl_certificate_key /etc/nginx/ssl/tls.key;
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
+            ssl_prefer_server_ciphers off;
+            ssl_session_cache shared:SSL:10m;
+            ssl_session_timeout 10m;
+            
+            # Security headers
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+            
+            # API routes
+            location /api/ {
+                limit_req zone=api burst=20 nodelay;
+                
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+                
+                # CORS headers
+                add_header Access-Control-Allow-Origin "$http_origin" always;
+                add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+                add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
+                add_header Access-Control-Allow-Credentials "true" always;
+                
+                if ($request_method = 'OPTIONS') {
+                    add_header Access-Control-Allow-Origin "$http_origin";
+                    add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS";
+                    add_header Access-Control-Allow-Headers "Authorization, Content-Type";
+                    add_header Access-Control-Allow-Credentials "true";
+                    add_header Access-Control-Max-Age 1728000;
+                    add_header Content-Type "text/plain charset=UTF-8";
+                    add_header Content-Length 0;
+                    return 204;
+                }
+            }
+            
+            # Login endpoint with stricter rate limiting
+            location /api/auth/login {
+                limit_req zone=login burst=5 nodelay;
+                
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+            
+            # Health check endpoint
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+            
+            # Frontend routes
+            location / {
+                proxy_pass http://frontend;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+            }
+            
+            # Static files caching
+            location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                proxy_pass http://frontend;
+                expires 1y;
+                add_header Cache-Control "public, immutable";
+                add_header Vary "Accept-Encoding";
+            }
+        }
+    }

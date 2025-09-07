@@ -1,0 +1,280 @@
+# Alertmanager configuration for Angkor Compliance Platform
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@angkor-compliance.com'
+  smtp_auth_username: 'alerts@angkor-compliance.com'
+  smtp_auth_password: 'smtp_password'
+  smtp_require_tls: true
+
+# The directory from which notification templates are read.
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# The root route on which each condition enters the routing tree.
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+    # Critical alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 5s
+      repeat_interval: 30m
+      routes:
+        - match:
+            service: backend
+          receiver: 'backend-critical'
+        - match:
+            service: database
+          receiver: 'database-critical'
+        - match:
+            service: infrastructure
+          receiver: 'infrastructure-critical'
+
+    # Warning alerts - delayed notification
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      group_wait: 30s
+      repeat_interval: 2h
+
+    # Business alerts - daily summary
+    - match:
+        service: business
+      receiver: 'business-alerts'
+      group_wait: 5m
+      repeat_interval: 24h
+
+    # Security alerts - immediate notification
+    - match:
+        service: security
+      receiver: 'security-alerts'
+      group_wait: 5s
+      repeat_interval: 1h
+
+# Inhibition rules allow to mute a set of alerts given that another alert is
+# firing.
+inhibit_rules:
+  # Mute any warning-level notifications if the same alert is already critical.
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+  # Mute individual node alerts if the entire cluster is down.
+  - source_match:
+      alertname: 'NodeDown'
+    target_match:
+      alertname: 'HighNodeCPUUsage'
+    equal: ['instance']
+
+  # Mute pod alerts if the node is down.
+  - source_match:
+      alertname: 'NodeDown'
+    target_match:
+      alertname: 'PodRestartingFrequently'
+    equal: ['instance']
+
+# Receivers
+receivers:
+  # Default receiver
+  - name: 'web.hook'
+    webhook_configs:
+      - url: 'http://webhook:5001/'
+
+  # Critical alerts
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'oncall@angkor-compliance.com'
+        subject: '[CRITICAL] {{ .GroupLabels.alertname }} - {{ .GroupLabels.service }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity }}
+          Service: {{ .Labels.service }}
+          Instance: {{ .Labels.instance }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+        headers:
+          X-Priority: '1'
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#alerts-critical'
+        title: 'Critical Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Severity:* {{ .Labels.severity }}
+          *Service:* {{ .Labels.service }}
+          *Instance:* {{ .Labels.instance }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+        send_resolved: true
+    pagerduty_configs:
+      - routing_key: 'YOUR_PAGERDUTY_ROUTING_KEY'
+        description: '{{ .GroupLabels.alertname }} - {{ .GroupLabels.service }}'
+        details:
+          summary: '{{ .Annotations.summary }}'
+          description: '{{ .Annotations.description }}'
+          severity: '{{ .Labels.severity }}'
+          service: '{{ .Labels.service }}'
+          instance: '{{ .Labels.instance }}'
+
+  # Backend critical alerts
+  - name: 'backend-critical'
+    email_configs:
+      - to: 'backend-team@angkor-compliance.com'
+        subject: '[CRITICAL] Backend Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Runbook: {{ .Annotations.runbook_url }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#backend-alerts'
+        title: 'Backend Critical Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Runbook:* {{ .Annotations.runbook_url }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+
+  # Database critical alerts
+  - name: 'database-critical'
+    email_configs:
+      - to: 'dba@angkor-compliance.com'
+        subject: '[CRITICAL] Database Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Runbook: {{ .Annotations.runbook_url }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#database-alerts'
+        title: 'Database Critical Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Runbook:* {{ .Annotations.runbook_url }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+
+  # Infrastructure critical alerts
+  - name: 'infrastructure-critical'
+    email_configs:
+      - to: 'ops@angkor-compliance.com'
+        subject: '[CRITICAL] Infrastructure Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Runbook: {{ .Annotations.runbook_url }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#infrastructure-alerts'
+        title: 'Infrastructure Critical Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Runbook:* {{ .Annotations.runbook_url }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+
+  # Warning alerts
+  - name: 'warning-alerts'
+    email_configs:
+      - to: 'alerts@angkor-compliance.com'
+        subject: '[WARNING] {{ .GroupLabels.alertname }} - {{ .GroupLabels.service }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity }}
+          Service: {{ .Labels.service }}
+          Instance: {{ .Labels.instance }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#alerts-warning'
+        title: 'Warning Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Severity:* {{ .Labels.severity }}
+          *Service:* {{ .Labels.service }}
+          *Instance:* {{ .Labels.instance }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+
+  # Business alerts
+  - name: 'business-alerts'
+    email_configs:
+      - to: 'business@angkor-compliance.com'
+        subject: '[BUSINESS] {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#business-alerts'
+        title: 'Business Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+
+  # Security alerts
+  - name: 'security-alerts'
+    email_configs:
+      - to: 'security@angkor-compliance.com'
+        subject: '[SECURITY] {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Time: {{ .StartsAt }}
+          {{ end }}
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+        channel: '#security-alerts'
+        title: 'Security Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Time:* {{ .StartsAt }}
+          {{ end }}
+    pagerduty_configs:
+      - routing_key: 'YOUR_PAGERDUTY_SECURITY_ROUTING_KEY'
+        description: 'Security Alert: {{ .GroupLabels.alertname }}'
+        details:
+          summary: '{{ .Annotations.summary }}'
+          description: '{{ .Annotations.description }}'
+          severity: '{{ .Labels.severity }}'
+          service: '{{ .Labels.service }}'
