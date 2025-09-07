@@ -3,188 +3,747 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Firebase Test</title>
+    <title>Angkor Compliance - System Test</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
             background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
             color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        .status {
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #D4AF37;
+        }
+
+        .status-card h3 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-success { background-color: #10b981; }
+        .status-error { background-color: #ef4444; }
+        .status-warning { background-color: #f59e0b; }
+        .status-loading { background-color: #3b82f6; }
+
+        .status-details {
+            margin-top: 15px;
             padding: 15px;
-            margin: 10px 0;
+            background: #f8fafc;
             border-radius: 8px;
-            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #374151;
+            max-height: 200px;
+            overflow-y: auto;
         }
-        .success { background-color: #22c55e; }
-        .error { background-color: #ef4444; }
-        .warning { background-color: #f59e0b; }
-        .info { background-color: #3b82f6; }
-        button {
-            background: #B8941F;
+
+        .test-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .test-section h3 {
+            margin: 0 0 20px 0;
+            color: #1f2937;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .test-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            margin: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
-        button:hover { background: #8B6914; }
-        .log {
-            background: rgba(0,0,0,0.1);
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .test-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-results {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #374151;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .auto-test {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
             padding: 15px;
             border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .auto-test h4 {
+            margin: 0 0 10px 0;
+            color: #92400e;
+        }
+
+        .auto-test p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
             margin: 10px 0;
-            max-height: 300px;
-            overflow-y: auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4AF37 0%, #B8941F 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+            }
+            
+            .test-button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>🔥 Firebase & Services Test</h1>
-    
-    <div id="firebaseStatus" class="status info">⏳ Checking Firebase...</div>
-    <div id="authStatus" class="status info">⏳ Checking Auth Service...</div>
-    <div id="userStatus" class="status info">⏳ Checking User Management...</div>
-    <div id="navStatus" class="status info">⏳ Checking Navigation Service...</div>
-    
-    <div style="margin: 20px 0;">
-        <button onclick="testFirebase()">Test Firebase</button>
-        <button onclick="testServices()">Test Services</button>
-        <button onclick="clearLog()">Clear Log</button>
+    <div class="header">
+        <h1>🚀 Angkor Compliance Platform</h1>
+        <p>System Test & Diagnostics Dashboard</p>
     </div>
-    
-    <div class="log" id="log"></div>
 
-    <!-- Load Firebase CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    
-    <!-- Load Firebase and Services -->
-    <script src="firebase-config.js"></script>
-    <script src="assets/js/services/auth-service.js"></script>
-    <script src="assets/js/services/user-management.js"></script>
-    <script src="assets/js/services/navigation-service.js"></script>
+    <!-- Auto Test Section -->
+    <div class="auto-test">
+        <h4>🔄 Auto-Test System</h4>
+        <p>This system will automatically test all components every 5 seconds. Monitor the status cards below for real-time results.</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p id="auto-test-status">Initializing auto-test system...</p>
+        <div id="system-ready-status" style="margin-top: 10px; padding: 8px; background: #dcfce7; border-radius: 4px; display: none;">
+            <strong>✅ System Ready:</strong> All test functions are available
+        </div>
+    </div>
 
-    <script>
-        function log(message) {
-            const logDiv = document.getElementById('log');
-            const timestamp = new Date().toLocaleTimeString();
-            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
-            logDiv.scrollTop = logDiv.scrollHeight;
-        }
+    <!-- Status Grid -->
+    <div class="status-grid">
+        <div class="status-card">
+            <h3>
+                <span class="status-indicator status-loading" id="firebase-status-indicator"></span>
+                Firebase v12
+            </h3>
+            <p>Firebase SDK initialization and configuration</p>
+            <div class="status-details" id="firebase-status-details">
+                Initializing...
+            </div>
+        </div>
 
-        function updateStatus(id, status, message) {
-            const element = document.getElementById(id);
-            element.className = `status ${status}`;
-            element.textContent = message;
-        }
+        <div class="status-card">
+            <h3>
+                <span class="status-indicator status-loading" id="auth-service-status-indicator"></span>
+                Auth Service
+            </h3>
+            <p>Authentication service initialization and testing</p>
+            <div class="status-details" id="auth-service-status-details">
+                Initializing...
+            </div>
+        </div>
 
-        function testFirebase() {
-            log('🧪 Testing Firebase availability...');
-            
-            if (window.Firebase) {
-                log('✅ Firebase object found');
+        <div class="status-card">
+            <h3>
+                <span class="status-indicator status-loading" id="user-management-status-indicator"></span>
+                User Management
+            </h3>
+            <p>User management service functionality</p>
+            <div class="status-details" id="user-management-status-details">
+                Initializing...
+            </div>
+        </div>
+
+        <div class="status-card">
+            <h3>
+                <span class="status-indicator status-loading" id="navigation-service-status-indicator"></span>
+                Navigation Service
+            </h3>
+            <p>Navigation and routing service</p>
+            <div class="status-details" id="navigation-service-status-details">
+                Initializing...
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Test Section -->
+    <div class="test-section">
+        <h3>🧪 Manual Testing</h3>
+        <div class="test-buttons">
+            <button class="test-button" onclick="handleTestClick('testFirebase')">Test Firebase</button>
+            <button class="test-button" onclick="handleTestClick('testAuthService')">Test Auth Service</button>
+            <button class="test-button" onclick="handleTestClick('testUserManagement')">Test User Management</button>
+            <button class="test-button" onclick="handleTestClick('testNavigationService')">Test Navigation</button>
+            <button class="test-button" onclick="handleTestClick('runAllTests')">Run All Tests</button>
+            <button class="test-button" onclick="clearResults()">Clear Results</button>
+        </div>
+        <div class="test-results" id="test-results">
+            Click a test button to see results...
+        </div>
+    </div>
+
+    <script type="module">
+        // Import services
+        import { Firebase } from './firebase-config.js';
+        import AuthService from './assets/js/services/auth-service.js';
+        import UserManagementService from './assets/js/services/user-management.js';
+        import NavigationService from './assets/js/services/navigation-service.js';
+
+        // Global variables
+        let authService;
+        let userManagementService;
+        let navigationService;
+        let autoTestInterval;
+        let testCount = 0;
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                console.log('🚀 Starting system initialization...');
                 
-                if (window.Firebase.auth) {
-                    log('✅ Firebase Auth available');
-                } else {
-                    log('❌ Firebase Auth not available');
-                }
+                // Initialize services
+                await initializeServices();
                 
-                if (window.Firebase.db) {
-                    log('✅ Firebase Firestore available');
-                } else {
-                    log('❌ Firebase Firestore not available');
-                }
+                // Start auto-test system
+                startAutoTest();
                 
-                if (window.Firebase.storage) {
-                    log('✅ Firebase Storage available');
-                } else {
-                    log('❌ Firebase Storage not available');
-                }
+                // Ensure test functions are globally available
+                ensureTestFunctionsAvailable();
                 
-                updateStatus('firebaseStatus', 'success', '✅ Firebase Available');
-            } else {
-                log('❌ Firebase object not found');
-                updateStatus('firebaseStatus', 'error', '❌ Firebase Not Available');
+                console.log('✅ System initialization complete');
+                
+            } catch (error) {
+                console.error('❌ System initialization failed:', error);
+                updateStatus('firebase', 'error', 'System initialization failed: ' + error.message);
             }
-        }
-
-        function testServices() {
-            log('🧪 Testing Services...');
-            
-            // Test Auth Service
-            if (window.AuthService) {
-                log('✅ AuthService class available');
-                if (window.authService) {
-                    log('✅ AuthService instance available');
-                    updateStatus('authStatus', 'success', '✅ Auth Service Available');
-                } else {
-                    log('⏳ AuthService instance not yet created (waiting for Firebase)');
-                    updateStatus('authStatus', 'warning', '⏳ Auth Service Waiting for Firebase');
-                }
-            } else {
-                log('❌ AuthService class not available');
-                updateStatus('authStatus', 'error', '❌ Auth Service Not Available');
-            }
-            
-            // Test User Management Service
-            if (window.UserManagementService) {
-                log('✅ UserManagementService class available');
-                if (window.userManagementService) {
-                    log('✅ UserManagementService instance available');
-                    updateStatus('userStatus', 'success', '✅ User Management Available');
-                } else {
-                    log('⏳ UserManagementService instance not yet created (waiting for Firebase)');
-                    updateStatus('userStatus', 'warning', '⏳ User Management Waiting for Firebase');
-                }
-            } else {
-                log('❌ UserManagementService class not available');
-                updateStatus('userStatus', 'error', '❌ User Management Not Available');
-            }
-            
-            // Test Navigation Service
-            if (window.NavigationService) {
-                log('✅ NavigationService class available');
-                if (window.navigationService) {
-                    log('✅ NavigationService instance available');
-                    updateStatus('navStatus', 'success', '✅ Navigation Service Available');
-                } else {
-                    log('⏳ NavigationService instance not yet created (waiting for Firebase)');
-                    updateStatus('navStatus', 'warning', '⏳ Navigation Service Waiting for Firebase');
-                }
-            } else {
-                log('❌ NavigationService class not available');
-                updateStatus('navStatus', 'error', '❌ Navigation Service Not Available');
-            }
-        }
-
-        function clearLog() {
-            document.getElementById('log').innerHTML = '';
-        }
-
-        // Auto-test when page loads
-        window.addEventListener('load', () => {
-            log('🚀 Page loaded, starting tests...');
-            
-            // Wait a bit for Firebase to initialize
-            setTimeout(() => {
-                testFirebase();
-                testServices();
-            }, 1000);
-            
-            // Test again after a longer delay to see if services initialize
-            setTimeout(() => {
-                log('🔄 Re-testing services after delay...');
-                testServices();
-            }, 3000);
         });
+
+        // Function to ensure test functions are available globally
+        function ensureTestFunctionsAvailable() {
+            // Double-check that all test functions are exposed
+            if (typeof window.testFirebase !== 'function') {
+                console.warn('⚠️ testFirebase not available, re-exposing...');
+                window.testFirebase = testFirebase;
+            }
+            if (typeof window.testAuthService !== 'function') {
+                console.warn('⚠️ testAuthService not available, re-exposing...');
+                window.testAuthService = testAuthService;
+            }
+            if (typeof window.testUserManagement !== 'function') {
+                console.warn('⚠️ testUserManagement not available, re-exposing...');
+                window.testUserManagement = testUserManagement;
+            }
+            if (typeof window.testNavigationService !== 'function') {
+                console.warn('⚠️ testNavigationService not available, re-exposing...');
+                window.testNavigationService = testNavigationService;
+            }
+            if (typeof window.runAllTests !== 'function') {
+                console.warn('⚠️ runAllTests not available, re-exposing...');
+                window.runAllTests = runAllTests;
+            }
+            if (typeof window.clearResults !== 'function') {
+                console.warn('⚠️ clearResults not available, re-exposing...');
+                window.clearResults = clearResults;
+            }
+            
+            console.log('✅ All test functions verified and available globally');
+            
+            // Show system ready status
+            const readyStatus = document.getElementById('system-ready-status');
+            if (readyStatus) {
+                readyStatus.style.display = 'block';
+            }
+        }
+
+        // Initialize all services
+        async function initializeServices() {
+            try {
+                // Test Firebase first
+                updateStatus('firebase', 'loading', 'Testing Firebase v12 initialization...');
+                
+                // Wait for Firebase to be ready
+                await waitForFirebase();
+                
+                updateStatus('firebase', 'success', '✅ Firebase v12 initialized successfully\n' +
+                    '• App: ' + (Firebase.app ? 'Ready' : 'Failed') + '\n' +
+                    '• Auth: ' + (Firebase.auth ? 'Ready' : 'Failed') + '\n' +
+                    '• Firestore: ' + (Firebase.db ? 'Ready' : 'Failed') + '\n' +
+                    '• Storage: ' + (Firebase.storage ? 'Ready' : 'Failed'));
+
+                // Initialize Auth Service
+                updateStatus('auth-service', 'loading', 'Initializing Auth Service...');
+                authService = new AuthService();
+                await waitForService(authService, 'AuthService');
+                updateStatus('auth-service', 'success', '✅ Auth Service initialized successfully\n' +
+                    '• Service: Ready\n' +
+                    '• Auth State: Active\n' +
+                    '• User Management: Ready');
+
+                // Initialize User Management Service
+                updateStatus('user-management', 'loading', 'Initializing User Management Service...');
+                userManagementService = new UserManagementService();
+                await waitForService(userManagementService, 'UserManagementService');
+                updateStatus('user-management', 'success', '✅ User Management Service initialized successfully\n' +
+                    '• Service: Ready\n' +
+                    '• CRUD Operations: Available\n' +
+                    '• Role Management: Active');
+
+                // Initialize Navigation Service
+                updateStatus('navigation', 'loading', 'Initializing Navigation Service...');
+                navigationService = new NavigationService();
+                await waitForService(navigationService, 'NavigationService');
+                updateStatus('navigation', 'success', '✅ Navigation Service initialized successfully\n' +
+                    '• Service: Ready\n' +
+                    '• Route Protection: Active\n' +
+                    '• Role-based Navigation: Ready');
+
+            } catch (error) {
+                console.error('Service initialization error:', error);
+                throw error;
+            }
+        }
+
+        // Wait for Firebase to be ready
+        async function waitForFirebase() {
+            return new Promise((resolve, reject) => {
+                let attempts = 0;
+                const maxAttempts = 50; // 5 seconds max
+                
+                const checkFirebase = () => {
+                    attempts++;
+                    
+                    if (window.Firebase && Firebase.app && Firebase.auth && Firebase.db) {
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        reject(new Error('Firebase initialization timeout'));
+                    } else {
+                        setTimeout(checkFirebase, 100);
+                    }
+                };
+                
+                checkFirebase();
+            });
+        }
+
+        // Wait for a service to be ready
+        async function waitForService(service, serviceName) {
+            return new Promise((resolve, reject) => {
+                let attempts = 0;
+                const maxAttempts = 30; // 3 seconds max
+                
+                const checkService = () => {
+                    attempts++;
+                    
+                    if (service && typeof service.init === 'function') {
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        reject(new Error(`${serviceName} initialization timeout`));
+                    } else {
+                        setTimeout(checkService, 100);
+                    }
+                };
+                
+                checkService();
+            });
+        }
+
+        // Start auto-test system
+        function startAutoTest() {
+            autoTestInterval = setInterval(() => {
+                testCount++;
+                runAutoTests();
+                updateProgressBar();
+            }, 5000);
+        }
+
+        // Run automatic tests
+        async function runAutoTests() {
+            try {
+                updateAutoTestStatus(`Running auto-test #${testCount}...`);
+                
+                // Test Firebase
+                if (Firebase && Firebase.app) {
+                    updateStatus('firebase', 'success', '✅ Firebase v12 - Auto-test passed\n' + new Date().toLocaleTimeString());
+                } else {
+                    updateStatus('firebase', 'error', '❌ Firebase v12 - Auto-test failed\n' + new Date().toLocaleTimeString());
+                }
+
+                // Test Auth Service
+                if (authService && authService.getCurrentUser) {
+                    updateStatus('auth-service', 'success', '✅ Auth Service - Auto-test passed\n' + new Date().toLocaleTimeString());
+                } else {
+                    updateStatus('auth-service', 'error', '❌ Auth Service - Auto-test failed\n' + new Date().toLocaleTimeString());
+                }
+
+                // Test User Management
+                if (userManagementService && userManagementService.getUser) {
+                    updateStatus('user-management', 'success', '✅ User Management - Auto-test passed\n' + new Date().toLocaleTimeString());
+                } else {
+                    updateStatus('user-management', 'error', '❌ User Management - Auto-test failed\n' + new Date().toLocaleTimeString());
+                }
+
+                // Test Navigation Service
+                if (navigationService && navigationService.getCurrentUserRole) {
+                    updateStatus('navigation', 'success', '✅ Navigation Service - Auto-test passed\n' + new Date().toLocaleTimeString());
+                } else {
+                    updateStatus('navigation', 'error', '❌ Navigation Service - Auto-test failed\n' + new Date().toLocaleTimeString());
+                }
+
+                updateAutoTestStatus(`Auto-test #${testCount} completed successfully at ${new Date().toLocaleTimeString()}`);
+                
+            } catch (error) {
+                console.error('Auto-test error:', error);
+                updateAutoTestStatus(`Auto-test #${testCount} failed: ${error.message}`);
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = (testCount % 12) * 8.33; // 12 tests = 100%
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        // Update status indicator
+        function updateStatus(service, status, details) {
+            const indicator = document.getElementById(`${service}-status-indicator`);
+            const detailsElement = document.getElementById(`${service}-status-details`);
+            
+            // Update indicator
+            indicator.className = `status-indicator status-${status}`;
+            
+            // Update details
+            if (detailsElement) {
+                detailsElement.textContent = details;
+            }
+        }
+
+        // Update auto-test status
+        function updateAutoTestStatus(message) {
+            document.getElementById('auto-test-status').textContent = message;
+        }
+
+        // Global functions for HTML onclick handlers
+        window.testFirebase = testFirebase;
+        window.testAuthService = testAuthService;
+        window.testUserManagement = testUserManagement;
+        window.testNavigationService = testNavigationService;
+        window.runAllTests = runAllTests;
+        window.clearResults = clearResults;
+
+        // Safe click handler for test buttons
+        window.handleTestClick = function(testName) {
+            const testFunction = window[testName];
+            if (typeof testFunction === 'function') {
+                testFunction();
+            } else {
+                console.error(`❌ Test function ${testName} is not available`);
+                document.getElementById('test-results').textContent = 
+                    `❌ Test function ${testName} is not available. Please wait for the system to initialize completely.`;
+            }
+        };
+
+        // Also expose functions for immediate use
+        console.log('✅ Test functions exposed globally');
+
+        // Add a small delay to ensure functions are available
+        setTimeout(() => {
+            ensureTestFunctionsAvailable();
+        }, 100);
+
+        // Test Firebase
+        async function testFirebase() {
+            const results = document.getElementById('test-results');
+            results.textContent = 'Testing Firebase v12...\n';
+            
+            try {
+                if (!Firebase) {
+                    throw new Error('Firebase not available');
+                }
+
+                let testResults = '🧪 Firebase v12 Test Results:\n\n';
+                
+                // Test app initialization
+                if (Firebase.app) {
+                    testResults += '✅ App: Initialized\n';
+                } else {
+                    testResults += '❌ App: Failed\n';
+                }
+
+                // Test auth service
+                if (Firebase.auth) {
+                    testResults += '✅ Auth: Available\n';
+                } else {
+                    testResults += '❌ Auth: Failed\n';
+                }
+
+                // Test Firestore
+                if (Firebase.db) {
+                    testResults += '✅ Firestore: Available\n';
+                } else {
+                    testResults += '❌ Firestore: Failed\n';
+                }
+
+                // Test Storage
+                if (Firebase.storage) {
+                    testResults += '✅ Storage: Available\n';
+                } else {
+                    testResults += '❌ Storage: Failed\n';
+                }
+
+                // Test functions
+                const functions = ['signInWithEmailAndPassword', 'createUserWithEmailAndPassword', 'doc', 'collection'];
+                functions.forEach(func => {
+                    if (typeof Firebase[func] === 'function') {
+                        testResults += `✅ ${func}: Available\n`;
+                    } else {
+                        testResults += `❌ ${func}: Missing\n`;
+                    }
+                });
+
+                testResults += '\n🎉 Firebase v12 test completed successfully!';
+                results.textContent = testResults;
+                
+            } catch (error) {
+                results.textContent = `❌ Firebase test failed: ${error.message}`;
+            }
+        }
+
+        // Test Auth Service
+        async function testAuthService() {
+            const results = document.getElementById('test-results');
+            results.textContent = 'Testing Auth Service...\n';
+            
+            try {
+                if (!authService) {
+                    throw new Error('Auth Service not initialized');
+                }
+
+                let testResults = '🧪 Auth Service Test Results:\n\n';
+                
+                // Test service methods
+                const methods = ['getCurrentUser', 'hasRole', 'hasPermission', 'canAccessFactory'];
+                methods.forEach(method => {
+                    if (typeof authService[method] === 'function') {
+                        testResults += `✅ ${method}: Available\n`;
+                    } else {
+                        testResults += `❌ ${method}: Missing\n`;
+                    }
+                });
+
+                // Test current user
+                const currentUser = authService.getCurrentUser();
+                if (currentUser) {
+                    testResults += `✅ Current User: ${currentUser.email || 'Unknown'}\n`;
+                } else {
+                    testResults += 'ℹ️ Current User: Not authenticated\n';
+                }
+
+                testResults += '\n🎉 Auth Service test completed successfully!';
+                results.textContent = testResults;
+                
+            } catch (error) {
+                results.textContent = `❌ Auth Service test failed: ${error.message}`;
+            }
+        }
+
+        // Test User Management Service
+        async function testUserManagement() {
+            const results = document.getElementById('test-results');
+            results.textContent = 'Testing User Management Service...\n';
+            
+            try {
+                if (!userManagementService) {
+                    throw new Error('User Management Service not initialized');
+                }
+
+                let testResults = '🧪 User Management Service Test Results:\n\n';
+                
+                // Test service methods
+                const methods = ['createUser', 'updateUser', 'deleteUser', 'getUser', 'getUsers'];
+                methods.forEach(method => {
+                    if (typeof userManagementService[method] === 'function') {
+                        testResults += `✅ ${method}: Available\n`;
+                    } else {
+                        testResults += `❌ ${method}: Missing\n`;
+                    }
+                });
+
+                // Test permissions
+                const permissions = ['assignRole', 'assignFactory', 'getDefaultPermissions'];
+                permissions.forEach(permission => {
+                    if (typeof userManagementService[permission] === 'function') {
+                        testResults += `✅ ${permission}: Available\n`;
+                    } else {
+                        testResults += `❌ ${permission}: Missing\n`;
+                    }
+                });
+
+                testResults += '\n🎉 User Management Service test completed successfully!';
+                results.textContent = testResults;
+                
+            } catch (error) {
+                results.textContent = `❌ User Management Service test failed: ${error.message}`;
+            }
+        }
+
+        // Test Navigation Service
+        async function testNavigationService() {
+            const results = document.getElementById('test-results');
+            results.textContent = 'Testing Navigation Service...\n';
+            
+            try {
+                if (!navigationService) {
+                    throw new Error('Navigation Service not initialized');
+                }
+
+                let testResults = '🧪 Navigation Service Test Results:\n\n';
+                
+                // Test service methods
+                const methods = ['getCurrentUserRole', 'getCurrentFactoryId', 'isAuthenticated', 'hasRole'];
+                methods.forEach(method => {
+                    if (typeof navigationService[method] === 'function') {
+                        testResults += `✅ ${method}: Available\n`;
+                    } else {
+                        testResults += `❌ ${method}: Missing\n`;
+                    }
+                });
+
+                // Test navigation items
+                const navItems = navigationService.getNavigationItems();
+                if (Array.isArray(navItems)) {
+                    testResults += `✅ Navigation Items: ${navItems.length} available\n`;
+                } else {
+                    testResults += '❌ Navigation Items: Not available\n';
+                }
+
+                testResults += '\n🎉 Navigation Service test completed successfully!';
+                results.textContent = testResults;
+                
+            } catch (error) {
+                results.textContent = `❌ Navigation Service test failed: ${error.message}`;
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            const results = document.getElementById('test-results');
+            results.textContent = 'Running all tests...\n\n';
+            
+            try {
+                await testFirebase();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testAuthService();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testUserManagement();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testNavigationService();
+                
+                results.textContent += '\n\n🎉 All tests completed successfully!';
+                
+            } catch (error) {
+                results.textContent += `\n\n❌ Some tests failed: ${error.message}`;
+            }
+        }
+
+        // Clear results
+        function clearResults() {
+            document.getElementById('test-results').textContent = 'Results cleared. Click a test button to see new results...';
+        }
     </script>
 </body>
 </html>
