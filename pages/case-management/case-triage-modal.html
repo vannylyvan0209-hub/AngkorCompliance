@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Triage - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/grievance-committee/case-triage.css">
+    
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="triage-container">
+        <!-- Header Section -->
+        <header class="triage-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="text-3xl font-bold text-neutral-900">
+                        <i data-lucide="clipboard-check"></i>
+                        Case Triage
+                    </h1>
+                    <p class="page-subtitle">Assess and categorize grievance cases</p>
+                </div>
+                <div class="header-right">
+                    <div class="triage-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Pending Triage</span>
+                            <span class="stat-value" id="pendingTriage">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Today's Triage</span>
+                            <span class="stat-value" id="todayTriage">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg. Triage Time</span>
+                            <span class="stat-value" id="avgTriageTime">8 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Triage Queue -->
+        <div class="triage-queue-section">
+            <div class="queue-header">
+                <h2>Cases Pending Triage</h2>
+                <div class="queue-filters">
+                    <select id="queueFilter" class="filter-select" onchange="filterQueue()">
+                        <option value="all">All Cases</option>
+                        <option value="new">New Cases</option>
+                        <option value="urgent">Urgent Cases</option>
+                        <option value="anonymous">Anonymous Cases</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="refreshQueue()">
+                        <i data-lucide="refresh-cw"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="queue-container" id="triageQueue">
+                <!-- Cases will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Triage Modal -->
+    <div id="caseTriageModal" class="modal">
+        <div class="modal-content modal-extra-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Case Triage Assessment</h2>
+                <div class="case-info-header">
+                    <span class="case-number" id="triageCaseNumber">GC-XXXXXX-XXXXX</span>
+                    <span class="case-status status-new">New</span>
+                </div>
+                <button class="modal-close" onclick="closeTriageModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="triage-content">
+                    <!-- Case Summary -->
+                    <div class="case-summary-section">
+                        <h3>Case Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <label>Title:</label>
+                                <span id="triageCaseTitle">Loading...</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Submitted:</label>
+                                <span id="triageSubmissionDate">Loading...</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Worker ID:</label>
+                                <span id="triageWorkerId">Not specified</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Department:</label>
+                                <span id="triageDepartment">Not specified</span>
+                            </div>
+                        </div>
+                        <div class="case-description">
+                            <label>Description:</label>
+                            <p id="triageDescription">Loading...</p>
+                        </div>
+                    </div>
+
+                    <!-- Triage Assessment -->
+                    <div class="triage-assessment-section">
+                        <h3>Triage Assessment</h3>
+                        
+                        <!-- Category Assessment -->
+                        <div class="assessment-group">
+                            <h4>Category Assessment</h4>
+                            <div class="assessment-options">
+                                <div class="option-group">
+                                    <label class="option-label">Primary Category:</label>
+                                    <select id="primaryCategory" class="form-select" onchange="updateSubcategories()">
+                                        <option value="">Select Category</option>
+                                        <option value="harassment">Harassment</option>
+                                        <option value="discrimination">Discrimination</option>
+                                        <option value="safety">Safety</option>
+                                        <option value="wages">Wages & Benefits</option>
+                                        <option value="working_conditions">Working Conditions</option>
+                                        <option value="management">Management Issues</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label class="option-label">Subcategory:</label>
+                                    <select id="subcategory" class="form-select">
+                                        <option value="">Select Subcategory</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Severity Assessment -->
+                        <div class="assessment-group">
+                            <h4>Severity Assessment</h4>
+                            <div class="severity-assessment">
+                                <div class="severity-options">
+                                    <div class="severity-option" onclick="selectTriageSeverity('low')">
+                                        <input type="radio" name="triageSeverity" value="low" id="triageSeverityLow">
+                                        <label for="triageSeverityLow" class="severity-label">
+                                            <div class="severity-icon severity-low">
+                                                <i data-lucide="info"></i>
+                                            </div>
+                                            <div class="severity-content">
+                                                <h4>Low</h4>
+                                                <p>Minor issues, no immediate risk</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="severity-option" onclick="selectTriageSeverity('medium')">
+                                        <input type="radio" name="triageSeverity" value="medium" id="triageSeverityMedium">
+                                        <label for="triageSeverityMedium" class="severity-label">
+                                            <div class="severity-icon severity-medium">
+                                                <i data-lucide="alert-circle"></i>
+                                            </div>
+                                            <div class="severity-content">
+                                                <h4>Medium</h4>
+                                                <p>Moderate concern, requires attention</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="severity-option" onclick="selectTriageSeverity('high')">
+                                        <input type="radio" name="triageSeverity" value="high" id="triageSeverityHigh">
+                                        <label for="triageSeverityHigh" class="severity-label">
+                                            <div class="severity-icon severity-high">
+                                                <i data-lucide="alert-triangle"></i>
+                                            </div>
+                                            <div class="severity-content">
+                                                <h4>High</h4>
+                                                <p>Serious issue, immediate action needed</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="severity-option" onclick="selectTriageSeverity('critical')">
+                                        <input type="radio" name="triageSeverity" value="critical" id="triageSeverityCritical">
+                                        <label for="triageSeverityCritical" class="severity-label">
+                                            <div class="severity-icon severity-critical">
+                                                <i data-lucide="x-circle"></i>
+                                            </div>
+                                            <div class="severity-content">
+                                                <h4>Critical</h4>
+                                                <p>Emergency situation, immediate intervention</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Priority Setting -->
+                        <div class="assessment-group">
+                            <h4>Priority Setting</h4>
+                            <div class="priority-assessment">
+                                <div class="priority-options">
+                                    <div class="priority-option" onclick="selectTriagePriority('low')">
+                                        <input type="radio" name="triagePriority" value="low" id="triagePriorityLow">
+                                        <label for="triagePriorityLow" class="priority-label">
+                                            <div class="priority-icon priority-low">
+                                                <i data-lucide="clock"></i>
+                                            </div>
+                                            <div class="priority-content">
+                                                <h4>Low Priority</h4>
+                                                <p>Standard processing timeline</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="priority-option" onclick="selectTriagePriority('medium')">
+                                        <input type="radio" name="triagePriority" value="medium" id="triagePriorityMedium">
+                                        <label for="triagePriorityMedium" class="priority-label">
+                                            <div class="priority-icon priority-medium">
+                                                <i data-lucide="alert-circle"></i>
+                                            </div>
+                                            <div class="priority-content">
+                                                <h4>Medium Priority</h4>
+                                                <p>Expedited processing</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="priority-option" onclick="selectTriagePriority('high')">
+                                        <input type="radio" name="triagePriority" value="high" id="triagePriorityHigh">
+                                        <label for="triagePriorityHigh" class="priority-label">
+                                            <div class="priority-icon priority-high">
+                                                <i data-lucide="alert-triangle"></i>
+                                            </div>
+                                            <div class="priority-content">
+                                                <h4>High Priority</h4>
+                                                <p>Immediate attention required</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="priority-option" onclick="selectTriagePriority('critical')">
+                                        <input type="radio" name="triagePriority" value="critical" id="triagePriorityCritical">
+                                        <label for="triagePriorityCritical" class="priority-label">
+                                            <div class="priority-icon priority-critical">
+                                                <i data-lucide="x-circle"></i>
+                                            </div>
+                                            <div class="priority-content">
+                                                <h4>Critical Priority</h4>
+                                                <p>Emergency response needed</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Investigator Assignment -->
+                        <div class="assessment-group">
+                            <h4>Investigator Assignment</h4>
+                            <div class="assignment-options">
+                                <div class="option-group">
+                                    <label class="option-label">Assigned Investigator:</label>
+                                    <select id="assignedInvestigator" class="form-select">
+                                        <option value="">Select Investigator</option>
+                                        <!-- Investigators will be populated here -->
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label class="option-label">Assignment Method:</label>
+                                    <div class="assignment-method">
+                                        <label class="radio-label">
+                                            <input type="radio" name="assignmentMethod" value="manual" checked>
+                                            <span>Manual Assignment</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="assignmentMethod" value="auto">
+                                            <span>Auto-assign (Workload-based)</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="assignmentMethod" value="round_robin">
+                                            <span>Round Robin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Triage Notes -->
+                        <div class="assessment-group">
+                            <h4>Triage Notes</h4>
+                            <div class="notes-section">
+                                <textarea id="triageNotes" class="form-textarea" rows="4" 
+                                          placeholder="Enter triage assessment notes, immediate actions needed, or special considerations..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Risk Assessment -->
+                        <div class="assessment-group">
+                            <h4>Risk Assessment</h4>
+                            <div class="risk-assessment">
+                                <div class="risk-factors">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="retaliationRisk">
+                                        <span>Retaliation Risk</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="safetyRisk">
+                                        <span>Safety Risk</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="legalRisk">
+                                        <span>Legal Risk</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="reputationRisk">
+                                        <span>Reputation Risk</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="financialRisk">
+                                        <span>Financial Risk</span>
+                                    </label>
+                                </div>
+                                <div class="risk-notes">
+                                    <label class="option-label">Risk Notes:</label>
+                                    <textarea id="riskNotes" class="form-textarea" rows="3" 
+                                              placeholder="Additional risk assessment details..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeTriageModal()">Cancel</button>
+                <button class="btn btn-outline" onclick="saveTriageDraft()">Save Draft</button>
+                <button class="btn btn-primary text-white font-medium" onclick="completeTriage()">Complete Triage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing triage...</p>
+        </div>
+    </div>
+
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/case-triage.js"></script>
+</body>
+</html>

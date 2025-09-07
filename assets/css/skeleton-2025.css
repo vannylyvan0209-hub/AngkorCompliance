@@ -1,0 +1,857 @@
+/**
+ * Angkor Compliance Platform - Skeleton Loading System 2025
+ * 
+ * Modern skeleton loading system with 2025 design patterns,
+ * accessibility support, and responsive design.
+ */
+
+/* ===== SKELETON SYSTEM VARIABLES ===== */
+
+:root {
+    /* Skeleton Animation Variables */
+    --skeleton-animation-duration: 1.5s;
+    --skeleton-animation-easing: ease-in-out;
+    --skeleton-delay: 0.1s;
+    
+    /* Skeleton Colors */
+    --skeleton-bg: var(--gray-200);
+    --skeleton-highlight: var(--gray-100);
+    --skeleton-bg-dark: var(--gray-700);
+    --skeleton-highlight-dark: var(--gray-600);
+    
+    /* Skeleton Sizes */
+    --skeleton-height-sm: 12px;
+    --skeleton-height-md: 16px;
+    --skeleton-height-lg: 20px;
+    --skeleton-height-xl: 24px;
+    
+    /* Skeleton Border Radius */
+    --skeleton-radius-sm: var(--radius-sm);
+    --skeleton-radius-md: var(--radius-md);
+    --skeleton-radius-lg: var(--radius-lg);
+    --skeleton-radius-xl: var(--radius-xl);
+    
+    /* Skeleton Spacing */
+    --skeleton-gap: var(--space-2);
+    --skeleton-margin: var(--space-1);
+}
+
+/* ===== SKELETON BASE ===== */
+
+.skeleton {
+    position: relative;
+    background: var(--skeleton-bg);
+    border-radius: var(--skeleton-radius-md);
+    overflow: hidden;
+    animation: skeleton-pulse var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-highlight) 50%,
+        transparent 100%
+    );
+    animation: skeleton-shimmer var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+@keyframes skeleton-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* ===== SKELETON VARIANTS ===== */
+
+/* Pulse Animation */
+.skeleton-pulse {
+    animation: skeleton-pulse var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+.skeleton-pulse::before {
+    display: none;
+}
+
+/* Shimmer Animation */
+.skeleton-shimmer {
+    animation: none;
+}
+
+.skeleton-shimmer::before {
+    display: block;
+}
+
+/* Wave Animation */
+.skeleton-wave {
+    animation: skeleton-wave var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+.skeleton-wave::before {
+    display: none;
+}
+
+@keyframes skeleton-wave {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.8);
+    }
+}
+
+/* Glow Animation */
+.skeleton-glow {
+    animation: skeleton-glow var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+.skeleton-glow::before {
+    display: none;
+}
+
+@keyframes skeleton-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ===== SKELETON SIZES ===== */
+
+.skeleton-sm {
+    height: var(--skeleton-height-sm);
+    border-radius: var(--skeleton-radius-sm);
+}
+
+.skeleton-md {
+    height: var(--skeleton-height-md);
+    border-radius: var(--skeleton-radius-md);
+}
+
+.skeleton-lg {
+    height: var(--skeleton-height-lg);
+    border-radius: var(--skeleton-radius-lg);
+}
+
+.skeleton-xl {
+    height: var(--skeleton-height-xl);
+    border-radius: var(--skeleton-radius-xl);
+}
+
+/* ===== SKELETON SHAPES ===== */
+
+.skeleton-circle {
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+.skeleton-square {
+    aspect-ratio: 1;
+}
+
+.skeleton-rectangle {
+    /* Default rectangle shape */
+}
+
+.skeleton-rounded {
+    border-radius: var(--skeleton-radius-lg);
+}
+
+.skeleton-pill {
+    border-radius: var(--radius-full);
+}
+
+/* ===== SKELETON WIDTHS ===== */
+
+.skeleton-w-25 {
+    width: 25%;
+}
+
+.skeleton-w-50 {
+    width: 50%;
+}
+
+.skeleton-w-75 {
+    width: 75%;
+}
+
+.skeleton-w-100 {
+    width: 100%;
+}
+
+.skeleton-w-auto {
+    width: auto;
+}
+
+/* ===== SKELETON COMPONENTS ===== */
+
+/* Text Skeleton */
+.skeleton-text {
+    height: var(--skeleton-height-md);
+    border-radius: var(--skeleton-radius-sm);
+    margin-bottom: var(--skeleton-gap);
+}
+
+.skeleton-text:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-text-sm {
+    height: var(--skeleton-height-sm);
+}
+
+.skeleton-text-lg {
+    height: var(--skeleton-height-lg);
+}
+
+.skeleton-text-xl {
+    height: var(--skeleton-height-xl);
+}
+
+/* Avatar Skeleton */
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.skeleton-avatar-lg {
+    width: 48px;
+    height: 48px;
+}
+
+.skeleton-avatar-xl {
+    width: 64px;
+    height: 64px;
+}
+
+/* Button Skeleton */
+.skeleton-button {
+    height: 40px;
+    border-radius: var(--radius-md);
+    min-width: 80px;
+}
+
+.skeleton-button-sm {
+    height: 32px;
+    min-width: 60px;
+}
+
+.skeleton-button-lg {
+    height: 48px;
+    min-width: 100px;
+}
+
+/* Card Skeleton */
+.skeleton-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.skeleton-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.skeleton-card-title {
+    flex: 1;
+}
+
+.skeleton-card-content {
+    margin-bottom: var(--space-4);
+}
+
+.skeleton-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+/* Table Skeleton */
+.skeleton-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.skeleton-table th,
+.skeleton-table td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border);
+}
+
+.skeleton-table-header {
+    height: var(--skeleton-height-md);
+    margin-bottom: var(--space-2);
+}
+
+.skeleton-table-row {
+    height: var(--skeleton-height-sm);
+    margin-bottom: var(--space-1);
+}
+
+/* List Skeleton */
+.skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.skeleton-list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.skeleton-list-item-content {
+    flex: 1;
+}
+
+/* Form Skeleton */
+.skeleton-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.skeleton-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.skeleton-form-label {
+    height: var(--skeleton-height-sm);
+    width: 30%;
+}
+
+.skeleton-form-input {
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.skeleton-form-textarea {
+    height: 80px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.skeleton-form-select {
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+/* Image Skeleton */
+.skeleton-image {
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-md);
+    background: var(--skeleton-bg);
+}
+
+.skeleton-image-square {
+    aspect-ratio: 1;
+}
+
+.skeleton-image-circle {
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+/* Chart Skeleton */
+.skeleton-chart {
+    height: 200px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.skeleton-chart-header {
+    height: var(--skeleton-height-md);
+    width: 40%;
+}
+
+.skeleton-chart-content {
+    flex: 1;
+    display: flex;
+    align-items: end;
+    gap: var(--space-2);
+}
+
+.skeleton-chart-bar {
+    flex: 1;
+    background: var(--skeleton-bg);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    animation: skeleton-pulse var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+.skeleton-chart-bar:nth-child(1) { height: 60%; }
+.skeleton-chart-bar:nth-child(2) { height: 80%; }
+.skeleton-chart-bar:nth-child(3) { height: 40%; }
+.skeleton-chart-bar:nth-child(4) { height: 90%; }
+.skeleton-chart-bar:nth-child(5) { height: 70%; }
+
+/* Dashboard Skeleton */
+.skeleton-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+    padding: var(--space-4);
+}
+
+.skeleton-dashboard-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.skeleton-dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.skeleton-dashboard-title {
+    height: var(--skeleton-height-md);
+    width: 60%;
+}
+
+.skeleton-dashboard-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.skeleton-dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.skeleton-dashboard-value {
+    height: var(--skeleton-height-xl);
+    width: 40%;
+}
+
+.skeleton-dashboard-description {
+    height: var(--skeleton-height-sm);
+    width: 80%;
+}
+
+/* ===== SKELETON LAYOUTS ===== */
+
+.skeleton-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.skeleton-layout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.skeleton-layout-title {
+    height: var(--skeleton-height-lg);
+    width: 30%;
+}
+
+.skeleton-layout-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.skeleton-layout-content {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.skeleton-layout-sidebar {
+    width: 250px;
+    padding: var(--space-4);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.skeleton-layout-main {
+    flex: 1;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+/* ===== SKELETON RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .skeleton-dashboard {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+    
+    .skeleton-dashboard-card {
+        padding: var(--space-3);
+    }
+    
+    .skeleton-layout-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+    
+    .skeleton-layout-title {
+        width: 60%;
+    }
+    
+    .skeleton-layout-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+}
+
+@media (max-width: 480px) {
+    .skeleton-dashboard {
+        padding: var(--space-2);
+    }
+    
+    .skeleton-dashboard-card {
+        padding: var(--space-2);
+    }
+    
+    .skeleton-layout-header,
+    .skeleton-layout-content,
+    .skeleton-layout-sidebar,
+    .skeleton-layout-main {
+        padding: var(--space-2);
+    }
+}
+
+/* ===== SKELETON ACCESSIBILITY ===== */
+
+.skeleton[aria-hidden="true"] {
+    display: none;
+}
+
+.skeleton[aria-hidden="false"] {
+    display: block;
+}
+
+.skeleton[aria-label] {
+    /* Screen reader support */
+}
+
+.skeleton[role="progressbar"] {
+    /* Progress indication */
+}
+
+/* ===== SKELETON DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .skeleton {
+        background: var(--skeleton-bg-dark);
+    }
+    
+    .skeleton::before {
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--skeleton-highlight-dark) 50%,
+            transparent 100%
+        );
+    }
+}
+
+.dark-mode .skeleton {
+    background: var(--skeleton-bg-dark);
+}
+
+.dark-mode .skeleton::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-highlight-dark) 50%,
+        transparent 100%
+    );
+}
+
+/* ===== SKELETON PRINT ===== */
+
+@media print {
+    .skeleton {
+        display: none !important;
+    }
+}
+
+/* ===== SKELETON UTILITIES ===== */
+
+.skeleton-disabled {
+    animation: none;
+}
+
+.skeleton-disabled::before {
+    display: none;
+}
+
+.skeleton-no-animation {
+    animation: none;
+}
+
+.skeleton-no-animation::before {
+    display: none;
+}
+
+.skeleton-fade-in {
+    animation: skeleton-fade-in 0.3s ease-in-out;
+}
+
+@keyframes skeleton-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.skeleton-fade-out {
+    animation: skeleton-fade-out 0.3s ease-in-out;
+}
+
+@keyframes skeleton-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ===== SKELETON LOADING STATES ===== */
+
+.skeleton-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+/* ===== SKELETON THEME VARIANTS ===== */
+
+.skeleton-primary {
+    background: var(--primary-200);
+}
+
+.skeleton-primary::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--primary-100) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton-secondary {
+    background: var(--secondary-200);
+}
+
+.skeleton-secondary::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--secondary-100) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton-success {
+    background: var(--success-200);
+}
+
+.skeleton-success::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--success-100) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton-warning {
+    background: var(--warning-200);
+}
+
+.skeleton-warning::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--warning-100) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton-danger {
+    background: var(--danger-200);
+}
+
+.skeleton-danger::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--danger-100) 50%,
+        transparent 100%
+    );
+}
+
+.skeleton-info {
+    background: var(--info-200);
+}
+
+.skeleton-info::before {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--info-100) 50%,
+        transparent 100%
+    );
+}
+
+/* ===== SKELETON CUSTOM ANIMATIONS ===== */
+
+.skeleton-bounce {
+    animation: skeleton-bounce var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+@keyframes skeleton-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.skeleton-rotate {
+    animation: skeleton-rotate var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+@keyframes skeleton-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.skeleton-scale {
+    animation: skeleton-scale var(--skeleton-animation-duration) var(--skeleton-animation-easing) infinite;
+}
+
+@keyframes skeleton-scale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ===== SKELETON STAGGERED ANIMATIONS ===== */
+
+.skeleton-stagger-1 {
+    animation-delay: 0.1s;
+}
+
+.skeleton-stagger-2 {
+    animation-delay: 0.2s;
+}
+
+.skeleton-stagger-3 {
+    animation-delay: 0.3s;
+}
+
+.skeleton-stagger-4 {
+    animation-delay: 0.4s;
+}
+
+.skeleton-stagger-5 {
+    animation-delay: 0.5s;
+}
+
+.skeleton-stagger-6 {
+    animation-delay: 0.6s;
+}
+
+.skeleton-stagger-7 {
+    animation-delay: 0.7s;
+}
+
+.skeleton-stagger-8 {
+    animation-delay: 0.8s;
+}
+
+.skeleton-stagger-9 {
+    animation-delay: 0.9s;
+}
+
+.skeleton-stagger-10 {
+    animation-delay: 1.0s;
+}

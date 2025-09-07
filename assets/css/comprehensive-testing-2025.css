@@ -1,0 +1,388 @@
+/**
+ * Comprehensive Testing 2025 - CSS
+ * Styles for comprehensive testing system
+ */
+
+/* ===== COMPREHENSIVE TESTING CONTAINER ===== */
+.comprehensive-testing {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-height: 90vh;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    z-index: 2000;
+    overflow: hidden;
+    font-family: var(--font-sans);
+}
+
+/* ===== TESTING HEADER ===== */
+.testing-header {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--neutral-50);
+}
+
+.testing-header h3 {
+    margin: 0 0 var(--space-3) 0;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.testing-controls {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.testing-controls .btn {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+}
+
+/* ===== TESTING PROGRESS ===== */
+.testing-progress {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--white);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--neutral-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: var(--space-2);
+}
+
+.progress-bar::before {
+    content: '';
+    display: block;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-gold), var(--success-500));
+    border-radius: var(--radius-sm);
+    transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    text-align: center;
+}
+
+/* ===== TESTING RESULTS ===== */
+.testing-results {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: var(--space-4);
+    background: var(--neutral-50);
+}
+
+/* ===== TESTING SUMMARY ===== */
+.testing-summary {
+    margin-bottom: var(--space-4);
+    padding: var(--space-3);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+}
+
+.testing-summary h4 {
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.testing-stats {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.testing-stat {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.testing-stat.passed {
+    background: var(--success-100);
+    color: var(--success-700);
+}
+
+.testing-stat.failed {
+    background: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.testing-stat.error {
+    background: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.testing-stat.skipped {
+    background: var(--warning-100);
+    color: var(--warning-700);
+}
+
+/* ===== TESTING DETAILS ===== */
+.testing-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.testing-result {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    background: var(--white);
+}
+
+.testing-result.pass {
+    border-color: var(--success-200);
+    background: var(--success-50);
+}
+
+.testing-result.fail {
+    border-color: var(--danger-200);
+    background: var(--danger-50);
+}
+
+.testing-result.error {
+    border-color: var(--danger-200);
+    background: var(--danger-50);
+}
+
+.testing-result.skip {
+    border-color: var(--warning-200);
+    background: var(--warning-50);
+}
+
+.testing-result .testing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.testing-name {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-700);
+}
+
+.testing-status {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+}
+
+.testing-result.pass .testing-status {
+    background: var(--success-100);
+    color: var(--success-700);
+}
+
+.testing-result.fail .testing-status {
+    background: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.testing-result.error .testing-status {
+    background: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.testing-result.skip .testing-status {
+    background: var(--warning-100);
+    color: var(--warning-700);
+}
+
+.testing-message {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    margin-bottom: var(--space-2);
+}
+
+.testing-details ul {
+    margin: 0;
+    padding-left: var(--space-4);
+    list-style-type: disc;
+}
+
+.testing-details li {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    margin-bottom: var(--space-1);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .comprehensive-testing {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-height: 95vh;
+        transform: none;
+    }
+    
+    .testing-controls {
+        flex-direction: column;
+    }
+    
+    .testing-controls .btn {
+        width: 100%;
+    }
+    
+    .testing-stats {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+    .comprehensive-testing {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .testing-header {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .testing-header h3 {
+        color: var(--neutral-100);
+    }
+    
+    .testing-progress {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .progress-bar {
+        background: var(--neutral-700);
+    }
+    
+    .progress-text {
+        color: var(--neutral-400);
+    }
+    
+    .testing-results {
+        background: var(--neutral-800);
+    }
+    
+    .testing-summary {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .testing-summary h4 {
+        color: var(--neutral-100);
+    }
+    
+    .testing-result {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .testing-result.pass {
+        background: var(--success-900);
+        border-color: var(--success-700);
+    }
+    
+    .testing-result.fail {
+        background: var(--danger-900);
+        border-color: var(--danger-700);
+    }
+    
+    .testing-result.error {
+        background: var(--danger-900);
+        border-color: var(--danger-700);
+    }
+    
+    .testing-result.skip {
+        background: var(--warning-900);
+        border-color: var(--warning-700);
+    }
+    
+    .testing-name {
+        color: var(--neutral-300);
+    }
+    
+    .testing-message {
+        color: var(--neutral-400);
+    }
+    
+    .testing-details li {
+        color: var(--neutral-400);
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.testing-controls .btn:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+.testing-results:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+/* ===== ANIMATIONS ===== */
+.testing-result {
+    transition: all 0.2s ease-in-out;
+}
+
+.testing-result:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.testing-controls .btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.testing-controls .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .comprehensive-testing {
+        position: static;
+        width: 100%;
+        max-height: none;
+        box-shadow: none;
+        border: 1px solid var(--neutral-300);
+        transform: none;
+    }
+    
+    .testing-controls {
+        display: none;
+    }
+    
+    .testing-results {
+        max-height: none;
+        overflow: visible;
+    }
+}

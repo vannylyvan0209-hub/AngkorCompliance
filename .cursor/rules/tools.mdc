@@ -1,0 +1,79 @@
+---
+description: timeout rules
+globs:
+alwaysApply: true
+---
+description:The tool call timed out after 200 seconds because the file was too large and complex to edit in a single operation. This commonly happens when:
+
+1. **File size**: The file contains too many lines or complex content
+2. **Complex edits**: Multiple sections being modified simultaneously
+3. **System resources**: The editing model needs to process too much content at once
+
+## How to Avoid Timeouts:
+
+### 1. **Break Large Edits into Smaller Chunks**
+Instead of editing the entire file at once, break it into logical sections:
+
+```bash
+# Edit design tokens first
+edit_file design-tokens.css
+
+# Then edit utilities
+edit_file utilities.css
+
+# Finally edit components
+edit_file components.css
+```
+
+### 2. **Use Incremental Edits**
+Edit one section at a time:
+
+```bash
+# First: Add basic variables
+edit_file target_file.css "Add CSS variables section"
+
+# Second: Add utility classes  
+edit_file target_file.css "Add utility classes section"
+
+# Third: Add component styles
+edit_file target_file.css "Add component styles section"
+```
+
+### 3. **Use Search and Replace for Large Changes**
+For systematic changes across many lines, use `search_replace`:
+
+```bash
+search_replace file.css "old_string" "new_string"
+```
+
+### 4. **Create New Files Instead of Large Edits**
+For completely new files, create them in smaller parts:
+
+```bash
+# Create basic structure
+edit_file new-file.css "Basic structure and imports"
+
+# Then append sections
+edit_file new-file.css "Add specific functionality"
+```
+
+### 5. **Optimize Edit Instructions**
+- Be specific about what to change
+- Use clear, concise instructions
+- Avoid editing multiple unrelated sections simultaneously
+
+### 6. **Use File Splitting Strategy**
+Break large CSS files into logical modules:
+
+```
+assets/css/
+├── design-system.css          # Core variables only
+├── utilities.css              # Utility classes
+├── components.css             # Component styles
+└── layout.css                 # Layout-specific styles
+```
+
+### 7. **Monitor File Size**
+Keep individual files under 500-1000 lines when possible to avoid timeouts.
+
+For your design system, I recommend creating it in smaller, focused files rather than one massive file. This approach is also better for maintainability and performance.

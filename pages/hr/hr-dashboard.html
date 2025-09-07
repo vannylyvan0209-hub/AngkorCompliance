@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR Dashboard - Angkor Compliance Platform</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
     
-    <!-- Modern CSS -->
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    <!-- 2025 Design System CSS -->
     
-    <!-- Inter Font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Lucide Icons -->
+    
+    
+    
+    <!-- Third-party Libraries -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- HR Dashboard Specific CSS -->
+    <link rel="stylesheet" href="../../assets/css/hr-dashboard-2025.css">
+    
+    <!-- Legacy CSS for backward compatibility -->
+    
+    
+    
     
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <!-- Moment.js for Date Formatting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <style>
         /* HR Dashboard Specific Styles */
@@ -398,185 +410,352 @@
         }
     </style>
 </head>
-<body>
+<body class="role-theme hr-staff">
+    <div id="sidebarContainer"></div>
     <div class="hr-dashboard">
-        <div class="dashboard-container">
-            <!-- HR Header -->
-            <div class="hr-header fade-in">
-                <div class="header-content">
-                    <div class="header-left">
-                        <h1>HR Dashboard</h1>
-                        <p>Manage workforce, training, and compliance</p>
-                    </div>
-                    <div class="header-right">
-                        <div class="user-info">
-                            <div class="user-avatar" id="userAvatar">
-                                <span>HR</span>
-                            </div>
-                            <div>
-                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">HR Staff</div>
-                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">Human Resources</div>
-                            </div>
-                        </div>
-                        <button onclick="logout()" class="action-btn secondary" style="padding: var(--space-2) var(--space-4);">
-                            <i data-lucide="log-out"></i>
-                            Logout
-                        </button>
-                    </div>
+        <!-- 2025 Navigation System -->
+        <nav class="role-nav">
+            <div class="nav">
+                <div class="nav-brand">
+                    <img src="../../logo.png" alt="Angkor Compliance" class="logo">
+                    <span class="brand-text">HR Dashboard</span>
                 </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="stat-card slide-in">
-                    <div class="stat-header">
-                        <div class="stat-icon" style="background: var(--primary-100); color: var(--primary-600);">
+                <div class="nav-items">
+                    <div class="nav-item">
+                        <a href="#dashboard" class="nav-link active" data-aos="fade-down" data-aos-delay="100">
+                            <i data-lucide="home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../hr-staff/hr-worker-management.html" class="nav-link" data-aos="fade-down" data-aos-delay="200">
                             <i data-lucide="users"></i>
-                        </div>
+                            <span>Worker Management</span>
+                        </a>
                     </div>
-                    <div class="stat-number" id="totalWorkers">0</div>
-                    <div class="stat-label">Total Workers</div>
-                    <div class="stat-trend trend-up" id="workersTrend">+5% this month</div>
-                </div>
-                
-                <div class="stat-card slide-in">
-                    <div class="stat-header">
-                        <div class="stat-icon" style="background: var(--success-100); color: var(--success-600);">
-                            <i data-lucide="check-circle"></i>
-                        </div>
+                    <div class="nav-item">
+                        <a href="#training" class="nav-link" data-aos="fade-down" data-aos-delay="300">
+                            <i data-lucide="graduation-cap"></i>
+                            <span>Training Programs</span>
+                        </a>
                     </div>
-                    <div class="stat-number" id="compliantWorkers">0</div>
-                    <div class="stat-label">Compliant Workers</div>
-                    <div class="stat-trend trend-up" id="complianceTrend">+12% this month</div>
-                </div>
-                
-                <div class="stat-card slide-in">
-                    <div class="stat-header">
-                        <div class="stat-icon" style="background: var(--warning-100); color: var(--warning-600);">
-                            <i data-lucide="alert-triangle"></i>
-                        </div>
+                    <div class="nav-item">
+                        <a href="#compliance" class="nav-link" data-aos="fade-down" data-aos-delay="400">
+                            <i data-lucide="shield-check"></i>
+                            <span>Compliance</span>
+                        </a>
                     </div>
-                    <div class="stat-number" id="pendingActions">0</div>
-                    <div class="stat-label">Pending Actions</div>
-                    <div class="stat-trend trend-down" id="pendingTrend">-8% this month</div>
-                </div>
-                
-                <div class="stat-card slide-in">
-                    <div class="stat-header">
-                        <div class="stat-icon" style="background: var(--info-100); color: var(--info-600);">
-                            <i data-lucide="book-open"></i>
-                        </div>
+                    <div class="nav-item">
+                        <a href="#reports" class="nav-link" data-aos="fade-down" data-aos-delay="500">
+                            <i data-lucide="bar-chart-3"></i>
+                            <span>Reports</span>
+                        </a>
                     </div>
-                    <div class="stat-number" id="trainingCompleted">0</div>
-                    <div class="stat-label">Training Completed</div>
-                    <div class="stat-trend trend-up" id="trainingTrend">+15% this month</div>
                 </div>
             </div>
+            <div class="nav-actions">
+                <div class="language-selector">
+                    <select id="languageSelect" class="form-select">
+                        <option value="en">English</option>
+                        <option value="km">ខ្មែរ</option>
+                        <option value="th">ไทย</option>
+                        <option value="vi">Tiếng Việt</option>
+                    </select>
+                </div>
+                <div class="role-selector">
+                    <label for="roleSelect" class="role-label">Role:</label>
+                    <select id="roleSelect" onchange="changeRole(this.value)" class="form-select">
+                        <option value="worker">Worker</option>
+                        <option value="factory-admin">Factory Admin</option>
+                        <option value="hr-staff" selected>HR Staff</option>
+                        <option value="grievance-committee">Grievance Committee</option>
+                        <option value="auditor">Auditor</option>
+                        <option value="analytics-user">Analytics User</option>
+                        <option value="super-admin">Super Admin</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+
+        <main class="portal-main">
+        <div style="margin-left: 280px;">
+            <!-- HR Header with 2025 Design -->
+            <section class="hr-header-section" id="hrHeader">
+                <div class="container">
+                    <div class="bento-grid">
+                        <div class="bento-card bento-hero" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="hr-header-content">
+                                    <div class="header-left">
+                                        <h1 class="hero-title">HR Dashboard</h1>
+                                        <p class="hero-subtitle">Manage workforce, training, and compliance</p>
+                                    </div>
+                                    <div class="header-right">
+                                        <div class="user-info">
+                                            <div class="user-avatar" id="userAvatar">
+                                                <span>HR</span>
+                                            </div>
+                                            <div>
+                                                <div id="userName" class="user-name">HR Staff</div>
+                                                <div class="user-role">Human Resources</div>
+                                            </div>
+                                        </div>
+                                        <button onclick="logout()" class="btn btn-secondary">
+                                            <i data-lucide="log-out"></i>
+                                            <span>Logout</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             
-            <!-- Main Content -->
-            <div class="main-content">
-                <div class="content-section">
-                    <h2 class="section-title">
-                        <i data-lucide="activity"></i>
-                        Workforce Overview
-                    </h2>
-                    
-                    <!-- Worker Distribution Chart -->
-                    <div class="chart-container">
-                        <canvas id="workerDistributionChart"></canvas>
-                    </div>
-                    
-                    <!-- Recent Workers -->
-                    <h3 style="font-size: var(--text-lg); font-weight: 600; color: var(--neutral-900); margin: var(--space-6) 0 var(--space-4) 0;">Recent Workers</h3>
-                    <div class="worker-list" id="recentWorkers">
-                        <!-- Worker items will be loaded here -->
-                    </div>
-                </div>
-                
-                <div class="sidebar">
-                    <!-- Notifications -->
-                    <div class="sidebar-card">
-                        <h3 class="section-title">
-                            <i data-lucide="bell"></i>
-                            Notifications
-                        </h3>
-                        <div id="notificationsList">
-                            <!-- Notifications will be loaded here -->
+            <!-- Quick Stats with 2025 Design -->
+            <section class="quick-stats-section" id="quickStats">
+                <div class="container">
+                    <div class="bento-grid">
+                        <div class="bento-card bento-stat" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="stat-header">
+                                    <div class="stat-icon" style="background: var(--primary-100); color: var(--primary-600);">
+                                        <i data-lucide="users"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-number" id="totalWorkers">0</div>
+                                <div class="stat-label">Total Workers</div>
+                                <div class="stat-trend trend-up" id="workersTrend">+5% this month</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Quick Actions -->
-                    <div class="sidebar-card">
-                        <h3 class="section-title">
-                            <i data-lucide="zap"></i>
-                            Quick Actions
-                        </h3>
-                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                            <button onclick="addNewWorker()" class="action-btn" style="width: 100%; justify-content: flex-start;">
-                                <i data-lucide="user-plus"></i>
-                                Add New Worker
-                            </button>
-                            <button onclick="scheduleTraining()" class="action-btn" style="width: 100%; justify-content: flex-start;">
-                                <i data-lucide="calendar"></i>
-                                Schedule Training
-                            </button>
-                            <button onclick="generateReport()" class="action-btn secondary" style="width: 100%; justify-content: flex-start;">
-                                <i data-lucide="file-text"></i>
-                                Generate Report
-                            </button>
-                            <button onclick="viewCompliance()" class="action-btn secondary" style="width: 100%; justify-content: flex-start;">
-                                <i data-lucide="shield-check"></i>
-                                View Compliance
-                            </button>
+                        
+                        <div class="bento-card bento-stat" data-aos="fade-up" data-aos-delay="200">
+                            <div class="card-content">
+                                <div class="stat-header">
+                                    <div class="stat-icon" style="background: var(--success-100); color: var(--success-600);">
+                                        <i data-lucide="check-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-number" id="compliantWorkers">0</div>
+                                <div class="stat-label">Compliant Workers</div>
+                                <div class="stat-trend trend-up" id="complianceTrend">+12% this month</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Training Progress -->
-                    <div class="sidebar-card">
-                        <h3 class="section-title">
-                            <i data-lucide="book-open"></i>
-                            Training Progress
-                        </h3>
-                        <div id="trainingProgress">
-                            <!-- Training progress will be loaded here -->
+                        
+                        <div class="bento-card bento-stat" data-aos="fade-up" data-aos-delay="300">
+                            <div class="card-content">
+                                <div class="stat-header">
+                                    <div class="stat-icon" style="background: var(--warning-100); color: var(--warning-600);">
+                                        <i data-lucide="alert-triangle"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-number" id="pendingActions">0</div>
+                                <div class="stat-label">Pending Actions</div>
+                                <div class="stat-trend trend-down" id="pendingTrend">-8% this month</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bento-card bento-stat" data-aos="fade-up" data-aos-delay="400">
+                            <div class="card-content">
+                                <div class="stat-header">
+                                    <div class="stat-icon" style="background: var(--info-100); color: var(--info-600);">
+                                        <i data-lucide="book-open"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-number" id="trainingCompleted">0</div>
+                                <div class="stat-label">Training Completed</div>
+                                <div class="stat-trend trend-up" id="trainingTrend">+15% this month</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button onclick="navigateToWorkerManagement()" class="action-btn">
-                    <i data-lucide="users"></i>
-                    Worker Management
-                </button>
-                <button onclick="navigateToTrainingManagement()" class="action-btn">
-                    <i data-lucide="book-open"></i>
-                    Training Management
-                </button>
-                <button onclick="navigateToComplianceMonitoring()" class="action-btn">
-                    <i data-lucide="shield-check"></i>
-                    Compliance Monitoring
-                </button>
-                <button onclick="navigateToHRSettings()" class="action-btn secondary">
-                    <i data-lucide="settings"></i>
-                    HR Settings
-                </button>
-            </div>
-        </div>
+            <!-- Main Content with 2025 Design -->
+            <section class="main-content-section" id="mainContent">
+                <div class="container">
+                    <div class="bento-grid">
+                        <!-- Workforce Overview -->
+                        <div class="bento-card bento-chart" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i data-lucide="activity"></i>
+                                        Workforce Overview
+                                    </h3>
+                                </div>
+                                
+                                <!-- Worker Distribution Chart -->
+                                <div class="chart-container">
+                                    <canvas id="workerDistributionChart"></canvas>
+                                </div>
+                                
+                                <!-- Recent Workers -->
+                                <div class="recent-workers">
+                                    <h4 class="card-subtitle">Recent Workers</h4>
+                                    <div class="worker-list" id="recentWorkers">
+                                        <!-- Worker items will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notifications -->
+                        <div class="bento-card bento-sidebar" data-aos="fade-up" data-aos-delay="200">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i data-lucide="bell"></i>
+                                        Notifications
+                                    </h3>
+                                </div>
+                                <div id="notificationsList">
+                                    <!-- Notifications will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="bento-card bento-actions" data-aos="fade-up" data-aos-delay="300">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i data-lucide="zap"></i>
+                                        Quick Actions
+                                    </h3>
+                                </div>
+                                <div class="action-buttons-grid">
+                                    <button onclick="addNewWorker()" class="btn btn-primary">
+                                        <i data-lucide="user-plus"></i>
+                                        <span>Add New Worker</span>
+                                    </button>
+                                    <button onclick="scheduleTraining()" class="btn btn-primary">
+                                        <i data-lucide="calendar"></i>
+                                        <span>Schedule Training</span>
+                                    </button>
+                                    <button onclick="generateReport()" class="btn btn-secondary">
+                                        <i data-lucide="file-text"></i>
+                                        <span>Generate Report</span>
+                                    </button>
+                                    <button onclick="viewCompliance()" class="btn btn-secondary">
+                                        <i data-lucide="shield-check"></i>
+                                        <span>View Compliance</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Training Progress -->
+                        <div class="bento-card bento-progress" data-aos="fade-up" data-aos-delay="400">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i data-lucide="book-open"></i>
+                                        Training Progress
+                                    </h3>
+                                </div>
+                                <div id="trainingProgress">
+                                    <!-- Training progress will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Action Buttons with 2025 Design -->
+            <section class="action-buttons-section" id="actionButtons">
+                <div class="container">
+                    <div class="bento-grid">
+                        <div class="bento-card bento-actions-main" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="action-buttons-grid">
+                                    <button onclick="navigateToWorkerManagement()" class="btn btn-primary btn-lg">
+                                        <i data-lucide="users"></i>
+                                        <span>Worker Management</span>
+                                    </button>
+                                    <button onclick="navigateToTrainingManagement()" class="btn btn-primary btn-lg">
+                                        <i data-lucide="book-open"></i>
+                                        <span>Training Management</span>
+                                    </button>
+                                    <button onclick="navigateToComplianceMonitoring()" class="btn btn-primary btn-lg">
+                                        <i data-lucide="shield-check"></i>
+                                        <span>Compliance Monitoring</span>
+                                    </button>
+                                    <button onclick="navigateToHRSettings()" class="btn btn-secondary btn-lg">
+                                        <i data-lucide="settings"></i>
+                                        <span>HR Settings</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                </div>
+</main>
     </div>
     
-    <!-- Scripts -->
+    <!-- 2025 Design System JavaScript -->
+    <script src="../../assets/js/role-switching-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/dark-mode-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/animations-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/accessibility-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- Legacy JavaScript -->
     <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/hr/hr-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <script>
-        // Initialize Lucide icons
+        // Initialize HR Dashboard
+        console.log('👥 HR Dashboard loading...');
+        
+        // Initialize 2025 Design System
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+            // Initialize AOS animations
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Initialize role switching
+            if (window.roleSwitching) {
+                window.roleSwitching.init();
+            }
+
+            // Initialize dark mode
+            if (window.darkMode) {
+                window.darkMode.init();
+            }
+
+            // Initialize accessibility features
+            if (window.accessibility) {
+                window.accessibility.init();
             }
         });
+
+        // Role switching function
+        function changeRole(role) {
+            if (window.roleSwitching) {
+                window.roleSwitching.switchRole(role);
+            } else {
+                // Fallback role switching
+                const body = document.body;
+                body.className = `role-theme ${role}`;
+            }
+        }
     </script>
 </body>
 </html>
+
+

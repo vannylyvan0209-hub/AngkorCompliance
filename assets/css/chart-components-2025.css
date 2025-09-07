@@ -1,0 +1,1112 @@
+/**
+ * Angkor Compliance Platform - Chart Components 2025
+ * 
+ * Modern chart and graph components with 2025 design patterns,
+ * accessibility support, and responsive design.
+ */
+
+/* ===== CHART COMPONENTS VARIABLES ===== */
+
+:root {
+    /* Chart Z-Index */
+    --chart-z-index: 1000;
+    --chart-tooltip-z-index: 1001;
+    --chart-legend-z-index: 1002;
+    --chart-overlay-z-index: 1003;
+    
+    /* Chart Animation Variables */
+    --chart-animation-duration: 0.3s;
+    --chart-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Chart Colors */
+    --chart-bg: var(--surface);
+    --chart-text: var(--text);
+    --chart-border: var(--border);
+    --chart-shadow: var(--shadow-lg);
+    --chart-grid-color: var(--gray-200);
+    --chart-axis-color: var(--gray-300);
+    --chart-label-color: var(--text-muted);
+    --chart-title-color: var(--text);
+    --chart-subtitle-color: var(--text-muted);
+    --chart-legend-bg: var(--surface);
+    --chart-legend-border: var(--border);
+    --chart-tooltip-bg: var(--surface);
+    --chart-tooltip-border: var(--border);
+    --chart-tooltip-text: var(--text);
+    --chart-tooltip-shadow: var(--shadow-lg);
+    
+    /* Chart Data Colors */
+    --chart-color-primary: var(--primary-500);
+    --chart-color-secondary: var(--secondary-500);
+    --chart-color-success: var(--success-500);
+    --chart-color-warning: var(--warning-500);
+    --chart-color-danger: var(--danger-500);
+    --chart-color-info: var(--info-500);
+    --chart-color-purple: #8b5cf6;
+    --chart-color-pink: #ec4899;
+    --chart-color-indigo: #6366f1;
+    --chart-color-teal: #14b8a6;
+    --chart-color-orange: #f97316;
+    --chart-color-cyan: #06b6d4;
+    --chart-color-lime: #84cc16;
+    --chart-color-rose: #f43f5e;
+    --chart-color-amber: #f59e0b;
+    --chart-color-emerald: #10b981;
+    --chart-color-violet: #8b5cf6;
+    --chart-color-sky: #0ea5e9;
+    --chart-color-stone: #78716c;
+    --chart-color-neutral: #737373;
+    --chart-color-zinc: #71717a;
+    --chart-color-slate: #64748b;
+    --chart-color-gray: #6b7280;
+    
+    /* Chart Spacing */
+    --chart-padding: var(--space-4);
+    --chart-margin: var(--space-2);
+    --chart-gap: var(--space-2);
+    --chart-border-radius: var(--radius-lg);
+    --chart-min-height: 300px;
+    --chart-max-height: 600px;
+    
+    /* Chart Typography */
+    --chart-font-size: var(--text-sm);
+    --chart-font-weight: var(--font-normal);
+    --chart-title-font-size: var(--text-lg);
+    --chart-title-font-weight: var(--font-semibold);
+    --chart-subtitle-font-size: var(--text-sm);
+    --chart-subtitle-font-weight: var(--font-normal);
+    --chart-label-font-size: var(--text-xs);
+    --chart-label-font-weight: var(--font-medium);
+    --chart-legend-font-size: var(--text-xs);
+    --chart-legend-font-weight: var(--font-medium);
+    --chart-tooltip-font-size: var(--text-sm);
+    --chart-tooltip-font-weight: var(--font-normal);
+    
+    /* Chart Sizes */
+    --chart-width-sm: 300px;
+    --chart-width-md: 400px;
+    --chart-width-lg: 500px;
+    --chart-width-xl: 600px;
+    --chart-width-full: 100%;
+    --chart-height-sm: 200px;
+    --chart-height-md: 300px;
+    --chart-height-lg: 400px;
+    --chart-height-xl: 500px;
+    --chart-height-full: 100%;
+}
+
+/* ===== CHART BASE ===== */
+
+.chart {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: var(--chart-width-md);
+    height: var(--chart-height-md);
+    background: var(--chart-bg);
+    border: 1px solid var(--chart-border);
+    border-radius: var(--chart-border-radius);
+    box-shadow: var(--chart-shadow);
+    overflow: hidden;
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--chart-padding);
+    border-bottom: 1px solid var(--chart-border);
+}
+
+.chart-title {
+    font-size: var(--chart-title-font-size);
+    font-weight: var(--chart-title-font-weight);
+    color: var(--chart-title-color);
+    margin: 0;
+}
+
+.chart-subtitle {
+    font-size: var(--chart-subtitle-font-size);
+    font-weight: var(--chart-subtitle-font-weight);
+    color: var(--chart-subtitle-color);
+    margin: 0;
+}
+
+.chart-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.chart-action {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-action:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.chart-action:active {
+    background: var(--primary-100);
+    color: var(--primary-800);
+}
+
+.chart-content {
+    flex: 1;
+    padding: var(--chart-padding);
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-md);
+}
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--chart-padding);
+    border-top: 1px solid var(--chart-border);
+    background: var(--chart-legend-bg);
+}
+
+.chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    background: var(--surface);
+    border: 1px solid var(--chart-legend-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.chart-legend-item:hover {
+    background: var(--gray-50);
+    border-color: var(--primary-200);
+}
+
+.chart-legend-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chart-legend-item.disabled:hover {
+    background: var(--surface);
+    border-color: var(--chart-legend-border);
+}
+
+.chart-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.chart-legend-label {
+    font-size: var(--chart-legend-font-size);
+    font-weight: var(--chart-legend-font-weight);
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.chart-tooltip {
+    position: absolute;
+    z-index: var(--chart-tooltip-z-index);
+    padding: var(--space-2) var(--space-3);
+    background: var(--chart-tooltip-bg);
+    border: 1px solid var(--chart-tooltip-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--chart-tooltip-shadow);
+    font-size: var(--chart-tooltip-font-size);
+    font-weight: var(--chart-tooltip-font-weight);
+    color: var(--chart-tooltip-text);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition-all);
+}
+
+.chart-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.chart-tooltip-title {
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-1);
+}
+
+.chart-tooltip-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.chart-tooltip-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.chart-tooltip-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.chart-tooltip-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+.chart-tooltip-value {
+    font-weight: var(--font-medium);
+    color: var(--text);
+}
+
+/* ===== CHART TYPES ===== */
+
+/* Line Chart */
+.chart-line {
+    /* Line chart specific styles */
+}
+
+.chart-line .chart-canvas {
+    /* Line chart canvas styles */
+}
+
+/* Bar Chart */
+.chart-bar {
+    /* Bar chart specific styles */
+}
+
+.chart-bar .chart-canvas {
+    /* Bar chart canvas styles */
+}
+
+/* Pie Chart */
+.chart-pie {
+    /* Pie chart specific styles */
+}
+
+.chart-pie .chart-canvas {
+    /* Pie chart canvas styles */
+}
+
+/* Doughnut Chart */
+.chart-doughnut {
+    /* Doughnut chart specific styles */
+}
+
+.chart-doughnut .chart-canvas {
+    /* Doughnut chart canvas styles */
+}
+
+/* Area Chart */
+.chart-area {
+    /* Area chart specific styles */
+}
+
+.chart-area .chart-canvas {
+    /* Area chart canvas styles */
+}
+
+/* Scatter Chart */
+.chart-scatter {
+    /* Scatter chart specific styles */
+}
+
+.chart-scatter .chart-canvas {
+    /* Scatter chart canvas styles */
+}
+
+/* Radar Chart */
+.chart-radar {
+    /* Radar chart specific styles */
+}
+
+.chart-radar .chart-canvas {
+    /* Radar chart canvas styles */
+}
+
+/* Polar Chart */
+.chart-polar {
+    /* Polar chart specific styles */
+}
+
+.chart-polar .chart-canvas {
+    /* Polar chart canvas styles */
+}
+
+/* Bubble Chart */
+.chart-bubble {
+    /* Bubble chart specific styles */
+}
+
+.chart-bubble .chart-canvas {
+    /* Bubble chart canvas styles */
+}
+
+/* Gauge Chart */
+.chart-gauge {
+    /* Gauge chart specific styles */
+}
+
+.chart-gauge .chart-canvas {
+    /* Gauge chart canvas styles */
+}
+
+/* Funnel Chart */
+.chart-funnel {
+    /* Funnel chart specific styles */
+}
+
+.chart-funnel .chart-canvas {
+    /* Funnel chart canvas styles */
+}
+
+/* Treemap Chart */
+.chart-treemap {
+    /* Treemap chart specific styles */
+}
+
+.chart-treemap .chart-canvas {
+    /* Treemap chart canvas styles */
+}
+
+/* Sankey Chart */
+.chart-sankey {
+    /* Sankey chart specific styles */
+}
+
+.chart-sankey .chart-canvas {
+    /* Sankey chart canvas styles */
+}
+
+/* Heatmap Chart */
+.chart-heatmap {
+    /* Heatmap chart specific styles */
+}
+
+.chart-heatmap .chart-canvas {
+    /* Heatmap chart canvas styles */
+}
+
+/* Waterfall Chart */
+.chart-waterfall {
+    /* Waterfall chart specific styles */
+}
+
+.chart-waterfall .chart-canvas {
+    /* Waterfall chart canvas styles */
+}
+
+/* Candlestick Chart */
+.chart-candlestick {
+    /* Candlestick chart specific styles */
+}
+
+.chart-candlestick .chart-canvas {
+    /* Candlestick chart canvas styles */
+}
+
+/* Box Plot Chart */
+.chart-boxplot {
+    /* Box plot chart specific styles */
+}
+
+.chart-boxplot .chart-canvas {
+    /* Box plot chart canvas styles */
+}
+
+/* Violin Chart */
+.chart-violin {
+    /* Violin chart specific styles */
+}
+
+.chart-violin .chart-canvas {
+    /* Violin chart canvas styles */
+}
+
+/* ===== CHART VARIANTS ===== */
+
+/* Default Chart */
+.chart-default {
+    background: var(--chart-bg);
+    border-color: var(--chart-border);
+}
+
+/* Glassmorphism Chart */
+.chart-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.chart-glass .chart-header {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.chart-glass .chart-legend {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.chart-glass .chart-tooltip {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+/* Neumorphism Chart */
+.chart-neumorphism {
+    background: var(--surface);
+    border: none;
+    box-shadow: 
+        8px 8px 16px rgba(0, 0, 0, 0.1),
+        -8px -8px 16px rgba(255, 255, 255, 0.1);
+}
+
+.chart-neumorphism .chart-header {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chart-neumorphism .chart-legend {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Elevated Chart */
+.chart-elevated {
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Flat Chart */
+.chart-flat {
+    box-shadow: none;
+    border: 2px solid var(--border);
+}
+
+/* ===== CHART SIZES ===== */
+
+.chart-sm {
+    width: var(--chart-width-sm);
+    height: var(--chart-height-sm);
+}
+
+.chart-sm .chart-header {
+    padding: var(--space-2) var(--space-3);
+}
+
+.chart-sm .chart-content {
+    padding: var(--space-2) var(--space-3);
+}
+
+.chart-sm .chart-legend {
+    padding: var(--space-2) var(--space-3);
+}
+
+.chart-sm .chart-title {
+    font-size: var(--text-base);
+}
+
+.chart-sm .chart-subtitle {
+    font-size: var(--text-xs);
+}
+
+.chart-md {
+    width: var(--chart-width-md);
+    height: var(--chart-height-md);
+}
+
+.chart-lg {
+    width: var(--chart-width-lg);
+    height: var(--chart-height-lg);
+}
+
+.chart-lg .chart-header {
+    padding: var(--space-5);
+}
+
+.chart-lg .chart-content {
+    padding: var(--space-5);
+}
+
+.chart-lg .chart-legend {
+    padding: var(--space-5);
+}
+
+.chart-lg .chart-title {
+    font-size: var(--text-xl);
+}
+
+.chart-lg .chart-subtitle {
+    font-size: var(--text-base);
+}
+
+.chart-xl {
+    width: var(--chart-width-xl);
+    height: var(--chart-height-xl);
+}
+
+.chart-xl .chart-header {
+    padding: var(--space-6);
+}
+
+.chart-xl .chart-content {
+    padding: var(--space-6);
+}
+
+.chart-xl .chart-legend {
+    padding: var(--space-6);
+}
+
+.chart-xl .chart-title {
+    font-size: var(--text-2xl);
+}
+
+.chart-xl .chart-subtitle {
+    font-size: var(--text-lg);
+}
+
+.chart-full {
+    width: var(--chart-width-full);
+    height: var(--chart-height-full);
+}
+
+/* ===== CHART RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .chart {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .chart-sm,
+    .chart-md,
+    .chart-lg,
+    .chart-xl {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .chart-header {
+        padding: var(--space-2) var(--space-3);
+    }
+    
+    .chart-content {
+        padding: var(--space-2) var(--space-3);
+    }
+    
+    .chart-legend {
+        padding: var(--space-2) var(--space-3);
+    }
+    
+    .chart-title {
+        font-size: var(--text-base);
+    }
+    
+    .chart-subtitle {
+        font-size: var(--text-xs);
+    }
+    
+    .chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .chart-legend-item {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .chart-sm,
+    .chart-md,
+    .chart-lg,
+    .chart-xl {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .chart-header {
+        padding: var(--space-2);
+    }
+    
+    .chart-content {
+        padding: var(--space-2);
+    }
+    
+    .chart-legend {
+        padding: var(--space-2);
+    }
+    
+    .chart-title {
+        font-size: var(--text-sm);
+    }
+    
+    .chart-subtitle {
+        font-size: var(--text-xs);
+    }
+    
+    .chart-actions {
+        gap: var(--space-1);
+    }
+    
+    .chart-action {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .chart-legend-item {
+        padding: var(--space-1);
+    }
+    
+    .chart-legend-color {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .chart-legend-label {
+        font-size: var(--text-xs);
+    }
+}
+
+/* ===== CHART ACCESSIBILITY ===== */
+
+.chart[role="img"] {
+    /* Semantic image role */
+}
+
+.chart:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.chart-action:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.chart-legend-item:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+/* ===== CHART DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .chart {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark);
+    }
+    
+    .chart-header {
+        border-bottom-color: var(--border-dark);
+    }
+    
+    .chart-title {
+        color: var(--text-dark);
+    }
+    
+    .chart-subtitle {
+        color: var(--text-muted-dark);
+    }
+    
+    .chart-action {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .chart-action:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .chart-action:active {
+        background: var(--primary-800);
+        color: var(--primary-200);
+    }
+    
+    .chart-legend {
+        background: var(--surface-dark);
+        border-top-color: var(--border-dark);
+    }
+    
+    .chart-legend-item {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .chart-legend-item:hover {
+        background: var(--gray-800);
+        border-color: var(--primary-700);
+    }
+    
+    .chart-legend-item.disabled {
+        opacity: 0.5;
+    }
+    
+    .chart-legend-item.disabled:hover {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .chart-legend-label {
+        color: var(--text-dark);
+    }
+    
+    .chart-tooltip {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark);
+    }
+    
+    .chart-tooltip-title {
+        color: var(--text-dark);
+    }
+    
+    .chart-tooltip-label {
+        color: var(--text-muted-dark);
+    }
+    
+    .chart-tooltip-value {
+        color: var(--text-dark);
+    }
+    
+    .chart-glass {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .chart-glass .chart-header {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .chart-glass .chart-legend {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .chart-glass .chart-tooltip {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .chart-neumorphism {
+        background: var(--surface-dark);
+        box-shadow: 
+            8px 8px 16px rgba(0, 0, 0, 0.3),
+            -8px -8px 16px rgba(255, 255, 255, 0.05);
+    }
+    
+    .chart-neumorphism .chart-header {
+        background: var(--surface-dark);
+        box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    }
+    
+    .chart-neumorphism .chart-legend {
+        background: var(--surface-dark);
+        box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    }
+}
+
+.dark-mode .chart {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-header {
+    border-bottom-color: var(--border-dark);
+}
+
+.dark-mode .chart-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-subtitle {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .chart-action {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-action:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .chart-action:active {
+    background: var(--primary-800);
+    color: var(--primary-200);
+}
+
+.dark-mode .chart-legend {
+    background: var(--surface-dark);
+    border-top-color: var(--border-dark);
+}
+
+.dark-mode .chart-legend-item {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .chart-legend-item:hover {
+    background: var(--gray-800);
+    border-color: var(--primary-700);
+}
+
+.dark-mode .chart-legend-item.disabled {
+    opacity: 0.5;
+}
+
+.dark-mode .chart-legend-item.disabled:hover {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .chart-legend-label {
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-tooltip {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-tooltip-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-tooltip-label {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .chart-tooltip-value {
+    color: var(--text-dark);
+}
+
+.dark-mode .chart-glass {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .chart-glass .chart-header {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .chart-glass .chart-legend {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .chart-glass .chart-tooltip {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .chart-neumorphism {
+    background: var(--surface-dark);
+    box-shadow: 
+        8px 8px 16px rgba(0, 0, 0, 0.3),
+        -8px -8px 16px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .chart-neumorphism .chart-header {
+    background: var(--surface-dark);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .chart-neumorphism .chart-legend {
+    background: var(--surface-dark);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ===== CHART PRINT ===== */
+
+@media print {
+    .chart {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .chart-header {
+        border-bottom: 1px solid #000;
+    }
+    
+    .chart-legend {
+        border-top: 1px solid #000;
+    }
+    
+    .chart-tooltip {
+        display: none;
+    }
+    
+    .chart-actions {
+        display: none;
+    }
+}
+
+/* ===== CHART UTILITIES ===== */
+
+.chart-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.chart-loading {
+    position: relative;
+}
+
+.chart-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.chart-loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-200);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1001;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.chart-empty {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.chart-error {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--danger-600);
+    background: var(--danger-50);
+    border: 1px solid var(--danger-200);
+    border-radius: var(--radius-md);
+    margin: var(--space-4);
+}
+
+/* ===== CHART THEME VARIANTS ===== */
+
+.chart-primary .chart-action:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.chart-primary .chart-legend-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+}
+
+.chart-secondary .chart-action:hover {
+    background: var(--secondary-50);
+    color: var(--secondary-700);
+}
+
+.chart-secondary .chart-legend-item:hover {
+    background: var(--secondary-50);
+    border-color: var(--secondary-200);
+}
+
+.chart-success .chart-action:hover {
+    background: var(--success-50);
+    color: var(--success-700);
+}
+
+.chart-success .chart-legend-item:hover {
+    background: var(--success-50);
+    border-color: var(--success-200);
+}
+
+.chart-warning .chart-action:hover {
+    background: var(--warning-50);
+    color: var(--warning-700);
+}
+
+.chart-warning .chart-legend-item:hover {
+    background: var(--warning-50);
+    border-color: var(--warning-200);
+}
+
+.chart-danger .chart-action:hover {
+    background: var(--danger-50);
+    color: var(--danger-700);
+}
+
+.chart-danger .chart-legend-item:hover {
+    background: var(--danger-50);
+    border-color: var(--danger-200);
+}
+
+.chart-info .chart-action:hover {
+    background: var(--info-50);
+    color: var(--info-700);
+}
+
+.chart-info .chart-legend-item:hover {
+    background: var(--info-50);
+    border-color: var(--info-200);
+}

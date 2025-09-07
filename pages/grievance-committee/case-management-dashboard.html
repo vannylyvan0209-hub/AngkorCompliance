@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Management Dashboard - Grievance Committee</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -90,11 +93,11 @@
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
-</head>
+    <script src="../../assets/js/universal-navigation.js"></script>`n</head>
 <body class="role-grievance-committee">
     
     <!-- Navigation Sidebar -->
-    <div id="navigation-sidebar" class="sidebar"></div>
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
     <!-- Header -->
     <header id="navigation-header" class="header"></header>
@@ -103,10 +106,10 @@
     <div id="quick-actions" class="quick-actions-container"></div>
 
     <!-- Main Content -->
-    <main class="main-content"><div class="dashboard-layout">
+    <main class="layout-main"><div class="dashboard-layout">
         <div id="sidebarContainer"></div></main>
         <script>
-            fetch('../../assets/html/sidebar-template.html')
+            fetch('../../assets/html/universal-sidebar-template.html')
                 .then(r => r.text())
                 .then(html => {
                     document.getElementById('sidebarContainer').innerHTML = html;
@@ -115,9 +118,9 @@
                 });
         </script>
         
-        <main class="main-content">
-            <header class="page-header">
-                <div class="page-title">
+        <main class="layout-main">
+            <header class="mb-8 pb-6 border-b border-neutral-200">
+                <div class="text-3xl font-bold text-neutral-900">
                     <div>
                         <h1><i data-lucide="bar-chart-3"></i> Case Management Dashboard</h1>
                         <p>Advanced analytics and performance metrics for grievance case management</p>
@@ -129,7 +132,7 @@
                         <button class="btn btn-outline btn-white" onclick="exportDashboard()">
                             <i data-lucide="download"></i> Export Report
                         </button>
-                        <button class="btn btn-primary" onclick="generateReport()">
+                        <button class="btn btn-primary text-white font-medium" onclick="generateReport()">
                             <i data-lucide="file-text"></i> Generate Report
                         </button>
                     </div>
@@ -354,7 +357,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
     <script src="../../assets/js/grievance-committee/case-dashboard.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     
     <script>
@@ -369,3 +372,4 @@
     </script>
 </body>
 </html>
+

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditor Settings - Angkor Compliance</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    
+    
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+</head>
+<body>
+    <div id="sidebarContainer"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="mb-8 pb-6 border-b border-neutral-200">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Auditor Settings</h1>
+                    <p>Manage audit processes and compliance verification settings</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <span id="userName">Loading...</span>
+                        <button onclick="logout()" class="btn btn-outline">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="layout-main">
+        <div style="margin-left: 280px;">
+            <div class="settings-container">
+                <!-- Settings Navigation -->
+                <nav class="settings-nav">
+                    <button class="nav-item active" onclick="showTab('audit')">
+                        <i data-lucide="clipboard-check"></i>
+                        Audit Management
+                    </button>
+                    <button class="nav-item" onclick="showTab('compliance')">
+                        <i data-lucide="shield-check"></i>
+                        Compliance Standards
+                    </button>
+                    <button class="nav-item" onclick="showTab('checklists')">
+                        <i data-lucide="list-checks"></i>
+                        Audit Checklists
+                    </button>
+                    <button class="nav-item" onclick="showTab('findings')">
+                        <i data-lucide="alert-triangle"></i>
+                        Findings Management
+                    </button>
+                    <button class="nav-item" onclick="showTab('reports')">
+                        <i data-lucide="file-text"></i>
+                        Audit Reports
+                    </button>
+                    <button class="nav-item" onclick="showTab('notifications')">
+                        <i data-lucide="bell"></i>
+                        Notifications
+                    </button>
+                </nav>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- Audit Management Tab -->
+                    <div id="audit" class="tab-content active">
+                        <div class="tab-header">
+                            <h2>Audit Management</h2>
+                            <p>Configure audit processes and scheduling</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Audit Scheduling</h3>
+                                <form id="auditSchedulingForm">
+                                    <div class="form-group">
+                                        <label for="auditFrequency">Audit Frequency</label>
+                                        <select id="auditFrequency" name="auditFrequency">
+                                            <option value="monthly">Monthly</option>
+                                            <option value="quarterly" selected>Quarterly</option>
+                                            <option value="biannually">Biannually</option>
+                                            <option value="annually">Annually</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auditDuration">Average Audit Duration (days)</label>
+                                        <input type="number" id="auditDuration" name="auditDuration" min="1" max="30" value="3">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auditTeamSize">Audit Team Size</label>
+                                        <input type="number" id="auditTeamSize" name="auditTeamSize" min="1" max="10" value="2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auditScope">Audit Scope</label>
+                                        <textarea id="auditScope" name="auditScope" rows="3" placeholder="Describe audit scope and coverage"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Audit Types</h3>
+                                <form id="auditTypesForm">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="documentAudit" value="true" checked>
+                                            Document Compliance Audit
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="processAudit" value="true" checked>
+                                            Process Compliance Audit
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="safetyAudit" value="true" checked>
+                                            Safety Compliance Audit
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="laborAudit" value="true" checked>
+                                            Labor Standards Audit
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="environmentalAudit" value="true">
+                                            Environmental Compliance Audit
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="qualityAudit" value="true">
+                                            Quality Management Audit
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compliance Standards Tab -->
+                    <div id="compliance" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Compliance Standards</h2>
+                            <p>Configure compliance standards and requirements</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Compliance Frameworks</h3>
+                                <form id="complianceFrameworksForm">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="iso9001" value="true">
+                                            ISO 9001 (Quality Management)
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="iso14001" value="true">
+                                            ISO 14001 (Environmental Management)
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="iso45001" value="true">
+                                            ISO 45001 (Occupational Health & Safety)
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="sa8000" value="true">
+                                            SA 8000 (Social Accountability)
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="bcorp" value="true">
+                                            B Corp Certification
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="fairtrade" value="true">
+                                            Fair Trade Certification
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Compliance Thresholds</h3>
+                                <form id="complianceThresholdsForm">
+                                    <div class="form-group">
+                                        <label for="criticalThreshold">Critical Compliance Threshold (%)</label>
+                                        <input type="number" id="criticalThreshold" name="criticalThreshold" min="0" max="100" value="95">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="warningThreshold">Warning Compliance Threshold (%)</label>
+                                        <input type="number" id="warningThreshold" name="warningThreshold" min="0" max="100" value="85">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="acceptableThreshold">Acceptable Compliance Threshold (%)</label>
+                                        <input type="number" id="acceptableThreshold" name="acceptableThreshold" min="0" max="100" value="75">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gracePeriod">Grace Period for Corrections (days)</label>
+                                        <input type="number" id="gracePeriod" name="gracePeriod" min="1" max="90" value="30">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Checklists Tab -->
+                    <div id="checklists" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Audit Checklists</h2>
+                            <p>Manage audit checklists and verification criteria</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Document Compliance Checklist</h3>
+                                <div class="checklist-items" id="documentChecklist">
+                                    <!-- Checklist items will be loaded here -->
+                                </div>
+                                <button onclick="openAddChecklistItemModal('document')" class="btn btn-primary text-white font-medium">Add Checklist Item</button>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Process Compliance Checklist</h3>
+                                <div class="checklist-items" id="processChecklist">
+                                    <!-- Checklist items will be loaded here -->
+                                </div>
+                                <button onclick="openAddChecklistItemModal('process')" class="btn btn-primary text-white font-medium">Add Checklist Item</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Findings Management Tab -->
+                    <div id="findings" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Findings Management</h2>
+                            <p>Configure findings classification and management</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Finding Categories</h3>
+                                <div class="finding-categories" id="findingCategories">
+                                    <!-- Finding categories will be loaded here -->
+                                </div>
+                                <button onclick="openAddFindingCategoryModal()" class="btn btn-primary text-white font-medium">Add Category</button>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Finding Severity Levels</h3>
+                                <form id="findingSeverityForm">
+                                    <div class="form-group">
+                                        <label for="criticalSeverity">Critical Severity Criteria</label>
+                                        <textarea id="criticalSeverity" name="criticalSeverity" rows="3" placeholder="Describe critical severity criteria"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="majorSeverity">Major Severity Criteria</label>
+                                        <textarea id="majorSeverity" name="majorSeverity" rows="3" placeholder="Describe major severity criteria"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="minorSeverity">Minor Severity Criteria</label>
+                                        <textarea id="minorSeverity" name="minorSeverity" rows="3" placeholder="Describe minor severity criteria"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="observationSeverity">Observation Criteria</label>
+                                        <textarea id="observationSeverity" name="observationSeverity" rows="3" placeholder="Describe observation criteria"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Reports Tab -->
+                    <div id="reports" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Audit Reports</h2>
+                            <p>Generate and manage audit reports</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Compliance Analytics</h3>
+                                <div class="chart-container">
+                                    <canvas id="complianceAnalyticsChart"></canvas>
+                                </div>
+                                <div class="chart-actions">
+                                    <button onclick="generateComplianceReport()" class="btn btn-primary text-white font-medium">Generate Report</button>
+                                    <button onclick="exportComplianceData()" class="btn btn-outline">Export Data</button>
+                                </div>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Audit Metrics</h3>
+                                <div class="metrics-grid">
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="overallCompliance">0%</div>
+                                        <div class="metric-label">Overall Compliance</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="criticalFindings">0</div>
+                                        <div class="metric-label">Critical Findings</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="openFindings">0</div>
+                                        <div class="metric-label">Open Findings</div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-value" id="resolvedFindings">0</div>
+                                        <div class="metric-label">Resolved Findings</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Tab -->
+                    <div id="notifications" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Notification Settings</h2>
+                            <p>Configure auditor-specific notification preferences</p>
+                        </div>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-card">
+                                <h3>Audit Notifications</h3>
+                                <form id="auditNotificationsForm">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="auditScheduled" value="true" checked>
+                                            Audit Scheduled Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="auditStarted" value="true" checked>
+                                            Audit Started Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="auditCompleted" value="true" checked>
+                                            Audit Completed Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="criticalFindings" value="true" checked>
+                                            Critical Findings Alerts
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="complianceBreaches" value="true" checked>
+                                            Compliance Breach Alerts
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auditorNotificationEmail">Auditor Notification Email</label>
+                                        <input type="email" id="auditorNotificationEmail" name="auditorNotificationEmail">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+
+                            <div class="setting-card">
+                                <h3>Report Notifications</h3>
+                                <form id="reportNotificationsForm">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="reportGenerated" value="true" checked>
+                                            Report Generated Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="reportApproved" value="true" checked>
+                                            Report Approval Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" name="reportRejected" value="true" checked>
+                                            Report Rejection Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reportFrequency">Report Frequency</label>
+                                        <select id="reportFrequency" name="reportFrequency">
+                                            <option value="immediate">Immediate</option>
+                                            <option value="daily" selected>Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary text-white font-medium">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                </div>
+</main>
+    </div>
+
+    <!-- Add Checklist Item Modal -->
+    <div id="addChecklistItemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Checklist Item</h3>
+                <button onclick="closeModal('addChecklistItemModal')" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addChecklistItemForm">
+                    <div class="form-group">
+                        <label for="checklistItemTitle">Item Title</label>
+                        <input type="text" id="checklistItemTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checklistItemDescription">Description</label>
+                        <textarea id="checklistItemDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="checklistItemCategory">Category</label>
+                        <select id="checklistItemCategory" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="document">Document Compliance</option>
+                            <option value="process">Process Compliance</option>
+                            <option value="safety">Safety Compliance</option>
+                            <option value="labor">Labor Standards</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="checklistItemPriority">Priority</label>
+                        <select id="checklistItemPriority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="checklistItemEvidence">Required Evidence</label>
+                        <textarea id="checklistItemEvidence" name="evidence" rows="3" placeholder="Describe required evidence"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addChecklistItemModal')" class="btn btn-outline">Cancel</button>
+                <button onclick="saveNewChecklistItem()" class="btn btn-primary text-white font-medium">Add Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Finding Category Modal -->
+    <div id="addFindingCategoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Finding Category</h3>
+                <button onclick="closeModal('addFindingCategoryModal')" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addFindingCategoryForm">
+                    <div class="form-group">
+                        <label for="findingCategoryName">Category Name</label>
+                        <input type="text" id="findingCategoryName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="findingCategoryDescription">Description</label>
+                        <textarea id="findingCategoryDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="findingCategorySeverity">Default Severity</label>
+                        <select id="findingCategorySeverity" name="severity">
+                            <option value="observation">Observation</option>
+                            <option value="minor">Minor</option>
+                            <option value="major" selected>Major</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="findingCategoryColor">Color</label>
+                        <input type="color" id="findingCategoryColor" name="color" value="#EF4444">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('addFindingCategoryModal')" class="btn btn-outline">Cancel</button>
+                <button onclick="saveNewFindingCategory()" class="btn btn-primary text-white font-medium">Add Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/notification-system.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/advanced-analytics.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/auditor-settings.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+</body>
+</html>
+
+

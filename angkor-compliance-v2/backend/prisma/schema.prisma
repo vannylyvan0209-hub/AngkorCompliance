@@ -1,0 +1,837 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// CORE ENTITIES
+// ============================================
+
+// Tenant/Organization
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  domain    String   @unique
+  settings  Json     @default("{}")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users     User[]
+  factories Factory[]
+  standards ComplianceStandard[]
+
+  @@map("tenants")
+}
+
+// User Management
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole
+  isActive     Boolean  @default(true)
+  isEmailVerified Boolean @default(false)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association (for factory-specific roles)
+  factoryId String?
+  factory   Factory? @relation(fields: [factoryId], references: [id], onDelete: SetNull)
+
+  // Relations
+  permissions     UserPermission[]
+  auditLogs       AuditLog[]
+  createdAudits   Audit[] @relation("AuditCreatedBy")
+  assignedAudits  Audit[] @relation("AuditAssignedTo")
+  grievances      Grievance[] @relation("GrievanceCreatedBy")
+  assignedGrievances Grievance[] @relation("GrievanceAssignedTo")
+  correctiveActions CorrectiveAction[] @relation("CorrectiveActionOwner")
+  trainingAttendees TrainingAttendee[]
+  notifications   Notification[]
+  activities      Activity[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  FACTORY_ADMIN
+  HR_STAFF
+  GRIEVANCE_COMMITTEE
+  AUDITOR
+  ANALYTICS_USER
+  WORKER
+}
+
+// Permission System
+model Permission {
+  id          String @id @default(cuid())
+  name        String @unique
+  resource    String
+  action      String
+  description String?
+  conditions  Json?  @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userPermissions UserPermission[]
+  rolePermissions RolePermission[]
+
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model UserPermission {
+  id           String @id @default(cuid())
+  userId       String
+  permissionId String
+  conditions   Json?  @default("{}")
+  grantedAt    DateTime @default(now())
+  grantedBy    String
+
+  // Relations
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionId])
+  @@map("user_permissions")
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  role         UserRole
+  permissionId String
+  conditions   Json?  @default("{}")
+
+  // Relations
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId])
+  @@map("role_permissions")
+}
+
+// Factory Management
+model Factory {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  address   String
+  country   String   @default("Cambodia")
+  industry  String
+  size      Int      // Number of workers
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Relations
+  users           User[]
+  documents       Document[]
+  audits          Audit[]
+  grievances      Grievance[]
+  trainings       Training[]
+  permits         Permit[]
+  complianceData  ComplianceData[]
+  activities      Activity[]
+
+  @@map("factories")
+}
+
+// ============================================
+// DOCUMENT MANAGEMENT
+// ============================================
+
+model Document {
+  id          String       @id @default(cuid())
+  title       String
+  type        DocumentType
+  category    String
+  content     String?
+  metadata    Json         @default("{}")
+  filePath    String?
+  fileSize    Int?
+  mimeType    String?
+  version     Int          @default(1)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // Uploader
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  // Relations
+  evidence      Evidence[]
+  trainingMaterials TrainingDocument[]
+  permitDocuments   PermitDocument[]
+
+  @@map("documents")
+}
+
+enum DocumentType {
+  REPORT
+  PERMIT
+  POLICY
+  SOP
+  PROCEDURE
+  CERTIFICATE
+  TRAINING
+  AUDIT_EVIDENCE
+  OTHER
+}
+
+// ============================================
+// COMPLIANCE STANDARDS
+// ============================================
+
+model ComplianceStandard {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  version     String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Relations
+  requirements ComplianceRequirement[]
+  audits       Audit[]
+
+  @@map("compliance_standards")
+}
+
+model ComplianceRequirement {
+  id          String   @id @default(cuid())
+  code        String
+  title       String
+  description String
+  category    String
+  priority    Priority
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Standard association
+  standardId String
+  standard   ComplianceStandard @relation(fields: [standardId], references: [id], onDelete: Cascade)
+
+  // Relations
+  controls     ComplianceControl[]
+  auditFindings AuditFinding[]
+
+  @@unique([standardId, code])
+  @@map("compliance_requirements")
+}
+
+model ComplianceControl {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  type        ControlType
+  frequency   Frequency
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Requirement association
+  requirementId String
+  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  // Relations
+  evidence Evidence[]
+
+  @@map("compliance_controls")
+}
+
+model Evidence {
+  id          String   @id @default(cuid())
+  type        EvidenceType
+  description String
+  isValid     Boolean  @default(true)
+  metadata    Json     @default("{}")
+  collectedAt DateTime @default(now())
+
+  // Control association
+  controlId String
+  control   ComplianceControl @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Document association
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+
+  // Collector
+  collectedById String
+  collectedBy   User   @relation(fields: [collectedById], references: [id])
+
+  // Relations
+  auditFindings AuditFindingEvidence[]
+
+  @@map("evidence")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ControlType {
+  PREVENTIVE
+  DETECTIVE
+  CORRECTIVE
+}
+
+enum Frequency {
+  CONTINUOUS
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+}
+
+enum EvidenceType {
+  DOCUMENT
+  PHOTO
+  VIDEO
+  AUDIO
+  DATA
+  OBSERVATION
+}
+
+// ============================================
+// AUDIT MANAGEMENT
+// ============================================
+
+model Audit {
+  id            String     @id @default(cuid())
+  type          AuditType
+  status        AuditStatus
+  scheduledDate DateTime
+  actualDate    DateTime?
+  score         Float?
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // Standard association
+  standardId String
+  standard   ComplianceStandard @relation(fields: [standardId], references: [id], onDelete: Cascade)
+
+  // Auditor
+  auditorId String
+  auditor   User   @relation("AuditAssignedTo", fields: [auditorId], references: [id])
+
+  // Creator
+  createdById String
+  createdBy   User   @relation("AuditCreatedBy", fields: [createdById], references: [id])
+
+  // Relations
+  findings AuditFinding[]
+
+  @@map("audits")
+}
+
+model AuditFinding {
+  id          String     @id @default(cuid())
+  type        FindingType
+  severity    Severity
+  description String
+  status      FindingStatus @default(OPEN)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Audit association
+  auditId String
+  audit   Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  // Requirement association
+  requirementId String
+  requirement   ComplianceRequirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  // Relations
+  evidence         AuditFindingEvidence[]
+  correctiveActions CorrectiveAction[]
+
+  @@map("audit_findings")
+}
+
+model AuditFindingEvidence {
+  id      String @id @default(cuid())
+  findingId String
+  evidenceId String
+
+  // Relations
+  finding  AuditFinding @relation(fields: [findingId], references: [id], onDelete: Cascade)
+  evidence Evidence     @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  @@unique([findingId, evidenceId])
+  @@map("audit_finding_evidence")
+}
+
+enum AuditType {
+  INTERNAL
+  EXTERNAL
+  CERTIFICATION
+  FOLLOW_UP
+}
+
+enum AuditStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum FindingType {
+  NON_CONFORMITY
+  OBSERVATION
+  OPPORTUNITY
+}
+
+enum Severity {
+  MINOR
+  MAJOR
+  CRITICAL
+}
+
+enum FindingStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+  VERIFIED
+}
+
+// ============================================
+// CORRECTIVE ACTION PLANS
+// ============================================
+
+model CorrectiveAction {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  dueDate       DateTime
+  status        ActionStatus @default(PENDING)
+  verificationDate DateTime?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Finding association
+  findingId String
+  finding   AuditFinding @relation(fields: [findingId], references: [id], onDelete: Cascade)
+
+  // Owner
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  // Verifier
+  verifiedById String?
+  verifiedBy   User?  @relation("CorrectiveActionVerifiedBy", fields: [verifiedById], references: [id])
+
+  // Relations
+  evidence CorrectiveActionEvidence[]
+
+  @@map("corrective_actions")
+}
+
+model CorrectiveActionEvidence {
+  id        String @id @default(cuid())
+  actionId  String
+  documentId String
+
+  // Relations
+  action   CorrectiveAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  document Document         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([actionId, documentId])
+  @@map("corrective_action_evidence")
+}
+
+enum ActionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+  VERIFIED
+}
+
+// ============================================
+// GRIEVANCE MANAGEMENT
+// ============================================
+
+model Grievance {
+  id          String        @id @default(cuid())
+  type        GrievanceType
+  severity    Severity
+  status      GrievanceStatus @default(SUBMITTED)
+  description String
+  isAnonymous Boolean       @default(false)
+  resolution  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // Worker (can be anonymous)
+  workerId String?
+
+  // Creator
+  createdById String
+  createdBy   User   @relation("GrievanceCreatedBy", fields: [createdById], references: [id])
+
+  // Assignee
+  assignedToId String?
+  assignedTo   User?  @relation("GrievanceAssignedTo", fields: [assignedToId], references: [id])
+
+  // Relations
+  notes GrievanceNote[]
+
+  @@map("grievances")
+}
+
+model GrievanceNote {
+  id         String   @id @default(cuid())
+  content    String
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  // Grievance association
+  grievanceId String
+  grievance   Grievance @relation(fields: [grievanceId], references: [id], onDelete: Cascade)
+
+  // Author
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  @@map("grievance_notes")
+}
+
+enum GrievanceType {
+  HARASSMENT
+  WAGE
+  SAFETY
+  DISCRIMINATION
+  WORKING_CONDITIONS
+  OTHER
+}
+
+enum GrievanceStatus {
+  SUBMITTED
+  ASSIGNED
+  INVESTIGATING
+  RESOLVED
+  CLOSED
+}
+
+// ============================================
+// TRAINING MANAGEMENT
+// ============================================
+
+model Training {
+  id            String        @id @default(cuid())
+  title         String
+  description   String
+  type          TrainingType
+  duration      Int           // in minutes
+  scheduledDate DateTime
+  completedDate DateTime?
+  status        TrainingStatus @default(SCHEDULED)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // Relations
+  materials  TrainingDocument[]
+  attendees  TrainingAttendee[]
+
+  @@map("trainings")
+}
+
+model TrainingDocument {
+  id         String @id @default(cuid())
+  trainingId String
+  documentId String
+
+  // Relations
+  training Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([trainingId, documentId])
+  @@map("training_documents")
+}
+
+model TrainingAttendee {
+  id               String           @id @default(cuid())
+  attendanceStatus AttendanceStatus
+  score            Float?
+  certificateIssued Boolean         @default(false)
+  completedAt      DateTime?
+  createdAt        DateTime         @default(now())
+
+  // Training association
+  trainingId String
+  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+
+  // Worker
+  workerId String
+  worker   User   @relation(fields: [workerId], references: [id])
+
+  @@unique([trainingId, workerId])
+  @@map("training_attendees")
+}
+
+enum TrainingType {
+  SAFETY
+  COMPLIANCE
+  SKILLS
+  ORIENTATION
+  REFRESHER
+}
+
+enum TrainingStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+// ============================================
+// PERMIT MANAGEMENT
+// ============================================
+
+model Permit {
+  id               String     @id @default(cuid())
+  type             String
+  number           String
+  issuingAuthority String
+  issueDate        DateTime
+  expiryDate       DateTime
+  status           PermitStatus @default(VALID)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // Relations
+  documents  PermitDocument[]
+  reminders  RenewalReminder[]
+
+  @@map("permits")
+}
+
+model PermitDocument {
+  id        String @id @default(cuid())
+  permitId  String
+  documentId String
+
+  // Relations
+  permit   Permit   @relation(fields: [permitId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([permitId, documentId])
+  @@map("permit_documents")
+}
+
+model RenewalReminder {
+  id          String        @id @default(cuid())
+  reminderDate DateTime
+  status      ReminderStatus @default(PENDING)
+  sentTo      String[]      @default([])
+  createdAt   DateTime      @default(now())
+
+  // Permit association
+  permitId String
+  permit   Permit @relation(fields: [permitId], references: [id], onDelete: Cascade)
+
+  @@map("renewal_reminders")
+}
+
+enum PermitStatus {
+  VALID
+  EXPIRED
+  EXPIRING_SOON
+  RENEWAL_PENDING
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  ACKNOWLEDGED
+}
+
+// ============================================
+// NOTIFICATIONS & ACTIVITIES
+// ============================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  actionUrl String?
+  createdAt DateTime         @default(now())
+
+  // User association
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Activity {
+  id          String       @id @default(cuid())
+  type        ActivityType
+  title       String
+  description String
+  metadata    Json         @default("{}")
+  timestamp   DateTime     @default(now())
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  // User association
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("activities")
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
+}
+
+enum ActivityType {
+  AUDIT
+  GRIEVANCE
+  TRAINING
+  PERMIT
+  DOCUMENT
+  USER
+  SYSTEM
+}
+
+// ============================================
+// COMPLIANCE DATA & ANALYTICS
+// ============================================
+
+model ComplianceData {
+  id        String   @id @default(cuid())
+  metric    String
+  value     Float
+  unit      String?
+  period    String   // e.g., "2025-01", "Q1-2025"
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Multi-tenant
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Factory association
+  factoryId String
+  factory   Factory @relation(fields: [factoryId], references: [id], onDelete: Cascade)
+
+  @@unique([factoryId, metric, period])
+  @@map("compliance_data")
+}
+
+// ============================================
+// AUDIT LOGGING
+// ============================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  resource  String
+  resourceId String?
+  oldValues Json?
+  newValues Json?
+  metadata  Json     @default("{}")
+  ipAddress String?
+  userAgent String?
+  timestamp DateTime @default(now())
+
+  // User association
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}

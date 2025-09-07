@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Integration - Worker Portal</title>
     <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/worker-portal.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+
     <style>
         /* Role-specific styling for worker */
         body.role-worker {
@@ -341,12 +344,12 @@
 
         <!-- Main Content -->
         <main class="whatsapp-content">
-            <div class="row">
+            <div class="grid grid-cols-12 gap-6">
                 <!-- Left Panel - Chat List & Templates -->
-                <div class="col-lg-4">
+                <div class="col-span-12 lg:col-span-4">
                     <!-- Statistics -->
                     <div class="whatsapp-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-chart-bar"></i> WhatsApp Statistics</h4>
                         </div>
                         <div class="card-body">
@@ -373,15 +376,15 @@
 
                     <!-- Quick Actions -->
                     <div class="whatsapp-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                         </div>
                         <div class="card-body">
                             <div class="quick-actions">
-                                <button class="btn btn-primary" id="sendBroadcast">
+                                <button class="btn btn-primary text-white font-medium" id="sendBroadcast">
                                     <i class="fas fa-broadcast-tower"></i> Broadcast
                                 </button>
-                                <button class="btn btn-secondary" id="syncContacts">
+                                <button class="btn btn-secondary font-medium" id="syncContacts">
                                     <i class="fas fa-sync"></i> Sync Contacts
                                 </button>
                                 <button class="btn btn-outline" id="exportChats">
@@ -393,7 +396,7 @@
 
                     <!-- Chat List -->
                     <div class="whatsapp-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-comments"></i> Active Chats</h4>
                             <div class="card-actions">
                                 <button class="btn btn-outline-primary btn-sm" id="refreshChats">
@@ -410,7 +413,7 @@
 
                     <!-- Message Templates -->
                     <div class="whatsapp-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-file-alt"></i> Message Templates</h4>
                             <div class="card-actions">
                                 <button class="btn btn-outline-primary btn-sm" id="addTemplate">
@@ -429,13 +432,13 @@
                 <!-- Right Panel - Chat Interface -->
                 <div class="col-lg-8">
                     <div class="whatsapp-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i class="fas fa-comment"></i> Chat Interface</h3>
                             <div class="card-actions">
-                                <button class="btn btn-secondary" id="sendTemplate">
+                                <button class="btn btn-secondary font-medium" id="sendTemplate">
                                     <i class="fas fa-file-alt"></i> Send Template
                                 </button>
-                                <button class="btn btn-primary" id="sendMessage">
+                                <button class="btn btn-primary text-white font-medium" id="sendMessage">
                                     <i class="fas fa-paper-plane"></i> Send Message
                                 </button>
                             </div>
@@ -444,28 +447,28 @@
                             <div id="chatInterface">
                                 <!-- Chat Interface -->
                                 <div class="chat-info">
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Worker Name:</label>
                                                 <span id="workerName">-</span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Phone Number:</label>
                                                 <span id="workerPhone">-</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Status:</label>
                                                 <span id="workerStatus">-</span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Last Active:</label>
                                                 <span id="lastActive">-</span>

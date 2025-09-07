@@ -1,0 +1,1045 @@
+/**
+ * Angkor Compliance Platform - Progress Indicators 2025
+ * 
+ * Modern progress bars, loading states, and indicators with 2025 design trends,
+ * accessibility features, and comprehensive animation support.
+ */
+
+/* ===== PROGRESS BARS ===== */
+
+/* Base Progress */
+.progress {
+    width: 100%;
+    height: 8px;
+    background: var(--neutral-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Bar */
+.progress-bar {
+    height: 100%;
+    background: var(--gradient-worker);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShine 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Progress Size Variants */
+.progress-sm {
+    height: 4px;
+}
+
+.progress-md {
+    height: 8px;
+}
+
+.progress-lg {
+    height: 12px;
+}
+
+.progress-xl {
+    height: 16px;
+}
+
+/* Progress Color Variants */
+.progress-bar-success {
+    background: var(--gradient-hr-staff);
+}
+
+.progress-bar-warning {
+    background: var(--gradient-grievance-committee);
+}
+
+.progress-bar-danger {
+    background: var(--gradient-auditor);
+}
+
+.progress-bar-info {
+    background: var(--gradient-analytics-user);
+}
+
+.progress-bar-neutral {
+    background: var(--neutral-500);
+}
+
+/* Progress Style Variants */
+.progress-striped .progress-bar {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem;
+    animation: progressStripes 1s linear infinite;
+}
+
+@keyframes progressStripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 1rem 0; }
+}
+
+.progress-animated .progress-bar {
+    animation: progressPulse 2s ease-in-out infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.progress-gradient .progress-bar {
+    background: linear-gradient(90deg, var(--primary-500), var(--primary-600), var(--primary-500));
+    background-size: 200% 100%;
+    animation: progressGradient 2s ease-in-out infinite;
+}
+
+@keyframes progressGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Progress with Label */
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+}
+
+.progress-label-text {
+    font-weight: var(--font-medium);
+}
+
+.progress-label-value {
+    font-weight: var(--font-semibold);
+    color: var(--neutral-700);
+}
+
+/* Progress with Steps */
+.progress-steps {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.progress-step {
+    flex: 1;
+    height: 4px;
+    background: var(--neutral-200);
+    border-radius: var(--radius-full);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-step.active {
+    background: var(--primary-500);
+}
+
+.progress-step.completed {
+    background: var(--success-500);
+}
+
+.progress-step::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    width: 8px;
+    height: 8px;
+    background: var(--neutral-200);
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.progress-step.completed::after {
+    background: var(--success-500);
+}
+
+.progress-step:last-child::after {
+    display: none;
+}
+
+/* ===== LOADING SPINNERS ===== */
+
+/* Base Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--neutral-200);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spinnerRotate 1s linear infinite;
+}
+
+@keyframes spinnerRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Spinner Size Variants */
+.spinner-xs {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+}
+
+.spinner-sm {
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
+}
+
+.spinner-md {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+}
+
+.spinner-lg {
+    width: 56px;
+    height: 56px;
+    border-width: 6px;
+}
+
+.spinner-xl {
+    width: 72px;
+    height: 72px;
+    border-width: 8px;
+}
+
+/* Spinner Color Variants */
+.spinner-success {
+    border-top-color: var(--success-500);
+}
+
+.spinner-warning {
+    border-top-color: var(--warning-500);
+}
+
+.spinner-danger {
+    border-top-color: var(--danger-500);
+}
+
+.spinner-info {
+    border-top-color: var(--info-500);
+}
+
+.spinner-neutral {
+    border-top-color: var(--neutral-500);
+}
+
+/* Spinner Style Variants */
+.spinner-dots {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.spinner-dots::before,
+.spinner-dots::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--primary-500);
+    border-radius: 50%;
+    animation: spinnerDots 1.4s ease-in-out infinite both;
+}
+
+.spinner-dots::before {
+    animation-delay: -0.32s;
+}
+
+.spinner-dots::after {
+    animation-delay: -0.16s;
+}
+
+@keyframes spinnerDots {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+.spinner-pulse {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--primary-500);
+    border-radius: 50%;
+    animation: spinnerPulse 1s ease-in-out infinite;
+}
+
+@keyframes spinnerPulse {
+    0%, 100% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+.spinner-bounce {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.spinner-bounce::before,
+.spinner-bounce::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--primary-500);
+    border-radius: 50%;
+    animation: spinnerBounce 1.4s ease-in-out infinite both;
+}
+
+.spinner-bounce::before {
+    animation-delay: -0.32s;
+}
+
+.spinner-bounce::after {
+    animation-delay: -0.16s;
+}
+
+@keyframes spinnerBounce {
+    0%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-16px);
+    }
+}
+
+.spinner-wave {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.spinner-wave::before,
+.spinner-wave::after {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--primary-500);
+    border-radius: 2px;
+    animation: spinnerWave 1.2s ease-in-out infinite;
+}
+
+.spinner-wave::before {
+    animation-delay: -0.4s;
+}
+
+.spinner-wave::after {
+    animation-delay: -0.2s;
+}
+
+@keyframes spinnerWave {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1);
+    }
+}
+
+/* ===== LOADING STATES ===== */
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: var(--glass-blur);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-loading);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-overlay .spinner {
+    margin-bottom: var(--space-4);
+}
+
+.loading-overlay .loading-text {
+    font-size: var(--text-lg);
+    font-weight: var(--font-medium);
+    color: var(--neutral-700);
+    text-align: center;
+}
+
+/* Loading Card */
+.loading-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    text-align: center;
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
+}
+
+.loading-card .spinner {
+    margin: 0 auto var(--space-4);
+}
+
+.loading-card .loading-text {
+    font-size: var(--text-base);
+    color: var(--neutral-600);
+    margin: 0;
+}
+
+/* Loading Button */
+.btn-loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spinnerRotate 1s linear infinite;
+}
+
+/* Loading Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--neutral-200) 25%, var(--neutral-100) 50%, var(--neutral-200) 75%);
+    background-size: 200% 100%;
+    animation: skeletonLoading 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes skeletonLoading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: var(--space-2);
+}
+
+.skeleton-text:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+.skeleton-text.medium {
+    width: 80%;
+}
+
+.skeleton-text.long {
+    width: 100%;
+}
+
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.skeleton-button {
+    height: 2.5rem;
+    width: 120px;
+}
+
+.skeleton-card {
+    height: 200px;
+    border-radius: var(--radius-lg);
+}
+
+/* ===== PROGRESS RINGS ===== */
+
+/* Progress Ring */
+.progress-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.progress-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    fill: none;
+    stroke: var(--neutral-200);
+    stroke-width: 8;
+}
+
+.progress-ring-progress {
+    fill: none;
+    stroke: var(--primary-500);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.3s ease;
+}
+
+.progress-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-700);
+}
+
+/* Progress Ring Size Variants */
+.progress-ring-sm {
+    width: 80px;
+    height: 80px;
+}
+
+.progress-ring-sm .progress-ring-circle,
+.progress-ring-sm .progress-ring-progress {
+    stroke-width: 6;
+}
+
+.progress-ring-lg {
+    width: 160px;
+    height: 160px;
+}
+
+.progress-ring-lg .progress-ring-circle,
+.progress-ring-lg .progress-ring-progress {
+    stroke-width: 10;
+}
+
+/* Progress Ring Color Variants */
+.progress-ring-success .progress-ring-progress {
+    stroke: var(--success-500);
+}
+
+.progress-ring-warning .progress-ring-progress {
+    stroke: var(--warning-500);
+}
+
+.progress-ring-danger .progress-ring-progress {
+    stroke: var(--danger-500);
+}
+
+.progress-ring-info .progress-ring-progress {
+    stroke: var(--info-500);
+}
+
+/* ===== LOADING BARS ===== */
+
+/* Loading Bar */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--neutral-200);
+    z-index: var(--z-loading);
+    overflow: hidden;
+}
+
+.loading-bar-progress {
+    height: 100%;
+    background: var(--gradient-worker);
+    width: 0%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.loading-bar-progress::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: loadingBarShine 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingBarShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+    .progress {
+        height: 6px;
+    }
+    
+    .progress-lg {
+        height: 10px;
+    }
+    
+    .progress-xl {
+        height: 14px;
+    }
+    
+    .spinner {
+        width: 32px;
+        height: 32px;
+        border-width: 3px;
+    }
+    
+    .spinner-lg {
+        width: 48px;
+        height: 48px;
+        border-width: 5px;
+    }
+    
+    .spinner-xl {
+        width: 64px;
+        height: 64px;
+        border-width: 6px;
+    }
+    
+    .progress-ring {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .progress-ring-lg {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* ===== DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .progress {
+        background: var(--dark-neutral-200);
+    }
+    
+    .progress-bar {
+        background: var(--dark-primary-500);
+    }
+    
+    .progress-bar-success {
+        background: var(--dark-success-500);
+    }
+    
+    .progress-bar-warning {
+        background: var(--dark-warning-500);
+    }
+    
+    .progress-bar-danger {
+        background: var(--dark-danger-500);
+    }
+    
+    .progress-bar-info {
+        background: var(--dark-info-500);
+    }
+    
+    .progress-bar-neutral {
+        background: var(--dark-neutral-500);
+    }
+    
+    .progress-label {
+        color: var(--dark-neutral-400);
+    }
+    
+    .progress-label-value {
+        color: var(--dark-neutral-300);
+    }
+    
+    .progress-step {
+        background: var(--dark-neutral-200);
+    }
+    
+    .progress-step.active {
+        background: var(--dark-primary-500);
+    }
+    
+    .progress-step.completed {
+        background: var(--dark-success-500);
+    }
+    
+    .progress-step::after {
+        background: var(--dark-neutral-200);
+    }
+    
+    .progress-step.completed::after {
+        background: var(--dark-success-500);
+    }
+    
+    .spinner {
+        border-color: var(--dark-neutral-200);
+        border-top-color: var(--dark-primary-500);
+    }
+    
+    .spinner-success {
+        border-top-color: var(--dark-success-500);
+    }
+    
+    .spinner-warning {
+        border-top-color: var(--dark-warning-500);
+    }
+    
+    .spinner-danger {
+        border-top-color: var(--dark-danger-500);
+    }
+    
+    .spinner-info {
+        border-top-color: var(--dark-info-500);
+    }
+    
+    .spinner-neutral {
+        border-top-color: var(--dark-neutral-500);
+    }
+    
+    .spinner-dots::before,
+    .spinner-dots::after {
+        background: var(--dark-primary-500);
+    }
+    
+    .spinner-pulse {
+        background: var(--dark-primary-500);
+    }
+    
+    .spinner-bounce::before,
+    .spinner-bounce::after {
+        background: var(--dark-primary-500);
+    }
+    
+    .spinner-wave::before,
+    .spinner-wave::after {
+        background: var(--dark-primary-500);
+    }
+    
+    .loading-overlay {
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
+    .loading-overlay .loading-text {
+        color: var(--dark-neutral-300);
+    }
+    
+    .loading-card {
+        background: var(--dark-glass-bg);
+        border-color: var(--dark-glass-border);
+    }
+    
+    .loading-card .loading-text {
+        color: var(--dark-neutral-400);
+    }
+    
+    .skeleton {
+        background: linear-gradient(90deg, var(--dark-neutral-200) 25%, var(--dark-neutral-100) 50%, var(--dark-neutral-200) 75%);
+    }
+    
+    .progress-ring-circle {
+        stroke: var(--dark-neutral-200);
+    }
+    
+    .progress-ring-progress {
+        stroke: var(--dark-primary-500);
+    }
+    
+    .progress-ring-text {
+        color: var(--dark-neutral-300);
+    }
+    
+    .progress-ring-success .progress-ring-progress {
+        stroke: var(--dark-success-500);
+    }
+    
+    .progress-ring-warning .progress-ring-progress {
+        stroke: var(--dark-warning-500);
+    }
+    
+    .progress-ring-danger .progress-ring-progress {
+        stroke: var(--dark-danger-500);
+    }
+    
+    .progress-ring-info .progress-ring-progress {
+        stroke: var(--dark-info-500);
+    }
+    
+    .loading-bar {
+        background: var(--dark-neutral-200);
+    }
+    
+    .loading-bar-progress {
+        background: var(--dark-primary-500);
+    }
+}
+
+.dark-mode .progress {
+    background: var(--dark-neutral-200);
+}
+
+.dark-mode .progress-bar {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .progress-bar-success {
+    background: var(--dark-success-500);
+}
+
+.dark-mode .progress-bar-warning {
+    background: var(--dark-warning-500);
+}
+
+.dark-mode .progress-bar-danger {
+    background: var(--dark-danger-500);
+}
+
+.dark-mode .progress-bar-info {
+    background: var(--dark-info-500);
+}
+
+.dark-mode .progress-bar-neutral {
+    background: var(--dark-neutral-500);
+}
+
+.dark-mode .progress-label {
+    color: var(--dark-neutral-400);
+}
+
+.dark-mode .progress-label-value {
+    color: var(--dark-neutral-300);
+}
+
+.dark-mode .progress-step {
+    background: var(--dark-neutral-200);
+}
+
+.dark-mode .progress-step.active {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .progress-step.completed {
+    background: var(--dark-success-500);
+}
+
+.dark-mode .progress-step::after {
+    background: var(--dark-neutral-200);
+}
+
+.dark-mode .progress-step.completed::after {
+    background: var(--dark-success-500);
+}
+
+.dark-mode .spinner {
+    border-color: var(--dark-neutral-200);
+    border-top-color: var(--dark-primary-500);
+}
+
+.dark-mode .spinner-success {
+    border-top-color: var(--dark-success-500);
+}
+
+.dark-mode .spinner-warning {
+    border-top-color: var(--dark-warning-500);
+}
+
+.dark-mode .spinner-danger {
+    border-top-color: var(--dark-danger-500);
+}
+
+.dark-mode .spinner-info {
+    border-top-color: var(--dark-info-500);
+}
+
+.dark-mode .spinner-neutral {
+    border-top-color: var(--dark-neutral-500);
+}
+
+.dark-mode .spinner-dots::before,
+.dark-mode .spinner-dots::after {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .spinner-pulse {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .spinner-bounce::before,
+.dark-mode .spinner-bounce::after {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .spinner-wave::before,
+.dark-mode .spinner-wave::after {
+    background: var(--dark-primary-500);
+}
+
+.dark-mode .loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.dark-mode .loading-overlay .loading-text {
+    color: var(--dark-neutral-300);
+}
+
+.dark-mode .loading-card {
+    background: var(--dark-glass-bg);
+    border-color: var(--dark-glass-border);
+}
+
+.dark-mode .loading-card .loading-text {
+    color: var(--dark-neutral-400);
+}
+
+.dark-mode .skeleton {
+    background: linear-gradient(90deg, var(--dark-neutral-200) 25%, var(--dark-neutral-100) 50%, var(--dark-neutral-200) 75%);
+}
+
+.dark-mode .progress-ring-circle {
+    stroke: var(--dark-neutral-200);
+}
+
+.dark-mode .progress-ring-progress {
+    stroke: var(--dark-primary-500);
+}
+
+.dark-mode .progress-ring-text {
+    color: var(--dark-neutral-300);
+}
+
+.dark-mode .progress-ring-success .progress-ring-progress {
+    stroke: var(--dark-success-500);
+}
+
+.dark-mode .progress-ring-warning .progress-ring-progress {
+    stroke: var(--dark-warning-500);
+}
+
+.dark-mode .progress-ring-danger .progress-ring-progress {
+    stroke: var(--dark-danger-500);
+}
+
+.dark-mode .progress-ring-info .progress-ring-progress {
+    stroke: var(--dark-info-500);
+}
+
+.dark-mode .loading-bar {
+    background: var(--dark-neutral-200);
+}
+
+.dark-mode .loading-bar-progress {
+    background: var(--dark-primary-500);
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .progress-bar,
+    .spinner,
+    .spinner-dots::before,
+    .spinner-dots::after,
+    .spinner-pulse,
+    .spinner-bounce::before,
+    .spinner-bounce::after,
+    .spinner-wave::before,
+    .spinner-wave::after,
+    .skeleton,
+    .loading-bar-progress {
+        animation: none;
+    }
+    
+    .progress-bar::before,
+    .loading-bar-progress::before {
+        animation: none;
+    }
+    
+    .progress-striped .progress-bar {
+        animation: none;
+    }
+    
+    .progress-animated .progress-bar {
+        animation: none;
+    }
+    
+    .progress-gradient .progress-bar {
+        animation: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .progress {
+        border: 1px solid var(--neutral-400);
+    }
+    
+    .progress-bar {
+        border: 1px solid var(--primary-700);
+    }
+    
+    .spinner {
+        border-width: 6px;
+    }
+    
+    .progress-ring-circle,
+    .progress-ring-progress {
+        stroke-width: 12px;
+    }
+}

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finding Documentation - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/auditor.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+
 </head>
 <body class="role-auditor">
     <div class="container-fluid">
@@ -29,18 +32,18 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <div class="row">
+        <main class="layout-main">
+            <div class="grid grid-cols-12 gap-6">
                 <!-- Left Panel - Finding Form -->
                 <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-header">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h3><i class="fas fa-edit"></i> Document New Finding</h3>
                             <div class="card-actions">
-                                <button class="btn btn-secondary" id="saveDraft">
+                                <button class="btn btn-secondary font-medium" id="saveDraft">
                                     <i class="fas fa-save"></i> Save Draft
                                 </button>
-                                <button class="btn btn-primary" id="submitFinding">
+                                <button class="btn btn-primary text-white font-medium" id="submitFinding">
                                     <i class="fas fa-paper-plane"></i> Submit Finding
                                 </button>
                             </div>
@@ -50,17 +53,17 @@
                                 <!-- Basic Information -->
                                 <div class="form-section">
                                     <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="findingTitle">Finding Title *</label>
-                                                <input type="text" id="findingTitle" class="form-control" required>
+                                                <input type="text" id="findingTitle" class="form-input" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="findingCategory">Category *</label>
-                                                <select id="findingCategory" class="form-control" required>
+                                                <select id="findingCategory" class="form-input" required>
                                                     <option value="">Select Category</option>
                                                     <option value="compliance">Compliance</option>
                                                     <option value="safety">Safety</option>
@@ -73,11 +76,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="findingSeverity">Severity Level *</label>
-                                                <select id="findingSeverity" class="form-control" required>
+                                                <select id="findingSeverity" class="form-input" required>
                                                     <option value="">Select Severity</option>
                                                     <option value="critical">Critical</option>
                                                     <option value="major">Major</option>
@@ -86,10 +89,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="findingPriority">Priority *</label>
-                                                <select id="findingPriority" class="form-control" required>
+                                                <select id="findingPriority" class="form-input" required>
                                                     <option value="">Select Priority</option>
                                                     <option value="immediate">Immediate</option>
                                                     <option value="high">High</option>
@@ -106,26 +109,26 @@
                                     <h4><i class="fas fa-search"></i> Finding Details</h4>
                                     <div class="form-group">
                                         <label for="findingDescription">Description *</label>
-                                        <textarea id="findingDescription" class="form-control" rows="4" placeholder="Describe the finding in detail..." required></textarea>
+                                        <textarea id="findingDescription" class="form-input" rows="4" placeholder="Describe the finding in detail..." required></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="findingCriteria">Non-Conformity Criteria</label>
-                                        <textarea id="findingCriteria" class="form-control" rows="3" placeholder="Reference to specific standard requirements or criteria..."></textarea>
+                                        <textarea id="findingCriteria" class="form-input" rows="3" placeholder="Reference to specific standard requirements or criteria..."></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="findingEvidence">Evidence</label>
-                                        <textarea id="findingEvidence" class="form-control" rows="3" placeholder="Document the evidence that supports this finding..."></textarea>
+                                        <textarea id="findingEvidence" class="form-input" rows="3" placeholder="Document the evidence that supports this finding..."></textarea>
                                     </div>
                                 </div>
 
                                 <!-- Impact Assessment -->
                                 <div class="form-section">
                                     <h4><i class="fas fa-exclamation-triangle"></i> Impact Assessment</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="businessImpact">Business Impact</label>
-                                                <select id="businessImpact" class="form-control">
+                                                <select id="businessImpact" class="form-input">
                                                     <option value="">Select Impact</option>
                                                     <option value="high">High - Significant business disruption</option>
                                                     <option value="medium">Medium - Moderate business impact</option>
@@ -134,10 +137,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="riskLevel">Risk Level</label>
-                                                <select id="riskLevel" class="form-control">
+                                                <select id="riskLevel" class="form-input">
                                                     <option value="">Select Risk Level</option>
                                                     <option value="extreme">Extreme</option>
                                                     <option value="high">High</option>
@@ -149,7 +152,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="impactDescription">Impact Description</label>
-                                        <textarea id="impactDescription" class="form-control" rows="3" placeholder="Describe the potential impact of this finding..."></textarea>
+                                        <textarea id="impactDescription" class="form-input" rows="3" placeholder="Describe the potential impact of this finding..."></textarea>
                                     </div>
                                 </div>
 
@@ -158,19 +161,19 @@
                                     <h4><i class="fas fa-lightbulb"></i> Recommendations</h4>
                                     <div class="form-group">
                                         <label for="recommendations">Recommended Actions *</label>
-                                        <textarea id="recommendations" class="form-control" rows="4" placeholder="Provide specific, actionable recommendations..." required></textarea>
+                                        <textarea id="recommendations" class="form-input" rows="4" placeholder="Provide specific, actionable recommendations..." required></textarea>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="targetDate">Target Completion Date</label>
-                                                <input type="date" id="targetDate" class="form-control">
+                                                <input type="date" id="targetDate" class="form-input">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="form-group">
                                                 <label for="responsibleParty">Responsible Party</label>
-                                                <input type="text" id="responsibleParty" class="form-control" placeholder="Department or person responsible">
+                                                <input type="text" id="responsibleParty" class="form-input" placeholder="Department or person responsible">
                                             </div>
                                         </div>
                                     </div>
@@ -197,10 +200,10 @@
                 </div>
 
                 <!-- Right Panel - Finding List & Statistics -->
-                <div class="col-lg-4">
+                <div class="col-span-12 lg:col-span-4">
                     <!-- Statistics -->
-                    <div class="card">
-                        <div class="card-header">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-chart-bar"></i> Finding Statistics</h4>
                         </div>
                         <div class="card-body">
@@ -226,8 +229,8 @@
                     </div>
 
                     <!-- Recent Findings -->
-                    <div class="card">
-                        <div class="card-header">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-history"></i> Recent Findings</h4>
                         </div>
                         <div class="card-body">
@@ -238,8 +241,8 @@
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="card">
-                        <div class="card-header">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                         </div>
                         <div class="card-body">

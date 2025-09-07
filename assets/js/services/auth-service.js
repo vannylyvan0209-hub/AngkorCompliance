@@ -3,7 +3,7 @@
  * Handles user authentication, role management, and session control
  */
 
-import { Firebase } from '../../firebase-config.js';
+import { Firebase } from '../../../firebase-config.js';
 
 class AuthService {
     constructor() {
@@ -22,8 +22,8 @@ class AuthService {
      */
     async init() {
         try {
-            // Set up auth state listener
-            Firebase.onAuthStateChanged(async (user) => {
+            // Set up auth state listener using the correct Firebase v12 syntax
+            Firebase.onAuthStateChanged(Firebase.auth, async (user) => {
                 if (user) {
                     await this.handleUserSignIn(user);
                 } else {

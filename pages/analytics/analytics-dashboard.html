@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics Dashboard - Angkor Compliance Platform</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
     
     <!-- Modern CSS -->
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+    
+    
     
     <!-- Inter Font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <!-- Moment.js for Date Formatting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <style>
         /* Role-specific styling for analytics_user */
@@ -410,9 +416,10 @@
     </style>
 </head>
 <body class="role-analytics-user">
+    <div id="sidebarContainer"></div>
     
     <!-- Navigation Sidebar -->
-    <div id="navigation-sidebar" class="sidebar"></div>
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
     <!-- Header -->
     <header id="navigation-header" class="header"></header>
@@ -421,7 +428,8 @@
     <div id="quick-actions" class="quick-actions-container"></div>
 
     <!-- Main Content -->
-    <main class="main-content"><div class="analytics-dashboard">
+    <main class="layout-main">
+        <div style="margin-left: 280px;"><div class="analytics-dashboard">
         <div class="dashboard-container">
             <!-- Dashboard Header -->
             <div class="dashboard-header fade-in">
@@ -429,7 +437,8 @@
                     <div class="header-left">
                         <h1>Analytics Dashboard</h1>
                         <p>Comprehensive insights and performance metrics</p>
-                    </div></main>
+                    </div>        </div>
+</main>
                     <div class="header-right">
                         <div class="user-info">
                             <div class="user-avatar" id="userAvatar">
@@ -624,9 +633,13 @@
     
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/analytics/analytics-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <script>
         // Initialize Lucide icons
@@ -638,3 +651,5 @@
     </script>
 </body>
 </html>
+
+

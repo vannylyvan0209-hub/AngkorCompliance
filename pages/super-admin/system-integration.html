@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Integration Management - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* System Integration Management Specific Styles */
+        .system-integration-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .integration-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .integration-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Integration Overview */
+        .integration-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.apis::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-card.integrations::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.webhooks::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.connections::before {
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.apis {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-icon.integrations {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-icon.webhooks {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.connections {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Integration Management */
+        .integration-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Integration Tabs */
+        .integration-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* API Management */
+        .api-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .api-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .api-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .api-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .api-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .api-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .api-status.inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .api-status.deprecated {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .api-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .api-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .api-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .api-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .api-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Third-party Integrations */
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .integration-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .integration-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .integration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .integration-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .integration-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            background: var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+        }
+        
+        .integration-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .integration-status.connected {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .integration-status.disconnected {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .integration-status.error {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .integration-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .integration-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .integration-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .integration-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Webhook Configuration */
+        .webhook-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .webhook-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .webhook-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .webhook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .webhook-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .webhook-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .webhook-status.enabled {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .webhook-status.disabled {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .webhook-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .webhook-url {
+            font-family: monospace;
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            background: var(--neutral-50);
+            padding: var(--space-2);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-3);
+            word-break: break-all;
+        }
+        
+        .webhook-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .webhook-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .webhook-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* External Connectivity */
+        .connectivity-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .connectivity-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .connectivity-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .connectivity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .connectivity-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .connectivity-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .connectivity-status.online {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .connectivity-status.offline {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .connectivity-status.error {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .connectivity-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .connectivity-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .connectivity-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .connectivity-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .integration-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .api-management {
+                grid-template-columns: 1fr;
+            }
+            
+            .integrations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .webhook-management {
+                grid-template-columns: 1fr;
+            }
+            
+            .connectivity-management {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .system-integration-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .integration-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="system-integration-system">
+            <div class="integration-container">
+                <!-- Integration Header -->
+                <div class="integration-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>System Integration Management</h1>
+                            <p>API management, third-party integrations, webhook configuration, and external system connectivity</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="createIntegration()">
+                                <i data-lucide="plus"></i>
+                                Create Integration
+                            </button>
+                            <button class="action-btn" onclick="testConnections()">
+                                <i data-lucide="wifi"></i>
+                                Test Connections
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Integration Overview -->
+                <div class="integration-overview fade-in">
+                    <div class="overview-card apis">
+                        <div class="overview-header">
+                            <div class="overview-icon apis">
+                                <i data-lucide="code"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">API Endpoints</div>
+                        <div class="overview-value" id="apiEndpoints">24</div>
+                        <div class="overview-description">Active API endpoints</div>
+                    </div>
+                    
+                    <div class="overview-card integrations">
+                        <div class="overview-header">
+                            <div class="overview-icon integrations">
+                                <i data-lucide="link"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Active Integrations</div>
+                        <div class="overview-value" id="activeIntegrations">8</div>
+                        <div class="overview-description">Connected third-party services</div>
+                    </div>
+                    
+                    <div class="overview-card webhooks">
+                        <div class="overview-header">
+                            <div class="overview-icon webhooks">
+                                <i data-lucide="webhook"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Webhooks</div>
+                        <div class="overview-value" id="webhooks">12</div>
+                        <div class="overview-description">Configured webhook endpoints</div>
+                    </div>
+                    
+                    <div class="overview-card connections">
+                        <div class="overview-header">
+                            <div class="overview-icon connections">
+                                <i data-lucide="globe"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">External Connections</div>
+                        <div class="overview-value" id="externalConnections">15</div>
+                        <div class="overview-description">External system connections</div>
+                    </div>
+                </div>
+                
+                <!-- Integration Management -->
+                <div class="integration-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Integration Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshIntegrations()">Refresh</button>
+                            <button class="management-btn" onclick="exportIntegrations()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Integration Tabs -->
+                    <div class="integration-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('apis')">API Management</button>
+                            <button class="tab-btn" onclick="switchTab('integrations')">Third-party Integrations</button>
+                            <button class="tab-btn" onclick="switchTab('webhooks')">Webhook Configuration</button>
+                            <button class="tab-btn" onclick="switchTab('connectivity')">External Connectivity</button>
+                        </div>
+                        
+                        <!-- API Management Tab -->
+                        <div id="apis-tab" class="tab-content active">
+                            <div class="api-management" id="apiManagement">
+                                <!-- API management items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Third-party Integrations Tab -->
+                        <div id="integrations-tab" class="tab-content">
+                            <div class="integrations-grid" id="integrationsGrid">
+                                <!-- Third-party integrations will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Webhook Configuration Tab -->
+                        <div id="webhooks-tab" class="tab-content">
+                            <div class="webhook-management" id="webhookManagement">
+                                <!-- Webhook management items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- External Connectivity Tab -->
+                        <div id="connectivity-tab" class="tab-content">
+                            <div class="connectivity-management" id="connectivityManagement">
+                                <!-- External connectivity items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/system-integration-core.js"></script>
+    <script src="../../assets/js/super-admin/system-integration-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function createIntegration() {
+            console.log('Creating new integration...');
+            // Implement create integration
+        }
+        
+        function testConnections() {
+            console.log('Testing connections...');
+            // Implement test connections
+        }
+        
+        function refreshIntegrations() {
+            console.log('Refreshing integrations...');
+            // Implement refresh functionality
+        }
+        
+        function exportIntegrations() {
+            console.log('Exporting integrations...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

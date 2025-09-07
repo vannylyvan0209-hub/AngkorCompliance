@@ -1,0 +1,1200 @@
+/**
+ * Angkor Compliance Platform - Print Styles 2025
+ * 
+ * Print-optimized styles for reports, documentation,
+ * and compliance materials with 2025 design system.
+ */
+
+/* ===== PRINT MEDIA QUERIES ===== */
+
+@media print {
+    /* ===== PAGE SETUP ===== */
+    
+    @page {
+        size: A4;
+        margin: 2cm;
+        @top-center {
+            content: "Angkor Compliance Platform";
+            font-family: var(--font-sans);
+            font-size: 10pt;
+            color: var(--neutral-600);
+        }
+        @bottom-center {
+            content: "Page " counter(page) " of " counter(pages);
+            font-family: var(--font-sans);
+            font-size: 10pt;
+            color: var(--neutral-600);
+        }
+    }
+
+    /* ===== ROOT VARIABLES FOR PRINT ===== */
+    
+    :root {
+        --print-primary: #000000;
+        --print-secondary: #333333;
+        --print-neutral: #666666;
+        --print-light: #999999;
+        --print-border: #cccccc;
+        --print-background: #ffffff;
+        --print-text: #000000;
+        --print-text-light: #666666;
+        --print-text-muted: #999999;
+    }
+
+    /* ===== GENERAL PRINT STYLES ===== */
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        font-size: 12pt;
+        line-height: 1.4;
+        color: var(--print-text);
+        background: var(--print-background);
+        margin: 0;
+        padding: 0;
+    }
+
+    /* ===== HIDE NON-PRINTABLE ELEMENTS ===== */
+    
+    .no-print,
+    .print-hidden,
+    .btn,
+    .nav,
+    .navigation,
+    .sidebar,
+    .header,
+    .footer,
+    .modal,
+    .toast,
+    .alert,
+    .banner,
+    .inline-notification,
+    .loading-overlay,
+    .loading-bar,
+    .spinner,
+    .skeleton,
+    .avatar-status,
+    .avatar-badge,
+    .progress-bar,
+    .progress-ring,
+    .form-input,
+    .form-textarea,
+    .form-select,
+    .form-checkbox,
+    .form-radio,
+    .form-switch,
+    .dropdown,
+    .tooltip,
+    .popover,
+    .context-menu,
+    .tab-nav,
+    .accordion-header,
+    .carousel,
+    .slider,
+    .video,
+    .audio,
+    .iframe,
+    .embed,
+    .script,
+    .noscript,
+    .style,
+    .link[rel="stylesheet"],
+    .meta,
+    .title,
+    .favicon,
+    .icon,
+    .logo[data-print="false"],
+    .social-links,
+    .share-buttons,
+    .comment-section,
+    .rating,
+    .feedback,
+    .chat,
+    .notification,
+    .badge,
+    .tag,
+    .chip,
+    .pill,
+    .label,
+    .mark,
+    .highlight,
+    .underline,
+    .strikethrough,
+    .subscript,
+    .superscript,
+    .small,
+    .big,
+    .markdown,
+    .code-block,
+    .pre,
+    .kbd,
+    .samp,
+    .var,
+    .dfn,
+    .abbr,
+    .acronym,
+    .cite,
+    .q,
+    .blockquote,
+    .address,
+    .ins,
+    .del,
+    .s,
+    .u,
+    .b,
+    .i,
+    .em,
+    .strong,
+    .mark,
+    .small,
+    .sub,
+    .sup,
+    .tt,
+    .code,
+    .kbd,
+    .samp,
+    .var,
+    .dfn,
+    .abbr,
+    .acronym,
+    .cite,
+    .q,
+    .blockquote,
+    .address,
+    .ins,
+    .del,
+    .s,
+    .u,
+    .b,
+    .i,
+    .em,
+    .strong {
+        display: none !important;
+    }
+
+    /* ===== PRINT-SPECIFIC ELEMENTS ===== */
+    
+    .print-only {
+        display: block !important;
+    }
+
+    .print-break-before {
+        page-break-before: always;
+    }
+
+    .print-break-after {
+        page-break-after: always;
+    }
+
+    .print-break-inside-avoid {
+        page-break-inside: avoid;
+    }
+
+    .print-break-inside-auto {
+        page-break-inside: auto;
+    }
+
+    /* ===== TYPOGRAPHY FOR PRINT ===== */
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-sans);
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        page-break-after: avoid;
+    }
+
+    h1 {
+        font-size: 18pt;
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.25em;
+        margin-bottom: 1em;
+    }
+
+    h2 {
+        font-size: 16pt;
+        border-bottom: 1px solid var(--print-border);
+        padding-bottom: 0.25em;
+        margin-bottom: 0.75em;
+    }
+
+    h3 {
+        font-size: 14pt;
+        margin-bottom: 0.5em;
+    }
+
+    h4 {
+        font-size: 13pt;
+        margin-bottom: 0.5em;
+    }
+
+    h5 {
+        font-size: 12pt;
+        margin-bottom: 0.5em;
+    }
+
+    h6 {
+        font-size: 11pt;
+        margin-bottom: 0.5em;
+    }
+
+    p {
+        margin: 0 0 1em 0;
+        text-align: justify;
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* ===== LISTS FOR PRINT ===== */
+    
+    ul, ol {
+        margin: 0 0 1em 0;
+        padding-left: 1.5em;
+    }
+
+    li {
+        margin-bottom: 0.25em;
+        page-break-inside: avoid;
+    }
+
+    /* ===== TABLES FOR PRINT ===== */
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1em 0;
+        page-break-inside: avoid;
+    }
+
+    th, td {
+        border: 1px solid var(--print-border);
+        padding: 0.5em;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    th {
+        background: var(--print-light);
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    /* ===== CARDS FOR PRINT ===== */
+    
+    .card {
+        border: 1px solid var(--print-border);
+        border-radius: 0;
+        padding: 1em;
+        margin: 1em 0;
+        page-break-inside: avoid;
+        background: var(--print-background);
+        box-shadow: none;
+    }
+
+    .card-header {
+        border-bottom: 1px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .card-title {
+        font-size: 14pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 0;
+    }
+
+    /* ===== FORMS FOR PRINT ===== */
+    
+    .form-group {
+        margin-bottom: 1em;
+        page-break-inside: avoid;
+    }
+
+    .form-label {
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        display: block;
+        margin-bottom: 0.25em;
+    }
+
+    .form-value {
+        color: var(--print-text);
+        font-weight: var(--font-normal);
+        display: block;
+        padding: 0.25em 0;
+        border-bottom: 1px solid var(--print-border);
+    }
+
+    /* ===== AVATARS FOR PRINT ===== */
+    
+    .avatar {
+        border: 1px solid var(--print-border);
+        border-radius: 0;
+        background: var(--print-background);
+        color: var(--print-text);
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .avatar img {
+        border-radius: 0;
+    }
+
+    /* ===== PROGRESS FOR PRINT ===== */
+    
+    .progress {
+        border: 1px solid var(--print-border);
+        height: 20px;
+        background: var(--print-background);
+        position: relative;
+        margin: 0.5em 0;
+    }
+
+    .progress-bar {
+        background: var(--print-primary);
+        height: 100%;
+        position: relative;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+    }
+
+    /* ===== LAYOUT FOR PRINT ===== */
+    
+    .container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .row {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .col,
+    .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+        width: 100%;
+        float: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .grid {
+        display: block;
+    }
+
+    .grid-item {
+        width: 100%;
+        float: none;
+        margin: 0 0 1em 0;
+        page-break-inside: avoid;
+    }
+
+    /* ===== FLEXBOX FOR PRINT ===== */
+    
+    .flex {
+        display: block;
+    }
+
+    .flex-item {
+        display: block;
+        margin-bottom: 0.5em;
+    }
+
+    /* ===== SPACING FOR PRINT ===== */
+    
+    .m-0, .mx-0, .my-0, .mt-0, .mr-0, .mb-0, .ml-0 { margin: 0 !important; }
+    .m-1, .mx-1, .my-1, .mt-1, .mr-1, .mb-1, .ml-1 { margin: 0.25em !important; }
+    .m-2, .mx-2, .my-2, .mt-2, .mr-2, .mb-2, .ml-2 { margin: 0.5em !important; }
+    .m-3, .mx-3, .my-3, .mt-3, .mr-3, .mb-3, .ml-3 { margin: 0.75em !important; }
+    .m-4, .mx-4, .my-4, .mt-4, .mr-4, .mb-4, .ml-4 { margin: 1em !important; }
+    .m-5, .mx-5, .my-5, .mt-5, .mr-5, .mb-5, .ml-5 { margin: 1.25em !important; }
+    .m-6, .mx-6, .my-6, .mt-6, .mr-6, .mb-6, .ml-6 { margin: 1.5em !important; }
+
+    .p-0, .px-0, .py-0, .pt-0, .pr-0, .pb-0, .pl-0 { padding: 0 !important; }
+    .p-1, .px-1, .py-1, .pt-1, .pr-1, .pb-1, .pl-1 { padding: 0.25em !important; }
+    .p-2, .px-2, .py-2, .pt-2, .pr-2, .pb-2, .pl-2 { padding: 0.5em !important; }
+    .p-3, .px-3, .py-3, .pt-3, .pr-3, .pb-3, .pl-3 { padding: 0.75em !important; }
+    .p-4, .px-4, .py-4, .pt-4, .pr-4, .pb-4, .pl-4 { padding: 1em !important; }
+    .p-5, .px-5, .py-5, .pt-5, .pr-5, .pb-5, .pl-5 { padding: 1.25em !important; }
+    .p-6, .px-6, .py-6, .pt-6, .pr-6, .pb-6, .pl-6 { padding: 1.5em !important; }
+
+    /* ===== TEXT ALIGNMENT FOR PRINT ===== */
+    
+    .text-left { text-align: left !important; }
+    .text-center { text-align: center !important; }
+    .text-right { text-align: right !important; }
+    .text-justify { text-align: justify !important; }
+
+    /* ===== FONT WEIGHTS FOR PRINT ===== */
+    
+    .font-light { font-weight: 300 !important; }
+    .font-normal { font-weight: 400 !important; }
+    .font-medium { font-weight: 500 !important; }
+    .font-semibold { font-weight: 600 !important; }
+    .font-bold { font-weight: 700 !important; }
+    .font-extrabold { font-weight: 800 !important; }
+
+    /* ===== COLORS FOR PRINT ===== */
+    
+    .text-primary { color: var(--print-primary) !important; }
+    .text-secondary { color: var(--print-secondary) !important; }
+    .text-neutral { color: var(--print-neutral) !important; }
+    .text-light { color: var(--print-light) !important; }
+    .text-muted { color: var(--print-text-muted) !important; }
+    .text-dark { color: var(--print-text) !important; }
+
+    /* ===== BORDERS FOR PRINT ===== */
+    
+    .border { border: 1px solid var(--print-border) !important; }
+    .border-top { border-top: 1px solid var(--print-border) !important; }
+    .border-right { border-right: 1px solid var(--print-border) !important; }
+    .border-bottom { border-bottom: 1px solid var(--print-border) !important; }
+    .border-left { border-left: 1px solid var(--print-border) !important; }
+    .border-0 { border: none !important; }
+
+    /* ===== BACKGROUNDS FOR PRINT ===== */
+    
+    .bg-primary { background: var(--print-primary) !important; color: white !important; }
+    .bg-secondary { background: var(--print-secondary) !important; color: white !important; }
+    .bg-neutral { background: var(--print-neutral) !important; color: white !important; }
+    .bg-light { background: var(--print-light) !important; color: var(--print-text) !important; }
+    .bg-white { background: var(--print-background) !important; color: var(--print-text) !important; }
+
+    /* ===== UTILITIES FOR PRINT ===== */
+    
+    .d-none { display: none !important; }
+    .d-block { display: block !important; }
+    .d-inline { display: inline !important; }
+    .d-inline-block { display: inline-block !important; }
+
+    .w-100 { width: 100% !important; }
+    .h-100 { height: 100% !important; }
+
+    .float-left { float: left !important; }
+    .float-right { float: right !important; }
+    .float-none { float: none !important; }
+
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* ===== PAGE BREAKS ===== */
+    
+    .page-break-before { page-break-before: always; }
+    .page-break-after { page-break-after: always; }
+    .page-break-inside-avoid { page-break-inside: avoid; }
+    .page-break-inside-auto { page-break-inside: auto; }
+
+    /* ===== PRINT HEADERS AND FOOTERS ===== */
+    
+    .print-header {
+        text-align: center;
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 1em;
+        margin-bottom: 2em;
+    }
+
+    .print-footer {
+        text-align: center;
+        border-top: 1px solid var(--print-border);
+        padding-top: 1em;
+        margin-top: 2em;
+        font-size: 10pt;
+        color: var(--print-text-muted);
+    }
+
+    /* ===== PRINT LOGO ===== */
+    
+    .print-logo {
+        max-width: 200px;
+        height: auto;
+        margin-bottom: 1em;
+    }
+
+    /* ===== PRINT METADATA ===== */
+    
+    .print-meta {
+        font-size: 10pt;
+        color: var(--print-text-muted);
+        margin-bottom: 1em;
+    }
+
+    .print-meta .meta-item {
+        display: inline-block;
+        margin-right: 1em;
+    }
+
+    /* ===== PRINT SECTIONS ===== */
+    
+    .print-section {
+        margin-bottom: 2em;
+        page-break-inside: avoid;
+    }
+
+    .print-section-title {
+        font-size: 14pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 1px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    /* ===== PRINT LISTS ===== */
+    
+    .print-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .print-list-item {
+        border-bottom: 1px solid var(--print-border);
+        padding: 0.5em 0;
+        page-break-inside: avoid;
+    }
+
+    .print-list-item:last-child {
+        border-bottom: none;
+    }
+
+    /* ===== PRINT FORMS ===== */
+    
+    .print-form {
+        border: 1px solid var(--print-border);
+        padding: 1em;
+        margin: 1em 0;
+        page-break-inside: avoid;
+    }
+
+    .print-form-row {
+        display: block;
+        margin-bottom: 1em;
+        page-break-inside: avoid;
+    }
+
+    .print-form-label {
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        display: block;
+        margin-bottom: 0.25em;
+    }
+
+    .print-form-value {
+        color: var(--print-text);
+        display: block;
+        padding: 0.25em 0;
+        border-bottom: 1px solid var(--print-border);
+        min-height: 1.5em;
+    }
+
+    /* ===== PRINT TABLES ===== */
+    
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1em 0;
+        page-break-inside: avoid;
+    }
+
+    .print-table th,
+    .print-table td {
+        border: 1px solid var(--print-border);
+        padding: 0.5em;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .print-table th {
+        background: var(--print-light);
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+    }
+
+    .print-table tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    /* ===== PRINT CHARTS ===== */
+    
+    .print-chart {
+        border: 1px solid var(--print-border);
+        padding: 1em;
+        margin: 1em 0;
+        text-align: center;
+        page-break-inside: avoid;
+    }
+
+    .print-chart-title {
+        font-size: 12pt;
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        margin-bottom: 0.5em;
+    }
+
+    .print-chart-placeholder {
+        color: var(--print-text-muted);
+        font-style: italic;
+        padding: 2em;
+        border: 2px dashed var(--print-border);
+    }
+
+    /* ===== PRINT SIGNATURES ===== */
+    
+    .print-signature {
+        margin-top: 2em;
+        page-break-inside: avoid;
+    }
+
+    .print-signature-line {
+        border-bottom: 1px solid var(--print-border);
+        width: 200px;
+        margin: 1em 0 0.5em 0;
+    }
+
+    .print-signature-label {
+        font-size: 10pt;
+        color: var(--print-text-muted);
+    }
+
+    /* ===== PRINT WATERMARKS ===== */
+    
+    .print-watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 48pt;
+        color: rgba(0, 0, 0, 0.1);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* ===== PRINT QR CODES ===== */
+    
+    .print-qr {
+        float: right;
+        margin: 0 0 1em 1em;
+        page-break-inside: avoid;
+    }
+
+    .print-qr img {
+        width: 100px;
+        height: 100px;
+        border: 1px solid var(--print-border);
+    }
+
+    /* ===== PRINT BARCODES ===== */
+    
+    .print-barcode {
+        text-align: center;
+        margin: 1em 0;
+        page-break-inside: avoid;
+    }
+
+    .print-barcode img {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid var(--print-border);
+    }
+
+    /* ===== PRINT FOOTNOTES ===== */
+    
+    .print-footnote {
+        font-size: 10pt;
+        color: var(--print-text-muted);
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 1px solid var(--print-border);
+    }
+
+    .print-footnote-item {
+        margin-bottom: 0.5em;
+    }
+
+    .print-footnote-ref {
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+    }
+
+    /* ===== PRINT APPENDICES ===== */
+    
+    .print-appendix {
+        margin-top: 2em;
+        page-break-before: always;
+    }
+
+    .print-appendix-title {
+        font-size: 16pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    /* ===== PRINT GLOSSARY ===== */
+    
+    .print-glossary {
+        margin-top: 2em;
+        page-break-before: always;
+    }
+
+    .print-glossary-title {
+        font-size: 16pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .print-glossary-item {
+        margin-bottom: 1em;
+        page-break-inside: avoid;
+    }
+
+    .print-glossary-term {
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        display: block;
+        margin-bottom: 0.25em;
+    }
+
+    .print-glossary-definition {
+        color: var(--print-text);
+        margin-left: 1em;
+    }
+
+    /* ===== PRINT INDEX ===== */
+    
+    .print-index {
+        margin-top: 2em;
+        page-break-before: always;
+    }
+
+    .print-index-title {
+        font-size: 16pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .print-index-column {
+        width: 50%;
+        float: left;
+        margin-bottom: 1em;
+    }
+
+    .print-index-item {
+        margin-bottom: 0.5em;
+        page-break-inside: avoid;
+    }
+
+    .print-index-term {
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+    }
+
+    .print-index-page {
+        color: var(--print-text-muted);
+        margin-left: 0.5em;
+    }
+
+    /* ===== PRINT BIBLIOGRAPHY ===== */
+    
+    .print-bibliography {
+        margin-top: 2em;
+        page-break-before: always;
+    }
+
+    .print-bibliography-title {
+        font-size: 16pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .print-bibliography-item {
+        margin-bottom: 1em;
+        page-break-inside: avoid;
+        text-indent: -1em;
+        padding-left: 1em;
+    }
+
+    /* ===== PRINT COVER PAGE ===== */
+    
+    .print-cover {
+        page-break-after: always;
+        text-align: center;
+        padding: 4cm 2cm;
+    }
+
+    .print-cover-title {
+        font-size: 24pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        margin-bottom: 1em;
+    }
+
+    .print-cover-subtitle {
+        font-size: 18pt;
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        margin-bottom: 2em;
+    }
+
+    .print-cover-meta {
+        font-size: 12pt;
+        color: var(--print-text-muted);
+        margin-bottom: 1em;
+    }
+
+    .print-cover-date {
+        font-size: 14pt;
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+        margin-top: 2em;
+    }
+
+    /* ===== PRINT TABLE OF CONTENTS ===== */
+    
+    .print-toc {
+        page-break-after: always;
+    }
+
+    .print-toc-title {
+        font-size: 18pt;
+        font-weight: var(--font-bold);
+        color: var(--print-text);
+        border-bottom: 2px solid var(--print-border);
+        padding-bottom: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .print-toc-item {
+        margin-bottom: 0.5em;
+        page-break-inside: avoid;
+    }
+
+    .print-toc-item-1 {
+        font-weight: var(--font-semibold);
+        color: var(--print-text);
+    }
+
+    .print-toc-item-2 {
+        margin-left: 1em;
+        color: var(--print-text);
+    }
+
+    .print-toc-item-3 {
+        margin-left: 2em;
+        color: var(--print-text-muted);
+    }
+
+    .print-toc-page {
+        float: right;
+        color: var(--print-text-muted);
+    }
+
+    .print-toc-dots {
+        color: var(--print-text-muted);
+        margin: 0 0.5em;
+    }
+
+    /* ===== PRINT LANDSCAPE ===== */
+    
+    @page landscape {
+        size: A4 landscape;
+        margin: 1.5cm;
+    }
+
+    .print-landscape {
+        page-break-before: always;
+    }
+
+    .print-landscape table {
+        width: 100%;
+        font-size: 10pt;
+    }
+
+    .print-landscape th,
+    .print-landscape td {
+        padding: 0.25em;
+    }
+
+    /* ===== PRINT PORTRAIT ===== */
+    
+    @page portrait {
+        size: A4 portrait;
+        margin: 2cm;
+    }
+
+    .print-portrait {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT LEGAL ===== */
+    
+    @page legal {
+        size: legal;
+        margin: 2cm;
+    }
+
+    .print-legal {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT LETTER ===== */
+    
+    @page letter {
+        size: letter;
+        margin: 2cm;
+    }
+
+    .print-letter {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT A3 ===== */
+    
+    @page a3 {
+        size: A3;
+        margin: 2cm;
+    }
+
+    .print-a3 {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT A5 ===== */
+    
+    @page a5 {
+        size: A5;
+        margin: 1.5cm;
+    }
+
+    .print-a5 {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT B4 ===== */
+    
+    @page b4 {
+        size: B4;
+        margin: 2cm;
+    }
+
+    .print-b4 {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT B5 ===== */
+    
+    @page b5 {
+        size: B5;
+        margin: 1.5cm;
+    }
+
+    .print-b5 {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT CUSTOM ===== */
+    
+    @page custom {
+        size: 21cm 29.7cm;
+        margin: 2cm;
+    }
+
+    .print-custom {
+        page-break-before: always;
+    }
+
+    /* ===== PRINT UTILITIES ===== */
+    
+    .print-float-left { float: left !important; }
+    .print-float-right { float: right !important; }
+    .print-float-none { float: none !important; }
+
+    .print-clear-left { clear: left !important; }
+    .print-clear-right { clear: right !important; }
+    .print-clear-both { clear: both !important; }
+    .print-clear-none { clear: none !important; }
+
+    .print-text-left { text-align: left !important; }
+    .print-text-center { text-align: center !important; }
+    .print-text-right { text-align: right !important; }
+    .print-text-justify { text-align: justify !important; }
+
+    .print-font-bold { font-weight: var(--font-bold) !important; }
+    .print-font-semibold { font-weight: var(--font-semibold) !important; }
+    .print-font-medium { font-weight: var(--font-medium) !important; }
+    .print-font-normal { font-weight: var(--font-normal) !important; }
+    .print-font-light { font-weight: var(--font-light) !important; }
+
+    .print-color-primary { color: var(--print-primary) !important; }
+    .print-color-secondary { color: var(--print-secondary) !important; }
+    .print-color-neutral { color: var(--print-neutral) !important; }
+    .print-color-light { color: var(--print-light) !important; }
+    .print-color-muted { color: var(--print-text-muted) !important; }
+    .print-color-dark { color: var(--print-text) !important; }
+
+    .print-bg-primary { background: var(--print-primary) !important; color: white !important; }
+    .print-bg-secondary { background: var(--print-secondary) !important; color: white !important; }
+    .print-bg-neutral { background: var(--print-neutral) !important; color: white !important; }
+    .print-bg-light { background: var(--print-light) !important; color: var(--print-text) !important; }
+    .print-bg-white { background: var(--print-background) !important; color: var(--print-text) !important; }
+
+    .print-border { border: 1px solid var(--print-border) !important; }
+    .print-border-top { border-top: 1px solid var(--print-border) !important; }
+    .print-border-right { border-right: 1px solid var(--print-border) !important; }
+    .print-border-bottom { border-bottom: 1px solid var(--print-border) !important; }
+    .print-border-left { border-left: 1px solid var(--print-border) !important; }
+    .print-border-0 { border: none !important; }
+
+    .print-m-0 { margin: 0 !important; }
+    .print-m-1 { margin: 0.25em !important; }
+    .print-m-2 { margin: 0.5em !important; }
+    .print-m-3 { margin: 0.75em !important; }
+    .print-m-4 { margin: 1em !important; }
+    .print-m-5 { margin: 1.25em !important; }
+    .print-m-6 { margin: 1.5em !important; }
+
+    .print-p-0 { padding: 0 !important; }
+    .print-p-1 { padding: 0.25em !important; }
+    .print-p-2 { padding: 0.5em !important; }
+    .print-p-3 { padding: 0.75em !important; }
+    .print-p-4 { padding: 1em !important; }
+    .print-p-5 { padding: 1.25em !important; }
+    .print-p-6 { padding: 1.5em !important; }
+
+    .print-w-100 { width: 100% !important; }
+    .print-h-100 { height: 100% !important; }
+
+    .print-d-none { display: none !important; }
+    .print-d-block { display: block !important; }
+    .print-d-inline { display: inline !important; }
+    .print-d-inline-block { display: inline-block !important; }
+
+    /* ===== PRINT RESPONSIVE ===== */
+    
+    @media print and (max-width: 21cm) {
+        .print-responsive {
+            font-size: 10pt;
+        }
+        
+        .print-responsive h1 { font-size: 16pt; }
+        .print-responsive h2 { font-size: 14pt; }
+        .print-responsive h3 { font-size: 12pt; }
+        .print-responsive h4 { font-size: 11pt; }
+        .print-responsive h5 { font-size: 10pt; }
+        .print-responsive h6 { font-size: 9pt; }
+    }
+
+    @media print and (min-width: 21cm) {
+        .print-responsive {
+            font-size: 12pt;
+        }
+        
+        .print-responsive h1 { font-size: 18pt; }
+        .print-responsive h2 { font-size: 16pt; }
+        .print-responsive h3 { font-size: 14pt; }
+        .print-responsive h4 { font-size: 13pt; }
+        .print-responsive h5 { font-size: 12pt; }
+        .print-responsive h6 { font-size: 11pt; }
+    }
+
+    /* ===== PRINT ACCESSIBILITY ===== */
+    
+    .print-sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+
+    .print-sr-only-focusable:focus {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        padding: inherit !important;
+        margin: inherit !important;
+        overflow: visible !important;
+        clip: auto !important;
+        white-space: normal !important;
+    }
+
+    /* ===== PRINT PERFORMANCE ===== */
+    
+    .print-optimize {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-optimize * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* ===== PRINT DEBUG ===== */
+    
+    .print-debug {
+        border: 2px dashed red !important;
+        background: rgba(255, 0, 0, 0.1) !important;
+    }
+
+    .print-debug::before {
+        content: 'PRINT DEBUG';
+        position: absolute;
+        top: -20px;
+        left: 0;
+        background: red;
+        color: white;
+        padding: 2px 4px;
+        font-size: 10px;
+        font-weight: bold;
+        z-index: 9999;
+    }
+}

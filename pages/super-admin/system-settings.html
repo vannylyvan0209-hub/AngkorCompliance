@@ -3,28 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Settings - Angkor Compliance Platform</title>
+    <title>System Settings - Super Admin - Angkor Compliance Platform</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
     
     <!-- Modern CSS -->
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+    
+    
+    
     
     <!-- Inter Font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
-    <!-- Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Moment.js for Date Formatting -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <style>
         /* Role-specific styling for super_admin */
@@ -33,7 +30,6 @@
             --role-secondary: var(--super-admin-secondary);
             --role-accent: var(--super-admin-accent);
         }
-
         
         /* System Settings Specific Styles */
         .system-settings {
@@ -74,33 +70,9 @@
             font-size: var(--text-lg);
         }
         
-        .header-right {
+        .header-actions {
             display: flex;
-            gap: var(--space-4);
-            align-items: center;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
             gap: var(--space-3);
-        }
-        
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .quick-actions {
-            display: flex;
-            gap: var(--space-2);
         }
         
         .action-btn {
@@ -127,13 +99,49 @@
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
         }
         
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: var(--space-8);
+        /* Settings Navigation */
+        .settings-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
         }
         
-        .settings-section {
+        .nav-tabs {
+            display: flex;
+            gap: var(--space-2);
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .nav-tab:hover {
+            background: var(--neutral-200);
+        }
+        
+        .nav-tab.active {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        /* Settings Content */
+        .settings-content {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: var(--radius-2xl);
@@ -141,91 +149,130 @@
             box-shadow: var(--shadow-lg);
         }
         
+        .settings-section {
+            display: none;
+        }
+        
+        .settings-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
         .section-title {
             font-size: var(--text-xl);
             font-weight: 600;
             color: var(--neutral-900);
-            margin-bottom: var(--space-6);
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
         }
         
-        .settings-tabs {
-            display: flex;
-            gap: var(--space-2);
-            margin-bottom: var(--space-6);
-            border-bottom: 2px solid var(--neutral-200);
-        }
-        
-        .tab-button {
-            padding: var(--space-3) var(--space-6);
-            border: none;
-            background: none;
-            font-size: var(--text-sm);
-            font-weight: 500;
+        .section-description {
             color: var(--neutral-600);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-bottom: 2px solid transparent;
+            font-size: var(--text-sm);
+            margin-top: var(--space-1);
         }
         
-        .tab-button.active {
-            color: var(--primary-600);
-            border-bottom-color: var(--primary-600);
+        /* Settings Groups */
+        .settings-groups {
+            display: grid;
+            gap: var(--space-6);
         }
         
-        .tab-content {
-            display: none;
+        .settings-group {
+            background: var(--neutral-50);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
         }
         
-        .tab-content.active {
-            display: block;
-        }
-        
-        .setting-group {
-            margin-bottom: var(--space-8);
-        }
-        
-        .setting-group h3 {
-            font-size: var(--text-lg);
-            font-weight: 600;
-            color: var(--neutral-900);
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: var(--space-4);
         }
         
-        .setting-item {
+        .group-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .group-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            margin-top: var(--space-1);
+        }
+        
+        /* Settings Items */
+        .settings-items {
+            display: grid;
+            gap: var(--space-4);
+        }
+        
+        .settings-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: var(--space-4);
+            background: white;
             border-radius: var(--radius-lg);
-            background: var(--neutral-50);
-            margin-bottom: var(--space-3);
+            border: 1px solid var(--neutral-200);
         }
         
-        .setting-info {
+        .item-info {
             flex: 1;
         }
         
-        .setting-label {
-            font-size: var(--text-sm);
+        .item-title {
             font-weight: 600;
             color: var(--neutral-900);
             margin-bottom: var(--space-1);
         }
         
-        .setting-description {
-            font-size: var(--text-xs);
+        .item-description {
+            font-size: var(--text-sm);
             color: var(--neutral-600);
         }
         
-        .setting-control {
+        .item-control {
             display: flex;
             align-items: center;
             gap: var(--space-3);
         }
         
+        /* Form Controls */
+        .form-input {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-select {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            background: white;
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Toggle Switch */
         .toggle-switch {
             position: relative;
             width: 48px;
@@ -256,164 +303,80 @@
             transform: translateX(24px);
         }
         
-        .input-field {
-            padding: var(--space-2) var(--space-3);
-            border: 2px solid var(--neutral-200);
-            border-radius: var(--radius-lg);
-            font-size: var(--text-sm);
-            background: white;
-            min-width: 120px;
-        }
-        
-        .select-field {
-            padding: var(--space-2) var(--space-3);
-            border: 2px solid var(--neutral-200);
-            border-radius: var(--radius-lg);
-            font-size: var(--text-sm);
-            background: white;
-            cursor: pointer;
-            min-width: 120px;
-        }
-        
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-6);
-        }
-        
-        .system-status {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-4);
-        }
-        
-        .status-item {
-            text-align: center;
-            padding: var(--space-3);
-            border-radius: var(--radius-lg);
-            background: var(--neutral-50);
-        }
-        
-        .status-value {
-            font-size: var(--text-xl);
-            font-weight: 700;
-            color: var(--primary-600);
-            margin-bottom: var(--space-1);
-        }
-        
-        .status-label {
-            font-size: var(--text-xs);
-            color: var(--neutral-600);
-        }
-        
-        .system-logs {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .logs-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .log-item {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-3);
-            padding: var(--space-3) 0;
-            border-bottom: 1px solid var(--neutral-200);
-        }
-        
-        .log-item:last-child {
-            border-bottom: none;
-        }
-        
-        .log-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: var(--text-xs);
-            flex-shrink: 0;
-        }
-        
-        .log-content {
-            flex: 1;
-        }
-        
-        .log-title {
-            font-size: var(--text-sm);
-            font-weight: 600;
-            color: var(--neutral-900);
-            margin-bottom: var(--space-1);
-        }
-        
-        .log-time {
-            font-size: var(--text-xs);
-            color: var(--neutral-500);
-        }
-        
-        .backup-section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .backup-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-        }
-        
-        .backup-btn {
-            padding: var(--space-3) var(--space-4);
+        /* Buttons */
+        .btn {
+            padding: var(--space-3) var(--space-6);
             border: none;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             font-size: var(--text-sm);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-2);
         }
         
-        .backup-btn.primary {
-            background: var(--primary-500);
+        .btn-primary {
+            background: var(--primary-600);
             color: white;
         }
         
-        .backup-btn.secondary {
+        .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        
+        .btn-secondary {
             background: var(--neutral-100);
             color: var(--neutral-700);
         }
         
-        .backup-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+        
+        .btn-danger {
+            background: var(--danger-600);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger-700);
+        }
+        
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: var(--space-2);
+        }
+        
+        .status-online {
+            background: var(--success-500);
+        }
+        
+        .status-offline {
+            background: var(--danger-500);
+        }
+        
+        .status-warning {
+            background: var(--warning-500);
         }
         
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .settings-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-3);
+            }
+            
+            .item-control {
+                width: 100%;
+                justify-content: space-between;
             }
         }
         
@@ -428,17 +391,8 @@
                 text-align: center;
             }
             
-            .settings-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-actions {
-                flex-direction: column;
-                width: 100%;
+            .settings-content {
+                padding: var(--space-6);
             }
         }
         
@@ -451,386 +405,577 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
     </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
-    <div class="system-settings">
-        <div class="settings-container">
-            <!-- Settings Header -->
-            <div class="settings-header fade-in">
-                <div class="header-content">
-                    <div class="header-left">
-                        <h1>System Settings</h1>
-                        <p>Configure platform-wide settings and system administration</p>
-                    </div>
-                    <div class="header-right">
-                        <div class="user-info">
-                            <div class="user-avatar" id="userAvatar">
-                                <span>SA</span>
-                            </div>
-                            <div>
-                                <div id="userName" style="font-weight: 600; color: var(--neutral-900);">Super Admin</div>
-                                <div style="font-size: var(--text-sm); color: var(--neutral-600);">System Administrator</div>
-                            </div>
+    <div id="sidebarContainer"></div>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div style="margin-left: 280px;">
+        <div class="system-settings">
+            <div class="settings-container">
+                <!-- Settings Header -->
+                <div class="settings-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>System Settings & Configuration</h1>
+                            <p>Global system configuration, environment settings, and system preferences</p>
                         </div>
-                        <div class="quick-actions">
-                            <button onclick="saveAllSettings()" class="action-btn secondary">
-                                <i data-lucide="save"></i>
-                                Save All
-                            </button>
-                            <button onclick="resetToDefaults()" class="action-btn">
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="resetToDefaults()">
                                 <i data-lucide="refresh-cw"></i>
-                                Reset Defaults
+                                Reset to Defaults
+                            </button>
+                            <button class="action-btn" onclick="saveAllSettings()">
+                                <i data-lucide="save"></i>
+                                Save All Settings
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="main-content fade-in">
-                <div class="settings-section">
-                    <h2 class="section-title">
-                        <i data-lucide="settings"></i>
-                        System Configuration
-                    </h2>
-                    
-                    <div class="settings-tabs">
-                        <button class="tab-button active" onclick="switchTab('general')">General</button>
-                        <button class="tab-button" onclick="switchTab('security')">Security</button>
-                        <button class="tab-button" onclick="switchTab('notifications')">Notifications</button>
-                        <button class="tab-button" onclick="switchTab('integrations')">Integrations</button>
-                        <button class="tab-button" onclick="switchTab('advanced')">Advanced</button>
+                
+                <!-- Settings Navigation -->
+                <div class="settings-nav fade-in">
+                    <div class="nav-tabs">
+                        <button class="nav-tab active" onclick="showSettingsSection('general')">
+                            <i data-lucide="settings"></i>
+                            General
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('security')">
+                            <i data-lucide="shield"></i>
+                            Security
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('database')">
+                            <i data-lucide="database"></i>
+                            Database
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('email')">
+                            <i data-lucide="mail"></i>
+                            Email
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('notifications')">
+                            <i data-lucide="bell"></i>
+                            Notifications
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('integrations')">
+                            <i data-lucide="link"></i>
+                            Integrations
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('backup')">
+                            <i data-lucide="hard-drive"></i>
+                            Backup
+                        </button>
+                        <button class="nav-tab" onclick="showSettingsSection('maintenance')">
+                            <i data-lucide="wrench"></i>
+                            Maintenance
+                        </button>
                     </div>
-                    
+                </div>
+                
+                <!-- Settings Content -->
+                <div class="settings-content fade-in">
                     <!-- General Settings -->
-                    <div id="general" class="tab-content active">
-                        <div class="setting-group">
-                            <h3>Platform Settings</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Platform Name</div>
-                                    <div class="setting-description">Display name for the platform</div>
-                                </div>
-                                <div class="setting-control">
-                                    <input type="text" class="input-field" id="platformName" value="Angkor Compliance Platform">
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Default Language</div>
-                                    <div class="setting-description">Primary language for the platform</div>
-                                </div>
-                                <div class="setting-control">
-                                    <select class="select-field" id="defaultLanguage">
-                                        <option value="en">English</option>
-                                        <option value="km">Khmer</option>
-                                        <option value="zh">Chinese</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Time Zone</div>
-                                    <div class="setting-description">Default timezone for the platform</div>
-                                </div>
-                                <div class="setting-control">
-                                    <select class="select-field" id="timezone">
-                                        <option value="Asia/Phnom_Penh">Asia/Phnom_Penh</option>
-                                        <option value="UTC">UTC</option>
-                                        <option value="Asia/Bangkok">Asia/Bangkok</option>
-                                    </select>
-                                </div>
+                    <div class="settings-section active" id="general-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">General Settings</h2>
+                                <p class="section-description">Basic system configuration and preferences</p>
                             </div>
                         </div>
                         
-                        <div class="setting-group">
-                            <h3>User Management</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Allow User Registration</div>
-                                    <div class="setting-description">Enable public user registration</div>
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">System Information</h3>
+                                        <p class="group-description">Basic system identification and branding</p>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="allowRegistration" onclick="toggleSetting(this)"></div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">System Name</div>
+                                            <div class="item-description">The name displayed throughout the system</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="text" class="form-input" id="systemName" value="Angkor Compliance Platform" style="width: 200px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">System Description</div>
+                                            <div class="item-description">Brief description of the system</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <textarea class="form-input form-textarea" id="systemDescription" style="width: 300px;">Enterprise compliance management platform for garment manufacturing</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Default Language</div>
+                                            <div class="item-description">Primary language for the system interface</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <select class="form-select" id="defaultLanguage" style="width: 150px;">
+                                                <option value="en">English</option>
+                                                <option value="km">Khmer</option>
+                                                <option value="zh">Chinese</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Time Zone</div>
+                                            <div class="item-description">Default time zone for the system</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <select class="form-select" id="timeZone" style="width: 200px;">
+                                                <option value="Asia/Phnom_Penh">Asia/Phnom_Penh</option>
+                                                <option value="UTC">UTC</option>
+                                                <option value="America/New_York">America/New_York</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Email Verification Required</div>
-                                    <div class="setting-description">Require email verification for new users</div>
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">System Behavior</h3>
+                                        <p class="group-description">Configure how the system behaves</p>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="emailVerification" onclick="toggleSetting(this)"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Session Timeout (minutes)</div>
-                                    <div class="setting-description">Auto-logout after inactivity</div>
-                                </div>
-                                <div class="setting-control">
-                                    <input type="number" class="input-field" id="sessionTimeout" value="30" min="5" max="480">
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Maintenance Mode</div>
+                                            <div class="item-description">Enable maintenance mode to restrict access</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch" id="maintenanceMode" onclick="toggleSetting('maintenanceMode')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Auto-Save</div>
+                                            <div class="item-description">Automatically save form data</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="autoSave" onclick="toggleSetting('autoSave')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Session Timeout (minutes)</div>
+                                            <div class="item-description">How long before users are automatically logged out</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="sessionTimeout" value="30" min="5" max="480" style="width: 100px;">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Security Settings -->
-                    <div id="security" class="tab-content">
-                        <div class="setting-group">
-                            <h3>Authentication</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Two-Factor Authentication</div>
-                                    <div class="setting-description">Require 2FA for all users</div>
-                                </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch" id="twoFactorAuth" onclick="toggleSetting(this)"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Password Complexity</div>
-                                    <div class="setting-description">Minimum password requirements</div>
-                                </div>
-                                <div class="setting-control">
-                                    <select class="select-field" id="passwordComplexity">
-                                        <option value="low">Low (6 characters)</option>
-                                        <option value="medium" selected>Medium (8 characters, mixed)</option>
-                                        <option value="high">High (10 characters, special chars)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Failed Login Attempts</div>
-                                    <div class="setting-description">Account lockout threshold</div>
-                                </div>
-                                <div class="setting-control">
-                                    <input type="number" class="input-field" id="maxLoginAttempts" value="5" min="3" max="10">
-                                </div>
+                    <div class="settings-section" id="security-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Security Settings</h2>
+                                <p class="section-description">Configure security policies and access controls</p>
                             </div>
                         </div>
                         
-                        <div class="setting-group">
-                            <h3>Data Protection</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Data Encryption</div>
-                                    <div class="setting-description">Enable end-to-end encryption</div>
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">Authentication</h3>
+                                        <p class="group-description">User authentication and access control</p>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="dataEncryption" onclick="toggleSetting(this)"></div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Multi-Factor Authentication</div>
+                                            <div class="item-description">Require MFA for all users</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="mfaRequired" onclick="toggleSetting('mfaRequired')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Password Complexity</div>
+                                            <div class="item-description">Minimum password requirements</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <select class="form-select" id="passwordComplexity" style="width: 150px;">
+                                                <option value="low">Low</option>
+                                                <option value="medium" selected>Medium</option>
+                                                <option value="high">High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Password Expiry (days)</div>
+                                            <div class="item-description">How often users must change passwords</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="passwordExpiry" value="90" min="30" max="365" style="width: 100px;">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Audit Logging</div>
-                                    <div class="setting-description">Log all system activities</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Database Settings -->
+                    <div class="settings-section" id="database-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Database Settings</h2>
+                                <p class="section-description">Configure database connections and performance</p>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">Connection</h3>
+                                        <p class="group-description">Database connection settings</p>
+                                    </div>
+                                    <div>
+                                        <span class="status-indicator status-online"></span>
+                                        <span style="color: var(--success-600); font-size: var(--text-sm);">Connected</span>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="auditLogging" onclick="toggleSetting(this)"></div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Connection Pool Size</div>
+                                            <div class="item-description">Maximum number of concurrent connections</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="connectionPoolSize" value="20" min="5" max="100" style="width: 100px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Query Timeout (seconds)</div>
+                                            <div class="item-description">Maximum time for database queries</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="queryTimeout" value="30" min="5" max="300" style="width: 100px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Email Settings -->
+                    <div class="settings-section" id="email-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Email Settings</h2>
+                                <p class="section-description">Configure email server and notification settings</p>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">SMTP Configuration</h3>
+                                        <p class="group-description">Email server settings</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">SMTP Server</div>
+                                            <div class="item-description">Email server hostname</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="text" class="form-input" id="smtpServer" value="smtp.gmail.com" style="width: 200px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">SMTP Port</div>
+                                            <div class="item-description">Email server port</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="smtpPort" value="587" min="1" max="65535" style="width: 100px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Use TLS</div>
+                                            <div class="item-description">Enable TLS encryption</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="useTLS" onclick="toggleSetting('useTLS')"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Notifications Settings -->
-                    <div id="notifications" class="tab-content">
-                        <div class="setting-group">
-                            <h3>Email Notifications</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">System Alerts</div>
-                                    <div class="setting-description">Send system alerts via email</div>
-                                </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="systemAlerts" onclick="toggleSetting(this)"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Weekly Reports</div>
-                                    <div class="setting-description">Send weekly compliance reports</div>
-                                </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch" id="weeklyReports" onclick="toggleSetting(this)"></div>
-                                </div>
+                    <div class="settings-section" id="notifications-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Notification Settings</h2>
+                                <p class="section-description">Configure system notifications and alerts</p>
                             </div>
                         </div>
                         
-                        <div class="setting-group">
-                            <h3>In-App Notifications</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Real-time Notifications</div>
-                                    <div class="setting-description">Show real-time notifications</div>
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">Alert Preferences</h3>
+                                        <p class="group-description">Configure when and how alerts are sent</p>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch active" id="realTimeNotifications" onclick="toggleSetting(this)"></div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Email Notifications</div>
+                                            <div class="item-description">Send notifications via email</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="emailNotifications" onclick="toggleSetting('emailNotifications')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">SMS Notifications</div>
+                                            <div class="item-description">Send notifications via SMS</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch" id="smsNotifications" onclick="toggleSetting('smsNotifications')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Push Notifications</div>
+                                            <div class="item-description">Send push notifications to mobile devices</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="pushNotifications" onclick="toggleSetting('pushNotifications')"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Integrations Settings -->
-                    <div id="integrations" class="tab-content">
-                        <div class="setting-group">
-                            <h3>External Services</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Email Service</div>
-                                    <div class="setting-description">Configure email provider</div>
-                                </div>
-                                <div class="setting-control">
-                                    <select class="select-field" id="emailService">
-                                        <option value="smtp">SMTP</option>
-                                        <option value="sendgrid">SendGrid</option>
-                                        <option value="mailgun">Mailgun</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">File Storage</div>
-                                    <div class="setting-description">Configure file storage service</div>
-                                </div>
-                                <div class="setting-control">
-                                    <select class="select-field" id="fileStorage">
-                                        <option value="firebase">Firebase Storage</option>
-                                        <option value="aws">AWS S3</option>
-                                        <option value="gcp">Google Cloud Storage</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Advanced Settings -->
-                    <div id="advanced" class="tab-content">
-                        <div class="setting-group">
-                            <h3>Performance</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Cache Duration (hours)</div>
-                                    <div class="setting-description">Data cache expiration time</div>
-                                </div>
-                                <div class="setting-control">
-                                    <input type="number" class="input-field" id="cacheDuration" value="24" min="1" max="168">
-                                </div>
-                            </div>
-                            
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">API Rate Limiting</div>
-                                    <div class="setting-description">Requests per minute per user</div>
-                                </div>
-                                <div class="setting-control">
-                                    <input type="number" class="input-field" id="rateLimit" value="100" min="10" max="1000">
-                                </div>
+                    <div class="settings-section" id="integrations-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Integration Settings</h2>
+                                <p class="section-description">Configure third-party integrations and APIs</p>
                             </div>
                         </div>
                         
-                        <div class="setting-group">
-                            <h3>Maintenance</h3>
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label">Maintenance Mode</div>
-                                    <div class="setting-description">Enable maintenance mode</div>
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">API Configuration</h3>
+                                        <p class="group-description">External API settings</p>
+                                    </div>
                                 </div>
-                                <div class="setting-control">
-                                    <div class="toggle-switch" id="maintenanceMode" onclick="toggleSetting(this)"></div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">API Rate Limit</div>
+                                            <div class="item-description">Maximum API requests per minute</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="apiRateLimit" value="1000" min="100" max="10000" style="width: 120px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">API Timeout (seconds)</div>
+                                            <div class="item-description">Timeout for external API calls</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="apiTimeout" value="30" min="5" max="300" style="width: 100px;">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="sidebar">
-                    <div class="system-status">
-                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
-                            <i data-lucide="activity"></i>
-                            System Status
-                        </h3>
-                        <div class="status-grid">
-                            <div class="status-item">
-                                <div class="status-value" id="uptime">99.9%</div>
-                                <div class="status-label">Uptime</div>
-                            </div>
-                            <div class="status-item">
-                                <div class="status-value" id="responseTime">45ms</div>
-                                <div class="status-label">Avg Response</div>
-                            </div>
-                            <div class="status-item">
-                                <div class="status-value" id="activeUsers">1,234</div>
-                                <div class="status-label">Active Users</div>
-                            </div>
-                            <div class="status-item">
-                                <div class="status-value" id="storageUsed">67%</div>
-                                <div class="status-label">Storage Used</div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="system-logs">
-                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
-                            <i data-lucide="file-text"></i>
-                            Recent Logs
-                        </h3>
-                        <div class="logs-list" id="systemLogs">
-                            <!-- System logs will be loaded here -->
+                    <!-- Backup Settings -->
+                    <div class="settings-section" id="backup-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Backup Settings</h2>
+                                <p class="section-description">Configure automated backup and recovery</p>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">Automated Backups</h3>
+                                        <p class="group-description">Schedule and configure automatic backups</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Enable Auto Backup</div>
+                                            <div class="item-description">Automatically backup system data</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="autoBackup" onclick="toggleSetting('autoBackup')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Backup Frequency</div>
+                                            <div class="item-description">How often to perform backups</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <select class="form-select" id="backupFrequency" style="width: 150px;">
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly" selected>Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Retention Period (days)</div>
+                                            <div class="item-description">How long to keep backup files</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <input type="number" class="form-input" id="backupRetention" value="30" min="7" max="365" style="width: 100px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="backup-section">
-                        <h3 class="section-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">
-                            <i data-lucide="database"></i>
-                            Backup & Recovery
-                        </h3>
-                        <div class="backup-actions">
-                            <button class="backup-btn primary" onclick="createBackup()">
-                                <i data-lucide="download"></i>
-                                Create Backup
-                            </button>
-                            <button class="backup-btn secondary" onclick="restoreBackup()">
-                                <i data-lucide="upload"></i>
-                                Restore Backup
-                            </button>
-                            <button class="backup-btn secondary" onclick="exportData()">
-                                <i data-lucide="file-export"></i>
-                                Export Data
-                            </button>
+                    <!-- Maintenance Settings -->
+                    <div class="settings-section" id="maintenance-settings">
+                        <div class="section-header">
+                            <div>
+                                <h2 class="section-title">Maintenance Settings</h2>
+                                <p class="section-description">System maintenance and optimization</p>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-groups">
+                            <div class="settings-group">
+                                <div class="group-header">
+                                    <div>
+                                        <h3 class="group-title">System Maintenance</h3>
+                                        <p class="group-description">Automated maintenance tasks</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="settings-items">
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Auto Cleanup</div>
+                                            <div class="item-description">Automatically clean temporary files</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="autoCleanup" onclick="toggleSetting('autoCleanup')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Log Rotation</div>
+                                            <div class="item-description">Automatically rotate log files</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="logRotation" onclick="toggleSetting('logRotation')"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="settings-item">
+                                        <div class="item-info">
+                                            <div class="item-title">Cache Management</div>
+                                            <div class="item-description">Automatically manage system cache</div>
+                                        </div>
+                                        <div class="item-control">
+                                            <div class="toggle-switch active" id="cacheManagement" onclick="toggleSetting('cacheManagement')"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+            </div>
+</main>
     
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/super-admin/system-settings.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     
     <script>
         // Initialize Lucide icons
@@ -841,57 +986,41 @@
         });
         
         // Global functions for HTML onclick handlers
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
+        function showSettingsSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
             });
             
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
+            // Show selected section
+            document.getElementById(sectionName + '-settings').classList.add('active');
             
-            // Add active class to clicked button
+            // Add active class to clicked tab
             event.target.classList.add('active');
         }
         
-        function toggleSetting(element) {
-            element.classList.toggle('active');
-        }
-        
-        function saveAllSettings() {
-            if (window.systemSettings) {
-                window.systemSettings.saveAllSettings();
-            }
+        function toggleSetting(settingId) {
+            const toggle = document.getElementById(settingId);
+            toggle.classList.toggle('active');
         }
         
         function resetToDefaults() {
-            if (window.systemSettings) {
-                window.systemSettings.resetToDefaults();
+            if (confirm('Are you sure you want to reset all settings to their default values?')) {
+                console.log('Resetting to defaults...');
+                // Implement reset functionality
             }
         }
         
-        function createBackup() {
-            if (window.systemSettings) {
-                window.systemSettings.createBackup();
-            }
-        }
-        
-        function restoreBackup() {
-            if (window.systemSettings) {
-                window.systemSettings.restoreBackup();
-            }
-        }
-        
-        function exportData() {
-            if (window.systemSettings) {
-                window.systemSettings.exportData();
-            }
+        function saveAllSettings() {
+            console.log('Saving all settings...');
+            // Implement save functionality
         }
     </script>
 </body>
 </html>
+

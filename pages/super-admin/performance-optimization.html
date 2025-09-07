@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Optimization - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Performance Optimization Specific Styles */
+        .performance-optimization-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .performance-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .performance-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.response-time::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-card.throughput::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.cache-hit::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.error-rate::before {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.response-time {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-icon.throughput {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-icon.cache-hit {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.error-rate {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Performance Management */
+        .performance-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Performance Tabs */
+        .performance-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Performance Monitoring */
+        .performance-monitoring {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .monitoring-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .monitoring-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .monitoring-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .monitoring-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .monitoring-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .monitoring-status.optimal {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .monitoring-status.warning {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .monitoring-status.critical {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .monitoring-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .monitoring-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .monitoring-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .monitoring-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .monitoring-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Optimization Tools */
+        .optimization-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .tool-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .tool-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tool-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .tool-status.enabled {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .tool-status.disabled {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .tool-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .tool-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tool-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Caching Management */
+        .caching-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .cache-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .cache-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .cache-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .cache-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .cache-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .cache-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .cache-status.inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .cache-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .cache-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .cache-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .cache-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .cache-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Performance Analytics */
+        .performance-analytics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .analytics-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .analytics-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .analytics-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .analytics-trend {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .analytics-trend.up {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .analytics-trend.down {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .analytics-trend.stable {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .analytics-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .analytics-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .analytics-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .analytics-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .analytics-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .performance-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .performance-monitoring {
+                grid-template-columns: 1fr;
+            }
+            
+            .optimization-tools {
+                grid-template-columns: 1fr;
+            }
+            
+            .caching-management {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-analytics {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .performance-optimization-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .performance-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="performance-optimization-system">
+            <div class="performance-container">
+                <!-- Performance Header -->
+                <div class="performance-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Performance Optimization</h1>
+                            <p>System performance monitoring, optimization tools, caching management, and performance analytics</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="runOptimization()">
+                                <i data-lucide="zap"></i>
+                                Run Optimization
+                            </button>
+                            <button class="action-btn" onclick="generateReport()">
+                                <i data-lucide="file-text"></i>
+                                Generate Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Overview -->
+                <div class="performance-overview fade-in">
+                    <div class="overview-card response-time">
+                        <div class="overview-header">
+                            <div class="overview-icon response-time">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Response Time</div>
+                        <div class="overview-value" id="responseTime">145ms</div>
+                        <div class="overview-description">Average response time</div>
+                    </div>
+                    
+                    <div class="overview-card throughput">
+                        <div class="overview-header">
+                            <div class="overview-icon throughput">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Throughput</div>
+                        <div class="overview-value" id="throughput">2.4K</div>
+                        <div class="overview-description">Requests per minute</div>
+                    </div>
+                    
+                    <div class="overview-card cache-hit">
+                        <div class="overview-header">
+                            <div class="overview-icon cache-hit">
+                                <i data-lucide="database"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Cache Hit Rate</div>
+                        <div class="overview-value" id="cacheHitRate">87%</div>
+                        <div class="overview-description">Cache efficiency</div>
+                    </div>
+                    
+                    <div class="overview-card error-rate">
+                        <div class="overview-header">
+                            <div class="overview-icon error-rate">
+                                <i data-lucide="alert-circle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Error Rate</div>
+                        <div class="overview-value" id="errorRate">0.2%</div>
+                        <div class="overview-description">System error rate</div>
+                    </div>
+                </div>
+                
+                <!-- Performance Management -->
+                <div class="performance-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Performance Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshMetrics()">Refresh</button>
+                            <button class="management-btn" onclick="exportMetrics()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Tabs -->
+                    <div class="performance-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('monitoring')">Performance Monitoring</button>
+                            <button class="tab-btn" onclick="switchTab('optimization')">Optimization Tools</button>
+                            <button class="tab-btn" onclick="switchTab('caching')">Caching Management</button>
+                            <button class="tab-btn" onclick="switchTab('analytics')">Performance Analytics</button>
+                        </div>
+                        
+                        <!-- Performance Monitoring Tab -->
+                        <div id="monitoring-tab" class="tab-content active">
+                            <div class="performance-monitoring" id="performanceMonitoring">
+                                <!-- Performance monitoring items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Optimization Tools Tab -->
+                        <div id="optimization-tab" class="tab-content">
+                            <div class="optimization-tools" id="optimizationTools">
+                                <!-- Optimization tools will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Caching Management Tab -->
+                        <div id="caching-tab" class="tab-content">
+                            <div class="caching-management" id="cachingManagement">
+                                <!-- Caching management items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Analytics Tab -->
+                        <div id="analytics-tab" class="tab-content">
+                            <div class="performance-analytics" id="performanceAnalytics">
+                                <!-- Performance analytics items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/performance-optimization-core.js"></script>
+    <script src="../../assets/js/super-admin/performance-optimization-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function runOptimization() {
+            console.log('Running performance optimization...');
+            // Implement optimization
+        }
+        
+        function generateReport() {
+            console.log('Generating performance report...');
+            // Implement report generation
+        }
+        
+        function refreshMetrics() {
+            console.log('Refreshing performance metrics...');
+            // Implement refresh functionality
+        }
+        
+        function exportMetrics() {
+            console.log('Exporting performance metrics...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

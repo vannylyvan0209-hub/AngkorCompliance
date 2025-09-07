@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Intake Screen - Grievance Committee</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         /* Role-specific styling for grievance_committee */
@@ -105,12 +108,12 @@
             .form-actions { flex-direction: column; }
         }
     </style>
-</head>
+    <script src="../../assets/js/universal-navigation.js"></script>`n</head>
 <body class="role-grievance-committee">
     <div class="intake-layout">
         <div id="sidebarContainer"></div>
         <script>
-            fetch('../../assets/html/sidebar-template.html')
+            fetch('../../assets/html/universal-sidebar-template.html')
                 .then(r => r.text())
                 .then(html => {
                     document.getElementById('sidebarContainer').innerHTML = html;
@@ -119,9 +122,9 @@
                 });
         </script>
         
-        <main class="main-content">
-            <header class="page-header">
-                <div class="page-title">
+        <main class="layout-main">
+            <header class="mb-8 pb-6 border-b border-neutral-200">
+                <div class="text-3xl font-bold text-neutral-900">
                     <div>
                         <h1><i data-lucide="file-plus"></i> Case Intake Screen</h1>
                         <p>Submit and process new grievance cases with initial assessment</p>
@@ -133,7 +136,7 @@
                         <button class="btn btn-outline btn-white" onclick="loadDraft()">
                             <i data-lucide="folder-open"></i> Load Draft
                         </button>
-                        <button class="btn btn-primary" onclick="submitCase()" id="submitBtn">
+                        <button class="btn btn-primary text-white font-medium" onclick="submitCase()" id="submitBtn">
                             <i data-lucide="send"></i> Submit Case
                         </button>
                     </div>
@@ -277,13 +280,13 @@
                         
                         <!-- Action Buttons -->
                         <div class="form-actions">
-                            <button class="btn btn-secondary" onclick="clearForm()">
+                            <button class="btn btn-secondary font-medium" onclick="clearForm()">
                                 <i data-lucide="refresh-cw"></i> Clear Form
                             </button>
-                            <button class="btn btn-secondary" onclick="saveDraft()">
+                            <button class="btn btn-secondary font-medium" onclick="saveDraft()">
                                 <i data-lucide="save"></i> Save Draft
                             </button>
-                            <button class="btn btn-primary" onclick="submitCase()" id="submitBtn">
+                            <button class="btn btn-primary text-white font-medium" onclick="submitCase()" id="submitBtn">
                                 <i data-lucide="send"></i> Submit Case
                             </button>
                         </div>
@@ -346,7 +349,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
     <script src="../../assets/js/grievance-committee/case-intake.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     
     <script>
@@ -361,3 +364,4 @@
     </script>
 </body>
 </html>
+

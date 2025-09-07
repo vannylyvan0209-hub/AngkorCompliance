@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Standard Configuration System for Super Admin
 
 class StandardConfiguration {
     constructor() {

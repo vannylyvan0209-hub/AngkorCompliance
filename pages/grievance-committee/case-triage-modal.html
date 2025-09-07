@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Triage Modal - Grievance Committee</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         /* Role-specific styling for grievance_committee */
@@ -125,7 +128,7 @@
     <div class="triage-layout">
         <div id="sidebarContainer"></div>
         <script>
-            fetch('../../assets/html/sidebar-template.html')
+            fetch('../../assets/html/universal-sidebar-template.html')
                 .then(r => r.text())
                 .then(html => {
                     document.getElementById('sidebarContainer').innerHTML = html;
@@ -134,9 +137,9 @@
                 });
         </script>
         
-        <main class="main-content">
-            <header class="page-header">
-                <div class="page-title">
+        <main class="layout-main">
+            <header class="mb-8 pb-6 border-b border-neutral-200">
+                <div class="text-3xl font-bold text-neutral-900">
                     <div>
                         <h1><i data-lucide="clipboard-list"></i> Case Triage</h1>
                         <p>Review and assess new grievance cases for proper categorization and priority assignment</p>
@@ -148,7 +151,7 @@
                         <button class="btn btn-outline btn-white" onclick="exportTriageReport()">
                             <i data-lucide="download"></i> Export Report
                         </button>
-                        <button class="btn btn-primary" onclick="processSelectedCases()" id="processBtn" disabled>
+                        <button class="btn btn-primary text-white font-medium" onclick="processSelectedCases()" id="processBtn" disabled>
                             <i data-lucide="check-circle"></i> Process Selected
                         </button>
                     </div>
@@ -316,13 +319,13 @@
                             
                             <!-- Action Buttons -->
                             <div class="triage-actions">
-                                <button class="btn btn-secondary" onclick="skipCase()">
+                                <button class="btn btn-secondary font-medium" onclick="skipCase()">
                                     <i data-lucide="skip-forward"></i> Skip Case
                                 </button>
-                                <button class="btn btn-secondary" onclick="escalateCase()">
+                                <button class="btn btn-secondary font-medium" onclick="escalateCase()">
                                     <i data-lucide="alert-triangle"></i> Escalate
                                 </button>
-                                <button class="btn btn-primary" onclick="completeTriage()" id="completeTriageBtn">
+                                <button class="btn btn-primary text-white font-medium" onclick="completeTriage()" id="completeTriageBtn">
                                     <i data-lucide="check-circle"></i> Complete Triage
                                 </button>
                             </div>
@@ -345,7 +348,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
     <script src="../../assets/js/grievance-committee/case-triage.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     
     <script>

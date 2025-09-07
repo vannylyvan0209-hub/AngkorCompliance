@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Requirement Management System for Super Admin
 
 class RequirementManagement {
     constructor() {

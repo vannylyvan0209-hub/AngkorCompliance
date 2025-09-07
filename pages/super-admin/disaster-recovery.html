@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Recovery Planning - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Disaster Recovery Planning Specific Styles */
+        .disaster-recovery-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .disaster-recovery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .disaster-recovery-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Disaster Recovery Overview */
+        .disaster-recovery-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.recovery-plans::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-card.backup-status::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.rto-rpo::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.testing::before {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.recovery-plans {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-icon.backup-status {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-icon.rto-rpo {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.testing {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Disaster Recovery Management */
+        .disaster-recovery-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Disaster Recovery Tabs */
+        .disaster-recovery-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Recovery Plans */
+        .recovery-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .plan-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .plan-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .plan-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .plan-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .plan-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .plan-status.draft {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .plan-status.inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .plan-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .plan-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .plan-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .plan-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .plan-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Business Continuity */
+        .business-continuity {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .continuity-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .continuity-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .continuity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .continuity-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .continuity-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .continuity-status.operational {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .continuity-status.degraded {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .continuity-status.critical {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .continuity-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .continuity-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .continuity-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .continuity-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Emergency Response */
+        .emergency-response {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .response-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .response-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .response-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .response-priority {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .response-priority.high {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .response-priority.medium {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .response-priority.low {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .response-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .response-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .response-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .response-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Testing & Validation */
+        .testing-validation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .testing-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .testing-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .testing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .testing-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .testing-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .testing-status.passed {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .testing-status.failed {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .testing-status.pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .testing-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .testing-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .testing-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .testing-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .disaster-recovery-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .recovery-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .business-continuity {
+                grid-template-columns: 1fr;
+            }
+            
+            .emergency-response {
+                grid-template-columns: 1fr;
+            }
+            
+            .testing-validation {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .disaster-recovery-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .disaster-recovery-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="disaster-recovery-system">
+            <div class="disaster-recovery-container">
+                <!-- Disaster Recovery Header -->
+                <div class="disaster-recovery-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Disaster Recovery Planning</h1>
+                            <p>Comprehensive disaster recovery protocols, business continuity planning, and emergency response systems</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn danger" onclick="initiateRecovery()">
+                                <i data-lucide="alert-triangle"></i>
+                                Initiate Recovery
+                            </button>
+                            <button class="action-btn secondary" onclick="runDisasterTest()">
+                                <i data-lucide="shield-check"></i>
+                                Run Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Disaster Recovery Overview -->
+                <div class="disaster-recovery-overview fade-in">
+                    <div class="overview-card recovery-plans">
+                        <div class="overview-header">
+                            <div class="overview-icon recovery-plans">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Recovery Plans</div>
+                        <div class="overview-value" id="recoveryPlans">12</div>
+                        <div class="overview-description">Active disaster recovery plans</div>
+                    </div>
+                    
+                    <div class="overview-card backup-status">
+                        <div class="overview-header">
+                            <div class="overview-icon backup-status">
+                                <i data-lucide="database"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Backup Status</div>
+                        <div class="overview-value" id="backupStatus">98%</div>
+                        <div class="overview-description">Backup completion rate</div>
+                    </div>
+                    
+                    <div class="overview-card rto-rpo">
+                        <div class="overview-header">
+                            <div class="overview-icon rto-rpo">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">RTO/RPO</div>
+                        <div class="overview-value" id="rtoRpo">4h/1h</div>
+                        <div class="overview-description">Recovery time & point objectives</div>
+                    </div>
+                    
+                    <div class="overview-card testing">
+                        <div class="overview-header">
+                            <div class="overview-icon testing">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Test Status</div>
+                        <div class="overview-value" id="testStatus">85%</div>
+                        <div class="overview-description">Recovery plan test success rate</div>
+                    </div>
+                </div>
+                
+                <!-- Disaster Recovery Management -->
+                <div class="disaster-recovery-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Disaster Recovery Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshRecovery()">Refresh</button>
+                            <button class="management-btn" onclick="exportRecovery()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Disaster Recovery Tabs -->
+                    <div class="disaster-recovery-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('plans')">Recovery Plans</button>
+                            <button class="tab-btn" onclick="switchTab('continuity')">Business Continuity</button>
+                            <button class="tab-btn" onclick="switchTab('response')">Emergency Response</button>
+                            <button class="tab-btn" onclick="switchTab('testing')">Testing & Validation</button>
+                        </div>
+                        
+                        <!-- Recovery Plans Tab -->
+                        <div id="plans-tab" class="tab-content active">
+                            <div class="recovery-plans" id="recoveryPlansGrid">
+                                <!-- Recovery plans will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Business Continuity Tab -->
+                        <div id="continuity-tab" class="tab-content">
+                            <div class="business-continuity" id="businessContinuityGrid">
+                                <!-- Business continuity items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Emergency Response Tab -->
+                        <div id="response-tab" class="tab-content">
+                            <div class="emergency-response" id="emergencyResponseGrid">
+                                <!-- Emergency response items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Testing & Validation Tab -->
+                        <div id="testing-tab" class="tab-content">
+                            <div class="testing-validation" id="testingValidationGrid">
+                                <!-- Testing & validation items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/disaster-recovery-core.js"></script>
+    <script src="../../assets/js/super-admin/disaster-recovery-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function initiateRecovery() {
+            console.log('Initiating disaster recovery...');
+            // Implement recovery initiation
+        }
+        
+        function runDisasterTest() {
+            console.log('Running disaster recovery test...');
+            // Implement disaster test
+        }
+        
+        function refreshRecovery() {
+            console.log('Refreshing disaster recovery data...');
+            // Implement refresh functionality
+        }
+        
+        function exportRecovery() {
+            console.log('Exporting disaster recovery data...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

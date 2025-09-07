@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evidence Binder Creation - Angkor Compliance</title>
@@ -8,6 +9,8 @@
     <link rel="stylesheet" href="../assets/css/fontawesome.min.css">
     <link rel="stylesheet" href="../assets/css/custom-styles.css">
     <link rel="stylesheet" href="../assets/css/auditor.css">
+    
+
     <style>
         /* Role-specific styling for auditor */
         body.role-auditor {
@@ -621,11 +624,11 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Binder Title</label>
-                                        <input type="text" class="form-control" id="binderTitle" placeholder="Enter binder title...">
+                                        <input type="text" class="form-input" id="binderTitle" placeholder="Enter binder title...">
                                     </div>
                                     <div class="form-group">
                                         <label>Binder Type</label>
-                                        <select class="form-control" id="binderType">
+                                        <select class="form-input" id="binderType">
                                             <option value="compliance">Compliance</option>
                                             <option value="safety">Safety</option>
                                             <option value="quality">Quality</option>
@@ -637,7 +640,7 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Audit Standard</label>
-                                        <select class="form-control" id="auditStandard">
+                                        <select class="form-input" id="auditStandard">
                                             <option value="">Select standard...</option>
                                             <option value="iso9001">ISO 9001</option>
                                             <option value="iso14001">ISO 14001</option>
@@ -647,13 +650,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Version</label>
-                                        <input type="text" class="form-control" id="binderVersion" value="1.0">
+                                        <input type="text" class="form-input" id="binderVersion" value="1.0">
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea class="form-control" id="binderDescription" rows="3" placeholder="Describe the purpose and scope of this evidence binder..."></textarea>
+                                    <textarea class="form-input" id="binderDescription" rows="3" placeholder="Describe the purpose and scope of this evidence binder..."></textarea>
                                 </div>
                                 
                                 <div class="evidence-sections">
@@ -672,16 +675,16 @@
                                         <h6>Add New Section</h6>
                                         <div class="form-group">
                                             <label>Section Title</label>
-                                            <input type="text" class="form-control" id="sectionTitle" placeholder="Enter section title...">
+                                            <input type="text" class="form-input" id="sectionTitle" placeholder="Enter section title...">
                                         </div>
                                         <div class="form-group">
                                             <label>Section Description</label>
-                                            <textarea class="form-control" id="sectionDescription" rows="2" placeholder="Describe what evidence this section will contain..."></textarea>
+                                            <textarea class="form-input" id="sectionDescription" rows="2" placeholder="Describe what evidence this section will contain..."></textarea>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group">
                                                 <label>Category</label>
-                                                <select class="form-control" id="sectionCategory">
+                                                <select class="form-input" id="sectionCategory">
                                                     <option value="general">General</option>
                                                     <option value="documentation">Documentation</option>
                                                     <option value="process">Process</option>
@@ -692,7 +695,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Priority</label>
-                                                <select class="form-control" id="sectionPriority">
+                                                <select class="form-input" id="sectionPriority">
                                                     <option value="low">Low</option>
                                                     <option value="medium">Medium</option>
                                                     <option value="high">High</option>
@@ -716,7 +719,7 @@
                                 <i class="fas fa-folder-open"></i>
                                 <h4>No Binder Selected</h4>
                                 <p>Select a binder from the sidebar or create a new one to get started.</p>
-                                <button class="btn btn-primary" id="createFirstBinderBtn">
+                                <button class="btn btn-primary text-white font-medium" id="createFirstBinderBtn">
                                     <i class="fas fa-plus"></i> Create First Binder
                                 </button>
                             </div>

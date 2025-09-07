@@ -1,0 +1,467 @@
+/**
+ * Post-Deployment Monitoring 2025 - CSS
+ * Styles for post-deployment monitoring system
+ */
+
+/* ===== POST-DEPLOYMENT MONITORING CONTAINER ===== */
+.post-deployment-monitoring {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    max-height: 90vh;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    z-index: 2000;
+    overflow: hidden;
+    font-family: var(--font-sans);
+}
+
+/* ===== MONITORING HEADER ===== */
+.monitoring-header {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--neutral-50);
+}
+
+.monitoring-header h3 {
+    margin: 0 0 var(--space-3) 0;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.monitoring-controls {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.monitoring-controls .btn {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+}
+
+/* ===== MONITORING CONTENT ===== */
+.monitoring-content {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+}
+
+/* ===== MONITORING TABS ===== */
+.monitoring-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--white);
+}
+
+.tab-btn {
+    padding: var(--space-3) var(--space-4);
+    border: none;
+    background: transparent;
+    color: var(--neutral-600);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn:hover {
+    background: var(--neutral-50);
+    color: var(--neutral-900);
+}
+
+.tab-btn.active {
+    color: var(--primary-gold);
+    border-bottom-color: var(--primary-gold);
+    background: var(--neutral-50);
+}
+
+/* ===== MONITORING PANELS ===== */
+.monitoring-panels {
+    flex: 1;
+    overflow: hidden;
+}
+
+.monitoring-panel {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    padding: var(--space-4);
+    background: var(--neutral-50);
+}
+
+.monitoring-panel.active {
+    display: block;
+}
+
+/* ===== PANEL CONTENT ===== */
+.panel-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+/* ===== METRICS GRID ===== */
+.performance-metrics,
+.error-metrics,
+.feedback-metrics,
+.accessibility-metrics,
+.usage-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+}
+
+.metric-card {
+    padding: var(--space-3);
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-md);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.metric-card h4 {
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--neutral-600);
+}
+
+.metric-value {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-900);
+}
+
+/* ===== CHARTS ===== */
+.performance-chart,
+.error-chart,
+.accessibility-chart,
+.usage-chart {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+}
+
+.performance-chart canvas,
+.error-chart canvas,
+.accessibility-chart canvas,
+.usage-chart canvas {
+    width: 100%;
+    height: 200px;
+}
+
+/* ===== FEEDBACK LIST ===== */
+.feedback-list {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+}
+
+.feedback-list h4 {
+    margin: 0 0 var(--space-3) 0;
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.feedback-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.feedback-item {
+    padding: var(--space-2);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-sm);
+    background: var(--neutral-50);
+}
+
+.feedback-rating {
+    color: var(--warning-500);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-1);
+}
+
+.feedback-text {
+    font-size: var(--text-sm);
+    color: var(--neutral-700);
+    margin-bottom: var(--space-1);
+}
+
+.feedback-time {
+    font-size: var(--text-xs);
+    color: var(--neutral-500);
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    animation: slideIn 0.3s ease-out;
+}
+
+.alert-content {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    max-width: 400px;
+}
+
+.alert-content h4 {
+    margin: 0 0 var(--space-1) 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+}
+
+.alert-content p {
+    margin: 0 0 var(--space-1) 0;
+    font-size: var(--text-sm);
+}
+
+.alert-time {
+    font-size: var(--text-xs);
+    opacity: 0.7;
+}
+
+.alert-warning {
+    background: var(--warning-500);
+    color: var(--white);
+}
+
+.alert-error {
+    background: var(--danger-500);
+    color: var(--white);
+}
+
+.alert-success {
+    background: var(--success-500);
+    color: var(--white);
+}
+
+.alert-info {
+    background: var(--info-500);
+    color: var(--white);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .post-deployment-monitoring {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-height: 95vh;
+        transform: none;
+    }
+    
+    .monitoring-controls {
+        flex-direction: column;
+    }
+    
+    .monitoring-controls .btn {
+        width: 100%;
+    }
+    
+    .monitoring-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .performance-metrics,
+    .error-metrics,
+    .feedback-metrics,
+    .accessibility-metrics,
+    .usage-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+    .post-deployment-monitoring {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .monitoring-header {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .monitoring-header h3 {
+        color: var(--neutral-100);
+    }
+    
+    .monitoring-tabs {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .tab-btn {
+        color: var(--neutral-400);
+    }
+    
+    .tab-btn:hover {
+        background: var(--neutral-700);
+        color: var(--neutral-100);
+    }
+    
+    .tab-btn.active {
+        color: var(--primary-gold);
+        background: var(--neutral-700);
+    }
+    
+    .monitoring-panel {
+        background: var(--neutral-800);
+    }
+    
+    .metric-card {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .metric-card h4 {
+        color: var(--neutral-400);
+    }
+    
+    .metric-value {
+        color: var(--neutral-100);
+    }
+    
+    .performance-chart,
+    .error-chart,
+    .accessibility-chart,
+    .usage-chart,
+    .feedback-list {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .feedback-list h4 {
+        color: var(--neutral-100);
+    }
+    
+    .feedback-item {
+        background: var(--neutral-700);
+        border-color: var(--neutral-600);
+    }
+    
+    .feedback-text {
+        color: var(--neutral-300);
+    }
+    
+    .feedback-time {
+        color: var(--neutral-500);
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.tab-btn:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+.monitoring-controls .btn:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+.monitoring-panel:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.metric-card {
+    transition: all 0.2s ease-in-out;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.monitoring-controls .btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.monitoring-controls .btn:hover {
+    transform: translateY(-1px);
+}
+
+.feedback-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.feedback-item:hover {
+    transform: translateX(2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .post-deployment-monitoring {
+        position: static;
+        width: 100%;
+        max-height: none;
+        box-shadow: none;
+        border: 1px solid var(--neutral-300);
+        transform: none;
+    }
+    
+    .monitoring-controls {
+        display: none;
+    }
+    
+    .monitoring-tabs {
+        display: none;
+    }
+    
+    .monitoring-panel {
+        display: block !important;
+        height: auto;
+        overflow: visible;
+    }
+    
+    .monitoring-panels {
+        height: auto;
+        overflow: visible;
+    }
+}

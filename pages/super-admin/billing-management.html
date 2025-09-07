@@ -4,31 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing Management - Angkor Compliance Platform</title>
-    <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-content">
-                <div class="header-left">
-                    <h1><i data-lucide="credit-card"></i> Billing Management</h1>
-                    <p>Manage subscriptions, payments, and billing oversight</p>
-                </div>
-                <div class="header-right">
-                    <div class="user-menu">
-                        <span class="user-name">Super Admin</span>
-                        <i data-lucide="user"></i>
-                    </div>
-                </div>
-            </div>
-        </header>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
-        <!-- Main Content -->
-        <main class="main-content">
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
             <!-- Billing Overview -->
             <section class="billing-overview">
                 <div class="overview-grid">
@@ -84,7 +89,7 @@
                 <div class="main-column">
                     <!-- Revenue Chart -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="trending-up"></i> Revenue Trends</h2>
                             <div class="card-actions">
                                 <select id="revenuePeriod" class="form-select">
@@ -101,10 +106,10 @@
 
                     <!-- Subscription Management -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="users"></i> Subscription Management</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="addNewSubscription()">
+                                <button class="btn btn-primary text-white font-medium" onclick="addNewSubscription()">
                                     <i data-lucide="plus"></i> Add Subscription
                                 </button>
                             </div>
@@ -133,10 +138,10 @@
 
                     <!-- Payment Processing -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="credit-card"></i> Payment Processing</h2>
                             <div class="card-actions">
-                                <button class="btn btn-secondary" onclick="refreshPayments()">
+                                <button class="btn btn-secondary font-medium" onclick="refreshPayments()">
                                     <i data-lucide="refresh-cw"></i> Refresh
                                 </button>
                             </div>
@@ -165,10 +170,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Billing Plans -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="package"></i> Billing Plans</h3>
                         </div>
                         <div class="card-body">
@@ -235,7 +240,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -270,7 +275,7 @@
 
                     <!-- Recent Activity -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="activity"></i> Recent Activity</h3>
                         </div>
                         <div class="card-body">
@@ -282,7 +287,6 @@
                 </div>
             </div>
         </main>
-    </div>
 
     <!-- Add Subscription Modal -->
     <div id="addSubscriptionModal" class="modal">
@@ -338,8 +342,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('addSubscriptionModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveSubscription()">Add Subscription</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('addSubscriptionModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveSubscription()">Add Subscription</button>
             </div>
         </div>
     </div>
@@ -357,16 +361,27 @@
                 <!-- Payment details will be loaded here -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('paymentDetailsModal')">Close</button>
-                <button class="btn btn-primary" onclick="processPayment()">Process Payment</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('paymentDetailsModal')">Close</button>
+                <button class="btn btn-primary text-white font-medium" onclick="processPayment()">Process Payment</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
-    <script src="../../assets/js/super-admin/billing-management.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/billing-management-core.js"></script>
+    <script src="../../assets/js/super-admin/billing-management-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Khmer:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Base styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+  }
+  
+  /* Khmer text styling */
+  .khmer {
+    font-family: 'Noto Sans Khmer', 'Khmer OS', 'Leelawadee UI', sans-serif;
+  }
+}
+
+/* Component styles */
+@layer components {
+  /* Glassmorphism components */
+  .glass {
+    @apply bg-glass-bg backdrop-blur-md border border-glass-border shadow-glass;
+  }
+  
+  /* Neumorphism components */
+  .neu {
+    @apply bg-neu-light shadow-neu-light;
+  }
+  
+  .neu-inset {
+    @apply bg-neu-light shadow-neu-inset;
+  }
+  
+  /* Button variants */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-neutral-200 text-neutral-900 hover:bg-neutral-300 focus:ring-neutral-500;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-neutral-700 hover:bg-neutral-100 focus:ring-neutral-500;
+  }
+  
+  .btn-outline {
+    @apply border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white focus:ring-primary-500;
+  }
+  
+  .btn-glass {
+    @apply glass text-neutral-700 hover:bg-white/80 focus:ring-primary-500;
+  }
+  
+  .btn-neu {
+    @apply neu text-neutral-700 hover:shadow-neu-inset focus:ring-primary-500;
+  }
+  
+  /* Card components */
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden;
+  }
+  
+  .card-glass {
+    @apply glass rounded-xl overflow-hidden;
+  }
+  
+  .card-neu {
+    @apply neu rounded-xl overflow-hidden;
+  }
+  
+  /* Form components */
+  .form-input {
+    @apply block w-full px-3 py-2 border border-neutral-300 rounded-lg shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+  }
+  
+  .form-input-neu {
+    @apply neu-inset border-0 focus:ring-2 focus:ring-primary-500;
+  }
+  
+  /* Navigation components */
+  .nav-link {
+    @apply flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200;
+  }
+  
+  .nav-link-active {
+    @apply bg-primary-100 text-primary-700;
+  }
+  
+  .nav-link-inactive {
+    @apply text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100;
+  }
+  
+  /* Role-specific theming */
+  .role-theme-worker {
+    --role-primary: theme('colors.worker');
+  }
+  
+  .role-theme-factory-admin {
+    --role-primary: theme('colors.factory-admin');
+  }
+  
+  .role-theme-hr-staff {
+    --role-primary: theme('colors.hr-staff');
+  }
+  
+  .role-theme-grievance-committee {
+    --role-primary: theme('colors.grievance-committee');
+  }
+  
+  .role-theme-auditor {
+    --role-primary: theme('colors.auditor');
+  }
+  
+  .role-theme-analytics-user {
+    --role-primary: theme('colors.analytics-user');
+  }
+  
+  .role-theme-super-admin {
+    --role-primary: theme('colors.super-admin');
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent;
+  }
+  
+  .shadow-soft {
+    box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+  }
+  
+  .backdrop-blur-glass {
+    backdrop-filter: blur(10px);
+  }
+  
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  /* Responsive utilities */
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dark-mode {
+    @apply bg-neutral-900 text-neutral-100;
+  }
+  
+  .dark-mode .card {
+    @apply bg-neutral-800 border-neutral-700;
+  }
+  
+  .dark-mode .form-input {
+    @apply bg-neutral-800 border-neutral-600 text-neutral-100;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn, .card, .form-input {
+    border-width: 2px;
+  }
+}

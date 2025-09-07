@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language & Localization Management - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Language & Localization Management Specific Styles */
+        .language-localization-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .language-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .language-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Language Overview */
+        .language-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.languages::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-card.translations::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.pending::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.coverage::before {
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.languages {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-icon.translations {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-icon.pending {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.coverage {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Language Management */
+        .language-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Language Tabs */
+        .language-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Language Settings */
+        .language-settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .language-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .language-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .language-item.active {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+        }
+        
+        .language-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .language-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .language-flag {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            background: var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+        }
+        
+        .language-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .language-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .language-status.inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .language-status.partial {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .language-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .language-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .language-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .language-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .language-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .language-btn.primary {
+            background: var(--primary-600);
+            color: white;
+            border-color: var(--primary-600);
+        }
+        
+        .language-btn.primary:hover {
+            background: var(--primary-700);
+        }
+        
+        /* Translation Management */
+        .translation-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .translation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .translation-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .translation-search {
+            position: relative;
+            width: 300px;
+        }
+        
+        .translation-search-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-10) var(--space-3) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+        }
+        
+        .translation-search-icon {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neutral-400);
+        }
+        
+        .translation-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .translation-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .translation-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .translation-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-3);
+        }
+        
+        .translation-key {
+            font-weight: 600;
+            color: var(--neutral-900);
+            font-family: monospace;
+            font-size: var(--text-sm);
+        }
+        
+        .translation-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .translation-status.translated {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .translation-status.pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .translation-status.missing {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .translation-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        .translation-text {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            line-height: 1.5;
+        }
+        
+        .translation-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+        }
+        
+        .translation-action-btn {
+            padding: var(--space-1) var(--space-2);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .translation-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Localization Settings */
+        .localization-settings {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .localization-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .localization-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .localization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .localization-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .localization-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .localization-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .localization-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .localization-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--neutral-200);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .localization-toggle.active {
+            background: var(--primary-500);
+        }
+        
+        .localization-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .localization-toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        .localization-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .localization-settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .localization-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--text-sm);
+        }
+        
+        .localization-setting-label {
+            color: var(--neutral-700);
+        }
+        
+        .localization-setting-value {
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .language-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .language-settings {
+                grid-template-columns: 1fr;
+            }
+            
+            .translation-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .localization-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .language-localization-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .language-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+            
+            .translation-search {
+                width: 100%;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="language-localization-system">
+            <div class="language-container">
+                <!-- Language Header -->
+                <div class="language-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Language & Localization Management</h1>
+                            <p>Khmer/English language switching, localization management, and multi-language support for administrators</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="addLanguage()">
+                                <i data-lucide="plus"></i>
+                                Add Language
+                            </button>
+                            <button class="action-btn" onclick="exportTranslations()">
+                                <i data-lucide="download"></i>
+                                Export Translations
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Language Overview -->
+                <div class="language-overview fade-in">
+                    <div class="overview-card languages">
+                        <div class="overview-header">
+                            <div class="overview-icon languages">
+                                <i data-lucide="globe"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Supported Languages</div>
+                        <div class="overview-value" id="supportedLanguages">2</div>
+                        <div class="overview-description">Languages available in the system</div>
+                    </div>
+                    
+                    <div class="overview-card translations">
+                        <div class="overview-header">
+                            <div class="overview-icon translations">
+                                <i data-lucide="languages"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Total Translations</div>
+                        <div class="overview-value" id="totalTranslations">1,247</div>
+                        <div class="overview-description">Translation strings in the system</div>
+                    </div>
+                    
+                    <div class="overview-card pending">
+                        <div class="overview-header">
+                            <div class="overview-icon pending">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Pending Translations</div>
+                        <div class="overview-value" id="pendingTranslations">23</div>
+                        <div class="overview-description">Translations requiring review</div>
+                    </div>
+                    
+                    <div class="overview-card coverage">
+                        <div class="overview-header">
+                            <div class="overview-icon coverage">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Translation Coverage</div>
+                        <div class="overview-value" id="translationCoverage">98%</div>
+                        <div class="overview-description">Percentage of translated content</div>
+                    </div>
+                </div>
+                
+                <!-- Language Management -->
+                <div class="language-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Language & Localization Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshLanguages()">Refresh</button>
+                            <button class="management-btn" onclick="importTranslations()">Import</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Language Tabs -->
+                    <div class="language-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('languages')">Languages</button>
+                            <button class="tab-btn" onclick="switchTab('translations')">Translations</button>
+                            <button class="tab-btn" onclick="switchTab('localization')">Localization</button>
+                        </div>
+                        
+                        <!-- Languages Tab -->
+                        <div id="languages-tab" class="tab-content active">
+                            <div class="language-settings" id="languageSettings">
+                                <!-- Language settings will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Translations Tab -->
+                        <div id="translations-tab" class="tab-content">
+                            <div class="translation-management">
+                                <div class="translation-header">
+                                    <h3 class="translation-title">Translation Management</h3>
+                                    <div class="translation-search">
+                                        <input type="text" class="translation-search-input" placeholder="Search translations..." id="translationSearchInput">
+                                        <i data-lucide="search" class="translation-search-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="translation-list" id="translationList">
+                                    <!-- Translation list will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Localization Tab -->
+                        <div id="localization-tab" class="tab-content">
+                            <div class="localization-settings">
+                                <div class="localization-header">
+                                    <h3 class="localization-title">Localization Settings</h3>
+                                </div>
+                                <div class="localization-grid" id="localizationGrid">
+                                    <!-- Localization settings will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/language-localization-core.js"></script>
+    <script src="../../assets/js/super-admin/language-localization-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function addLanguage() {
+            console.log('Adding new language...');
+            // Implement add language
+        }
+        
+        function exportTranslations() {
+            console.log('Exporting translations...');
+            // Implement export functionality
+        }
+        
+        function refreshLanguages() {
+            console.log('Refreshing languages...');
+            // Implement refresh functionality
+        }
+        
+        function importTranslations() {
+            console.log('Importing translations...');
+            // Implement import functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

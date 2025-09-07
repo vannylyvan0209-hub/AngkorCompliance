@@ -3,12 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Standard Configuration - Angkor Compliance</title>
+    <title>Standard Configuration - Super Admin - Angkor Compliance Platform</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         /* Role-specific styling for super_admin */
         body.role-super-admin {
@@ -16,621 +32,802 @@
             --role-secondary: var(--super-admin-secondary);
             --role-accent: var(--super-admin-accent);
         }
-
         
+        /* Standard Configuration Specific Styles */
         .standard-configuration {
-            padding: var(--space-4);
-            max-width: 1400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .standard-container {
+            max-width: 1600px;
             margin: 0 auto;
         }
-
-        .configuration-header {
+        
+        .standard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--border-color);
         }
-
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
         .header-actions {
             display: flex;
             gap: var(--space-3);
         }
-
-        .configuration-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: var(--space-4);
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
-
-        .standards-list {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Standard Overview */
+        .standard-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
             overflow: hidden;
         }
-
-        .list-header {
-            background: var(--primary-color);
-            color: white;
-            padding: var(--space-4);
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.active::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.inactive::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.draft::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: var(--space-4);
         }
-
-        .search-box {
-            display: flex;
-            gap: var(--space-2);
-            flex: 1;
-            max-width: 300px;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: var(--space-2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .standards-container {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .standard-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-4);
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .standard-item:hover {
-            background: var(--hover-color);
-        }
-
-        .standard-item.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .standard-item.active .standard-details {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .standard-icon {
+        
+        .overview-icon {
             width: 48px;
             height: 48px;
-            border-radius: var(--border-radius);
-            background: var(--primary-color);
-            color: white;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            color: white;
+            font-size: var(--text-xl);
         }
-
-        .standard-item.active .standard-icon {
-            background: white;
-            color: var(--primary-color);
+        
+        .overview-icon.active {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
         }
-
-        .standard-info {
-            flex: 1;
+        
+        .overview-icon.inactive {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
         }
-
-        .standard-name {
+        
+        .overview-icon.draft {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
             font-weight: 600;
-            margin-bottom: 4px;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
         }
-
-        .standard-details {
-            font-size: 14px;
-            color: var(--text-secondary);
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
         }
-
-        .standard-status {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
         }
-
-        .status-active {
-            background: var(--success-color);
-            color: white;
+        
+        /* Standard Management */
+        .standard-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
         }
-
-        .status-draft {
-            background: var(--warning-color);
-            color: white;
-        }
-
-        .status-inactive {
-            background: var(--text-secondary);
-            color: white;
-        }
-
-        .standard-form {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: var(--space-4);
-            height: fit-content;
-        }
-
-        .form-header {
+        
+        .management-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: var(--space-6);
         }
-
-        .form-section {
-            margin-bottom: var(--space-4);
-        }
-
-        .section-title {
-            font-size: 16px;
+        
+        .management-title {
+            font-size: var(--text-lg);
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: var(--space-3);
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
             display: flex;
-            align-items: center;
             gap: var(--space-2);
         }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-3);
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
         }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 14px;
-            margin-bottom: var(--space-1);
+        
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
             display: block;
         }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: var(--space-2);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--background-color);
-            color: var(--text-primary);
-            font-size: 14px;
+        
+        /* Standard Grid */
+        .standard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-4);
         }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        
+        .standard-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
         }
-
-        .checkbox-group {
+        
+        .standard-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .standard-header {
             display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            margin-bottom: var(--space-2);
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        .checkbox-group label {
-            font-weight: normal;
-            font-size: 14px;
-            margin-bottom: 0;
-        }
-
-        .requirements-section {
-            margin-top: var(--space-4);
-        }
-
-        .requirement-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--space-2);
-            background: var(--background-color);
-        }
-
-        .requirement-info {
-            flex: 1;
-        }
-
-        .requirement-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-
-        .requirement-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .requirement-actions {
-            display: flex;
-            gap: var(--space-2);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: var(--space-3);
-            justify-content: flex-end;
-            margin-top: var(--space-4);
-            padding-top: var(--space-3);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: var(--space-8);
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: var(--space-3);
-            opacity: 0.5;
-        }
-
-        .standard-categories {
-            display: flex;
-            gap: var(--space-2);
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: var(--space-3);
         }
-
-        .category-tag {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+        
+        .standard-title {
+            font-size: var(--text-lg);
             font-weight: 600;
-            background: var(--primary-color);
-            color: white;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
         }
-
-        .version-info {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            font-size: 12px;
-            color: var(--text-secondary);
+        
+        .standard-version {
+            font-size: var(--text-sm);
+            color: var(--neutral-500);
+            font-family: monospace;
         }
-
-        .version-badge {
-            padding: 2px 6px;
-            border-radius: 8px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 10px;
+        
+        .standard-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
             font-weight: 600;
+            text-transform: uppercase;
         }
-
+        
+        .standard-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .standard-status.inactive {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .standard-status.draft {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .standard-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+        
         .standard-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: var(--space-2);
-            font-size: 12px;
-            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
         }
-
-        .meta-item {
+        
+        .standard-meta-item {
             display: flex;
             align-items: center;
             gap: var(--space-1);
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
         }
-
-        .add-requirement-btn {
-            width: 100%;
-            padding: var(--space-3);
-            border: 2px dashed var(--border-color);
-            border-radius: var(--border-radius);
-            background: none;
-            color: var(--text-secondary);
+        
+        .standard-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .standard-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: var(--space-1);
+        }
+        
+        .standard-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .standard-btn.danger:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-200);
+            color: var(--danger-700);
+        }
+        
+        /* Template Management */
+        .template-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .template-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .template-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .template-item:hover {
+            background: var(--neutral-100);
+            border-color: var(--primary-200);
+        }
+        
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .template-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .template-type {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .template-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .template-actions {
+            display: flex;
             gap: var(--space-2);
         }
-
-        .add-requirement-btn:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+        
+        .template-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .template-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Configuration Profiles */
+        .configuration-profiles {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .profiles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .profiles-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .profile-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .profile-item:hover {
+            background: var(--neutral-100);
+            border-color: var(--primary-200);
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .profile-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .profile-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .profile-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .profile-status.inactive {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .profile-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .profile-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .profile-meta-item {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .profile-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .profile-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .profile-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .standard-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .standard-configuration {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .standard-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .standard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
-    <div class="standard-configuration">
-        <div class="configuration-header">
-            <div>
-                <h1><i data-lucide="shield"></i> Standard Configuration</h1>
-                <p>Manage compliance standards and requirements</p>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-outline" onclick="exportStandards()">
-                    <i data-lucide="download"></i> Export
-                </button>
-                <button class="btn btn-primary" onclick="addNewStandard()">
-                    <i data-lucide="plus"></i> Add Standard
-                </button>
-            </div>
-        </div>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
-        <div class="configuration-grid">
-            <div class="standards-list">
-                <div class="list-header">
-                    <div class="search-box">
-                        <input type="text" id="searchStandards" placeholder="Search standards...">
-                        <button class="btn btn-sm btn-outline" onclick="searchStandards()">
-                            <i data-lucide="search"></i>
-                        </button>
-                    </div>
-                    <select id="categoryFilter" onchange="filterStandards()">
-                        <option value="">All Categories</option>
-                        <option value="quality">Quality Management</option>
-                        <option value="environmental">Environmental</option>
-                        <option value="safety">Health & Safety</option>
-                        <option value="social">Social Accountability</option>
-                        <option value="organic">Organic & Fair Trade</option>
-                    </select>
-                </div>
-                <div class="standards-container" id="standardsContainer">
-                    <div class="empty-state">
-                        <i data-lucide="shield"></i>
-                        <h3>No standards found</h3>
-                        <p>Add your first compliance standard to get started</p>
-                        <button class="btn btn-primary" onclick="addNewStandard()">
-                            <i data-lucide="plus"></i> Add First Standard
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
 
-            <div class="standard-form">
-                <div id="noStandardSelected" class="empty-state">
-                    <i data-lucide="edit"></i>
-                    <h3>Select a Standard</h3>
-                    <p>Choose a standard from the list to edit its configuration</p>
-                </div>
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
 
-                <div id="standardForm" style="display: none;">
-                    <div class="form-header">
-                        <h3><i data-lucide="edit"></i> Edit Standard</h3>
-                        <button class="btn btn-sm btn-outline" onclick="duplicateStandard()">
-                            <i data-lucide="copy"></i> Duplicate
-                        </button>
-                    </div>
-
-                    <form id="standardConfigurationForm">
-                        <div class="form-section">
-                            <div class="section-title">
-                                <i data-lucide="info"></i>
-                                Basic Information
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="standardName">Standard Name *</label>
-                                    <input type="text" id="standardName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="standardCode">Standard Code *</label>
-                                    <input type="text" id="standardCode" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="standardCategory">Category *</label>
-                                    <select id="standardCategory" required>
-                                        <option value="">Select Category</option>
-                                        <option value="quality">Quality Management</option>
-                                        <option value="environmental">Environmental</option>
-                                        <option value="safety">Health & Safety</option>
-                                        <option value="social">Social Accountability</option>
-                                        <option value="organic">Organic & Fair Trade</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="standardVersion">Version *</label>
-                                    <input type="text" id="standardVersion" placeholder="e.g., 2021" required>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="standardDescription">Description</label>
-                                    <textarea id="standardDescription" rows="3" placeholder="Brief description of the standard"></textarea>
-                                </div>
-                            </div>
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="standard-configuration">
+            <div class="standard-container">
+                <!-- Standard Header -->
+                <div class="standard-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Standard Configuration Management</h1>
+                            <p>Standard templates, configuration profiles, audit checklist generation, and standard customization</p>
                         </div>
-
-                        <div class="form-section">
-                            <div class="section-title">
-                                <i data-lucide="settings"></i>
-                                Configuration
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="standardStatus">Status</label>
-                                    <select id="standardStatus">
-                                        <option value="active">Active</option>
-                                        <option value="draft">Draft</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="auditFrequency">Default Audit Frequency</label>
-                                    <select id="auditFrequency">
-                                        <option value="">Select Frequency</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="quarterly">Quarterly</option>
-                                        <option value="semi-annually">Semi-Annually</option>
-                                        <option value="annually">Annually</option>
-                                        <option value="biennially">Biennially</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="certificationBody">Certification Body</label>
-                                    <input type="text" id="certificationBody" placeholder="e.g., ISO, BSI">
-                                </div>
-                                <div class="form-group">
-                                    <label for="validityPeriod">Validity Period (months)</label>
-                                    <input type="number" id="validityPeriod" min="1" placeholder="12">
-                                </div>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="requiresTraining">
-                                <label for="requiresTraining">Requires training program</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="requiresDocumentation">
-                                <label for="requiresDocumentation">Requires documentation system</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="requiresAudit">
-                                <label for="requiresAudit">Requires external audit</label>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <div class="section-title">
-                                <i data-lucide="list-check"></i>
-                                Requirements
-                            </div>
-                            <div id="requirementsList">
-                                <!-- Requirements will be dynamically added here -->
-                            </div>
-                            <button type="button" class="add-requirement-btn" onclick="addRequirement()">
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="createStandard()">
                                 <i data-lucide="plus"></i>
-                                Add Requirement
+                                Create Standard
+                            </button>
+                            <button class="action-btn" onclick="generateChecklist()">
+                                <i data-lucide="list-checks"></i>
+                                Generate Checklist
                             </button>
                         </div>
-
-                        <div class="form-section">
-                            <div class="section-title">
-                                <i data-lucide="link"></i>
-                                References & Links
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="officialWebsite">Official Website</label>
-                                    <input type="url" id="officialWebsite" placeholder="https://example.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="documentationUrl">Documentation URL</label>
-                                    <input type="url" id="documentationUrl" placeholder="https://docs.example.com">
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="additionalNotes">Additional Notes</label>
-                                    <textarea id="additionalNotes" rows="3" placeholder="Any additional notes or references"></textarea>
-                                </div>
+                    </div>
+                </div>
+                
+                <!-- Standard Overview -->
+                <div class="standard-overview fade-in">
+                    <div class="overview-card active">
+                        <div class="overview-header">
+                            <div class="overview-icon active">
+                                <i data-lucide="check-circle"></i>
                             </div>
                         </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" onclick="resetForm()">
-                                <i data-lucide="refresh-cw"></i> Reset
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="deleteStandard()">
-                                <i data-lucide="trash-2"></i> Delete
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i data-lucide="save"></i> Save Standard
-                            </button>
+                        <div class="overview-title">Active Standards</div>
+                        <div class="overview-value" id="activeStandards">8</div>
+                        <div class="overview-description">Currently active standards</div>
+                    </div>
+                    
+                    <div class="overview-card draft">
+                        <div class="overview-header">
+                            <div class="overview-icon draft">
+                                <i data-lucide="edit"></i>
+                            </div>
                         </div>
-                    </form>
+                        <div class="overview-title">Draft Standards</div>
+                        <div class="overview-value" id="draftStandards">3</div>
+                        <div class="overview-description">Standards in development</div>
+                    </div>
+                    
+                    <div class="overview-card inactive">
+                        <div class="overview-header">
+                            <div class="overview-icon inactive">
+                                <i data-lucide="pause"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Inactive Standards</div>
+                        <div class="overview-value" id="inactiveStandards">2</div>
+                        <div class="overview-description">Deprecated standards</div>
+                    </div>
+                    
+                    <div class="overview-card active">
+                        <div class="overview-header">
+                            <div class="overview-icon active">
+                                <i data-lucide="layers"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Templates</div>
+                        <div class="overview-value" id="totalTemplates">15</div>
+                        <div class="overview-description">Available templates</div>
+                    </div>
+                </div>
+                
+                <!-- Standard Management -->
+                <div class="standard-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Standard Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="importStandard()">Import</button>
+                            <button class="management-btn" onclick="exportStandards()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('standards')">Standards</button>
+                            <button class="tab-btn" onclick="switchTab('templates')">Templates</button>
+                            <button class="tab-btn" onclick="switchTab('profiles')">Profiles</button>
+                        </div>
+                        
+                        <!-- Standards Tab -->
+                        <div id="standards-tab" class="tab-content active">
+                            <div class="standard-grid" id="standardsGrid">
+                                <!-- Standards will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Templates Tab -->
+                        <div id="templates-tab" class="tab-content">
+                            <div class="template-grid" id="templatesGrid">
+                                <!-- Templates will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Profiles Tab -->
+                        <div id="profiles-tab" class="tab-content">
+                            <div class="profiles-grid" id="profilesGrid">
+                                <!-- Profiles will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Add Requirement Modal -->
-    <div id="requirementModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i data-lucide="list-check"></i> Add Requirement</h3>
-                <button class="modal-close" onclick="closeModal('requirementModal')">&times;</button>
-            </div>
-            <form id="requirementForm">
-                <div class="form-group">
-                    <label for="requirementTitle">Requirement Title *</label>
-                    <input type="text" id="requirementTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="requirementDescription">Description</label>
-                    <textarea id="requirementDescription" rows="3" placeholder="Detailed description of the requirement"></textarea>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="requirementType">Type</label>
-                        <select id="requirementType">
-                            <option value="mandatory">Mandatory</option>
-                            <option value="recommended">Recommended</option>
-                            <option value="optional">Optional</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="requirementPriority">Priority</label>
-                        <select id="requirementPriority">
-                            <option value="high">High</option>
-                            <option value="medium">Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('requirementModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i data-lucide="plus"></i> Add Requirement
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script type="module" src="../../firebase-config.js"></script>
-    <script src="../../assets/js/super-admin/standard-configuration.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/standard-configuration-core.js"></script>
+    <script src="../../assets/js/super-admin/standard-configuration-actions.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize navigation system
-            const navigation = new NavigationComponent();
-            navigation.init();
-            if (window.lucide) {
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
         });
+        
+        // Global functions for HTML onclick handlers
+        function createStandard() {
+            console.log('Creating new standard...');
+            // Implement standard creation
+        }
+        
+        function generateChecklist() {
+            console.log('Generating audit checklist...');
+            // Implement checklist generation
+        }
+        
+        function importStandard() {
+            console.log('Importing standard...');
+            // Implement import functionality
+        }
+        
+        function exportStandards() {
+            console.log('Exporting standards...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
     </script>
 </body>
 </html>

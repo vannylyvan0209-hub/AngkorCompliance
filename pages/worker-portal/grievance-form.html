@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Grievance - Worker App</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/worker-portal.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
     <style>
         .grievance-form-container {
             min-height: 100vh;
@@ -541,6 +544,7 @@
     </style>
 </head>
 <body>
+    <div id="sidebarContainer"></div>
     <div class="language-toggle">
         <button class="language-btn" onclick="toggleLanguage()">
             <i class="fas fa-globe"></i>
@@ -667,11 +671,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <button class="btn btn-secondary" onclick="previousStep()" style="display: none;" id="prev-btn">
+                        <button class="btn btn-secondary font-medium" onclick="previousStep()" style="display: none;" id="prev-btn">
                             <i class="fas fa-arrow-left"></i>
                             <span id="prev-text">Previous</span>
                         </button>
-                        <button class="btn btn-primary" onclick="nextStep()" id="next-btn">
+                        <button class="btn btn-primary text-white font-medium" onclick="nextStep()" id="next-btn">
                             <span id="next-text">Next</span>
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -763,11 +767,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <button class="btn btn-secondary" onclick="previousStep()">
+                        <button class="btn btn-secondary font-medium" onclick="previousStep()">
                             <i class="fas fa-arrow-left"></i>
                             <span id="prev-text-2">Previous</span>
                         </button>
-                        <button class="btn btn-primary" onclick="nextStep()">
+                        <button class="btn btn-primary text-white font-medium" onclick="nextStep()">
                             <span id="next-text-2">Next</span>
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -802,11 +806,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <button class="btn btn-secondary" onclick="previousStep()">
+                        <button class="btn btn-secondary font-medium" onclick="previousStep()">
                             <i class="fas fa-arrow-left"></i>
                             <span id="prev-text-3">Previous</span>
                         </button>
-                        <button class="btn btn-primary" onclick="nextStep()">
+                        <button class="btn btn-primary text-white font-medium" onclick="nextStep()">
                             <span id="next-text-3">Next</span>
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -860,11 +864,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <button class="btn btn-secondary" onclick="previousStep()">
+                        <button class="btn btn-secondary font-medium" onclick="previousStep()">
                             <i class="fas fa-arrow-left"></i>
                             <span id="prev-text-4">Previous</span>
                         </button>
-                        <button class="btn btn-primary" onclick="submitGrievance()" id="submit-btn">
+                        <button class="btn btn-primary text-white font-medium" onclick="submitGrievance()" id="submit-btn">
                             <i class="fas fa-paper-plane"></i>
                             <span id="submit-text">Submit Grievance</span>
                         </button>
@@ -875,10 +879,18 @@
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../assets/js/worker-portal/grievance-form.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </body>
 </html>
+
+

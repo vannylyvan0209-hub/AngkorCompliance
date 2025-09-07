@@ -1,5 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
-
+// Backup Recovery System for Super Admin
 class BackupRecovery {
     constructor() {
         this.db = null;

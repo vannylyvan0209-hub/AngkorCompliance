@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Management - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Factory Management Specific Styles */
+        .factory-management {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .management-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .management-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Factory Grid */
+        .factory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .factory-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .factory-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .factory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+        }
+        
+        .factory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-4);
+        }
+        
+        .factory-info h3 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .factory-info p {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .factory-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-suspended {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .factory-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .metric-item {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .factory-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .factory-action-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+        }
+        
+        .factory-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .factory-action-btn.danger:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-200);
+            color: var(--danger-700);
+        }
+        
+        /* Factory Analytics */
+        .factory-analytics {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .analytics-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .analytics-filters {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .filter-select {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: var(--text-sm);
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .chart-container {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .chart-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-3);
+        }
+        
+        .chart-canvas {
+            height: 300px;
+        }
+        
+        .analytics-summary {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .summary-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .summary-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .summary-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .summary-change {
+            font-size: var(--text-xs);
+            color: var(--success-600);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        /* Factory Registration Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .modal-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--neutral-100);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--neutral-200);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            background: white;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+        }
+        
+        .btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .factory-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .factory-management {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .factory-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .factory-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    <div id="sidebarContainer"></div>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div style="margin-left: 280px;">
+        <div class="factory-management">
+            <div class="management-container">
+                <!-- Management Header -->
+                <div class="management-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Factory Management</h1>
+                            <p>Manage factory registrations, compliance oversight, and analytics</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="openFactoryRegistration()">
+                                <i data-lucide="plus"></i>
+                                Register Factory
+                            </button>
+                            <button class="action-btn" onclick="exportFactoryData()">
+                                <i data-lucide="download"></i>
+                                Export Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Factory Grid -->
+                <div class="factory-grid fade-in" id="factoryGrid">
+                    <!-- Factory cards will be loaded here -->
+                </div>
+                
+                <!-- Factory Analytics -->
+                <div class="factory-analytics fade-in">
+                    <div class="analytics-header">
+                        <h2 class="analytics-title">Factory Analytics</h2>
+                        <div class="analytics-filters">
+                            <select class="filter-select" id="timeFilter">
+                                <option value="7d">Last 7 days</option>
+                                <option value="30d">Last 30 days</option>
+                                <option value="90d">Last 90 days</option>
+                                <option value="1y">Last year</option>
+                            </select>
+                            <select class="filter-select" id="factoryFilter">
+                                <option value="all">All Factories</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-grid">
+                        <div class="chart-container">
+                            <div class="chart-title">Factory Performance Over Time</div>
+                            <canvas id="factoryPerformanceChart" class="chart-canvas"></canvas>
+                        </div>
+                        
+                        <div class="analytics-summary">
+                            <div class="summary-item">
+                                <div class="summary-title">Total Factories</div>
+                                <div class="summary-value" id="totalFactories">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+12.5%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Active Factories</div>
+                                <div class="summary-value" id="activeFactories">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+8.2%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Compliance Rate</div>
+                                <div class="summary-value" id="complianceRate">0%</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+3.1%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Average Score</div>
+                                <div class="summary-value" id="averageScore">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+2.4</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+</main>
+    
+    <!-- Factory Registration Modal -->
+    <div class="modal-overlay" id="factoryRegistrationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Register New Factory</h2>
+                <button class="modal-close" onclick="closeFactoryRegistration()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="factoryRegistrationForm">
+                <div class="form-group">
+                    <label class="form-label">Factory Name</label>
+                    <input type="text" class="form-input" id="factoryName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Factory Code</label>
+                    <input type="text" class="form-input" id="factoryCode" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Factory Type</label>
+                    <select class="form-select" id="factoryType" required>
+                        <option value="">Select Factory Type</option>
+                        <option value="garment">Garment Manufacturing</option>
+                        <option value="textile">Textile Production</option>
+                        <option value="footwear">Footwear Manufacturing</option>
+                        <option value="electronics">Electronics Assembly</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="factoryLocation" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contact Information</label>
+                    <input type="email" class="form-input" id="factoryEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" id="factoryPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Factory Admin Email</label>
+                    <input type="email" class="form-input" id="adminEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Compliance Standards</label>
+                    <select class="form-select" id="complianceStandards" multiple>
+                        <option value="bci">Better Cotton Initiative (BCI)</option>
+                        <option value="gots">Global Organic Textile Standard (GOTS)</option>
+                        <option value="oeko-tex">OEKO-TEX Standard 100</option>
+                        <option value="sa8000">SA8000 Social Accountability</option>
+                        <option value="sedex">Sedex Members Ethical Trade Audit (SMETA)</option>
+                        <option value="wrap">Worldwide Responsible Accredited Production (WRAP)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input form-textarea" id="factoryDescription" placeholder="Brief description of the factory..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeFactoryRegistration()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Register Factory</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/factory-management.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function openFactoryRegistration() {
+            document.getElementById('factoryRegistrationModal').classList.add('show');
+        }
+        
+        function closeFactoryRegistration() {
+            document.getElementById('factoryRegistrationModal').classList.remove('show');
+        }
+        
+        function exportFactoryData() {
+            console.log('Exporting factory data...');
+            // Implement export functionality
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('factoryRegistrationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFactoryRegistration();
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('factoryRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Submitting factory registration...');
+            // Implement form submission
+        });
+    </script>
+</body>
+</html>
+

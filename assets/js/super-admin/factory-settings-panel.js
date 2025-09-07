@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Factory Settings Panel System for Super Admin
 
 class FactorySettingsPanel {
     constructor() {

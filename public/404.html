@@ -1,33 +1,540 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Page Not Found</title>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px 16px; border-radius: 3px; }
-      #message h3 { color: #888; font-weight: normal; font-size: 16px; margin: 16px 0 12px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
+<html lang="en" class="role-theme worker">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Angkor Compliance Platform</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/main-2025.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <style>
+        /* Error Page Specific Styles */
+        .error-page {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .error-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .error-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            padding: var(--space-8);
+        }
+        
+        .error-illustration {
+            margin-bottom: var(--space-8);
+            position: relative;
+        }
+        
+        .error-illustration svg {
+            width: 200px;
+            height: 200px;
+            opacity: 0.8;
+        }
+        
+        .error-illustration .floating-element {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .error-illustration .floating-element:nth-child(2) {
+            top: 20px;
+            right: 20px;
+            animation-delay: 0.5s;
+        }
+        
+        .error-illustration .floating-element:nth-child(3) {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 1s;
+        }
+        
+        .error-illustration .floating-element:nth-child(4) {
+            top: 50%;
+            right: 10px;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: var(--font-black);
+            color: var(--primary-500);
+            line-height: 1;
+            margin-bottom: var(--space-4);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .error-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--text);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-description {
+            font-size: var(--text-lg);
+            color: var(--text-muted);
+            margin-bottom: var(--space-8);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .error-search {
+            margin-top: var(--space-8);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .error-search .form-group {
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-search .form-input {
+            text-align: center;
+        }
+        
+        .error-links {
+            margin-top: var(--space-8);
+            display: flex;
+            gap: var(--space-6);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .error-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            transition: var(--transition-colors);
+        }
+        
+        .error-link:hover {
+            color: var(--primary-600);
+        }
+        
+        .error-link i {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .error-stats {
+            margin-top: var(--space-8);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .error-stat {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-all);
+        }
+        
+        .error-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .error-stat-number {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-500);
+            margin-bottom: var(--space-1);
+        }
+        
+        .error-stat-label {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+        
+        .error-footer {
+            position: absolute;
+            bottom: var(--space-6);
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        
+        .error-footer p {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin: 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: var(--space-6);
+            }
+            
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .error-title {
+                font-size: var(--text-2xl);
+            }
+            
+            .error-description {
+                font-size: var(--text-base);
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-actions .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .error-links {
+                flex-direction: column;
+                gap: var(--space-3);
+            }
+            
+            .error-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .error-illustration svg {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-container {
+                padding: var(--space-4);
+            }
+            
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: var(--text-xl);
+            }
+            
+            .error-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Dark Mode Adjustments */
+        @media (prefers-color-scheme: dark) {
+            .error-page::before {
+                background: linear-gradient(135deg, var(--primary-900) 0%, var(--secondary-900) 100%);
+                opacity: 0.2;
+            }
+            
+            .error-stat {
+                background: var(--surface-dark);
+                border-color: var(--border-dark);
+            }
+        }
+        
+        .dark-mode .error-page::before {
+            background: linear-gradient(135deg, var(--primary-900) 0%, var(--secondary-900) 100%);
+            opacity: 0.2;
+        }
+        
+        .dark-mode .error-stat {
+            background: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+        
+        /* Print Styles */
+        @media print {
+            .error-page::before {
+                display: none;
+            }
+            
+            .error-illustration {
+                display: none;
+            }
+            
+            .error-actions {
+                display: none;
+            }
+            
+            .error-search {
+                display: none;
+            }
+            
+            .error-links {
+                display: none;
+            }
+            
+            .error-stats {
+                display: none;
+            }
+            
+            .error-footer {
+                position: static;
+                transform: none;
+                margin-top: var(--space-8);
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>404</h2>
-      <h1>Page Not Found</h1>
-      <p>The specified file was not found on this website. Please check the URL for mistakes and try again.</p>
-      <h3>Why am I seeing this?</h3>
-      <p>This page was generated by the Firebase Command-Line Interface. To modify it, edit the <code>404.html</code> file in your project's configured <code>public</code> directory.</p>
+</head>
+<body class="error-page">
+    <div class="error-container">
+        <!-- Error Illustration -->
+        <div class="error-illustration" data-aos="fade-up" data-aos-duration="800">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main Error Icon -->
+                <circle cx="100" cy="100" r="80" fill="var(--primary-100)" stroke="var(--primary-300)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="60" fill="var(--primary-50)" stroke="var(--primary-200)" stroke-width="1"/>
+                <text x="100" y="110" text-anchor="middle" font-size="40" font-weight="bold" fill="var(--primary-500)">404</text>
+                
+                <!-- Floating Elements -->
+                <circle class="floating-element" cx="50" cy="50" r="8" fill="var(--secondary-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="150" cy="50" r="6" fill="var(--accent-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="50" cy="150" r="10" fill="var(--warning-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="150" cy="150" r="7" fill="var(--info-300)" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <!-- Error Code -->
+        <div class="error-code" data-aos="fade-up" data-aos-delay="200">404</div>
+        
+        <!-- Error Title -->
+        <h1 class="error-title" data-aos="fade-up" data-aos-delay="400">Page Not Found</h1>
+        
+        <!-- Error Description -->
+        <p class="error-description" data-aos="fade-up" data-aos-delay="600">
+            Sorry, the page you are looking for doesn't exist or has been moved. 
+            Don't worry, let's get you back on track!
+        </p>
+        
+        <!-- Error Actions -->
+        <div class="error-actions" data-aos="fade-up" data-aos-delay="800">
+            <button class="btn btn-primary btn-lg" onclick="goHome()">
+                <i data-lucide="home"></i>
+                Go Home
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="goBack()">
+                <i data-lucide="arrow-left"></i>
+                Go Back
+            </button>
+        </div>
+        
+        <!-- Search -->
+        <div class="error-search" data-aos="fade-up" data-aos-delay="1000">
+            <div class="form-group">
+                <label for="errorSearch" class="form-label">Search for what you need</label>
+                <input type="text" id="errorSearch" class="form-input" placeholder="Search pages, documents, or help...">
+            </div>
+            <button class="btn btn-outline" onclick="performSearch()">
+                <i data-lucide="search"></i>
+                Search
+            </button>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="error-links" data-aos="fade-up" data-aos-delay="1200">
+            <a href="../index.html" class="error-link">
+                <i data-lucide="layout-dashboard"></i>
+                Dashboard
+            </a>
+            <a href="../pages/documentation/documentation-management.html" class="error-link">
+                <i data-lucide="file-text"></i>
+                Documents
+            </a>
+            <a href="../pages/auth/profile.html" class="error-link">
+                <i data-lucide="settings"></i>
+                Settings
+            </a>
+            <a href="../pages/super-admin/help-support.html" class="error-link">
+                <i data-lucide="help-circle"></i>
+                Help
+            </a>
+        </div>
+        
+        <!-- Error Stats -->
+        <div class="error-stats" data-aos="fade-up" data-aos-delay="1400">
+            <div class="error-stat">
+                <div class="error-stat-number">99.9%</div>
+                <div class="error-stat-label">Uptime</div>
+            </div>
+            <div class="error-stat">
+                <div class="error-stat-number">24/7</div>
+                <div class="error-stat-label">Support</div>
+            </div>
+            <div class="error-stat">
+                <div class="error-stat-number">1000+</div>
+                <div class="error-stat-label">Users</div>
+            </div>
+        </div>
     </div>
-  </body>
+    
+    <!-- Footer -->
+    <div class="error-footer" data-aos="fade-up" data-aos-delay="1600">
+        <p>&copy; 2025 Angkor Compliance Platform. All rights reserved.</p>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../assets/js/role-switching-2025.js"></script>
+    <script src="../assets/js/dark-mode-2025.js"></script>
+    <script src="../assets/js/accessibility-2025.js"></script>
+    <script src="../assets/js/performance-2025.js"></script>
+    <script src="../assets/js/cross-browser-2025.js"></script>
+    <script src="../assets/js/animations-2025.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Navigation Functions
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+        
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '../index.html';
+            }
+        }
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('errorSearch').value.trim();
+            if (searchTerm) {
+                // Redirect to search results page
+                window.location.href = `../search.html?q=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+        
+        // Search on Enter key
+        document.getElementById('errorSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // Initialize role switcher
+        if (window.roleSwitcher) {
+            window.roleSwitcher.init();
+        }
+        
+        // Initialize dark mode manager
+        if (window.darkModeManager) {
+            window.darkModeManager.init();
+        }
+        
+        // Initialize accessibility manager
+        if (window.accessibilityManager) {
+            window.accessibilityManager.init();
+        }
+        
+        // Initialize performance manager
+        if (window.performanceManager) {
+            window.performanceManager.init();
+        }
+        
+        // Initialize cross-browser compatibility
+        if (window.crossBrowserManager) {
+            window.crossBrowserManager.init();
+        }
+        
+        // Initialize animation manager
+        if (window.animationManager) {
+            window.animationManager.init();
+        }
+        
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to error stats
+            const errorStats = document.querySelectorAll('.error-stat');
+            errorStats.forEach(stat => {
+                stat.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                stat.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Add click effects to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
 </html>

@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification System - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Notification System Specific Styles */
+        .notification-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .notification-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .notification-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Notification Overview */
+        .notification-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.total::before {
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-card.unread::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.urgent::before {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-card.sent::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.total {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-icon.unread {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.urgent {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .overview-icon.sent {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Notification Management */
+        .notification-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Notification Tabs */
+        .notification-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Notification List */
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .notification-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .notification-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .notification-item.unread {
+            border-left: 4px solid var(--primary-500);
+            background: var(--primary-50);
+        }
+        
+        .notification-item.urgent {
+            border-left: 4px solid var(--danger-500);
+            background: var(--danger-50);
+        }
+        
+        .notification-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-2);
+        }
+        
+        .notification-title {
+            font-size: var(--text-md);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .notification-time {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .notification-content {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+        
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-type {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .notification-type.system {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .notification-type.security {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .notification-type.compliance {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .notification-type.performance {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .notification-action-btn {
+            padding: var(--space-1) var(--space-2);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Alert Configuration */
+        .alert-configuration {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .config-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .config-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .config-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .config-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .config-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .config-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--neutral-200);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .config-toggle.active {
+            background: var(--primary-500);
+        }
+        
+        .config-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .config-toggle.active::after {
+            transform: translateX(20px);
+        }
+        
+        .config-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .config-settings {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .config-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--text-sm);
+        }
+        
+        .config-setting-label {
+            color: var(--neutral-700);
+        }
+        
+        .config-setting-value {
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+        
+        /* Communication Tools */
+        .communication-tools {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tools-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .tools-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .tool-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .tool-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tool-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .tool-status.active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .tool-status.inactive {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .tool-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .tool-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tool-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .notification-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .notification-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .notification-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="notification-system">
+            <div class="notification-container">
+                <!-- Notification Header -->
+                <div class="notification-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Advanced Notification System</h1>
+                            <p>System-wide notification management, alert configuration, and communication tools for administrators</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="markAllAsRead()">
+                                <i data-lucide="check"></i>
+                                Mark All Read
+                            </button>
+                            <button class="action-btn" onclick="sendNotification()">
+                                <i data-lucide="send"></i>
+                                Send Notification
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notification Overview -->
+                <div class="notification-overview fade-in">
+                    <div class="overview-card total">
+                        <div class="overview-header">
+                            <div class="overview-icon total">
+                                <i data-lucide="bell"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Total Notifications</div>
+                        <div class="overview-value" id="totalNotifications">156</div>
+                        <div class="overview-description">All notifications in the system</div>
+                    </div>
+                    
+                    <div class="overview-card unread">
+                        <div class="overview-header">
+                            <div class="overview-icon unread">
+                                <i data-lucide="mail"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Unread</div>
+                        <div class="overview-value" id="unreadNotifications">23</div>
+                        <div class="overview-description">Notifications requiring attention</div>
+                    </div>
+                    
+                    <div class="overview-card urgent">
+                        <div class="overview-header">
+                            <div class="overview-icon urgent">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Urgent</div>
+                        <div class="overview-value" id="urgentNotifications">5</div>
+                        <div class="overview-description">High priority notifications</div>
+                    </div>
+                    
+                    <div class="overview-card sent">
+                        <div class="overview-header">
+                            <div class="overview-icon sent">
+                                <i data-lucide="send"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Sent Today</div>
+                        <div class="overview-value" id="sentNotifications">42</div>
+                        <div class="overview-description">Notifications sent today</div>
+                    </div>
+                </div>
+                
+                <!-- Notification Management -->
+                <div class="notification-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Notification Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshNotifications()">Refresh</button>
+                            <button class="management-btn" onclick="exportNotifications()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Tabs -->
+                    <div class="notification-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('all')">All</button>
+                            <button class="tab-btn" onclick="switchTab('unread')">Unread</button>
+                            <button class="tab-btn" onclick="switchTab('urgent')">Urgent</button>
+                            <button class="tab-btn" onclick="switchTab('system')">System</button>
+                            <button class="tab-btn" onclick="switchTab('security')">Security</button>
+                        </div>
+                        
+                        <!-- All Notifications Tab -->
+                        <div id="all-tab" class="tab-content active">
+                            <div class="notification-list" id="allNotifications">
+                                <!-- All notifications will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Unread Notifications Tab -->
+                        <div id="unread-tab" class="tab-content">
+                            <div class="notification-list" id="unreadNotificationsList">
+                                <!-- Unread notifications will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Urgent Notifications Tab -->
+                        <div id="urgent-tab" class="tab-content">
+                            <div class="notification-list" id="urgentNotificationsList">
+                                <!-- Urgent notifications will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- System Notifications Tab -->
+                        <div id="system-tab" class="tab-content">
+                            <div class="notification-list" id="systemNotifications">
+                                <!-- System notifications will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Security Notifications Tab -->
+                        <div id="security-tab" class="tab-content">
+                            <div class="notification-list" id="securityNotifications">
+                                <!-- Security notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alert Configuration -->
+                <div class="alert-configuration fade-in">
+                    <div class="config-header">
+                        <h3 class="config-title">Alert Configuration</h3>
+                    </div>
+                    
+                    <div class="config-grid" id="alertConfigGrid">
+                        <!-- Alert configurations will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Communication Tools -->
+                <div class="communication-tools fade-in">
+                    <div class="tools-header">
+                        <h3 class="tools-title">Communication Tools</h3>
+                    </div>
+                    
+                    <div class="tools-grid" id="communicationToolsGrid">
+                        <!-- Communication tools will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/notification-system-core.js"></script>
+    <script src="../../assets/js/super-admin/notification-system-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function markAllAsRead() {
+            console.log('Marking all notifications as read...');
+            // Implement mark all as read
+        }
+        
+        function sendNotification() {
+            console.log('Sending notification...');
+            // Implement send notification
+        }
+        
+        function refreshNotifications() {
+            console.log('Refreshing notifications...');
+            // Implement refresh functionality
+        }
+        
+        function exportNotifications() {
+            console.log('Exporting notifications...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Performance Dashboard - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- 2025 Design System CSS -->
+    
+    
+    
+    
+    
+    <!-- Third-party Libraries -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Factory Dashboard Specific CSS -->
+    <link rel="stylesheet" href="../../assets/css/factory-dashboard-2025.css">
+    
+    <!-- Legacy CSS for backward compatibility -->
+    
+    
+    
+
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Moment.js for Date Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <!-- Navigation System -->
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <style>
+        /* Factory Dashboard Styles */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            background: var(--neutral-50);
+            min-height: 100vh;
+        }
+        
+        .factory-header {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+        
+        .factory-info {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: var(--space-6);
+            align-items: center;
+        }
+        
+        .factory-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+        }
+        
+        .factory-details h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        
+        .factory-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+        
+        .factory-meta span {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        .factory-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--primary-700);
+            border: 2px solid white;
+        }
+        
+        .btn-white:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-50);
+        }
+        
+        /* Performance Metrics Grid */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+        }
+        
+        .metric-icon.compliance {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .metric-icon.performance {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .metric-icon.safety {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .metric-icon.productivity {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .metric-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .metric-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+        
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            margin-top: var(--space-3);
+        }
+        
+        .metric-trend.positive {
+            color: var(--success-700);
+        }
+        
+        .metric-trend.negative {
+            color: var(--danger-700);
+        }
+        
+        .metric-trend.neutral {
+            color: var(--neutral-600);
+        }
+        
+        /* Progress Circles */
+        .progress-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: var(--space-4) auto;
+        }
+        
+        .progress-circle svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .progress-circle-bg {
+            fill: none;
+            stroke: var(--neutral-200);
+            stroke-width: 8;
+        }
+        
+        .progress-circle-fill {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+        
+        .progress-circle-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--neutral-900);
+        }
+        
+        /* Analytics Section */
+        .analytics-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--neutral-200);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .chart-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+        
+        /* Compliance Timeline */
+        .timeline-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-100);
+        }
+        
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: var(--text-sm);
+        }
+        
+        .timeline-icon.audit {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .timeline-icon.improvement {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .timeline-icon.issue {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .timeline-description {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .timeline-date {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            font-weight: 500;
+        }
+        
+        /* Mobile Optimizations */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            left: var(--space-4);
+            z-index: 1001;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .mobile-overlay.open {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                height: 100vh;
+                z-index: 100;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .factory-info {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: var(--space-4);
+            }
+            
+            .factory-actions {
+                justify-content: center;
+            }
+            
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="role-theme factory-admin">
+    <div id="sidebarContainer"></div>
+    <div class="factory-dashboard">
+        <!-- 2025 Navigation System -->
+        <nav class="role-nav">
+            <div class="nav">
+                <div class="nav-brand">
+                    <img src="logo.png" alt="Angkor Compliance" class="logo">
+                    <span class="brand-text">Factory Dashboard</span>
+                </div>
+                <div class="nav-items">
+                    <div class="nav-item">
+                        <a href="#dashboard" class="nav-link active" data-aos="fade-down" data-aos-delay="100">
+                            <i data-lucide="home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pages/factory-admin/factory-user-management.html" class="nav-link" data-aos="fade-down" data-aos-delay="200">
+                            <i data-lucide="users"></i>
+                            <span>Factory Users</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pages/factory-admin/audit-management-dashboard.html" class="nav-link" data-aos="fade-down" data-aos-delay="300">
+                            <i data-lucide="clipboard-check"></i>
+                            <span>Audit Preparation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pages/factory-admin/compliance-monitoring-dashboard.html" class="nav-link" data-aos="fade-down" data-aos-delay="400">
+                            <i data-lucide="clipboard-list"></i>
+                            <span>CAP Management</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pages/factory-admin/document-oversight-dashboard.html" class="nav-link" data-aos="fade-down" data-aos-delay="500">
+                            <i data-lucide="file-text"></i>
+                            <span>Documents</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="language-selector">
+                    <select id="languageSelect" class="form-select">
+                        <option value="en">English</option>
+                        <option value="km">ខ្មែរ</option>
+                        <option value="th">ไทย</option>
+                        <option value="vi">Tiếng Việt</option>
+                    </select>
+                </div>
+                <div class="role-selector">
+                    <label for="roleSelect" class="role-label">Role:</label>
+                    <select id="roleSelect" onchange="changeRole(this.value)" class="form-select">
+                        <option value="worker">Worker</option>
+                        <option value="factory-admin" selected>Factory Admin</option>
+                        <option value="hr-staff">HR Staff</option>
+                        <option value="grievance-committee">Grievance Committee</option>
+                        <option value="auditor">Auditor</option>
+                        <option value="analytics-user">Analytics User</option>
+                        <option value="super-admin">Super Admin</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="portal-main">
+        <div style="margin-left: 280px;">
+            <!-- Factory Header with 2025 Design -->
+            <section class="factory-header-section" id="factoryHeader">
+                <div class="container">
+                    <div class="bento-grid">
+                        <div class="bento-card bento-hero" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="factory-info">
+                                    <div class="factory-avatar" id="factoryAvatar">
+                                        AC
+                                    </div>
+                                    <div class="factory-details">
+                                        <h1 class="hero-title" id="factoryName">Loading Factory...</h1>
+                                        <div class="factory-meta">
+                                            <span>
+                                                <i data-lucide="map-pin"></i>
+                                                <span id="factoryLocation">Loading...</span>
+                                            </span>
+                                            <span>
+                                                <i data-lucide="users"></i>
+                                                <span id="factoryEmployees">-</span> employees
+                                            </span>
+                                            <span>
+                                                <i data-lucide="calendar"></i>
+                                                Established <span id="factoryEstablished">-</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary btn-lg" onclick="editFactory()" data-aos="fade-up" data-aos-delay="200">
+                                        <i data-lucide="edit"></i>
+                                        <span>Edit Factory</span>
+                                    </button>
+                                    <button class="btn btn-secondary btn-lg" onclick="generateReport()" data-aos="fade-up" data-aos-delay="300">
+                                        <i data-lucide="download"></i>
+                                        <span>Export Report</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Performance Metrics with 2025 Design -->
+            <section class="performance-metrics" id="performanceMetrics">
+                <div class="container">
+                    <div class="bento-grid">
+                        <!-- Compliance Score -->
+                        <div class="bento-card bento-metric" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="metric-header">
+                                    <div class="metric-icon compliance">
+                                        <i data-lucide="shield-check"></i>
+                                    </div>
+                                </div>
+                                <div class="metric-value" id="complianceScore">-</div>
+                                <div class="metric-label">Compliance Score</div>
+                                <div class="progress-circle">
+                                    <svg>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-bg"/>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-fill" 
+                                                id="complianceCircle" style="stroke: var(--success-500);"/>
+                                    </svg>
+                                    <div class="progress-circle-text" id="compliancePercent">-</div>
+                                </div>
+                                <div class="metric-trend positive" id="complianceTrend">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+5.2% this month</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Rating -->
+                        <div class="bento-card bento-metric" data-aos="fade-up" data-aos-delay="200">
+                            <div class="card-content">
+                                <div class="metric-header">
+                                    <div class="metric-icon performance">
+                                        <i data-lucide="zap"></i>
+                                    </div>
+                                </div>
+                                <div class="metric-value" id="performanceScore">-</div>
+                                <div class="metric-label">Performance Rating</div>
+                                <div class="progress-circle">
+                                    <svg>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-bg"/>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-fill" 
+                                                id="performanceCircle" style="stroke: var(--info-500);"/>
+                                    </svg>
+                                    <div class="progress-circle-text" id="performancePercent">-</div>
+                                </div>
+                                <div class="metric-trend positive" id="performanceTrend">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+2.8% this month</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Safety Rating -->
+                        <div class="bento-card bento-metric" data-aos="fade-up" data-aos-delay="300">
+                            <div class="card-content">
+                                <div class="metric-header">
+                                    <div class="metric-icon safety">
+                                        <i data-lucide="hard-hat"></i>
+                                    </div>
+                                </div>
+                                <div class="metric-value" id="safetyScore">-</div>
+                                <div class="metric-label">Safety Rating</div>
+                                <div class="progress-circle">
+                                    <svg>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-bg"/>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-fill" 
+                                                id="safetyCircle" style="stroke: var(--warning-500);"/>
+                                    </svg>
+                                    <div class="progress-circle-text" id="safetyPercent">-</div>
+                                </div>
+                                <div class="metric-trend neutral" id="safetyTrend">
+                                    <i data-lucide="minus"></i>
+                                    <span>No change</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Productivity Index -->
+                        <div class="bento-card bento-metric" data-aos="fade-up" data-aos-delay="400">
+                            <div class="card-content">
+                                <div class="metric-header">
+                                    <div class="metric-icon productivity">
+                                        <i data-lucide="trending-up"></i>
+                                    </div>
+                                </div>
+                                <div class="metric-value" id="productivityScore">-</div>
+                                <div class="metric-label">Productivity Index</div>
+                                <div class="progress-circle">
+                                    <svg>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-bg"/>
+                                        <circle cx="50" cy="50" r="36" class="progress-circle-fill" 
+                                                id="productivityCircle" style="stroke: var(--primary-500);"/>
+                                    </svg>
+                                    <div class="progress-circle-text" id="productivityPercent">-</div>
+                                </div>
+                                <div class="metric-trend positive" id="productivityTrend">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+8.1% this month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Analytics Section with 2025 Design -->
+            <section class="analytics-section" id="analyticsSection">
+                <div class="container">
+                    <div class="bento-grid">
+                        <!-- Performance Trends Chart -->
+                        <div class="bento-card bento-chart" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">Performance Trends (6 Months)</h3>
+                                    <select class="form-select" style="width: auto;" onchange="changeMetricType(this.value)">
+                                        <option value="compliance">Compliance</option>
+                                        <option value="performance">Performance</option>
+                                        <option value="safety">Safety</option>
+                                        <option value="productivity">Productivity</option>
+                                    </select>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="trendsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activity Timeline -->
+                        <div class="bento-card bento-timeline" data-aos="fade-up" data-aos-delay="200">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h3 class="card-title">Recent Activity</h3>
+                                    <button class="btn btn-sm btn-outline" onclick="refreshTimeline()">
+                                        <i data-lucide="refresh-cw"></i>
+                                        Refresh
+                                    </button>
+                                </div>
+                                <div class="timeline-container" id="activityTimeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon audit">
+                                            <i data-lucide="search"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">Loading activities...</div>
+                                            <div class="timeline-description">Please wait while we fetch recent factory activities</div>
+                                            <div class="timeline-date">Now</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                </div>
+</main>
+    </div>
+    
+    <!-- 2025 Design System JavaScript -->
+    <script src="../../assets/js/role-switching-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/dark-mode-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/animations-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/accessibility-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- Legacy JavaScript -->
+    <script type="module" src="firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/lang.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/enterprise-authentication.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/factory-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <script>
+        // Initialize Factory Dashboard
+        console.log('🏭 Factory Performance Dashboard loading...');
+        
+        // Initialize 2025 Design System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS animations
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Initialize role switching
+            if (window.roleSwitching) {
+                window.roleSwitching.init();
+            }
+
+            // Initialize dark mode
+            if (window.darkMode) {
+                window.darkMode.init();
+            }
+
+            // Initialize accessibility features
+            if (window.accessibility) {
+                window.accessibility.init();
+            }
+        });
+
+        // Role switching function
+        function changeRole(role) {
+            if (window.roleSwitching) {
+                window.roleSwitching.switchRole(role);
+            } else {
+                // Fallback role switching
+                const body = document.body;
+                body.className = `role-theme ${role}`;
+            }
+        }
+    </script>
+</body>
+</html>
+
+

@@ -1,35 +1,5 @@
-// Firebase v12+ Configuration using ES6 modules
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged, 
-  updateProfile, 
-  sendPasswordResetEmail, 
-  EmailAuthProvider, 
-  reauthenticateWithCredential, 
-  updatePassword 
-} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js';
-import { 
-  getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  updateDoc, 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  serverTimestamp, 
-  orderBy, 
-  onSnapshot, 
-  addDoc, 
-  deleteDoc, 
-  writeBatch 
-} from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js';
-import { getStorage } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js';
+// Firebase Configuration for Angkor Compliance Platform
+// Compatible with Firebase v9 CDN imports
 
 // Firebase configuration object
 const firebaseConfig = {
@@ -41,51 +11,100 @@ const firebaseConfig = {
   appId: "1:75963971757:web:b316be1852d1851e082e24"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
 // Initialize Firebase services
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+let app, auth, db, storage;
 
-// Export Firebase services and functions
-export const Firebase = {
-  // Services
-  auth,
-  db,
-  storage,
-  app,
+// Firebase service getters
+function getFirebaseApp() {
+  if (!app && window.firebase) {
+    app = window.firebase.initializeApp(firebaseConfig);
+  }
+  return app;
+}
+
+function getFirebaseAuth() {
+  if (!auth) {
+    const firebaseApp = getFirebaseApp();
+    if (firebaseApp && window.firebase) {
+      auth = window.firebase.auth(firebaseApp);
+    }
+  }
+  return auth;
+}
+
+function getFirebaseFirestore() {
+  if (!db) {
+    const firebaseApp = getFirebaseApp();
+    if (firebaseApp && window.firebase) {
+      db = window.firebase.firestore(firebaseApp);
+    }
+  }
+  return db;
+}
+
+function getFirebaseStorage() {
+  if (!storage) {
+    const firebaseApp = getFirebaseApp();
+    if (firebaseApp && window.firebase) {
+      storage = window.firebase.storage(firebaseApp);
+    }
+  }
+  return storage;
+}
+
+// Initialize Firebase function (for backward compatibility)
+function initializeFirebase() {
+  return window.Firebase.initialize();
+}
+
+// Make Firebase available globally
+window.Firebase = {
+  // Configuration
+  config: firebaseConfig,
   
-  // Auth functions
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  sendPasswordResetEmail,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
+  // Service getters
+  getApp: getFirebaseApp,
+  getAuth: getFirebaseAuth,
+  getFirestore: getFirebaseFirestore,
+  getStorage: getFirebaseStorage,
   
-  // Firestore functions
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  serverTimestamp,
-  orderBy,
-  onSnapshot,
-  addDoc,
-  deleteDoc,
-  writeBatch
+  // Direct service access
+  get auth() { return getFirebaseAuth(); },
+  get db() { return getFirebaseFirestore(); },
+  get storage() { return getFirebaseStorage(); },
+  get app() { return getFirebaseApp(); },
+  
+  // Utility functions
+  isAvailable() {
+    return !!(window.firebase && getFirebaseApp());
+  },
+  
+  // Initialize function
+  initialize() {
+    if (window.firebase) {
+      app = getFirebaseApp();
+      auth = getFirebaseAuth();
+      db = getFirebaseFirestore();
+      storage = getFirebaseStorage();
+      console.log('✅ Firebase initialized successfully');
+      return true;
+    } else {
+      console.warn('⚠️ Firebase CDN not loaded - using fallback mode');
+      return false;
+    }
+  }
 };
 
-// Also export individual services for direct import
-export { auth, db, storage, app };
+// Make individual services available globally
+window.getFirebaseApp = getFirebaseApp;
+window.getFirebaseAuth = getFirebaseAuth;
+window.getFirebaseFirestore = getFirebaseFirestore;
+window.getFirebaseStorage = getFirebaseStorage;
+window.initializeFirebase = initializeFirebase;
 
-console.log('✅ Firebase v12 initialized successfully with ES6 modules');
+// Auto-initialize if Firebase is available
+if (typeof window !== 'undefined' && window.firebase) {
+  window.Firebase.initialize();
+}
+
+console.log('✅ Firebase configuration loaded (npm package compatible)');

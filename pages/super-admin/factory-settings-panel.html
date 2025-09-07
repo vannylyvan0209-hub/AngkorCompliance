@@ -3,12 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factory Settings Panel - Angkor Compliance</title>
+    <title>Factory Settings Panel - Super Admin - Angkor Compliance Platform</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
     <style>
         /* Role-specific styling for super_admin */
         body.role-super-admin {
@@ -17,20 +30,43 @@
             --role-accent: var(--super-admin-accent);
         }
 
+        /* Factory Settings Panel Specific Styles */
+        .factory-settings-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
         
-        .factory-settings {
-            padding: var(--space-4);
+        .settings-container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .settings-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
         }
 
         .header-actions {
@@ -38,99 +74,167 @@
             gap: var(--space-3);
         }
 
-        .settings-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: var(--space-4);
-        }
-
-        .factory-selector {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: var(--space-4);
-            height: fit-content;
-        }
-
-        .factory-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .factory-item {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3);
-            border-radius: var(--border-radius);
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .factory-item:hover {
-            background: var(--hover-color);
-        }
-
-        .factory-item.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .factory-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 16px;
+            gap: var(--space-2);
         }
-
-        .factory-info {
-            flex: 1;
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
-
-        .factory-name {
-            font-weight: 600;
-            margin-bottom: 2px;
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
         }
-
-        .factory-details {
-            font-size: 12px;
-            opacity: 0.8;
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
         }
-
-        .settings-content {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: var(--space-4);
+        
+        /* Factory Selector */
+        .factory-selector {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
         }
-
-        .settings-tabs {
+        
+        .selector-header {
             display: flex;
-            border-bottom: 1px solid var(--border-color);
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: var(--space-4);
         }
-
-        .tab-button {
+        
+        .selector-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .factory-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
             padding: var(--space-3) var(--space-4);
-            border: none;
-            background: none;
-            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--neutral-700);
             cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            min-width: 300px;
+        }
+        
+        .dropdown-btn:hover {
+            border-color: var(--primary-200);
+            background: var(--primary-50);
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .dropdown-content.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+        
+        .dropdown-item:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Settings Tabs */
+        .settings-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .tabs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
         }
 
-        .tab-button.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
         }
 
         .tab-content {
@@ -141,164 +245,94 @@
             display: block;
         }
 
+        /* Settings Sections */
         .settings-section {
+            margin-bottom: var(--space-8);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: var(--space-4);
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: var(--text-md);
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: var(--space-3);
-            padding-bottom: var(--space-2);
-            border-bottom: 1px solid var(--border-color);
+            color: var(--neutral-900);
+        }
+        
+        .section-actions {
             display: flex;
-            align-items: center;
             gap: var(--space-2);
         }
 
-        .form-grid {
+        .section-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .section-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .settings-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-3);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
         }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
+        
+        .setting-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
         }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 14px;
-            margin-bottom: var(--space-1);
-            display: block;
+        
+        .setting-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
         }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: var(--space-2);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--background-color);
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            margin-bottom: var(--space-2);
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        .checkbox-group label {
-            font-weight: normal;
-            font-size: 14px;
-            margin-bottom: 0;
-        }
-
-        .settings-actions {
-            display: flex;
-            gap: var(--space-3);
-            justify-content: flex-end;
-            margin-top: var(--space-4);
-            padding-top: var(--space-3);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--border-radius);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .status-pending {
-            background: var(--warning-color);
-            color: white;
-        }
-
-        .status-inactive {
-            background: var(--text-secondary);
-            color: white;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: var(--space-8);
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: var(--space-3);
-            opacity: 0.5;
-        }
-
-        .feature-toggle {
+        
+        .setting-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-3);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--space-2);
+            margin-bottom: var(--space-3);
         }
-
-        .feature-info {
-            flex: 1;
-        }
-
-        .feature-name {
+        
+        .setting-title {
+            font-size: var(--text-sm);
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
+            color: var(--neutral-900);
         }
-
-        .feature-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .toggle-switch {
+        
+        .setting-toggle {
             position: relative;
-            width: 50px;
+            width: 44px;
             height: 24px;
-            background: var(--text-secondary);
+            background: var(--neutral-200);
             border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
         }
-
-        .toggle-switch.active {
-            background: var(--success-color);
+        
+        .setting-toggle.active {
+            background: var(--primary-500);
         }
-
-        .toggle-switch::after {
+        
+        .setting-toggle::after {
             content: '';
             position: absolute;
             top: 2px;
@@ -307,495 +341,548 @@
             height: 20px;
             background: white;
             border-radius: 50%;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
         }
-
-        .toggle-switch.active::after {
-            transform: translateX(26px);
+        
+        .setting-toggle.active::after {
+            transform: translateX(20px);
         }
-
-        .usage-stats {
+        
+        .setting-description {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .setting-input {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .setting-select {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Inheritance Settings */
+        .inheritance-settings {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .inheritance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .inheritance-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .inheritance-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-3);
-            margin-bottom: var(--space-4);
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .inheritance-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .inheritance-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .inheritance-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .inheritance-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .inheritance-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .inheritance-status.inherited {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .inheritance-status.overridden {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .inheritance-status.custom {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .inheritance-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .inheritance-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .inheritance-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .inheritance-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Customization Tools */
+        .customization-tools {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .customization-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .customization-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .customization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .customization-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .customization-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .customization-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
         }
 
-        .stat-card {
-            background: var(--background-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: var(--space-3);
+        .customization-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .customization-type {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .customization-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .customization-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .customization-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .customization-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .settings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .inheritance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .customization-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .factory-settings-panel {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
             text-align: center;
         }
 
-        .stat-number {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 4px;
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
         }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
-    <div class="factory-settings">
-        <div class="settings-header">
-            <div>
-                <h1><i data-lucide="settings"></i> Factory Settings Panel</h1>
-                <p>Configure factory-specific settings and manage factory configurations</p>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="factory-settings-panel">
+            <div class="settings-container">
+                <!-- Settings Header -->
+                <div class="settings-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Factory Settings Panel</h1>
+                            <p>Factory-specific configuration management, settings inheritance, and factory customization tools</p>
             </div>
             <div class="header-actions">
-                <button class="btn btn-outline" onclick="exportFactorySettings()">
-                    <i data-lucide="download"></i> Export Settings
+                            <button class="action-btn secondary" onclick="resetToDefaults()">
+                                <i data-lucide="refresh-cw"></i>
+                                Reset to Defaults
                 </button>
-                <button class="btn btn-primary" onclick="saveAllSettings()">
-                    <i data-lucide="save"></i> Save All Changes
+                            <button class="action-btn" onclick="saveAllSettings()">
+                                <i data-lucide="save"></i>
+                                Save All Settings
                 </button>
             </div>
         </div>
-
-        <div class="settings-grid">
-            <div class="factory-selector">
-                <h3><i data-lucide="building"></i> Select Factory</h3>
-                <div class="factory-list" id="factoryList">
-                    <div class="empty-state">
-                        <i data-lucide="building"></i>
-                        <h3>No factories found</h3>
-                        <p>Factories will appear here once registered</p>
+                </div>
+                
+                <!-- Factory Selector -->
+                <div class="factory-selector fade-in">
+                    <div class="selector-header">
+                        <h3 class="selector-title">Select Factory</h3>
+                    </div>
+                    
+                    <div class="factory-dropdown">
+                        <button class="dropdown-btn" onclick="toggleDropdown()">
+                            <span id="selectedFactory">Select a factory...</span>
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="dropdown-content" id="factoryDropdown">
+                            <!-- Factory options will be loaded here -->
                     </div>
                 </div>
             </div>
 
-            <div class="settings-content">
-                <div id="noFactorySelected" class="empty-state">
-                    <i data-lucide="settings"></i>
-                    <h3>Select a Factory</h3>
-                    <p>Choose a factory from the list to configure its settings</p>
+                <!-- Settings Tabs -->
+                <div class="settings-tabs fade-in">
+                    <div class="tabs-header">
+                        <h3 class="tabs-title">Factory Configuration</h3>
                 </div>
 
-                <div id="factorySettings" style="display: none;">
-                    <div class="factory-info-header">
-                        <div class="factory-details">
-                            <h2 id="selectedFactoryName">Factory Name</h2>
-                            <p id="selectedFactoryDetails">Factory details</p>
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" onclick="switchTab('general')">General</button>
+                        <button class="tab-btn" onclick="switchTab('compliance')">Compliance</button>
+                        <button class="tab-btn" onclick="switchTab('security')">Security</button>
+                        <button class="tab-btn" onclick="switchTab('notifications')">Notifications</button>
+                        <button class="tab-btn" onclick="switchTab('integrations')">Integrations</button>
+                    </div>
+
+                    <!-- General Tab -->
+                    <div id="general-tab" class="tab-content active">
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h4 class="section-title">Basic Settings</h4>
+                                <div class="section-actions">
+                                    <button class="section-btn" onclick="importSettings()">Import</button>
+                                    <button class="section-btn" onclick="exportSettings()">Export</button>
+                            </div>
                         </div>
-                        <div class="status-indicator" id="factoryStatus">
-                            <i data-lucide="circle"></i>
-                            <span>Active</span>
+
+                            <div class="settings-grid" id="generalSettings">
+                                <!-- General settings will be loaded here -->
+                            </div>
                         </div>
                     </div>
 
-                    <div class="settings-tabs">
-                        <button class="tab-button active" onclick="switchTab('general')">
-                            <i data-lucide="settings"></i> General
-                        </button>
-                        <button class="tab-button" onclick="switchTab('compliance')">
-                            <i data-lucide="shield"></i> Compliance
-                        </button>
-                        <button class="tab-button" onclick="switchTab('features')">
-                            <i data-lucide="zap"></i> Features
-                        </button>
-                        <button class="tab-button" onclick="switchTab('users')">
-                            <i data-lucide="users"></i> Users
-                        </button>
-                        <button class="tab-button" onclick="switchTab('billing')">
-                            <i data-lucide="credit-card"></i> Billing
-                        </button>
-                        <button class="tab-button" onclick="switchTab('security')">
-                            <i data-lucide="lock"></i> Security
-                        </button>
-                    </div>
-
-                    <!-- General Settings Tab -->
-                    <div id="generalTab" class="tab-content active">
+                    <!-- Compliance Tab -->
+                    <div id="compliance-tab" class="tab-content">
                         <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="info"></i>
-                                Basic Information
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="factoryName">Factory Name</label>
-                                    <input type="text" id="factoryName" placeholder="Enter factory name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="factoryCode">Factory Code</label>
-                                    <input type="text" id="factoryCode" placeholder="Enter factory code" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="industry">Industry</label>
-                                    <select id="industry">
-                                        <option value="">Select Industry</option>
-                                        <option value="textiles">Textiles & Apparel</option>
-                                        <option value="electronics">Electronics</option>
-                                        <option value="automotive">Automotive</option>
-                                        <option value="food">Food & Beverage</option>
-                                        <option value="chemicals">Chemicals</option>
-                                        <option value="pharmaceuticals">Pharmaceuticals</option>
-                                        <option value="construction">Construction</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="timezone">Timezone</label>
-                                    <select id="timezone">
-                                        <option value="">Select Timezone</option>
-                                        <option value="Asia/Phnom_Penh">Asia/Phnom_Penh (GMT+7)</option>
-                                        <option value="Asia/Bangkok">Asia/Bangkok (GMT+7)</option>
-                                        <option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh (GMT+7)</option>
-                                        <option value="Asia/Vientiane">Asia/Vientiane (GMT+7)</option>
-                                        <option value="Asia/Yangon">Asia/Yangon (GMT+6:30)</option>
-                                        <option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur (GMT+8)</option>
-                                        <option value="Asia/Jakarta">Asia/Jakarta (GMT+7)</option>
-                                        <option value="Asia/Manila">Asia/Manila (GMT+8)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="description">Description</label>
-                                    <textarea id="description" rows="3" placeholder="Brief description of the factory"></textarea>
-                                </div>
+                            <div class="section-header">
+                                <h4 class="section-title">Compliance Settings</h4>
+                                <div class="section-actions">
+                                    <button class="section-btn" onclick="updateComplianceSettings()">Update</button>
                             </div>
                         </div>
 
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="map-pin"></i>
-                                Contact Information
+                            <div class="settings-grid" id="complianceSettings">
+                                <!-- Compliance settings will be loaded here -->
                             </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="contactEmail">Contact Email</label>
-                                    <input type="email" id="contactEmail" placeholder="Enter contact email">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactPhone">Contact Phone</label>
-                                    <input type="tel" id="contactPhone" placeholder="Enter contact phone">
-                                </div>
-                                <div class="form-group">
-                                    <label for="website">Website</label>
-                                    <input type="url" id="website" placeholder="Enter website URL">
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Address</label>
-                                    <input type="text" id="address" placeholder="Enter factory address">
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div id="security-tab" class="tab-content">
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h4 class="section-title">Security Settings</h4>
+                                <div class="section-actions">
+                                    <button class="section-btn" onclick="updateSecuritySettings()">Update</button>
+                            </div>
+                        </div>
+
+                            <div class="settings-grid" id="securitySettings">
+                                <!-- Security settings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Tab -->
+                    <div id="notifications-tab" class="tab-content">
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h4 class="section-title">Notification Settings</h4>
+                                <div class="section-actions">
+                                    <button class="section-btn" onclick="updateNotificationSettings()">Update</button>
+                            </div>
+                        </div>
+
+                            <div class="settings-grid" id="notificationSettings">
+                                <!-- Notification settings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integrations Tab -->
+                    <div id="integrations-tab" class="tab-content">
+                        <div class="settings-section">
+                            <div class="section-header">
+                                <h4 class="section-title">Integration Settings</h4>
+                                <div class="section-actions">
+                                    <button class="section-btn" onclick="updateIntegrationSettings()">Update</button>
+                            </div>
+                        </div>
+
+                            <div class="settings-grid" id="integrationSettings">
+                                <!-- Integration settings will be loaded here -->
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Compliance Settings Tab -->
-                    <div id="complianceTab" class="tab-content">
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="shield"></i>
-                                Compliance Standards
+                <!-- Inheritance Settings -->
+                <div class="inheritance-settings fade-in">
+                    <div class="inheritance-header">
+                        <h3 class="inheritance-title">Settings Inheritance</h3>
                             </div>
-                            <div class="form-grid">
-                                <div class="form-group full-width">
-                                    <label for="complianceStandards">Active Compliance Standards</label>
-                                    <select id="complianceStandards" multiple>
-                                        <option value="iso9001">ISO 9001 (Quality Management)</option>
-                                        <option value="iso14001">ISO 14001 (Environmental Management)</option>
-                                        <option value="iso45001">ISO 45001 (Occupational Health & Safety)</option>
-                                        <option value="sa8000">SA 8000 (Social Accountability)</option>
-                                        <option value="bsci">BSCI (Business Social Compliance Initiative)</option>
-                                        <option value="sedex">Sedex (Supplier Ethical Data Exchange)</option>
-                                        <option value="wrap">WRAP (Worldwide Responsible Accredited Production)</option>
-                                        <option value="fairtrade">Fairtrade</option>
-                                        <option value="organic">Organic Certification</option>
-                                        <option value="gots">GOTS (Global Organic Textile Standard)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="auditFrequency">Audit Frequency</label>
-                                    <select id="auditFrequency">
-                                        <option value="">Select Frequency</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="quarterly">Quarterly</option>
-                                        <option value="semi-annually">Semi-Annually</option>
-                                        <option value="annually">Annually</option>
-                                        <option value="biennially">Biennially</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nextAuditDate">Next Audit Date</label>
-                                    <input type="date" id="nextAuditDate">
-                                </div>
+                    
+                    <div class="inheritance-grid" id="inheritanceGrid">
+                        <!-- Inheritance settings will be loaded here -->
                             </div>
                         </div>
 
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="check-circle"></i>
-                                Compliance Programs
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="hasGrievanceSystem">
-                                <label for="hasGrievanceSystem">Has Grievance System</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="hasWorkerCommittee">
-                                <label for="hasWorkerCommittee">Has Worker Committee</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="hasSafetyProgram">
-                                <label for="hasSafetyProgram">Has Safety Program</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="hasTrainingProgram">
-                                <label for="hasTrainingProgram">Has Training Program</label>
-                            </div>
-                        </div>
+                <!-- Customization Tools -->
+                <div class="customization-tools fade-in">
+                    <div class="customization-header">
+                        <h3 class="customization-title">Factory Customization Tools</h3>
                     </div>
 
-                    <!-- Features Settings Tab -->
-                    <div id="featuresTab" class="tab-content">
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="zap"></i>
-                                System Features
-                            </div>
-                            <div class="feature-toggle" onclick="toggleFeature('enableAI')">
-                                <div class="feature-info">
-                                    <div class="feature-name">AI Copilot</div>
-                                    <div class="feature-description">Enable AI-powered assistance and automation</div>
-                                </div>
-                                <div class="toggle-switch" id="aiToggle"></div>
-                            </div>
-                            <div class="feature-toggle" onclick="toggleFeature('enableAnalytics')">
-                                <div class="feature-info">
-                                    <div class="feature-name">Advanced Analytics</div>
-                                    <div class="feature-description">Enable detailed analytics and reporting</div>
-                                </div>
-                                <div class="toggle-switch" id="analyticsToggle"></div>
-                            </div>
-                            <div class="feature-toggle" onclick="toggleFeature('enableMultiLanguage')">
-                                <div class="feature-info">
-                                    <div class="feature-name">Multi-Language Support</div>
-                                    <div class="feature-description">Enable multiple language interfaces</div>
-                                </div>
-                                <div class="toggle-switch" id="languageToggle"></div>
-                            </div>
-                            <div class="feature-toggle" onclick="toggleFeature('enableAPI')">
-                                <div class="feature-info">
-                                    <div class="feature-name">API Access</div>
-                                    <div class="feature-description">Enable API integration capabilities</div>
-                                </div>
-                                <div class="toggle-switch" id="apiToggle"></div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="bar-chart-3"></i>
-                                Usage Statistics
-                            </div>
-                            <div class="usage-stats">
-                                <div class="stat-card">
-                                    <div class="stat-number" id="activeUsers">0</div>
-                                    <div class="stat-label">Active Users</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number" id="totalCases">0</div>
-                                    <div class="stat-label">Total Cases</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number" id="complianceScore">0%</div>
-                                    <div class="stat-label">Compliance Score</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-number" id="lastActivity">-</div>
-                                    <div class="stat-label">Last Activity</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Users Settings Tab -->
-                    <div id="usersTab" class="tab-content">
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="users"></i>
-                                User Management
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="maxUsers">Maximum Users</label>
-                                    <input type="number" id="maxUsers" min="1" placeholder="Enter max users">
-                                </div>
-                                <div class="form-group">
-                                    <label for="userRole">Default User Role</label>
-                                    <select id="userRole">
-                                        <option value="staff">Staff</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="viewer">Viewer</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="user-plus"></i>
-                                User Invitations
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="requireApproval">
-                                <label for="requireApproval">Require admin approval for new users</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="autoAssignRole">
-                                <label for="autoAssignRole">Auto-assign default role to new users</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="sendWelcomeEmail">
-                                <label for="sendWelcomeEmail">Send welcome email to new users</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Billing Settings Tab -->
-                    <div id="billingTab" class="tab-content">
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="credit-card"></i>
-                                Subscription Details
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="subscriptionPlan">Current Plan</label>
-                                    <select id="subscriptionPlan">
-                                        <option value="basic">Basic</option>
-                                        <option value="professional">Professional</option>
-                                        <option value="enterprise">Enterprise</option>
-                                        <option value="custom">Custom</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="billingCycle">Billing Cycle</label>
-                                    <select id="billingCycle">
-                                        <option value="monthly">Monthly</option>
-                                        <option value="quarterly">Quarterly</option>
-                                        <option value="annually">Annually</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nextBillingDate">Next Billing Date</label>
-                                    <input type="date" id="nextBillingDate">
-                                </div>
-                                <div class="form-group">
-                                    <label for="billingAmount">Billing Amount</label>
-                                    <input type="text" id="billingAmount" placeholder="Enter amount" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="receipt"></i>
-                                Billing History
-                            </div>
-                            <div class="billing-history" id="billingHistory">
-                                <div class="empty-state">
-                                    <i data-lucide="receipt"></i>
-                                    <h3>No billing history</h3>
-                                    <p>Billing records will appear here</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Security Settings Tab -->
-                    <div id="securityTab" class="tab-content">
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="lock"></i>
-                                Security Configuration
-                            </div>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="sessionTimeout">Session Timeout (minutes)</label>
-                                    <input type="number" id="sessionTimeout" min="15" max="480" placeholder="Enter timeout">
-                                </div>
-                                <div class="form-group">
-                                    <label for="maxLoginAttempts">Max Login Attempts</label>
-                                    <input type="number" id="maxLoginAttempts" min="3" max="10" placeholder="Enter attempts">
-                                </div>
-                                <div class="form-group">
-                                    <label for="passwordPolicy">Password Policy</label>
-                                    <select id="passwordPolicy">
-                                        <option value="basic">Basic (8 characters)</option>
-                                        <option value="standard">Standard (10 characters, mixed)</option>
-                                        <option value="strong">Strong (12 characters, complex)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="mfaRequired">MFA Requirement</label>
-                                    <select id="mfaRequired">
-                                        <option value="none">None</option>
-                                        <option value="admin">Admin users only</option>
-                                        <option value="all">All users</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <div class="section-title">
-                                <i data-lucide="shield"></i>
-                                Data Protection
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="enableAuditLog">
-                                <label for="enableAuditLog">Enable audit logging</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="dataEncryption">
-                                <label for="dataEncryption">Enable data encryption at rest</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="backupEnabled">
-                                <label for="backupEnabled">Enable automatic backups</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="gdprCompliance">
-                                <label for="gdprCompliance">GDPR compliance mode</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-actions">
-                        <button class="btn btn-outline" onclick="resetSettings()">
-                            <i data-lucide="refresh-cw"></i> Reset
-                        </button>
-                        <button class="btn btn-primary" onclick="saveSettings()">
-                            <i data-lucide="save"></i> Save Changes
-                        </button>
+                    <div class="customization-grid" id="customizationGrid">
+                        <!-- Customization tools will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script type="module" src="../../firebase-config.js"></script>
-    <script src="../../assets/js/super-admin/factory-settings-panel.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/factory-settings-panel-core.js"></script>
+    <script src="../../assets/js/super-admin/factory-settings-panel-actions.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize navigation system
-            const navigation = new NavigationComponent();
-            navigation.init();
-            if (window.lucide) {
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function resetToDefaults() {
+            console.log('Resetting to defaults...');
+            // Implement reset functionality
+        }
+        
+        function saveAllSettings() {
+            console.log('Saving all settings...');
+            // Implement save functionality
+        }
+        
+        function toggleDropdown() {
+            const dropdown = document.getElementById('factoryDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+        
+        function importSettings() {
+            console.log('Importing settings...');
+            // Implement import functionality
+        }
+        
+        function exportSettings() {
+            console.log('Exporting settings...');
+            // Implement export functionality
+        }
+        
+        function updateComplianceSettings() {
+            console.log('Updating compliance settings...');
+            // Implement update functionality
+        }
+        
+        function updateSecuritySettings() {
+            console.log('Updating security settings...');
+            // Implement update functionality
+        }
+        
+        function updateNotificationSettings() {
+            console.log('Updating notification settings...');
+            // Implement update functionality
+        }
+        
+        function updateIntegrationSettings() {
+            console.log('Updating integration settings...');
+            // Implement update functionality
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('factoryDropdown');
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            
+            if (!dropdownBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
             }
         });
     </script>

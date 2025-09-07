@@ -1,0 +1,721 @@
+/**
+ * Angkor Compliance Platform - Icon System 2025
+ * 
+ * Consistent Lucide icon usage and icon components
+ * for the 2025 design system.
+ */
+
+/* ===== ICON BASE STYLES ===== */
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+.icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ===== ICON SIZES ===== */
+
+.icon-xs {
+    width: 0.75rem;
+    height: 0.75rem;
+    font-size: 0.75rem;
+}
+
+.icon-sm {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+}
+
+.icon-md {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+}
+
+.icon-lg {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.icon-xl {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+}
+
+.icon-2xl {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2.5rem;
+}
+
+.icon-3xl {
+    width: 3rem;
+    height: 3rem;
+    font-size: 3rem;
+}
+
+/* ===== ICON COLORS ===== */
+
+.icon-primary {
+    color: var(--primary-500);
+}
+
+.icon-secondary {
+    color: var(--secondary-500);
+}
+
+.icon-success {
+    color: var(--success-500);
+}
+
+.icon-warning {
+    color: var(--warning-500);
+}
+
+.icon-danger {
+    color: var(--danger-500);
+}
+
+.icon-info {
+    color: var(--info-500);
+}
+
+.icon-neutral {
+    color: var(--neutral-500);
+}
+
+.icon-light {
+    color: var(--neutral-400);
+}
+
+.icon-dark {
+    color: var(--neutral-700);
+}
+
+.icon-white {
+    color: white;
+}
+
+.icon-black {
+    color: black;
+}
+
+/* ===== ICON VARIANTS ===== */
+
+.icon-outline {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.icon-filled {
+    fill: currentColor;
+    stroke: none;
+}
+
+.icon-duotone {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1;
+    opacity: 0.6;
+}
+
+.icon-gradient {
+    background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== ICON ANIMATIONS ===== */
+
+.icon-spin {
+    animation: iconSpin 1s linear infinite;
+}
+
+.icon-pulse {
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+.icon-bounce {
+    animation: iconBounce 1s ease-in-out infinite;
+}
+
+.icon-shake {
+    animation: iconShake 0.5s ease-in-out infinite;
+}
+
+.icon-rotate {
+    animation: iconRotate 2s linear infinite;
+}
+
+.icon-scale {
+    animation: iconScale 1s ease-in-out infinite;
+}
+
+.icon-fade {
+    animation: iconFade 2s ease-in-out infinite;
+}
+
+.icon-slide {
+    animation: iconSlide 1s ease-in-out infinite;
+}
+
+@keyframes iconSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes iconPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+@keyframes iconShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+@keyframes iconRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes iconScale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes iconFade {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes iconSlide {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
+/* ===== ICON STATES ===== */
+
+.icon-hover {
+    transition: var(--transition-all);
+    cursor: pointer;
+}
+
+.icon-hover:hover {
+    transform: scale(1.1);
+    color: var(--primary-600);
+}
+
+.icon-active {
+    color: var(--primary-600);
+    transform: scale(1.1);
+}
+
+.icon-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.icon-loading {
+    animation: iconSpin 1s linear infinite;
+    opacity: 0.7;
+}
+
+/* ===== ICON GROUPS ===== */
+
+.icon-group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.icon-group .icon {
+    margin: 0;
+}
+
+.icon-group .icon:not(:last-child) {
+    margin-right: var(--space-1);
+}
+
+.icon-stack {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-stack .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.icon-stack .icon:first-child {
+    z-index: 1;
+}
+
+.icon-stack .icon:last-child {
+    z-index: 2;
+}
+
+/* ===== ICON BUTTONS ===== */
+
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--neutral-600);
+    cursor: pointer;
+    transition: var(--transition-all);
+    text-decoration: none;
+}
+
+.icon-btn:hover {
+    background: var(--neutral-100);
+    color: var(--neutral-700);
+    transform: translateY(-1px);
+}
+
+.icon-btn:active {
+    transform: translateY(0);
+    background: var(--neutral-200);
+}
+
+.icon-btn:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.icon-btn-primary {
+    background: var(--primary-500);
+    color: white;
+    border-color: var(--primary-500);
+}
+
+.icon-btn-primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    color: white;
+}
+
+.icon-btn-secondary {
+    background: var(--secondary-500);
+    color: white;
+    border-color: var(--secondary-500);
+}
+
+.icon-btn-secondary:hover {
+    background: var(--secondary-600);
+    border-color: var(--secondary-600);
+    color: white;
+}
+
+.icon-btn-success {
+    background: var(--success-500);
+    color: white;
+    border-color: var(--success-500);
+}
+
+.icon-btn-success:hover {
+    background: var(--success-600);
+    border-color: var(--success-600);
+    color: white;
+}
+
+.icon-btn-warning {
+    background: var(--warning-500);
+    color: white;
+    border-color: var(--warning-500);
+}
+
+.icon-btn-warning:hover {
+    background: var(--warning-600);
+    border-color: var(--warning-600);
+    color: white;
+}
+
+.icon-btn-danger {
+    background: var(--danger-500);
+    color: white;
+    border-color: var(--danger-500);
+}
+
+.icon-btn-danger:hover {
+    background: var(--danger-600);
+    border-color: var(--danger-600);
+    color: white;
+}
+
+.icon-btn-info {
+    background: var(--info-500);
+    color: white;
+    border-color: var(--info-500);
+}
+
+.icon-btn-info:hover {
+    background: var(--info-600);
+    border-color: var(--info-600);
+    color: white;
+}
+
+.icon-btn-outline {
+    background: transparent;
+    border-color: var(--neutral-300);
+    color: var(--neutral-600);
+}
+
+.icon-btn-outline:hover {
+    background: var(--neutral-100);
+    border-color: var(--neutral-400);
+    color: var(--neutral-700);
+}
+
+.icon-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--neutral-600);
+}
+
+.icon-btn-ghost:hover {
+    background: var(--neutral-100);
+    color: var(--neutral-700);
+}
+
+/* ===== ICON SIZES FOR BUTTONS ===== */
+
+.icon-btn-xs {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.icon-btn-sm {
+    width: 2rem;
+    height: 2rem;
+}
+
+.icon-btn-md {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.icon-btn-lg {
+    width: 3rem;
+    height: 3rem;
+}
+
+.icon-btn-xl {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+/* ===== ICON SHAPES FOR BUTTONS ===== */
+
+.icon-btn-square {
+    border-radius: var(--radius-sm);
+}
+
+.icon-btn-circle {
+    border-radius: 50%;
+}
+
+.icon-btn-rounded {
+    border-radius: var(--radius-lg);
+}
+
+/* ===== ICON BADGES ===== */
+
+.icon-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-badge::after {
+    content: attr(data-badge);
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.25rem;
+    background: var(--danger-500);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+.icon-badge-sm::after {
+    min-width: 0.75rem;
+    height: 0.75rem;
+    font-size: 0.625rem;
+    top: -0.125rem;
+    right: -0.125rem;
+}
+
+.icon-badge-lg::after {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.875rem;
+    top: -0.375rem;
+    right: -0.375rem;
+}
+
+/* ===== ICON TOOLTIPS ===== */
+
+.icon-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--neutral-900);
+    color: white;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-all);
+    z-index: var(--z-tooltip);
+    margin-bottom: 0.5rem;
+}
+
+.icon-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--neutral-900);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-all);
+    z-index: var(--z-tooltip);
+}
+
+.icon-tooltip:hover::before,
+.icon-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ===== ICON RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .icon-xs { width: 0.875rem; height: 0.875rem; }
+    .icon-sm { width: 1.125rem; height: 1.125rem; }
+    .icon-md { width: 1.375rem; height: 1.375rem; }
+    .icon-lg { width: 1.625rem; height: 1.625rem; }
+    .icon-xl { width: 2.125rem; height: 2.125rem; }
+    .icon-2xl { width: 2.625rem; height: 2.625rem; }
+    .icon-3xl { width: 3.125rem; height: 3.125rem; }
+    
+    .icon-btn-xs { width: 1.75rem; height: 1.75rem; }
+    .icon-btn-sm { width: 2.25rem; height: 2.25rem; }
+    .icon-btn-md { width: 2.75rem; height: 2.75rem; }
+    .icon-btn-lg { width: 3.25rem; height: 3.25rem; }
+    .icon-btn-xl { width: 3.75rem; height: 3.75rem; }
+}
+
+/* ===== ICON DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .icon-primary { color: var(--dark-primary-500); }
+    .icon-secondary { color: var(--dark-secondary-500); }
+    .icon-success { color: var(--dark-success-500); }
+    .icon-warning { color: var(--dark-warning-500); }
+    .icon-danger { color: var(--dark-danger-500); }
+    .icon-info { color: var(--dark-info-500); }
+    .icon-neutral { color: var(--dark-neutral-500); }
+    .icon-light { color: var(--dark-neutral-400); }
+    .icon-dark { color: var(--dark-neutral-300); }
+    .icon-white { color: var(--dark-text-inverse); }
+    .icon-black { color: var(--dark-text-primary); }
+    
+    .icon-hover:hover { color: var(--dark-primary-400); }
+    .icon-active { color: var(--dark-primary-400); }
+    
+    .icon-btn { color: var(--dark-neutral-400); }
+    .icon-btn:hover { background: var(--dark-neutral-100); color: var(--dark-neutral-300); }
+    .icon-btn:active { background: var(--dark-neutral-200); }
+    .icon-btn:focus-visible { outline-color: var(--dark-primary-500); }
+    
+    .icon-btn-primary { background: var(--dark-primary-500); border-color: var(--dark-primary-500); }
+    .icon-btn-primary:hover { background: var(--dark-primary-400); border-color: var(--dark-primary-400); }
+    
+    .icon-btn-secondary { background: var(--dark-secondary-500); border-color: var(--dark-secondary-500); }
+    .icon-btn-secondary:hover { background: var(--dark-secondary-400); border-color: var(--dark-secondary-400); }
+    
+    .icon-btn-success { background: var(--dark-success-500); border-color: var(--dark-success-500); }
+    .icon-btn-success:hover { background: var(--dark-success-400); border-color: var(--dark-success-400); }
+    
+    .icon-btn-warning { background: var(--dark-warning-500); border-color: var(--dark-warning-500); }
+    .icon-btn-warning:hover { background: var(--dark-warning-400); border-color: var(--dark-warning-400); }
+    
+    .icon-btn-danger { background: var(--dark-danger-500); border-color: var(--dark-danger-500); }
+    .icon-btn-danger:hover { background: var(--dark-danger-400); border-color: var(--dark-danger-400); }
+    
+    .icon-btn-info { background: var(--dark-info-500); border-color: var(--dark-info-500); }
+    .icon-btn-info:hover { background: var(--dark-info-400); border-color: var(--dark-info-400); }
+    
+    .icon-btn-outline { border-color: var(--dark-neutral-300); color: var(--dark-neutral-400); }
+    .icon-btn-outline:hover { background: var(--dark-neutral-100); border-color: var(--dark-neutral-200); color: var(--dark-neutral-300); }
+    
+    .icon-btn-ghost { color: var(--dark-neutral-400); }
+    .icon-btn-ghost:hover { background: var(--dark-neutral-100); color: var(--dark-neutral-300); }
+    
+    .icon-badge::after { border-color: var(--dark-neutral-800); }
+    .icon-tooltip::before { background: var(--dark-neutral-100); color: var(--dark-text-primary); }
+    .icon-tooltip::after { border-top-color: var(--dark-neutral-100); }
+}
+
+.dark-mode .icon-primary { color: var(--dark-primary-500); }
+.dark-mode .icon-secondary { color: var(--dark-secondary-500); }
+.dark-mode .icon-success { color: var(--dark-success-500); }
+.dark-mode .icon-warning { color: var(--dark-warning-500); }
+.dark-mode .icon-danger { color: var(--dark-danger-500); }
+.dark-mode .icon-info { color: var(--dark-info-500); }
+.dark-mode .icon-neutral { color: var(--dark-neutral-500); }
+.dark-mode .icon-light { color: var(--dark-neutral-400); }
+.dark-mode .icon-dark { color: var(--dark-neutral-300); }
+.dark-mode .icon-white { color: var(--dark-text-inverse); }
+.dark-mode .icon-black { color: var(--dark-text-primary); }
+
+.dark-mode .icon-hover:hover { color: var(--dark-primary-400); }
+.dark-mode .icon-active { color: var(--dark-primary-400); }
+
+.dark-mode .icon-btn { color: var(--dark-neutral-400); }
+.dark-mode .icon-btn:hover { background: var(--dark-neutral-100); color: var(--dark-neutral-300); }
+.dark-mode .icon-btn:active { background: var(--dark-neutral-200); }
+.dark-mode .icon-btn:focus-visible { outline-color: var(--dark-primary-500); }
+
+.dark-mode .icon-btn-primary { background: var(--dark-primary-500); border-color: var(--dark-primary-500); }
+.dark-mode .icon-btn-primary:hover { background: var(--dark-primary-400); border-color: var(--dark-primary-400); }
+
+.dark-mode .icon-btn-secondary { background: var(--dark-secondary-500); border-color: var(--dark-secondary-500); }
+.dark-mode .icon-btn-secondary:hover { background: var(--dark-secondary-400); border-color: var(--dark-secondary-400); }
+
+.dark-mode .icon-btn-success { background: var(--dark-success-500); border-color: var(--dark-success-500); }
+.dark-mode .icon-btn-success:hover { background: var(--dark-success-400); border-color: var(--dark-success-400); }
+
+.dark-mode .icon-btn-warning { background: var(--dark-warning-500); border-color: var(--dark-warning-500); }
+.dark-mode .icon-btn-warning:hover { background: var(--dark-warning-400); border-color: var(--dark-warning-400); }
+
+.dark-mode .icon-btn-danger { background: var(--dark-danger-500); border-color: var(--dark-danger-500); }
+.dark-mode .icon-btn-danger:hover { background: var(--dark-danger-400); border-color: var(--dark-danger-400); }
+
+.dark-mode .icon-btn-info { background: var(--dark-info-500); border-color: var(--dark-info-500); }
+.dark-mode .icon-btn-info:hover { background: var(--dark-info-400); border-color: var(--dark-info-400); }
+
+.dark-mode .icon-btn-outline { border-color: var(--dark-neutral-300); color: var(--dark-neutral-400); }
+.dark-mode .icon-btn-outline:hover { background: var(--dark-neutral-100); border-color: var(--dark-neutral-200); color: var(--dark-neutral-300); }
+
+.dark-mode .icon-btn-ghost { color: var(--dark-neutral-400); }
+.dark-mode .icon-btn-ghost:hover { background: var(--dark-neutral-100); color: var(--dark-neutral-300); }
+
+.dark-mode .icon-badge::after { border-color: var(--dark-neutral-800); }
+.dark-mode .icon-tooltip::before { background: var(--dark-neutral-100); color: var(--dark-text-primary); }
+.dark-mode .icon-tooltip::after { border-top-color: var(--dark-neutral-100); }
+
+/* ===== ICON ACCESSIBILITY ===== */
+
+.icon:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.icon-btn:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .icon-spin,
+    .icon-pulse,
+    .icon-bounce,
+    .icon-shake,
+    .icon-rotate,
+    .icon-scale,
+    .icon-fade,
+    .icon-slide {
+        animation: none;
+    }
+    
+    .icon-hover {
+        transition: none;
+    }
+    
+    .icon-hover:hover {
+        transform: none;
+    }
+    
+    .icon-btn {
+        transition: none;
+    }
+    
+    .icon-btn:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .icon {
+        stroke-width: 3;
+    }
+    
+    .icon-btn {
+        border-width: 2px;
+    }
+    
+    .icon-badge::after {
+        border-width: 3px;
+    }
+}

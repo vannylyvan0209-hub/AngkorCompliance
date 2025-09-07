@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evidence Review - Angkor Compliance 4</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/auditor/evidence-review.css">
+    
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
@@ -18,7 +21,7 @@
         <header class="review-header">
             <div class="header-content">
                 <div class="header-left">
-                    <h1 class="page-title">
+                    <h1 class="text-3xl font-bold text-neutral-900">
                         <i data-lucide="check-circle"></i>
                         Evidence Review
                     </h1>
@@ -62,7 +65,7 @@
                             <i data-lucide="download"></i>
                             Export Report
                         </button>
-                        <button class="btn btn-primary" onclick="evidenceReviewer.startReview()">
+                        <button class="btn btn-primary text-white font-medium" onclick="evidenceReviewer.startReview()">
                             <i data-lucide="play"></i>
                             Start Review
                         </button>
@@ -313,7 +316,7 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceReviewer.closeReviewModal()">Cancel</button>
                 <button class="btn btn-outline" onclick="evidenceReviewer.saveDraft()">Save Draft</button>
-                <button class="btn btn-primary" onclick="evidenceReviewer.submitReview()">Submit Review</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceReviewer.submitReview()">Submit Review</button>
             </div>
         </div>
     </div>
@@ -375,7 +378,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceReviewer.closeBulkReviewModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="evidenceReviewer.applyBulkReview()">Apply Bulk Review</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceReviewer.applyBulkReview()">Apply Bulk Review</button>
             </div>
         </div>
     </div>
@@ -419,7 +422,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceReviewer.closeHistoryModal()">Close</button>
-                <button class="btn btn-primary" onclick="evidenceReviewer.exportHistory()">Export History</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceReviewer.exportHistory()">Export History</button>
             </div>
         </div>
     </div>
@@ -433,7 +436,7 @@
     </div>
 
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script src="../../assets/js/auditor/evidence-review.js"></script>
 </body>

@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit Checklist Generator - Angkor Compliance</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         /* Role-specific styling for super_admin */
@@ -501,6 +503,7 @@
             color: var(--text-secondary);
         }
     </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
     <div class="audit-checklist-generator">
@@ -516,7 +519,7 @@
                 <button class="btn btn-outline" onclick="exportChecklist()">
                     <i data-lucide="download"></i> Export
                 </button>
-                <button class="btn btn-primary" onclick="generateChecklist()">
+                <button class="btn btn-primary text-white font-medium" onclick="generateChecklist()">
                     <i data-lucide="play"></i> Generate Checklist
                 </button>
             </div>
@@ -676,14 +679,14 @@
                         <button type="button" class="btn btn-outline" onclick="saveDraft()">
                             <i data-lucide="save"></i> Save Draft
                         </button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary text-white font-medium">
                             <i data-lucide="play"></i> Generate Checklist
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div class="sidebar">
+            <div class="layout-sidebar bg-white shadow-lg">
                 <div class="checklist-preview">
                     <div class="preview-header">
                         <h3><i data-lucide="eye"></i> Checklist Preview</h3>
@@ -826,7 +829,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
     <script src="../../assets/js/super-admin/audit-checklist-generator.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

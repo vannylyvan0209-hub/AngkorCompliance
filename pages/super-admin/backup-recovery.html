@@ -3,402 +3,875 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backup & Recovery - Angkor Compliance Platform</title>
-    <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    <title>Backup & Recovery - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Backup & Recovery Specific Styles */
+        .backup-recovery {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .backup-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .backup-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Backup Status Overview */
+        .backup-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .status-card.healthy::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .status-card.warning::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .status-card.critical::before {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .status-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .status-icon.healthy {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .status-icon.warning {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .status-icon.critical {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .status-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .status-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .status-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Backup Management */
+        .backup-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .backup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .backup-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            transition: all 0.2s ease;
+        }
+        
+        .backup-item:hover {
+            background: var(--neutral-100);
+        }
+        
+        .backup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .backup-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .backup-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .backup-status.completed {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .backup-status.in-progress {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .backup-status.failed {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .backup-status.scheduled {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .backup-details {
+            margin-bottom: var(--space-3);
+        }
+        
+        .backup-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-1);
+            font-size: var(--text-sm);
+        }
+        
+        .backup-detail-label {
+            color: var(--neutral-600);
+        }
+        
+        .backup-detail-value {
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+        
+        .backup-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .backup-action-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+        }
+        
+        .backup-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .backup-action-btn.danger:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-200);
+            color: var(--danger-700);
+        }
+        
+        /* Recovery Management */
+        .recovery-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .recovery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .recovery-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .recovery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .recovery-options {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .recovery-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: white;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .recovery-option:hover {
+            background: var(--primary-50);
+        }
+        
+        .recovery-option.selected {
+            background: var(--primary-100);
+            border: 1px solid var(--primary-200);
+        }
+        
+        .recovery-option-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-sm);
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .recovery-option-content {
+            flex: 1;
+        }
+        
+        .recovery-option-title {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .recovery-option-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .recovery-details {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .recovery-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .recovery-detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .recovery-detail-label {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .recovery-detail-value {
+            color: var(--neutral-900);
+            font-weight: 500;
+            font-size: var(--text-sm);
+        }
+        
+        /* Disaster Recovery */
+        .disaster-recovery {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .disaster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .disaster-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .disaster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .disaster-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+        
+        .disaster-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+            margin: 0 auto var(--space-3);
+        }
+        
+        .disaster-title-text {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .disaster-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .disaster-btn {
+            width: 100%;
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--danger-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--danger-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .disaster-btn:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-300);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .recovery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .backup-status {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .backup-recovery {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .backup-status {
+                grid-template-columns: 1fr;
+            }
+            
+            .backup-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .disaster-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
 </head>
 <body class="role-super-admin">
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-content">
-                <div class="header-left">
-                    <h1><i data-lucide="database"></i> Backup & Recovery</h1>
-                    <p>Manage data backup, restoration, and disaster recovery</p>
-                </div>
-                <div class="header-right">
-                    <div class="user-menu">
-                        <span class="user-name">Super Admin</span>
-                        <i data-lucide="user"></i>
-                    </div>
-                </div>
-            </div>
-        </header>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Backup Overview -->
-            <section class="backup-overview">
-                <div class="overview-grid">
-                    <div class="overview-card">
-                        <div class="card-icon">
-                            <i data-lucide="check-circle"></i>
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="backup-recovery">
+            <div class="backup-container">
+                <!-- Backup Header -->
+                <div class="backup-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Backup & Recovery System</h1>
+                            <p>Automated backup systems, disaster recovery protocols, and data restoration tools</p>
                         </div>
-                        <div class="card-content">
-                            <h3>Last Backup</h3>
-                            <div class="card-value">2 hours ago</div>
-                            <div class="card-change positive">Successful</div>
-                        </div>
-                    </div>
-                    
-                    <div class="overview-card">
-                        <div class="card-icon">
-                            <i data-lucide="hard-drive"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Backup Size</h3>
-                            <div class="card-value">2.4 GB</div>
-                            <div class="card-change">Compressed</div>
-                        </div>
-                    </div>
-                    
-                    <div class="overview-card">
-                        <div class="card-icon">
-                            <i data-lucide="clock"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Recovery Time</h3>
-                            <div class="card-value">15 min</div>
-                            <div class="card-change">Estimated</div>
-                        </div>
-                    </div>
-                    
-                    <div class="overview-card">
-                        <div class="card-icon">
-                            <i data-lucide="shield-check"></i>
-                        </div>
-                        <div class="card-content">
-                            <h3>Backup Health</h3>
-                            <div class="card-value">98%</div>
-                            <div class="card-change positive">Excellent</div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="createBackup()">
+                                <i data-lucide="plus"></i>
+                                Create Backup
+                            </button>
+                            <button class="action-btn" onclick="testRecovery()">
+                                <i data-lucide="play"></i>
+                                Test Recovery
+                            </button>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Main Content Grid -->
-            <div class="content-grid">
-                <!-- Left Column -->
-                <div class="main-column">
-                    <!-- Backup Management -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h2><i data-lucide="settings"></i> Backup Configuration</h2>
-                            <div class="card-actions">
-                                <button class="btn btn-primary" onclick="saveBackupSettings()">
-                                    <i data-lucide="save"></i> Save Settings
-                                </button>
+                
+                <!-- Backup Status Overview -->
+                <div class="backup-status fade-in">
+                    <div class="status-card healthy">
+                        <div class="status-header">
+                            <div class="status-icon healthy">
+                                <i data-lucide="hard-drive"></i>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <form id="backupSettingsForm">
-                                <div class="settings-section">
-                                    <h3>Backup Schedule</h3>
-                                    <div class="form-group">
-                                        <label for="backupFrequency">Backup Frequency</label>
-                                        <select id="backupFrequency" class="form-select">
-                                            <option value="hourly">Hourly</option>
-                                            <option value="daily" selected>Daily</option>
-                                            <option value="weekly">Weekly</option>
-                                            <option value="monthly">Monthly</option>
-                                        </select>
-                                        <p class="form-help">How often to perform automated backups</p>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="backupTime">Backup Time</label>
-                                        <input type="time" id="backupTime" class="form-input" value="02:00">
-                                        <p class="form-help">Time to perform daily backups (UTC)</p>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="retentionDays">Retention Period (Days)</label>
-                                        <input type="number" id="retentionDays" class="form-input" value="30" min="1" max="365">
-                                        <p class="form-help">How long to keep backup files</p>
-                                    </div>
-                                </div>
-
-                                <div class="settings-section">
-                                    <h3>Backup Scope</h3>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="backupUserData" class="form-checkbox" checked>
-                                            User Data & Profiles
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="backupDocuments" class="form-checkbox" checked>
-                                            Documents & Files
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="backupSettings" class="form-checkbox" checked>
-                                            System Settings
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="backupLogs" class="form-checkbox">
-                                            Audit Logs
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="settings-section">
-                                    <h3>Storage Configuration</h3>
-                                    <div class="form-group">
-                                        <label for="storageLocation">Storage Location</label>
-                                        <select id="storageLocation" class="form-select">
-                                            <option value="firebase">Firebase Storage</option>
-                                            <option value="aws">AWS S3</option>
-                                            <option value="gcp">Google Cloud Storage</option>
-                                            <option value="azure">Azure Blob Storage</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="enableEncryption" class="form-checkbox" checked>
-                                            Encrypt Backups
-                                        </label>
-                                        <p class="form-help">Encrypt backup files for security</p>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <input type="checkbox" id="enableCompression" class="form-checkbox" checked>
-                                            Compress Backups
-                                        </label>
-                                        <p class="form-help">Reduce backup file size</p>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        <div class="status-title">Backup Storage</div>
+                        <div class="status-value" id="backupStorage">2.4 TB</div>
+                        <div class="status-description">Available storage space</div>
                     </div>
-
-                    <!-- Backup History -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h2><i data-lucide="history"></i> Backup History</h2>
-                            <div class="card-actions">
-                                <button class="btn btn-secondary" onclick="refreshBackupHistory()">
-                                    <i data-lucide="refresh-cw"></i> Refresh
-                                </button>
+                    
+                    <div class="status-card healthy">
+                        <div class="status-header">
+                            <div class="status-icon healthy">
+                                <i data-lucide="clock"></i>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Backup Date</th>
-                                            <th>Type</th>
-                                            <th>Size</th>
-                                            <th>Status</th>
-                                            <th>Duration</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="backupHistoryTable">
-                                        <!-- Backup history will be loaded here -->
-                                    </tbody>
-                                </table>
+                        <div class="status-title">Last Backup</div>
+                        <div class="status-value" id="lastBackup">2h ago</div>
+                        <div class="status-description">Automated daily backup</div>
+                    </div>
+                    
+                    <div class="status-card warning">
+                        <div class="status-header">
+                            <div class="status-icon warning">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="status-title">Retention Policy</div>
+                        <div class="status-value" id="retentionPolicy">30 days</div>
+                        <div class="status-description">Backup retention period</div>
+                    </div>
+                    
+                    <div class="status-card healthy">
+                        <div class="status-header">
+                            <div class="status-icon healthy">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                        </div>
+                        <div class="status-title">Recovery Tests</div>
+                        <div class="status-value" id="recoveryTests">12/12</div>
+                        <div class="status-description">Successful recovery tests</div>
+                    </div>
+                </div>
+                
+                <!-- Backup Management -->
+                <div class="backup-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Backup Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="scheduleBackup()">Schedule</button>
+                            <button class="management-btn" onclick="configureBackup()">Configure</button>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-grid" id="backupGrid">
+                        <!-- Backup items will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Recovery Management -->
+                <div class="recovery-management fade-in">
+                    <div class="recovery-header">
+                        <h3 class="recovery-title">Recovery Management</h3>
+                    </div>
+                    
+                    <div class="recovery-grid">
+                        <div class="recovery-options">
+                            <div class="recovery-option selected" onclick="selectRecoveryOption('full')">
+                                <div class="recovery-option-icon">
+                                    <i data-lucide="database"></i>
+                                </div>
+                                <div class="recovery-option-content">
+                                    <div class="recovery-option-title">Full System Recovery</div>
+                                    <div class="recovery-option-description">Restore entire system from backup</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recovery-option" onclick="selectRecoveryOption('partial')">
+                                <div class="recovery-option-icon">
+                                    <i data-lucide="folder"></i>
+                                </div>
+                                <div class="recovery-option-content">
+                                    <div class="recovery-option-title">Partial Recovery</div>
+                                    <div class="recovery-option-description">Restore specific data or components</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recovery-option" onclick="selectRecoveryOption('point-in-time')">
+                                <div class="recovery-option-icon">
+                                    <i data-lucide="clock"></i>
+                                </div>
+                                <div class="recovery-option-content">
+                                    <div class="recovery-option-title">Point-in-Time Recovery</div>
+                                    <div class="recovery-option-description">Restore to specific date and time</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recovery-details">
+                            <div class="recovery-detail-item">
+                                <div class="recovery-detail-label">Recovery Type</div>
+                                <div class="recovery-detail-value" id="recoveryType">Full System</div>
+                            </div>
+                            <div class="recovery-detail-item">
+                                <div class="recovery-detail-label">Estimated Time</div>
+                                <div class="recovery-detail-value" id="recoveryTime">2-4 hours</div>
+                            </div>
+                            <div class="recovery-detail-item">
+                                <div class="recovery-detail-label">Data Size</div>
+                                <div class="recovery-detail-value" id="recoverySize">1.2 TB</div>
+                            </div>
+                            <div class="recovery-detail-item">
+                                <div class="recovery-detail-label">Last Tested</div>
+                                <div class="recovery-detail-value" id="lastTested">3 days ago</div>
+                            </div>
+                            <div class="recovery-detail-item">
+                                <div class="recovery-detail-label">Success Rate</div>
+                                <div class="recovery-detail-value" id="successRate">100%</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Right Sidebar -->
-                <div class="sidebar">
-                    <!-- Quick Actions -->
-                    <div class="sidebar-card">
-                        <div class="card-header">
-                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="quick-actions">
-                                <button class="action-btn" onclick="createManualBackup()">
-                                    <i data-lucide="download"></i>
-                                    <span>Create Backup</span>
-                                </button>
-                                <button class="action-btn" onclick="testRestore()">
-                                    <i data-lucide="refresh-cw"></i>
-                                    <span>Test Restore</span>
-                                </button>
-                                <button class="action-btn" onclick="exportBackupData()">
-                                    <i data-lucide="file-text"></i>
-                                    <span>Export Data</span>
-                                </button>
-                                <button class="action-btn" onclick="validateBackups()">
-                                    <i data-lucide="check-circle"></i>
-                                    <span>Validate Backups</span>
-                                </button>
-                                <button class="action-btn" onclick="cleanupOldBackups()">
-                                    <i data-lucide="trash-2"></i>
-                                    <span>Cleanup Old</span>
-                                </button>
-                                <button class="action-btn" onclick="configureDisasterRecovery()">
-                                    <i data-lucide="shield"></i>
-                                    <span>Disaster Recovery</span>
-                                </button>
-                            </div>
-                        </div>
+                
+                <!-- Disaster Recovery -->
+                <div class="disaster-recovery fade-in">
+                    <div class="disaster-header">
+                        <h3 class="disaster-title">Disaster Recovery</h3>
                     </div>
-
-                    <!-- Backup Status -->
-                    <div class="sidebar-card">
-                        <div class="card-header">
-                            <h3><i data-lucide="activity"></i> Backup Status</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="status-indicators">
-                                <div class="status-item">
-                                    <div class="status-icon status-success">
-                                        <i data-lucide="check-circle"></i>
-                                    </div>
-                                    <div class="status-content">
-                                        <div class="status-title">Automated Backup</div>
-                                        <div class="status-details">Running normally</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="status-item">
-                                    <div class="status-icon status-warning">
-                                        <i data-lucide="clock"></i>
-                                    </div>
-                                    <div class="status-content">
-                                        <div class="status-title">Next Backup</div>
-                                        <div class="status-details">In 22 hours</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="status-item">
-                                    <div class="status-icon status-success">
-                                        <i data-lucide="shield"></i>
-                                    </div>
-                                    <div class="status-content">
-                                        <div class="status-title">Encryption</div>
-                                        <div class="status-details">Enabled</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="status-item">
-                                    <div class="status-icon status-info">
-                                        <i data-lucide="hard-drive"></i>
-                                    </div>
-                                    <div class="status-content">
-                                        <div class="status-title">Storage</div>
-                                        <div class="status-details">2.4 GB used</div>
-                                    </div>
-                                </div>
+                    
+                    <div class="disaster-grid">
+                        <div class="disaster-item">
+                            <div class="disaster-icon">
+                                <i data-lucide="alert-triangle"></i>
                             </div>
+                            <div class="disaster-title-text">Emergency Recovery</div>
+                            <div class="disaster-description">Initiate emergency recovery procedures</div>
+                            <button class="disaster-btn" onclick="initiateEmergencyRecovery()">
+                                Emergency Recovery
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- Recovery Points -->
-                    <div class="sidebar-card">
-                        <div class="card-header">
-                            <h3><i data-lucide="rotate-ccw"></i> Recovery Points</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="recovery-points" id="recoveryPoints">
-                                <!-- Recovery points will be loaded here -->
+                        
+                        <div class="disaster-item">
+                            <div class="disaster-icon">
+                                <i data-lucide="server"></i>
                             </div>
+                            <div class="disaster-title-text">Failover</div>
+                            <div class="disaster-description">Switch to backup systems</div>
+                            <button class="disaster-btn" onclick="initiateFailover()">
+                                Initiate Failover
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- Backup Analytics -->
-                    <div class="sidebar-card">
-                        <div class="card-header">
-                            <h3><i data-lucide="bar-chart-3"></i> Backup Analytics</h3>
+                        
+                        <div class="disaster-item">
+                            <div class="disaster-icon">
+                                <i data-lucide="refresh-cw"></i>
+                            </div>
+                            <div class="disaster-title-text">System Restore</div>
+                            <div class="disaster-description">Restore system to last known good state</div>
+                            <button class="disaster-btn" onclick="initiateSystemRestore()">
+                                System Restore
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <canvas id="backupAnalyticsChart" height="200"></canvas>
+                        
+                        <div class="disaster-item">
+                            <div class="disaster-icon">
+                                <i data-lucide="shield"></i>
+                            </div>
+                            <div class="disaster-title-text">Business Continuity</div>
+                            <div class="disaster-description">Activate business continuity plan</div>
+                            <button class="disaster-btn" onclick="activateBusinessContinuity()">
+                                Activate BCP
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Restore Modal -->
-    <div id="restoreModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i data-lucide="refresh-cw"></i> Restore Data</h2>
-                <button class="modal-close" onclick="closeModal('restoreModal')">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="restore-options">
-                    <div class="form-group">
-                        <label for="restorePoint">Select Restore Point</label>
-                        <select id="restorePoint" class="form-select">
-                            <option value="">Choose a backup to restore from</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="restoreScope">Restore Scope</label>
-                        <select id="restoreScope" class="form-select">
-                            <option value="full">Full System Restore</option>
-                            <option value="partial">Partial Restore</option>
-                            <option value="factory">Factory-Specific</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" id="overwriteExisting" class="form-checkbox">
-                            Overwrite existing data
-                        </label>
-                        <p class="form-help">Warning: This will replace current data</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="restoreNotes">Restore Notes</label>
-                        <textarea id="restoreNotes" class="form-textarea" rows="3" placeholder="Reason for restore..."></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('restoreModal')">Cancel</button>
-                <button class="btn btn-warning" onclick="confirmRestore()">Confirm Restore</button>
             </div>
         </div>
-    </div>
-
-    <!-- Backup Details Modal -->
-    <div id="backupDetailsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i data-lucide="info"></i> Backup Details</h2>
-                <button class="modal-close" onclick="closeModal('backupDetailsModal')">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="backupDetailsContent">
-                <!-- Backup details will be loaded here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('backupDetailsModal')">Close</button>
-                <button class="btn btn-primary" onclick="downloadBackup()">Download</button>
-            </div>
-        </div>
-    </div>
-
+    </main>
+    
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
-    <script src="../../assets/js/super-admin/backup-recovery.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/backup-recovery-core.js"></script>
+    <script src="../../assets/js/super-admin/backup-recovery-actions.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function createBackup() {
+            console.log('Creating backup...');
+            // Implement backup creation
+        }
+        
+        function testRecovery() {
+            console.log('Testing recovery...');
+            // Implement recovery testing
+        }
+        
+        function scheduleBackup() {
+            console.log('Scheduling backup...');
+            // Implement backup scheduling
+        }
+        
+        function configureBackup() {
+            console.log('Configuring backup...');
+            // Implement backup configuration
+        }
+        
+        function selectRecoveryOption(option) {
+            console.log('Selecting recovery option:', option);
+            // Implement recovery option selection
+        }
+        
+        function initiateEmergencyRecovery() {
+            console.log('Initiating emergency recovery...');
+            // Implement emergency recovery
+        }
+        
+        function initiateFailover() {
+            console.log('Initiating failover...');
+            // Implement failover
+        }
+        
+        function initiateSystemRestore() {
+            console.log('Initiating system restore...');
+            // Implement system restore
+        }
+        
+        function activateBusinessContinuity() {
+            console.log('Activating business continuity...');
+            // Implement business continuity
+        }
+    </script>
 </body>
 </html>

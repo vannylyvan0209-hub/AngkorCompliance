@@ -1,0 +1,897 @@
+/**
+ * Angkor Compliance Platform - Accessibility Validation 2025
+ * 
+ * WCAG 2.1 AA compliance validation, accessibility testing,
+ * and accessibility enhancement features.
+ */
+
+/* ===== ACCESSIBILITY VALIDATION TOOLS ===== */
+
+/* Accessibility Testing Overlay */
+.a11y-test-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+}
+
+.a11y-test-overlay.active {
+    display: block;
+}
+
+/* Accessibility Test Results */
+.a11y-test-results {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 80vh;
+    background: white;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 10000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.a11y-test-results h3 {
+    margin: 0 0 15px 0;
+    color: #d4af37;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.a11y-test-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+
+.a11y-test-item.error {
+    background: #fee;
+    border-left-color: #e53e3e;
+    color: #c53030;
+}
+
+.a11y-test-item.warning {
+    background: #fffbeb;
+    border-left-color: #f6ad55;
+    color: #c05621;
+}
+
+.a11y-test-item.success {
+    background: #f0fff4;
+    border-left-color: #38a169;
+    color: #2f855a;
+}
+
+.a11y-test-item.info {
+    background: #ebf8ff;
+    border-left-color: #3182ce;
+    color: #2c5282;
+}
+
+/* ===== COLOR CONTRAST VALIDATION ===== */
+
+/* Color Contrast Test */
+.color-contrast-test {
+    position: relative;
+    display: inline-block;
+}
+
+.color-contrast-test::after {
+    content: attr(data-contrast-ratio);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.color-contrast-test:hover::after {
+    opacity: 1;
+}
+
+/* Color Contrast Indicators */
+.contrast-pass {
+    border: 2px solid #38a169;
+}
+
+.contrast-fail {
+    border: 2px solid #e53e3e;
+}
+
+.contrast-warning {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== FOCUS VALIDATION ===== */
+
+/* Focus Test */
+.focus-test {
+    position: relative;
+}
+
+.focus-test::before {
+    content: 'FOCUS TEST';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background: #d4af37;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.focus-test:focus::before {
+    opacity: 1;
+}
+
+/* Focus Indicators */
+.focus-visible-test {
+    outline: 3px solid #d4af37;
+    outline-offset: 2px;
+}
+
+.focus-visible-test:focus-visible {
+    outline: 3px solid #d4af37;
+    outline-offset: 2px;
+}
+
+/* ===== KEYBOARD NAVIGATION VALIDATION ===== */
+
+/* Keyboard Navigation Test */
+.keyboard-nav-test {
+    position: relative;
+}
+
+.keyboard-nav-test::after {
+    content: 'TAB ORDER: ' attr(data-tab-order);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.keyboard-nav-test:focus::after {
+    opacity: 1;
+}
+
+/* Tab Order Indicators */
+.tab-order-1 { order: 1; }
+.tab-order-2 { order: 2; }
+.tab-order-3 { order: 3; }
+.tab-order-4 { order: 4; }
+.tab-order-5 { order: 5; }
+.tab-order-6 { order: 6; }
+.tab-order-7 { order: 7; }
+.tab-order-8 { order: 8; }
+.tab-order-9 { order: 9; }
+.tab-order-10 { order: 10; }
+
+/* ===== ARIA VALIDATION ===== */
+
+/* ARIA Test */
+.aria-test {
+    position: relative;
+}
+
+.aria-test::before {
+    content: 'ARIA: ' attr(data-aria-attributes);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.aria-test:hover::before {
+    opacity: 1;
+}
+
+/* ARIA Indicators */
+.aria-valid {
+    border: 2px solid #38a169;
+}
+
+.aria-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.aria-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== SCREEN READER VALIDATION ===== */
+
+/* Screen Reader Test */
+.sr-test {
+    position: relative;
+}
+
+.sr-test::after {
+    content: 'SR: ' attr(data-sr-content);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sr-test:hover::after {
+    opacity: 1;
+}
+
+/* Screen Reader Indicators */
+.sr-valid {
+    border: 2px solid #38a169;
+}
+
+.sr-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.sr-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== TOUCH TARGET VALIDATION ===== */
+
+/* Touch Target Test */
+.touch-target-test {
+    position: relative;
+}
+
+.touch-target-test::before {
+    content: 'TOUCH: ' attr(data-touch-size);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.touch-target-test:hover::before {
+    opacity: 1;
+}
+
+/* Touch Target Indicators */
+.touch-target-pass {
+    border: 2px solid #38a169;
+}
+
+.touch-target-fail {
+    border: 2px solid #e53e3e;
+}
+
+.touch-target-warning {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== MOTION VALIDATION ===== */
+
+/* Motion Test */
+.motion-test {
+    position: relative;
+}
+
+.motion-test::after {
+    content: 'MOTION: ' attr(data-motion-type);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.motion-test:hover::after {
+    opacity: 1;
+}
+
+/* Motion Indicators */
+.motion-safe {
+    border: 2px solid #38a169;
+}
+
+.motion-unsafe {
+    border: 2px solid #e53e3e;
+}
+
+.motion-warning {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== LANGUAGE VALIDATION ===== */
+
+/* Language Test */
+.language-test {
+    position: relative;
+}
+
+.language-test::before {
+    content: 'LANG: ' attr(data-language);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.language-test:hover::before {
+    opacity: 1;
+}
+
+/* Language Indicators */
+.language-valid {
+    border: 2px solid #38a169;
+}
+
+.language-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.language-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== HEADING VALIDATION ===== */
+
+/* Heading Test */
+.heading-test {
+    position: relative;
+}
+
+.heading-test::after {
+    content: 'H' attr(data-heading-level);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.heading-test:hover::after {
+    opacity: 1;
+}
+
+/* Heading Indicators */
+.heading-valid {
+    border: 2px solid #38a169;
+}
+
+.heading-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.heading-skip {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== LINK VALIDATION ===== */
+
+/* Link Test */
+.link-test {
+    position: relative;
+}
+
+.link-test::before {
+    content: 'LINK: ' attr(data-link-text);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.link-test:hover::before {
+    opacity: 1;
+}
+
+/* Link Indicators */
+.link-valid {
+    border: 2px solid #38a169;
+}
+
+.link-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.link-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== FORM VALIDATION ===== */
+
+/* Form Test */
+.form-test {
+    position: relative;
+}
+
+.form-test::after {
+    content: 'FORM: ' attr(data-form-status);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.form-test:hover::after {
+    opacity: 1;
+}
+
+/* Form Indicators */
+.form-valid {
+    border: 2px solid #38a169;
+}
+
+.form-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.form-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== IMAGE VALIDATION ===== */
+
+/* Image Test */
+.image-test {
+    position: relative;
+}
+
+.image-test::before {
+    content: 'IMG: ' attr(data-image-status);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.image-test:hover::before {
+    opacity: 1;
+}
+
+/* Image Indicators */
+.image-valid {
+    border: 2px solid #38a169;
+}
+
+.image-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.image-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== TABLE VALIDATION ===== */
+
+/* Table Test */
+.table-test {
+    position: relative;
+}
+
+.table-test::after {
+    content: 'TABLE: ' attr(data-table-status);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.table-test:hover::after {
+    opacity: 1;
+}
+
+/* Table Indicators */
+.table-valid {
+    border: 2px solid #38a169;
+}
+
+.table-invalid {
+    border: 2px solid #e53e3e;
+}
+
+.table-missing {
+    border: 2px solid #f6ad55;
+}
+
+/* ===== ACCESSIBILITY TESTING CONTROLS ===== */
+
+/* Test Controls */
+.a11y-test-controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 10001;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-test-controls h4 {
+    margin: 0 0 10px 0;
+    color: #d4af37;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.a11y-test-controls button {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #d4af37;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.a11y-test-controls button:hover {
+    background: #b8941f;
+}
+
+.a11y-test-controls button:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== ACCESSIBILITY TESTING MODES ===== */
+
+/* Test Mode Indicators */
+.a11y-test-mode {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 10002;
+    text-align: center;
+    display: none;
+}
+
+.a11y-test-mode.active {
+    display: block;
+}
+
+.a11y-test-mode h3 {
+    margin: 0 0 10px 0;
+    color: #d4af37;
+    font-size: 18px;
+}
+
+.a11y-test-mode p {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+}
+
+.a11y-test-mode button {
+    background: #d4af37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0 5px;
+}
+
+.a11y-test-mode button:hover {
+    background: #b8941f;
+}
+
+/* ===== ACCESSIBILITY TESTING RESULTS ===== */
+
+/* Test Results Summary */
+.a11y-test-summary {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: white;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 10003;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+}
+
+.a11y-test-summary h4 {
+    margin: 0 0 10px 0;
+    color: #d4af37;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.a11y-test-summary .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.a11y-test-summary .summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.a11y-test-summary .summary-label {
+    font-weight: 500;
+}
+
+.a11y-test-summary .summary-value {
+    font-weight: bold;
+}
+
+.a11y-test-summary .summary-value.error {
+    color: #e53e3e;
+}
+
+.a11y-test-summary .summary-value.warning {
+    color: #f6ad55;
+}
+
+.a11y-test-summary .summary-value.success {
+    color: #38a169;
+}
+
+/* ===== ACCESSIBILITY TESTING EXPORT ===== */
+
+/* Export Controls */
+.a11y-test-export {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 10004;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-test-export h4 {
+    margin: 0 0 10px 0;
+    color: #d4af37;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.a11y-test-export button {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #d4af37;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.a11y-test-export button:hover {
+    background: #b8941f;
+}
+
+.a11y-test-export button:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== ACCESSIBILITY TESTING RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .a11y-test-results {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+    }
+    
+    .a11y-test-controls {
+        left: 5%;
+        right: 5%;
+        width: 90%;
+    }
+    
+    .a11y-test-summary {
+        left: 5%;
+        right: 5%;
+        width: 90%;
+    }
+    
+    .a11y-test-export {
+        left: 5%;
+        right: 5%;
+        width: 90%;
+    }
+}
+
+/* ===== ACCESSIBILITY TESTING DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .a11y-test-results,
+    .a11y-test-controls,
+    .a11y-test-summary,
+    .a11y-test-export {
+        background: #1a1a1a;
+        color: #ffffff;
+        border-color: #d4af37;
+    }
+    
+    .a11y-test-results h3,
+    .a11y-test-controls h4,
+    .a11y-test-summary h4,
+    .a11y-test-export h4 {
+        color: #d4af37;
+    }
+    
+    .a11y-test-mode {
+        background: rgba(0, 0, 0, 0.95);
+        color: #ffffff;
+    }
+    
+    .a11y-test-mode h3 {
+        color: #d4af37;
+    }
+}
+
+.dark-mode .a11y-test-results,
+.dark-mode .a11y-test-controls,
+.dark-mode .a11y-test-summary,
+.dark-mode .a11y-test-export {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-color: #d4af37;
+}
+
+.dark-mode .a11y-test-results h3,
+.dark-mode .a11y-test-controls h4,
+.dark-mode .a11y-test-summary h4,
+.dark-mode .a11y-test-export h4 {
+    color: #d4af37;
+}
+
+.dark-mode .a11y-test-mode {
+    background: rgba(0, 0, 0, 0.95);
+    color: #ffffff;
+}
+
+.dark-mode .a11y-test-mode h3 {
+    color: #d4af37;
+}
+
+/* ===== ACCESSIBILITY TESTING PRINT ===== */
+
+@media print {
+    .a11y-test-overlay,
+    .a11y-test-results,
+    .a11y-test-controls,
+    .a11y-test-summary,
+    .a11y-test-export,
+    .a11y-test-mode {
+        display: none !important;
+    }
+    
+    .color-contrast-test::after,
+    .focus-test::before,
+    .keyboard-nav-test::after,
+    .aria-test::before,
+    .sr-test::after,
+    .touch-target-test::before,
+    .motion-test::after,
+    .language-test::before,
+    .heading-test::after,
+    .link-test::before,
+    .form-test::after,
+    .image-test::before,
+    .table-test::after {
+        display: none !important;
+    }
+}

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worker Dashboard - Angkor Compliance</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <style>
         /* Role-specific styling for worker */
         body.role-worker {
@@ -358,8 +362,9 @@
     </style>
 </head>
 <body class="role-worker">
+    <div id="sidebarContainer"></div>
     <!-- Navigation Sidebar -->
-    <div id="navigation-sidebar" class="sidebar"></div>
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
 
     <!-- Header -->
     <header id="navigation-header" class="header"></header>
@@ -369,6 +374,7 @@
 
     <!-- Main Content -->
     <main class="worker-dashboard">
+        <div style="margin-left: 280px;">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
             <h1><i data-lucide="user"></i> Worker Dashboard</h1>
@@ -401,10 +407,10 @@
 
         <!-- Dashboard Content -->
         <div class="dashboard-grid">
-            <div class="main-content">
+            <div class="layout-main">
                 <!-- Case Statistics -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="bar-chart-3"></i> Your Case Statistics</h3>
                     </div>
                     <div class="stats-grid" id="caseStats">
@@ -428,8 +434,8 @@
                 </div>
 
                 <!-- Recent Cases -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="clock"></i> Recent Cases</h3>
                         <button class="btn btn-outline" onclick="viewAllCases()">
                             <i data-lucide="external-link"></i> View All
@@ -440,7 +446,7 @@
                             <i data-lucide="file-text"></i>
                             <h3>No cases yet</h3>
                             <p>You haven't submitted any grievances yet.</p>
-                            <button class="btn btn-primary" onclick="submitNewGrievance()">
+                            <button class="btn btn-primary text-white font-medium" onclick="submitNewGrievance()">
                                 <i data-lucide="plus"></i> Submit Your First Grievance
                             </button>
                         </div>
@@ -448,10 +454,10 @@
                 </div>
             </div>
 
-            <div class="sidebar">
+            <div class="layout-sidebar bg-white shadow-lg">
                 <!-- Contact Information -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="phone"></i> Contact Information</h3>
                     </div>
                     <div class="contact-info" id="contactInfo">
@@ -495,8 +501,8 @@
                 </div>
 
                 <!-- Help Resources -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="help-circle"></i> Help Resources</h3>
                     </div>
                     <div class="help-resources" id="helpResources">
@@ -540,15 +546,23 @@
                 </div>
             </div>
         </div>
-    </main>
+            </div>
+</main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/worker-portal/worker-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) {
@@ -562,3 +576,5 @@
     </script>
 </body>
 </html>
+
+

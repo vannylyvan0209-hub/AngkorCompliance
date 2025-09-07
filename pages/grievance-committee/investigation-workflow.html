@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investigation Workflow - Angkor Compliance</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/grievance-committee.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
     <style>
         .investigation-workflow {
             padding: 20px;
@@ -421,22 +424,22 @@
             <form id="report-form" class="report-form">
                 <div class="form-group">
                     <label for="report-title-input" id="report-title-label">Report Title</label>
-                    <input type="text" id="report-title-input" class="form-control" required>
+                    <input type="text" id="report-title-input" class="form-input" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="investigation-date" id="investigation-date-label">Investigation Date</label>
-                    <input type="date" id="investigation-date" class="form-control" required>
+                    <input type="date" id="investigation-date" class="form-input" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="investigator-name" id="investigator-name-label">Lead Investigator</label>
-                    <input type="text" id="investigator-name" class="form-control" required>
+                    <input type="text" id="investigator-name" class="form-input" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="case-number" id="case-number-label">Case Number</label>
-                    <input type="text" id="case-number" class="form-control" required>
+                    <input type="text" id="case-number" class="form-input" required>
                 </div>
                 
                 <div class="form-group full-width">
@@ -460,11 +463,11 @@
                 </div>
                 
                 <div class="form-group full-width">
-                    <button type="submit" class="btn btn-primary" id="generate-report-btn">
+                    <button type="submit" class="btn btn-primary text-white font-medium" id="generate-report-btn">
                         <i class="fas fa-file-pdf"></i>
                         <span id="generate-report-text">Generate Report</span>
                     </button>
-                    <button type="button" class="btn btn-secondary" id="save-draft-btn">
+                    <button type="button" class="btn btn-secondary font-medium" id="save-draft-btn">
                         <i class="fas fa-save"></i>
                         <span id="save-draft-text">Save Draft</span>
                     </button>

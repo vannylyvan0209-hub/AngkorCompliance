@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Training Management Dashboard - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </head>
 <body class="role-factory-admin">
+    <div id="sidebarContainer"></div>
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
@@ -27,7 +32,8 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="layout-main">
+        <div style="margin-left: 280px;">
             <!-- Training Overview -->
             <section class="training-overview">
                 <div class="overview-grid">
@@ -83,10 +89,10 @@
                 <div class="main-column">
                     <!-- Training Programs -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="book-open"></i> Training Programs</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="createTrainingProgram()">
+                                <button class="btn btn-primary text-white font-medium" onclick="createTrainingProgram()">
                                     <i data-lucide="plus"></i> Create Program
                                 </button>
                                 <button class="btn btn-outline" onclick="importTrainingData()">
@@ -103,7 +109,7 @@
 
                     <!-- Employee Training Status -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="user-check"></i> Employee Training Status</h2>
                             <div class="card-actions">
                                 <div class="search-box">
@@ -143,10 +149,10 @@
 
                     <!-- Training Calendar -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="calendar"></i> Training Calendar</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="scheduleTraining()">
+                                <button class="btn btn-primary text-white font-medium" onclick="scheduleTraining()">
                                     <i data-lucide="plus"></i> Schedule Training
                                 </button>
                                 <button class="btn btn-outline" onclick="exportCalendar()">
@@ -163,10 +169,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Training Categories -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="folder"></i> Training Categories</h3>
                         </div>
                         <div class="card-body">
@@ -178,7 +184,7 @@
 
                     <!-- Upcoming Trainings -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="clock"></i> Upcoming Trainings</h3>
                         </div>
                         <div class="card-body">
@@ -190,7 +196,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -225,7 +231,7 @@
 
                     <!-- Training Statistics -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="trending-up"></i> Training Statistics</h3>
                         </div>
                         <div class="card-body">
@@ -236,7 +242,8 @@
                     </div>
                 </div>
             </div>
-        </main>
+                </div>
+</main>
     </div>
 
     <!-- Create Training Program Modal -->
@@ -316,8 +323,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('createTrainingModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveTrainingProgram()">Create Program</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('createTrainingModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveTrainingProgram()">Create Program</button>
             </div>
         </div>
     </div>
@@ -381,8 +388,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('scheduleTrainingModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveScheduledTraining()">Schedule Training</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('scheduleTrainingModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveScheduledTraining()">Schedule Training</button>
             </div>
         </div>
     </div>
@@ -402,17 +409,23 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('employeeTrainingModal')">Close</button>
-                <button class="btn btn-primary" onclick="updateEmployeeTraining()">Update Training</button>
-                <button class="btn btn-success" onclick="markTrainingComplete()">Mark Complete</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('employeeTrainingModal')">Close</button>
+                <button class="btn btn-primary text-white font-medium" onclick="updateEmployeeTraining()">Update Training</button>
+                <button class="btn btn-success text-white font-medium" onclick="markTrainingComplete()">Mark Complete</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/factory-admin/training-management-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </body>
 </html>
+
+

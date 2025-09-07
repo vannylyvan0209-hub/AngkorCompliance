@@ -1,5 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
-
+// Security Settings System for Super Admin
 class SecuritySettings {
     constructor() {
         this.db = null;

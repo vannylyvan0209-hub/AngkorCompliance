@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Performance Optimization - Angkor Compliance</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css">
+    
+
     <style>
         .performance-metric {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -51,15 +54,15 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="text-xl font-bold text-primary-gold" href="#">
                 <i class="fas fa-tachometer-alt me-2"></i>
                 Angkor Compliance - Performance Optimization
             </a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="../../index.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../../index.html">
                     <i class="fas fa-home me-1"></i>Home
                 </a>
-                <a class="nav-link" href="../security/security-penetration-testing.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../security/security-penetration-testing.html">
                     <i class="fas fa-shield-alt me-1"></i>Security
                 </a>
             </div>
@@ -75,7 +78,7 @@
                     <i class="fas fa-tachometer-alt text-primary me-2"></i>
                     Performance Optimization Dashboard
                 </h1>
-                <p class="text-muted">Monitor, analyze, and optimize platform performance for enterprise-grade scalability</p>
+                <p class="text-neutral-600">Monitor, analyze, and optimize platform performance for enterprise-grade scalability</p>
             </div>
         </div>
 
@@ -120,10 +123,10 @@
         </div>
 
         <!-- Performance Monitoring Tabs -->
-        <div class="row">
+        <div class="grid grid-cols-12 gap-6">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <ul class="nav nav-tabs card-header-tabs" id="performanceTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="frontend-tab" data-bs-toggle="tab" data-bs-target="#frontend" type="button" role="tab">
@@ -131,22 +134,22 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="backend-tab" data-bs-toggle="tab" data-bs-target="#backend" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="backend-tab" data-bs-toggle="tab" data-bs-target="#backend" type="button" role="tab">
                                     <i class="fas fa-server me-2"></i>Backend
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab">
                                     <i class="fas fa-database me-2"></i>Database
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="load-testing-tab" data-bs-toggle="tab" data-bs-target="#load-testing" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="load-testing-tab" data-bs-toggle="tab" data-bs-target="#load-testing" type="button" role="tab">
                                     <i class="fas fa-chart-line me-2"></i>Load Testing
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="optimization-tab" data-bs-toggle="tab" data-bs-target="#optimization" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="optimization-tab" data-bs-toggle="tab" data-bs-target="#optimization" type="button" role="tab">
                                     <i class="fas fa-magic me-2"></i>Optimization
                                 </button>
                             </li>
@@ -159,20 +162,20 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Frontend Performance Metrics</h5>
-                                        <p class="text-muted">Monitor page load times, bundle sizes, and user experience metrics</p>
+                                        <p class="text-neutral-600">Monitor page load times, bundle sizes, and user experience metrics</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                <div class="grid grid-cols-12 gap-6">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Page Load Performance</h6>
                                                 <canvas id="pageLoadChart" class="performance-chart"></canvas>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Bundle Size Analysis</h6>
                                                 <canvas id="bundleSizeChart" class="performance-chart"></canvas>
@@ -207,20 +210,20 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Backend Performance Metrics</h5>
-                                        <p class="text-muted">Monitor API response times, server performance, and resource utilization</p>
+                                        <p class="text-neutral-600">Monitor API response times, server performance, and resource utilization</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                <div class="grid grid-cols-12 gap-6">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">API Response Times</h6>
                                                 <canvas id="apiResponseChart" class="performance-chart"></canvas>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Server Resource Usage</h6>
                                                 <canvas id="serverResourceChart" class="performance-chart"></canvas>
@@ -255,20 +258,20 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Database Performance Metrics</h5>
-                                        <p class="text-muted">Monitor query performance, connection pools, and database health</p>
+                                        <p class="text-neutral-600">Monitor query performance, connection pools, and database health</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                <div class="grid grid-cols-12 gap-6">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Query Performance</h6>
                                                 <canvas id="queryPerformanceChart" class="performance-chart"></canvas>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Connection Pool Status</h6>
                                                 <canvas id="connectionPoolChart" class="performance-chart"></canvas>
@@ -303,45 +306,45 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Load Testing & Scalability</h5>
-                                        <p class="text-muted">Execute load tests and validate performance under various user loads</p>
+                                        <p class="text-neutral-600">Execute load tests and validate performance under various user loads</p>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="grid grid-cols-12 gap-6">
                                     <div class="col-md-8">
-                                        <div class="card">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Load Test Configuration</h6>
-                                                <div class="row">
-                                                    <div class="col-md-6">
+                                                <div class="grid grid-cols-12 gap-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <div class="mb-3">
                                                             <label class="form-label">Virtual Users</label>
-                                                            <input type="number" class="form-control" id="virtualUsers" value="1000" min="100" max="10000">
+                                                            <input type="number" class="form-input" id="virtualUsers" value="1000" min="100" max="10000">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <div class="mb-3">
                                                             <label class="form-label">Test Duration (minutes)</label>
-                                                            <input type="number" class="form-control" id="testDuration" value="30" min="5" max="120">
+                                                            <input type="number" class="form-input" id="testDuration" value="30" min="5" max="120">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
+                                                <div class="grid grid-cols-12 gap-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <div class="mb-3">
                                                             <label class="form-label">Ramp-up Time (minutes)</label>
-                                                            <input type="number" class="form-control" id="rampUpTime" value="5" min="1" max="30">
+                                                            <input type="number" class="form-input" id="rampUpTime" value="5" min="1" max="30">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <div class="mb-3">
                                                             <label class="form-label">Target Response Time (ms)</label>
-                                                            <input type="number" class="form-control" id="targetResponseTime" value="500" min="100" max="2000">
+                                                            <input type="number" class="form-input" id="targetResponseTime" value="500" min="100" max="2000">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-3">
                                                     <div class="col-12">
-                                                        <button class="btn btn-primary" id="startLoadTest">
+                                                        <button class="btn btn-primary text-white font-medium" id="startLoadTest">
                                                             <i class="fas fa-play me-2"></i>Start Load Test
                                                         </button>
                                                         <button class="btn btn-outline-secondary" id="stopLoadTest" disabled>
@@ -353,11 +356,11 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="card">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Test Status</h6>
                                                 <div id="loadTestStatus">
-                                                    <p class="text-muted">No test running</p>
+                                                    <p class="text-neutral-600">No test running</p>
                                                 </div>
                                                 <div class="mt-3" id="loadTestProgress" style="display: none;">
                                                     <div class="progress load-test-progress">
@@ -371,7 +374,7 @@
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-12">
-                                        <div class="card">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
                                                 <h6 class="card-title">Load Test Results</h6>
                                                 <div class="table-responsive">
@@ -403,15 +406,15 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Performance Optimization Recommendations</h5>
-                                        <p class="text-muted">Automated optimization suggestions and performance improvement opportunities</p>
+                                        <p class="text-neutral-600">Automated optimization suggestions and performance improvement opportunities</p>
                                     </div>
                                 </div>
-                                <div class="row" id="optimizationCards">
+                                <div class="grid grid-cols-12 gap-6" id="optimizationCards">
                                     <!-- Optimization cards will be populated here -->
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12">
-                                        <button class="btn btn-primary" id="runOptimizationScan">
+                                        <button class="btn btn-primary text-white font-medium" id="runOptimizationScan">
                                             <i class="fas fa-search me-2"></i>Run Optimization Scan
                                         </button>
                                         <button class="btn btn-outline-secondary" id="exportOptimizationReport">

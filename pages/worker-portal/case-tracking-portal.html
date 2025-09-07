@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Tracking Portal - Angkor Compliance</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <style>
         /* Role-specific styling for worker */
         body.role-worker {
@@ -372,6 +376,7 @@
     </style>
 </head>
 <body class="role-worker">
+    <div id="sidebarContainer"></div>
     <div class="tracking-portal">
         <!-- Portal Header -->
         <div class="portal-header">
@@ -384,8 +389,8 @@
             <!-- Sidebar -->
             <div class="tracking-sidebar">
                 <!-- Search Form -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="search"></i> Track Your Case</h3>
                     </div>
                     <form class="search-form" id="trackingForm">
@@ -404,8 +409,8 @@
                 </div>
 
                 <!-- Your Cases -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="list"></i> Your Cases</h3>
                     </div>
                     <div class="cases-list" id="casesList">
@@ -421,8 +426,8 @@
             <!-- Main Content -->
             <div class="tracking-main">
                 <!-- Case Details -->
-                <div class="card" id="caseDetailsCard" style="display: none;">
-                    <div class="card-header">
+                <div class="card shadow-md" id="caseDetailsCard" style="display: none;">
+                    <div class="card-header bg-neutral-50">
                         <h3><i data-lucide="file-text"></i> Case Details</h3>
                         <button class="btn btn-outline" onclick="submitNewGrievance()">
                             <i data-lucide="plus"></i> Submit New Case
@@ -453,13 +458,13 @@
                 </div>
 
                 <!-- Welcome Message -->
-                <div class="card" id="welcomeCard">
+                <div class="card shadow-md" id="welcomeCard">
                     <div class="empty-state">
                         <i data-lucide="search"></i>
                         <h3>Track Your Case</h3>
                         <p>Enter your case ID and phone number in the sidebar to view detailed information about your grievance case.</p>
                         <div style="display: flex; gap: var(--space-3); justify-content: center;">
-                            <button class="btn btn-primary" onclick="submitNewGrievance()">
+                            <button class="btn btn-primary text-white font-medium" onclick="submitNewGrievance()">
                                 <i data-lucide="plus"></i> Submit New Grievance
                             </button>
                             <button class="btn btn-outline" onclick="goToDashboard()">
@@ -470,7 +475,7 @@
                 </div>
 
                 <!-- Loading State -->
-                <div class="card" id="loadingCard" style="display: none;">
+                <div class="card shadow-md" id="loadingCard" style="display: none;">
                     <div class="loading">
                         <div class="spinner"></div>
                         <p>Loading case information...</p>
@@ -481,12 +486,19 @@
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/worker-portal/case-tracking-portal.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize navigation system
@@ -499,3 +511,5 @@
     </script>
 </body>
 </html>
+
+

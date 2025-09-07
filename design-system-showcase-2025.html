@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angkor Compliance Platform - 2025 Design System Showcase</title>
+    <meta name="description" content="Comprehensive showcase of the modern 2025 design system for Angkor Compliance Platform featuring glassmorphism, neumorphism, and role-specific theming.">
+    
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Khmer:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- 2025 Design System CSS -->
+    <link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+    <link rel="stylesheet" href="assets/css/components-2025.css">
+    <link rel="stylesheet" href="assets/css/layout-2025.css">
+    <link rel="stylesheet" href="assets/css/role-themes-2025.css">
+    
+    <style>
+        /* Custom showcase styles */
+        .showcase-section {
+            margin-bottom: var(--space-16);
+        }
+        
+        .showcase-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-4);
+            text-align: center;
+        }
+        
+        .showcase-subtitle {
+            font-size: var(--text-lg);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-8);
+            text-align: center;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .component-demo {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-shadow);
+            padding: var(--space-6);
+            transition: var(--transition-all);
+        }
+        
+        .component-demo:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl), var(--glass-shadow);
+        }
+        
+        .demo-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-800);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .demo-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            align-items: center;
+        }
+        
+        .role-selector {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-fixed);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--shadow-lg);
+            padding: var(--space-3);
+        }
+        
+        .role-selector select {
+            background: transparent;
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+            color: var(--neutral-700);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+            color: white;
+            padding: var(--space-20) var(--space-6);
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+        
+        .hero-title {
+            font-size: var(--text-5xl);
+            font-weight: var(--font-black);
+            margin-bottom: var(--space-4);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--text-xl);
+            opacity: 0.9;
+            margin-bottom: var(--space-8);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+            margin: var(--space-12) 0;
+        }
+        
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-shadow);
+            padding: var(--space-6);
+            text-align: center;
+            transition: var(--transition-all);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl), var(--glass-shadow);
+        }
+        
+        .stat-number {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-500);
+            margin-bottom: var(--space-2);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+        }
+        
+        .bento-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin: var(--space-8) 0;
+        }
+        
+        .bento-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-shadow);
+            padding: var(--space-6);
+            transition: var(--transition-all);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bento-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-xl), var(--glass-shadow);
+        }
+        
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-worker);
+        }
+        
+        .bento-card.feature::before {
+            background: var(--gradient-hr-staff);
+        }
+        
+        .bento-card.warning::before {
+            background: var(--gradient-grievance-committee);
+        }
+        
+        .bento-card.info::before {
+            background: var(--gradient-auditor);
+        }
+        
+        .bento-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-worker);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: var(--space-4);
+        }
+        
+        .bento-card.feature .bento-icon {
+            background: var(--gradient-hr-staff);
+        }
+        
+        .bento-card.warning .bento-icon {
+            background: var(--gradient-grievance-committee);
+        }
+        
+        .bento-card.info .bento-icon {
+            background: var(--gradient-auditor);
+        }
+        
+        .bento-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-800);
+            margin-bottom: var(--space-2);
+        }
+        
+        .bento-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .form-showcase {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-6);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .role-selector {
+                position: static;
+                margin-bottom: var(--space-4);
+            }
+        }
+    </style>
+</head>
+<body class="role-theme worker">
+    <!-- Role Selector -->
+    <div class="role-selector">
+        <label for="roleSelect" style="font-size: var(--text-sm); color: var(--neutral-600); margin-right: var(--space-2);">Role:</label>
+        <select id="roleSelect" onchange="changeRole(this.value)">
+            <option value="worker">Worker</option>
+            <option value="factory-admin">Factory Admin</option>
+            <option value="hr-staff">HR Staff</option>
+            <option value="grievance-committee">Grievance Committee</option>
+            <option value="auditor">Auditor</option>
+            <option value="analytics-user">Analytics User</option>
+            <option value="super-admin">Super Admin</option>
+        </select>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-aos="fade-up">Angkor Compliance Platform</h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">2025 Design System Showcase</p>
+            <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
+                <button class="btn btn-primary btn-lg">
+                    <i data-lucide="play"></i>
+                    Get Started
+                </button>
+                <button class="btn btn-glass btn-lg">
+                    <i data-lucide="book-open"></i>
+                    Documentation
+                </button>
+                <button class="btn btn-neu btn-lg">
+                    <i data-lucide="github"></i>
+                    View Source
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="showcase-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Compliance Rate</div>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Factories</div>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Workers</div>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Button Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Button Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Modern button styles with 2025 design trends</p>
+            
+            <div class="component-grid">
+                <div class="component-demo" data-aos="fade-up">
+                    <h3 class="demo-title">
+                        <i data-lucide="mouse-pointer"></i>
+                        Primary Buttons
+                    </h3>
+                    <div class="demo-content">
+                        <button class="btn btn-primary btn-xs">Extra Small</button>
+                        <button class="btn btn-primary btn-sm">Small</button>
+                        <button class="btn btn-primary">Default</button>
+                        <button class="btn btn-primary btn-lg">Large</button>
+                        <button class="btn btn-primary btn-xl">Extra Large</button>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="demo-title">
+                        <i data-lucide="layers"></i>
+                        Style Variants
+                    </h3>
+                    <div class="demo-content">
+                        <button class="btn btn-primary">Primary</button>
+                        <button class="btn btn-secondary">Secondary</button>
+                        <button class="btn btn-ghost">Ghost</button>
+                        <button class="btn btn-outline">Outline</button>
+                        <button class="btn btn-glass">Glass</button>
+                        <button class="btn btn-neu">Neumorphism</button>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="demo-title">
+                        <i data-lucide="palette"></i>
+                        Semantic Colors
+                    </h3>
+                    <div class="demo-content">
+                        <button class="btn btn-success">Success</button>
+                        <button class="btn btn-warning">Warning</button>
+                        <button class="btn btn-danger">Danger</button>
+                        <button class="btn btn-info">Info</button>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="demo-title">
+                        <i data-lucide="settings"></i>
+                        States
+                    </h3>
+                    <div class="demo-content">
+                        <button class="btn btn-primary">Normal</button>
+                        <button class="btn btn-primary" disabled>Disabled</button>
+                        <button class="btn btn-primary">
+                            <span class="spinner spinner-sm"></span>
+                            Loading
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Card Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Card Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Glassmorphism and neumorphism card designs</p>
+            
+            <div class="component-grid">
+                <div class="component-demo" data-aos="fade-up">
+                    <h3 class="demo-title">
+                        <i data-lucide="credit-card"></i>
+                        Glass Cards
+                    </h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin: 0; font-size: var(--text-lg); font-weight: var(--font-semibold);">Card Header</h4>
+                        </div>
+                        <div class="card-body">
+                            <p style="margin: 0; color: var(--neutral-600);">This is a glassmorphism card with backdrop blur effects and subtle transparency.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-sm">Action</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="demo-title">
+                        <i data-lucide="box"></i>
+                        Neumorphism Cards
+                    </h3>
+                    <div class="card card-neu">
+                        <div class="card-header">
+                            <h4 style="margin: 0; font-size: var(--text-lg); font-weight: var(--font-semibold);">Neumorphism Card</h4>
+                        </div>
+                        <div class="card-body">
+                            <p style="margin: 0; color: var(--neutral-600);">Soft, tactile design with subtle shadows and highlights for a modern look.</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-neu btn-sm">Action</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Bento Grid Layout</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Modern asymmetrical grid system for diverse content</p>
+            
+            <div class="bento-showcase">
+                <div class="bento-card" data-aos="fade-up">
+                    <div class="bento-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <h3 class="bento-title">Compliance Monitoring</h3>
+                    <p class="bento-description">Real-time monitoring of factory compliance with AI-powered insights and automated reporting.</p>
+                </div>
+                
+                <div class="bento-card feature" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bento-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <h3 class="bento-title">Worker Management</h3>
+                    <p class="bento-description">Comprehensive worker portal with training, grievance management, and performance tracking.</p>
+                </div>
+                
+                <div class="bento-card warning" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bento-icon">
+                        <i data-lucide="alert-triangle"></i>
+                    </div>
+                    <h3 class="bento-title">Risk Assessment</h3>
+                    <p class="bento-description">Proactive risk identification and mitigation strategies for factory operations.</p>
+                </div>
+                
+                <div class="bento-card info" data-aos="fade-up" data-aos-delay="300">
+                    <div class="bento-icon">
+                        <i data-lucide="bar-chart-3"></i>
+                    </div>
+                    <h3 class="bento-title">Analytics Dashboard</h3>
+                    <p class="bento-description">Advanced analytics and reporting tools for data-driven compliance decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Form Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Modern form elements with enhanced UX</p>
+            
+            <div class="form-showcase" data-aos="fade-up">
+                <form class="role-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input type="text" class="form-input" id="firstName" placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input type="text" class="form-input" id="lastName" placeholder="Enter your last name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" class="form-input" id="email" placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="role">Role</label>
+                        <select class="form-input form-select" id="role">
+                            <option>Select your role</option>
+                            <option>Worker</option>
+                            <option>Factory Admin</option>
+                            <option>HR Staff</option>
+                            <option>Auditor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="message">Message</label>
+                        <textarea class="form-input form-textarea" id="message" placeholder="Enter your message"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="send"></i>
+                            Submit Form
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                            <i data-lucide="x"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Navigation Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Ultra-minimal and context-sensitive navigation</p>
+            
+            <div class="component-demo" data-aos="fade-up">
+                <h3 class="demo-title">
+                    <i data-lucide="navigation"></i>
+                    Role Navigation
+                </h3>
+                <nav class="role-nav">
+                    <div class="nav">
+                        <div class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <i data-lucide="home"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i data-lucide="users"></i>
+                                Workers
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i data-lucide="shield-check"></i>
+                                Compliance
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i data-lucide="bar-chart-3"></i>
+                                Reports
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i data-lucide="settings"></i>
+                                Settings
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Badge and Status Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Badge & Status Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Status indicators and role-specific badges</p>
+            
+            <div class="component-grid">
+                <div class="component-demo" data-aos="fade-up">
+                    <h3 class="demo-title">
+                        <i data-lucide="tag"></i>
+                        Badges
+                    </h3>
+                    <div class="demo-content">
+                        <span class="badge badge-primary">Primary</span>
+                        <span class="badge badge-success">Success</span>
+                        <span class="badge badge-warning">Warning</span>
+                        <span class="badge badge-danger">Danger</span>
+                        <span class="badge badge-info">Info</span>
+                        <span class="badge badge-neutral">Neutral</span>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="demo-title">
+                        <i data-lucide="user-check"></i>
+                        Role Status
+                    </h3>
+                    <div class="demo-content">
+                        <span class="role-status worker">
+                            <span class="role-status-dot"></span>
+                            Worker
+                        </span>
+                        <span class="role-status hr-staff">
+                            <span class="role-status-dot"></span>
+                            HR Staff
+                        </span>
+                        <span class="role-status auditor">
+                            <span class="role-status-dot"></span>
+                            Auditor
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress and Loading Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Progress & Loading Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Modern progress indicators and loading states</p>
+            
+            <div class="component-grid">
+                <div class="component-demo" data-aos="fade-up">
+                    <h3 class="demo-title">
+                        <i data-lucide="trending-up"></i>
+                        Progress Bars
+                    </h3>
+                    <div class="demo-content" style="flex-direction: column; gap: var(--space-4); width: 100%;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                                <span style="font-size: var(--text-sm); color: var(--neutral-600);">Compliance Progress</span>
+                                <span style="font-size: var(--text-sm); color: var(--neutral-600);">85%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                                <span style="font-size: var(--text-sm); color: var(--neutral-600);">Training Completion</span>
+                                <span style="font-size: var(--text-sm); color: var(--neutral-600);">60%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 60%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="demo-title">
+                        <i data-lucide="loader"></i>
+                        Loading States
+                    </h3>
+                    <div class="demo-content">
+                        <div class="spinner spinner-sm"></div>
+                        <div class="spinner"></div>
+                        <div class="spinner spinner-lg"></div>
+                    </div>
+                </div>
+                
+                <div class="component-demo" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="demo-title">
+                        <i data-lucide="square"></i>
+                        Skeleton Loading
+                    </h3>
+                    <div class="demo-content" style="flex-direction: column; gap: var(--space-3); width: 100%;">
+                        <div class="skeleton" style="height: 1rem; width: 100%;"></div>
+                        <div class="skeleton" style="height: 1rem; width: 80%;"></div>
+                        <div class="skeleton" style="height: 1rem; width: 60%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Avatar Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Avatar Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Role-specific avatar designs</p>
+            
+            <div class="component-demo" data-aos="fade-up">
+                <h3 class="demo-title">
+                    <i data-lucide="user-circle"></i>
+                    Avatar Sizes
+                </h3>
+                <div class="demo-content">
+                    <div class="avatar avatar-xs">XS</div>
+                    <div class="avatar avatar-sm">SM</div>
+                    <div class="avatar avatar-md">MD</div>
+                    <div class="avatar avatar-lg">LG</div>
+                    <div class="avatar avatar-xl">XL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alert Components Showcase -->
+    <section class="showcase-section">
+        <div class="container">
+            <h2 class="showcase-title" data-aos="fade-up">Alert Components</h2>
+            <p class="showcase-subtitle" data-aos="fade-up" data-aos-delay="100">Contextual feedback messages</p>
+            
+            <div class="component-demo" data-aos="fade-up">
+                <h3 class="demo-title">
+                    <i data-lucide="bell"></i>
+                    Alert Types
+                </h3>
+                <div class="demo-content" style="flex-direction: column; gap: var(--space-4); width: 100%;">
+                    <div class="alert alert-success">
+                        <i data-lucide="check-circle"></i>
+                        <div>
+                            <strong>Success!</strong> Your compliance report has been submitted successfully.
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i data-lucide="alert-triangle"></i>
+                        <div>
+                            <strong>Warning!</strong> Please review the pending compliance items.
+                        </div>
+                    </div>
+                    <div class="alert alert-danger">
+                        <i data-lucide="x-circle"></i>
+                        <div>
+                            <strong>Error!</strong> Failed to save your changes. Please try again.
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i data-lucide="info"></i>
+                        <div>
+                            <strong>Info!</strong> New compliance standards have been updated.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--neutral-900); color: white; padding: var(--space-16) var(--space-6); text-align: center;">
+        <div class="container">
+            <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-4);">Angkor Compliance Platform</h3>
+            <p style="color: var(--neutral-400); margin-bottom: var(--space-8);">Modern design system for 2025 compliance management</p>
+            <div style="display: flex; gap: var(--space-6); justify-content: center; flex-wrap: wrap;">
+                <a href="#" style="color: var(--neutral-400); text-decoration: none;">Documentation</a>
+                <a href="#" style="color: var(--neutral-400); text-decoration: none;">GitHub</a>
+                <a href="#" style="color: var(--neutral-400); text-decoration: none;">Support</a>
+                <a href="#" style="color: var(--neutral-400); text-decoration: none;">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Role switching functionality
+        function changeRole(role) {
+            const body = document.body;
+            body.className = `role-theme ${role}`;
+            
+            // Update role status elements
+            const roleStatuses = document.querySelectorAll('.role-status');
+            roleStatuses.forEach(status => {
+                status.className = `role-status ${role}`;
+            });
+        }
+
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for demo buttons
+            const demoButtons = document.querySelectorAll('.component-demo .btn');
+            demoButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Add a temporary ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = '50%';
+                    ripple.style.top = '50%';
+                    ripple.style.width = '20px';
+                    ripple.style.height = '20px';
+                    ripple.style.marginLeft = '-10px';
+                    ripple.style.marginTop = '-10px';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+
+        // Add CSS for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

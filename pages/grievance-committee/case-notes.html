@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Notes - Angkor Compliance</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/grievance-committee.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
     <style>
         .case-notes {
             padding: 20px;
@@ -612,11 +615,11 @@
                     <input type="date" id="date-filter" class="filter-control">
                 </div>
                 <div class="filter-actions">
-                    <button class="btn btn-primary" id="apply-filters-btn">
+                    <button class="btn btn-primary text-white font-medium" id="apply-filters-btn">
                         <i class="fas fa-filter"></i>
                         <span id="apply-filters-text">Apply Filters</span>
                     </button>
-                    <button class="btn btn-secondary" id="clear-filters-btn">
+                    <button class="btn btn-secondary font-medium" id="clear-filters-btn">
                         <i class="fas fa-times"></i>
                         <span id="clear-filters-text">Clear</span>
                     </button>
@@ -634,7 +637,7 @@
                 <div class="case-selector">
                     <div class="form-group">
                         <label for="note-case-selector" id="note-case-selector-label">Select Case</label>
-                        <select id="note-case-selector" class="form-control">
+                        <select id="note-case-selector" class="form-input">
                             <option value="">Choose a case...</option>
                         </select>
                     </div>
@@ -648,11 +651,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="note-title" id="note-title-label">Note Title</label>
-                            <input type="text" id="note-title" class="form-control" required>
+                            <input type="text" id="note-title" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label for="note-type" id="note-type-label">Note Type</label>
-                            <select id="note-type" class="form-control" required>
+                            <select id="note-type" class="form-input" required>
                                 <option value="">Select type...</option>
                                 <option value="investigation">Investigation Note</option>
                                 <option value="interview">Interview Summary</option>
@@ -672,11 +675,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="note-tags" id="note-tags-label">Tags (comma-separated)</label>
-                            <input type="text" id="note-tags" class="form-control" placeholder="witness, evidence, timeline">
+                            <input type="text" id="note-tags" class="form-input" placeholder="witness, evidence, timeline">
                         </div>
                         <div class="form-group">
                             <label for="note-priority" id="note-priority-label">Priority</label>
-                            <select id="note-priority" class="form-control">
+                            <select id="note-priority" class="form-input">
                                 <option value="low">Low</option>
                                 <option value="medium" selected>Medium</option>
                                 <option value="high">High</option>
@@ -686,11 +689,11 @@
                     </div>
                     
                     <div class="note-actions">
-                        <button type="button" class="btn btn-secondary" id="save-draft-btn">
+                        <button type="button" class="btn btn-secondary font-medium" id="save-draft-btn">
                             <i class="fas fa-save"></i>
                             <span id="save-draft-text">Save Draft</span>
                         </button>
-                        <button type="submit" class="btn btn-primary" id="publish-note-btn">
+                        <button type="submit" class="btn btn-primary text-white font-medium" id="publish-note-btn">
                             <i class="fas fa-paper-plane"></i>
                             <span id="publish-note-text">Publish Note</span>
                         </button>

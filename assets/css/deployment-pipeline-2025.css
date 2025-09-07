@@ -1,0 +1,220 @@
+/**
+ * Deployment Pipeline 2025 - CSS
+ * Styles for deployment pipeline system
+ */
+
+/* ===== DEPLOYMENT PIPELINE CONTAINER ===== */
+.deployment-pipeline {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 500px;
+    max-height: 80vh;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    z-index: 1000;
+    overflow: hidden;
+    font-family: var(--font-sans);
+}
+
+/* ===== DEPLOYMENT HEADER ===== */
+.deployment-header {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--neutral-50);
+}
+
+.deployment-header h3 {
+    margin: 0 0 var(--space-3) 0;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--neutral-900);
+}
+
+.deployment-controls {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.deployment-controls .btn {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+}
+
+/* ===== DEPLOYMENT PROGRESS ===== */
+.deployment-progress {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--neutral-200);
+    background: var(--white);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--neutral-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: var(--space-2);
+}
+
+.progress-bar::before {
+    content: '';
+    display: block;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-gold), var(--success-500));
+    border-radius: var(--radius-sm);
+    transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    text-align: center;
+}
+
+/* ===== DEPLOYMENT LOG ===== */
+.deployment-log {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+}
+
+.log-entry {
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--neutral-200);
+    color: var(--neutral-700);
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+/* ===== DEPLOYMENT STATUS ===== */
+.deployment-pipeline[data-status="running"] .progress-bar::before {
+    background: linear-gradient(90deg, var(--primary-gold), var(--info-500));
+    animation: progress-pulse 2s ease-in-out infinite;
+}
+
+.deployment-pipeline[data-status="completed"] .progress-bar::before {
+    background: var(--success-500);
+}
+
+.deployment-pipeline[data-status="failed"] .progress-bar::before {
+    background: var(--danger-500);
+}
+
+.deployment-pipeline[data-status="paused"] .progress-bar::before {
+    background: var(--warning-500);
+}
+
+.deployment-pipeline[data-status="stopped"] .progress-bar::before {
+    background: var(--neutral-500);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes progress-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .deployment-pipeline {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-height: 90vh;
+    }
+    
+    .deployment-controls {
+        flex-direction: column;
+    }
+    
+    .deployment-controls .btn {
+        width: 100%;
+    }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+    .deployment-pipeline {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .deployment-header {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .deployment-header h3 {
+        color: var(--neutral-100);
+    }
+    
+    .deployment-progress {
+        background: var(--neutral-800);
+        border-color: var(--neutral-700);
+    }
+    
+    .progress-bar {
+        background: var(--neutral-700);
+    }
+    
+    .progress-text {
+        color: var(--neutral-400);
+    }
+    
+    .deployment-log {
+        background: var(--neutral-800);
+    }
+    
+    .log-entry {
+        color: var(--neutral-300);
+        border-color: var(--neutral-700);
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.deployment-controls .btn:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+.deployment-log:focus {
+    outline: 2px solid var(--primary-gold);
+    outline-offset: 2px;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .deployment-pipeline {
+        position: static;
+        width: 100%;
+        max-height: none;
+        box-shadow: none;
+        border: 1px solid var(--neutral-300);
+    }
+    
+    .deployment-controls {
+        display: none;
+    }
+    
+    .deployment-log {
+        max-height: none;
+        overflow: visible;
+    }
+}

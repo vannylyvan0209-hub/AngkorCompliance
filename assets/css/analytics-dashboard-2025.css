@@ -1,0 +1,662 @@
+/* ===== ANALYTICS DASHBOARD 2025 DESIGN SYSTEM ===== */
+
+/* Analytics Dashboard Layout */
+.analytics-dashboard {
+    min-height: 100vh;
+    background: var(--neutral-50);
+}
+
+/* Analytics Header Section */
+.analytics-header-section {
+    padding: var(--space-8) 0;
+    background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+    color: white;
+    margin-bottom: var(--space-8);
+}
+
+.analytics-header-section .bento-hero {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.analytics-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.header-left h1 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: white;
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.header-left h1 i {
+    width: 32px;
+    height: 32px;
+}
+
+.header-left p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--text-lg);
+}
+
+.analytics-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* Filters Section */
+.filters-section {
+    padding: var(--space-8) 0;
+}
+
+.bento-filters {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.bento-filters:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+/* KPI Section */
+.kpi-section {
+    padding: var(--space-8) 0;
+}
+
+.bento-kpi {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-kpi:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.bento-kpi::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple-500), var(--purple-600));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.kpi-title {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+    font-weight: 500;
+}
+
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--text-lg);
+}
+
+.kpi-value {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--neutral-900);
+    margin-bottom: var(--space-3);
+}
+
+.kpi-change {
+    font-size: var(--text-sm);
+    color: var(--success-600);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.kpi-change.negative {
+    color: var(--danger-600);
+}
+
+/* Risk Heatmap Section */
+.risk-heatmap-section {
+    padding: var(--space-8) 0;
+}
+
+.bento-heatmap {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.bento-heatmap:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.risk-level-card {
+    text-align: center;
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.risk-level-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.risk-level-card.critical {
+    background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+}
+
+.risk-level-card.high {
+    background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+}
+
+.risk-level-card.medium {
+    background: linear-gradient(135deg, var(--info-500), var(--info-600));
+}
+
+.risk-level-card.low {
+    background: linear-gradient(135deg, var(--success-500), var(--success-600));
+}
+
+.risk-count {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+}
+
+.risk-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.risk-percentage {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    font-size: var(--text-xs);
+    opacity: 0.8;
+}
+
+/* Charts Section */
+.charts-section {
+    padding: var(--space-8) 0;
+}
+
+.bento-chart {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.bento-chart:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+    margin-top: var(--space-6);
+}
+
+/* Export Section */
+.export-section {
+    padding: var(--space-8) 0;
+}
+
+.bento-export {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.bento-export:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.export-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.export-option {
+    background: var(--neutral-50);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.export-option:hover {
+    border-color: var(--purple-500);
+    background: var(--purple-50);
+    transform: translateY(-2px);
+}
+
+.export-option.selected {
+    border-color: var(--purple-500);
+    background: var(--purple-50);
+}
+
+.export-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto var(--space-4);
+    background: var(--purple-500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--text-lg);
+}
+
+.export-title {
+    font-weight: 600;
+    color: var(--neutral-900);
+    margin-bottom: var(--space-1);
+}
+
+.export-description {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+}
+
+/* Loading States */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-8);
+    color: var(--neutral-600);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--neutral-200);
+    border-top: 4px solid var(--purple-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .heatmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .export-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .analytics-header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-4);
+    }
+    
+    .analytics-actions {
+        justify-content: center;
+    }
+    
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .heatmap-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .export-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-left h1 {
+        font-size: var(--text-2xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .analytics-header-section {
+        padding: var(--space-6) 0;
+    }
+    
+    .header-left h1 {
+        font-size: var(--text-xl);
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    
+    .analytics-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .analytics-actions .btn {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .kpi-value {
+        font-size: var(--text-2xl);
+    }
+    
+    .risk-count {
+        font-size: var(--text-2xl);
+    }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .analytics-dashboard {
+    background: var(--neutral-900);
+}
+
+[data-theme="dark"] .bento-filters,
+[data-theme="dark"] .bento-kpi,
+[data-theme="dark"] .bento-heatmap,
+[data-theme="dark"] .bento-chart,
+[data-theme="dark"] .bento-export {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+}
+
+[data-theme="dark"] .kpi-value {
+    color: var(--neutral-100);
+}
+
+[data-theme="dark"] .kpi-title {
+    color: var(--neutral-400);
+}
+
+[data-theme="dark"] .export-title {
+    color: var(--neutral-100);
+}
+
+[data-theme="dark"] .export-description {
+    color: var(--neutral-400);
+}
+
+[data-theme="dark"] .export-option {
+    background: var(--neutral-700);
+    border-color: var(--neutral-600);
+}
+
+[data-theme="dark"] .export-option:hover {
+    background: var(--neutral-600);
+}
+
+/* Role-specific theming */
+.role-theme.analytics-user .analytics-header-section {
+    background: linear-gradient(135deg, var(--analytics-user-primary), var(--analytics-user-primary-dark));
+}
+
+.role-theme.analytics-user .bento-kpi::before {
+    background: linear-gradient(90deg, var(--analytics-user-primary), var(--analytics-user-primary-dark));
+}
+
+/* Animation Enhancements */
+.bento-filters,
+.bento-kpi,
+.bento-heatmap,
+.bento-chart,
+.bento-export {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Accessibility Enhancements */
+.bento-filters:focus-within,
+.bento-kpi:focus-within,
+.bento-heatmap:focus-within,
+.bento-chart:focus-within,
+.bento-export:focus-within {
+    outline: 2px solid var(--purple-500);
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .analytics-dashboard {
+        background: white;
+    }
+    
+    .bento-filters,
+    .bento-kpi,
+    .bento-heatmap,
+    .bento-chart,
+    .bento-export {
+        box-shadow: none;
+        border: 1px solid var(--neutral-300);
+    }
+    
+    .analytics-actions {
+        display: none;
+    }
+}
+
+/* Chart Enhancements */
+.chart-wrapper canvas {
+    border-radius: var(--radius-lg);
+}
+
+/* Export Button Enhancements */
+.export-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.export-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.export-btn:hover::before {
+    left: 100%;
+}
+
+/* KPI Trend Indicators */
+.kpi-trend-up {
+    color: var(--success-600);
+}
+
+.kpi-trend-down {
+    color: var(--danger-600);
+}
+
+.kpi-trend-neutral {
+    color: var(--neutral-500);
+}
+
+/* Risk Level Indicators */
+.risk-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.risk-indicator.critical {
+    background: var(--danger-100);
+    color: var(--danger-700);
+}
+
+.risk-indicator.high {
+    background: var(--warning-100);
+    color: var(--warning-700);
+}
+
+.risk-indicator.medium {
+    background: var(--info-100);
+    color: var(--info-700);
+}
+
+.risk-indicator.low {
+    background: var(--success-100);
+    color: var(--success-700);
+}
+
+/* Data Visualization Enhancements */
+.data-point {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.data-point:hover {
+    transform: scale(1.1);
+}
+
+.data-point::after {
+    content: attr(data-value);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--neutral-900);
+    color: white;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.data-point:hover::after {
+    opacity: 1;
+}
+
+/* Performance Metrics */
+.performance-metric {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.performance-metric:hover {
+    background: var(--neutral-100);
+}
+
+.metric-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: var(--text-sm);
+}
+
+.metric-value {
+    font-weight: 600;
+    color: var(--neutral-900);
+}
+
+.metric-label {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+}

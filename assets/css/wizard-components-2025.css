@@ -1,0 +1,1272 @@
+/**
+ * Angkor Compliance Platform - Wizard Components 2025
+ * 
+ * Modern multi-step forms and wizards with 2025 design patterns,
+ * accessibility support, and responsive design.
+ */
+
+/* ===== WIZARD COMPONENTS VARIABLES ===== */
+
+:root {
+    /* Wizard Z-Index */
+    --wizard-z-index: 1000;
+    --wizard-overlay-z-index: 1001;
+    --wizard-modal-z-index: 1002;
+    
+    /* Wizard Animation Variables */
+    --wizard-animation-duration: 0.3s;
+    --wizard-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Wizard Colors */
+    --wizard-bg: var(--surface);
+    --wizard-text: var(--text);
+    --wizard-border: var(--border);
+    --wizard-shadow: var(--shadow-lg);
+    --wizard-step-bg: var(--surface);
+    --wizard-step-text: var(--text);
+    --wizard-step-border: var(--border);
+    --wizard-step-active-bg: var(--primary-50);
+    --wizard-step-active-text: var(--primary-700);
+    --wizard-step-active-border: var(--primary-200);
+    --wizard-step-completed-bg: var(--success-50);
+    --wizard-step-completed-text: var(--success-700);
+    --wizard-step-completed-border: var(--success-200);
+    --wizard-step-disabled-bg: var(--gray-100);
+    --wizard-step-disabled-text: var(--text-muted);
+    --wizard-step-disabled-border: var(--gray-200);
+    --wizard-progress-bg: var(--gray-200);
+    --wizard-progress-fill: var(--primary-500);
+    --wizard-nav-bg: var(--surface);
+    --wizard-nav-border: var(--border);
+    
+    /* Wizard Spacing */
+    --wizard-padding: var(--space-4);
+    --wizard-gap: var(--space-2);
+    --wizard-border-radius: var(--radius-lg);
+    --wizard-min-height: 400px;
+    --wizard-max-height: 800px;
+    
+    /* Wizard Typography */
+    --wizard-font-size: var(--text-base);
+    --wizard-font-weight: var(--font-normal);
+    --wizard-title-font-size: var(--text-xl);
+    --wizard-title-font-weight: var(--font-semibold);
+    --wizard-subtitle-font-size: var(--text-sm);
+    --wizard-subtitle-font-weight: var(--font-normal);
+    --wizard-step-font-size: var(--text-sm);
+    --wizard-step-font-weight: var(--font-medium);
+    --wizard-nav-font-size: var(--text-sm);
+    --wizard-nav-font-weight: var(--font-medium);
+    
+    /* Wizard Sizes */
+    --wizard-width-sm: 400px;
+    --wizard-width-md: 600px;
+    --wizard-width-lg: 800px;
+    --wizard-width-xl: 1000px;
+    --wizard-width-full: 100%;
+    --wizard-height-sm: 300px;
+    --wizard-height-md: 500px;
+    --wizard-height-lg: 700px;
+    --wizard-height-xl: 900px;
+    --wizard-height-full: 100%;
+}
+
+/* ===== WIZARD BASE ===== */
+
+.wizard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: var(--wizard-width-md);
+    height: var(--wizard-height-md);
+    background: var(--wizard-bg);
+    border: 1px solid var(--wizard-border);
+    border-radius: var(--wizard-border-radius);
+    box-shadow: var(--wizard-shadow);
+    overflow: hidden;
+}
+
+.wizard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--wizard-padding);
+    border-bottom: 1px solid var(--wizard-border);
+    background: var(--wizard-nav-bg);
+}
+
+.wizard-title {
+    font-size: var(--wizard-title-font-size);
+    font-weight: var(--wizard-title-font-weight);
+    color: var(--wizard-text);
+    margin: 0;
+}
+
+.wizard-subtitle {
+    font-size: var(--wizard-subtitle-font-size);
+    font-weight: var(--wizard-subtitle-font-weight);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.wizard-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wizard-close:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.wizard-progress {
+    padding: var(--space-3) var(--wizard-padding);
+    border-bottom: 1px solid var(--wizard-border);
+    background: var(--wizard-nav-bg);
+}
+
+.wizard-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--wizard-progress-bg);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.wizard-progress-fill {
+    height: 100%;
+    background: var(--wizard-progress-fill);
+    border-radius: var(--radius-sm);
+    transition: width var(--wizard-animation-duration) var(--wizard-animation-easing);
+}
+
+.wizard-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--wizard-padding);
+    border-bottom: 1px solid var(--wizard-border);
+    background: var(--wizard-nav-bg);
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    background: var(--wizard-step-bg);
+    border: 1px solid var(--wizard-step-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-all);
+    min-width: 80px;
+    text-align: center;
+}
+
+.wizard-step:hover {
+    background: var(--wizard-step-active-bg);
+    border-color: var(--wizard-step-active-border);
+    color: var(--wizard-step-active-text);
+}
+
+.wizard-step.active {
+    background: var(--wizard-step-active-bg);
+    border-color: var(--wizard-step-active-border);
+    color: var(--wizard-step-active-text);
+    box-shadow: var(--shadow-sm);
+}
+
+.wizard-step.completed {
+    background: var(--wizard-step-completed-bg);
+    border-color: var(--wizard-step-completed-border);
+    color: var(--wizard-step-completed-text);
+}
+
+.wizard-step.disabled {
+    background: var(--wizard-step-disabled-bg);
+    border-color: var(--wizard-step-disabled-border);
+    color: var(--wizard-step-disabled-text);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.wizard-step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-500);
+    color: var(--white);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-1);
+}
+
+.wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-step.disabled .wizard-step-number {
+    background: var(--gray-400);
+}
+
+.wizard-step-label {
+    font-size: var(--wizard-step-font-size);
+    font-weight: var(--wizard-step-font-weight);
+    color: inherit;
+    margin: 0;
+}
+
+.wizard-content {
+    flex: 1;
+    padding: var(--wizard-padding);
+    overflow-y: auto;
+    position: relative;
+}
+
+.wizard-step-content {
+    display: none;
+    animation: fadeIn var(--wizard-animation-duration) var(--wizard-animation-easing);
+}
+
+.wizard-step-content.active {
+    display: block;
+}
+
+.wizard-step-content.completed {
+    display: none;
+}
+
+.wizard-step-title {
+    font-size: var(--wizard-title-font-size);
+    font-weight: var(--wizard-title-font-weight);
+    color: var(--wizard-text);
+    margin: 0 0 var(--space-3) 0;
+}
+
+.wizard-step-description {
+    font-size: var(--wizard-subtitle-font-size);
+    font-weight: var(--wizard-subtitle-font-weight);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4) 0;
+}
+
+.wizard-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--wizard-padding);
+    border-top: 1px solid var(--wizard-border);
+    background: var(--wizard-nav-bg);
+}
+
+.wizard-nav-button {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--text);
+    font-size: var(--wizard-nav-font-size);
+    font-weight: var(--wizard-nav-font-weight);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.wizard-nav-button:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    color: var(--primary-700);
+}
+
+.wizard-nav-button:disabled {
+    background: var(--gray-100);
+    border-color: var(--gray-200);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.wizard-nav-button.primary {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--white);
+}
+
+.wizard-nav-button.primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+}
+
+.wizard-nav-button.primary:disabled {
+    background: var(--gray-400);
+    border-color: var(--gray-400);
+    color: var(--white);
+}
+
+/* ===== WIZARD VARIANTS ===== */
+
+/* Default Wizard */
+.wizard-default {
+    background: var(--wizard-bg);
+    border-color: var(--wizard-border);
+}
+
+/* Glassmorphism Wizard */
+.wizard-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.wizard-glass .wizard-header,
+.wizard-glass .wizard-progress,
+.wizard-glass .wizard-steps,
+.wizard-glass .wizard-navigation {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Neumorphism Wizard */
+.wizard-neumorphism {
+    background: var(--surface);
+    border: none;
+    box-shadow: 
+        8px 8px 16px rgba(0, 0, 0, 0.1),
+        -8px -8px 16px rgba(255, 255, 255, 0.1);
+}
+
+.wizard-neumorphism .wizard-header,
+.wizard-neumorphism .wizard-progress,
+.wizard-neumorphism .wizard-steps,
+.wizard-neumorphism .wizard-navigation {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Elevated Wizard */
+.wizard-elevated {
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Flat Wizard */
+.wizard-flat {
+    box-shadow: none;
+    border: 2px solid var(--border);
+}
+
+/* ===== WIZARD SIZES ===== */
+
+.wizard-sm {
+    width: var(--wizard-width-sm);
+    height: var(--wizard-height-sm);
+}
+
+.wizard-sm .wizard-header,
+.wizard-sm .wizard-progress,
+.wizard-sm .wizard-steps,
+.wizard-sm .wizard-content,
+.wizard-sm .wizard-navigation {
+    padding: var(--space-3);
+}
+
+.wizard-sm .wizard-title {
+    font-size: var(--text-lg);
+}
+
+.wizard-sm .wizard-subtitle {
+    font-size: var(--text-xs);
+}
+
+.wizard-md {
+    width: var(--wizard-width-md);
+    height: var(--wizard-height-md);
+}
+
+.wizard-lg {
+    width: var(--wizard-width-lg);
+    height: var(--wizard-height-lg);
+}
+
+.wizard-lg .wizard-header,
+.wizard-lg .wizard-progress,
+.wizard-lg .wizard-steps,
+.wizard-lg .wizard-content,
+.wizard-lg .wizard-navigation {
+    padding: var(--space-5);
+}
+
+.wizard-lg .wizard-title {
+    font-size: var(--text-2xl);
+}
+
+.wizard-lg .wizard-subtitle {
+    font-size: var(--text-base);
+}
+
+.wizard-xl {
+    width: var(--wizard-width-xl);
+    height: var(--wizard-height-xl);
+}
+
+.wizard-xl .wizard-header,
+.wizard-xl .wizard-progress,
+.wizard-xl .wizard-steps,
+.wizard-xl .wizard-content,
+.wizard-xl .wizard-navigation {
+    padding: var(--space-6);
+}
+
+.wizard-xl .wizard-title {
+    font-size: var(--text-3xl);
+}
+
+.wizard-xl .wizard-subtitle {
+    font-size: var(--text-lg);
+}
+
+.wizard-full {
+    width: var(--wizard-width-full);
+    height: var(--wizard-height-full);
+}
+
+/* ===== WIZARD RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .wizard {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .wizard-sm,
+    .wizard-md,
+    .wizard-lg,
+    .wizard-xl {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .wizard-header,
+    .wizard-progress,
+    .wizard-steps,
+    .wizard-content,
+    .wizard-navigation {
+        padding: var(--space-3);
+    }
+    
+    .wizard-title {
+        font-size: var(--text-lg);
+    }
+    
+    .wizard-subtitle {
+        font-size: var(--text-xs);
+    }
+    
+    .wizard-steps {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    
+    .wizard-step {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+    }
+    
+    .wizard-step-number {
+        margin-bottom: 0;
+        margin-right: var(--space-2);
+    }
+    
+    .wizard-navigation {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    
+    .wizard-nav-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .wizard {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .wizard-sm,
+    .wizard-md,
+    .wizard-lg,
+    .wizard-xl {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .wizard-header,
+    .wizard-progress,
+    .wizard-steps,
+    .wizard-content,
+    .wizard-navigation {
+        padding: var(--space-2);
+    }
+    
+    .wizard-title {
+        font-size: var(--text-base);
+    }
+    
+    .wizard-subtitle {
+        font-size: var(--text-xs);
+    }
+    
+    .wizard-step {
+        padding: var(--space-1);
+        min-width: 60px;
+    }
+    
+    .wizard-step-number {
+        width: 20px;
+        height: 20px;
+        font-size: var(--text-xs);
+    }
+    
+    .wizard-step-label {
+        font-size: var(--text-xs);
+    }
+    
+    .wizard-nav-button {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-xs);
+    }
+}
+
+/* ===== WIZARD ACCESSIBILITY ===== */
+
+.wizard[role="dialog"] {
+    /* Semantic dialog role */
+}
+
+.wizard:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.wizard-step:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.wizard-nav-button:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.wizard-close:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+/* ===== WIZARD DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .wizard {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark);
+    }
+    
+    .wizard-header,
+    .wizard-progress,
+    .wizard-steps,
+    .wizard-navigation {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .wizard-title {
+        color: var(--text-dark);
+    }
+    
+    .wizard-subtitle {
+        color: var(--text-muted-dark);
+    }
+    
+    .wizard-close {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .wizard-close:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .wizard-progress-bg {
+        background: var(--gray-700);
+    }
+    
+    .wizard-progress-fill {
+        background: var(--primary-500);
+    }
+    
+    .wizard-step {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark);
+    }
+    
+    .wizard-step:hover {
+        background: var(--primary-900);
+        border-color: var(--primary-700);
+        color: var(--primary-300);
+    }
+    
+    .wizard-step.active {
+        background: var(--primary-900);
+        border-color: var(--primary-700);
+        color: var(--primary-300);
+    }
+    
+    .wizard-step.completed {
+        background: var(--success-900);
+        border-color: var(--success-700);
+        color: var(--success-300);
+    }
+    
+    .wizard-step.disabled {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--text-muted-dark);
+    }
+    
+    .wizard-step-number {
+        background: var(--primary-500);
+        color: var(--white);
+    }
+    
+    .wizard-step.completed .wizard-step-number {
+        background: var(--success-500);
+    }
+    
+    .wizard-step.disabled .wizard-step-number {
+        background: var(--gray-600);
+    }
+    
+    .wizard-step-label {
+        color: inherit;
+    }
+    
+    .wizard-step-title {
+        color: var(--text-dark);
+    }
+    
+    .wizard-step-description {
+        color: var(--text-muted-dark);
+    }
+    
+    .wizard-nav-button {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark);
+    }
+    
+    .wizard-nav-button:hover {
+        background: var(--primary-900);
+        border-color: var(--primary-700);
+        color: var(--primary-300);
+    }
+    
+    .wizard-nav-button:disabled {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--text-muted-dark);
+    }
+    
+    .wizard-nav-button.primary {
+        background: var(--primary-500);
+        border-color: var(--primary-500);
+        color: var(--white);
+    }
+    
+    .wizard-nav-button.primary:hover {
+        background: var(--primary-600);
+        border-color: var(--primary-600);
+    }
+    
+    .wizard-nav-button.primary:disabled {
+        background: var(--gray-600);
+        border-color: var(--gray-600);
+        color: var(--white);
+    }
+    
+    .wizard-glass {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .wizard-glass .wizard-header,
+    .wizard-glass .wizard-progress,
+    .wizard-glass .wizard-steps,
+    .wizard-glass .wizard-navigation {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .wizard-neumorphism {
+        background: var(--surface-dark);
+        box-shadow: 
+            8px 8px 16px rgba(0, 0, 0, 0.3),
+            -8px -8px 16px rgba(255, 255, 255, 0.05);
+    }
+    
+    .wizard-neumorphism .wizard-header,
+    .wizard-neumorphism .wizard-progress,
+    .wizard-neumorphism .wizard-steps,
+    .wizard-neumorphism .wizard-navigation {
+        background: var(--surface-dark);
+        box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    }
+}
+
+.dark-mode .wizard {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-header,
+.dark-mode .wizard-progress,
+.dark-mode .wizard-steps,
+.dark-mode .wizard-navigation {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .wizard-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-subtitle {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .wizard-close {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-close:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .wizard-progress-bg {
+    background: var(--gray-700);
+}
+
+.dark-mode .wizard-progress-fill {
+    background: var(--primary-500);
+}
+
+.dark-mode .wizard-step {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-step:hover {
+    background: var(--primary-900);
+    border-color: var(--primary-700);
+    color: var(--primary-300);
+}
+
+.dark-mode .wizard-step.active {
+    background: var(--primary-900);
+    border-color: var(--primary-700);
+    color: var(--primary-300);
+}
+
+.dark-mode .wizard-step.completed {
+    background: var(--success-900);
+    border-color: var(--success-700);
+    color: var(--success-300);
+}
+
+.dark-mode .wizard-step.disabled {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .wizard-step-number {
+    background: var(--primary-500);
+    color: var(--white);
+}
+
+.dark-mode .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.dark-mode .wizard-step.disabled .wizard-step-number {
+    background: var(--gray-600);
+}
+
+.dark-mode .wizard-step-label {
+    color: inherit;
+}
+
+.dark-mode .wizard-step-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-step-description {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .wizard-nav-button {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .wizard-nav-button:hover {
+    background: var(--primary-900);
+    border-color: var(--primary-700);
+    color: var(--primary-300);
+}
+
+.dark-mode .wizard-nav-button:disabled {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .wizard-nav-button.primary {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--white);
+}
+
+.dark-mode .wizard-nav-button.primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+}
+
+.dark-mode .wizard-nav-button.primary:disabled {
+    background: var(--gray-600);
+    border-color: var(--gray-600);
+    color: var(--white);
+}
+
+.dark-mode .wizard-glass {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .wizard-glass .wizard-header,
+.dark-mode .wizard-glass .wizard-progress,
+.dark-mode .wizard-glass .wizard-steps,
+.dark-mode .wizard-glass .wizard-navigation {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .wizard-neumorphism {
+    background: var(--surface-dark);
+    box-shadow: 
+        8px 8px 16px rgba(0, 0, 0, 0.3),
+        -8px -8px 16px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .wizard-neumorphism .wizard-header,
+.dark-mode .wizard-neumorphism .wizard-progress,
+.dark-mode .wizard-neumorphism .wizard-steps,
+.dark-mode .wizard-neumorphism .wizard-navigation {
+    background: var(--surface-dark);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ===== WIZARD PRINT ===== */
+
+@media print {
+    .wizard {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .wizard-header,
+    .wizard-progress,
+    .wizard-steps,
+    .wizard-navigation {
+        border: 1px solid #000;
+    }
+    
+    .wizard-step {
+        border: 1px solid #000;
+    }
+    
+    .wizard-step.active {
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .wizard-step.completed {
+        background: #e8f5e8 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .wizard-step-number {
+        background: #000 !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .wizard-step.completed .wizard-step-number {
+        background: #28a745 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .wizard-progress-fill {
+        background: #000 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+}
+
+/* ===== WIZARD UTILITIES ===== */
+
+.wizard-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.wizard-loading {
+    position: relative;
+}
+
+.wizard-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.wizard-loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-200);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1001;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.wizard-empty {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.wizard-error {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--danger-600);
+    background: var(--danger-50);
+    border: 1px solid var(--danger-200);
+    border-radius: var(--radius-md);
+    margin: var(--space-4);
+}
+
+/* ===== WIZARD ANIMATIONS ===== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+/* ===== WIZARD THEME VARIANTS ===== */
+
+.wizard-primary .wizard-step.active {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    color: var(--primary-700);
+}
+
+.wizard-primary .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-primary .wizard-progress-fill {
+    background: var(--primary-500);
+}
+
+.wizard-primary .wizard-step-number {
+    background: var(--primary-500);
+}
+
+.wizard-primary .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-primary .wizard-nav-button.primary {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: var(--white);
+}
+
+.wizard-primary .wizard-nav-button.primary:hover {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+}
+
+.wizard-secondary .wizard-step.active {
+    background: var(--secondary-50);
+    border-color: var(--secondary-200);
+    color: var(--secondary-700);
+}
+
+.wizard-secondary .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-secondary .wizard-progress-fill {
+    background: var(--secondary-500);
+}
+
+.wizard-secondary .wizard-step-number {
+    background: var(--secondary-500);
+}
+
+.wizard-secondary .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-secondary .wizard-nav-button.primary {
+    background: var(--secondary-500);
+    border-color: var(--secondary-500);
+    color: var(--white);
+}
+
+.wizard-secondary .wizard-nav-button.primary:hover {
+    background: var(--secondary-600);
+    border-color: var(--secondary-600);
+}
+
+.wizard-success .wizard-step.active {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-success .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-success .wizard-progress-fill {
+    background: var(--success-500);
+}
+
+.wizard-success .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-success .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-success .wizard-nav-button.primary {
+    background: var(--success-500);
+    border-color: var(--success-500);
+    color: var(--white);
+}
+
+.wizard-success .wizard-nav-button.primary:hover {
+    background: var(--success-600);
+    border-color: var(--success-600);
+}
+
+.wizard-warning .wizard-step.active {
+    background: var(--warning-50);
+    border-color: var(--warning-200);
+    color: var(--warning-700);
+}
+
+.wizard-warning .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-warning .wizard-progress-fill {
+    background: var(--warning-500);
+}
+
+.wizard-warning .wizard-step-number {
+    background: var(--warning-500);
+}
+
+.wizard-warning .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-warning .wizard-nav-button.primary {
+    background: var(--warning-500);
+    border-color: var(--warning-500);
+    color: var(--white);
+}
+
+.wizard-warning .wizard-nav-button.primary:hover {
+    background: var(--warning-600);
+    border-color: var(--warning-600);
+}
+
+.wizard-danger .wizard-step.active {
+    background: var(--danger-50);
+    border-color: var(--danger-200);
+    color: var(--danger-700);
+}
+
+.wizard-danger .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-danger .wizard-progress-fill {
+    background: var(--danger-500);
+}
+
+.wizard-danger .wizard-step-number {
+    background: var(--danger-500);
+}
+
+.wizard-danger .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-danger .wizard-nav-button.primary {
+    background: var(--danger-500);
+    border-color: var(--danger-500);
+    color: var(--white);
+}
+
+.wizard-danger .wizard-nav-button.primary:hover {
+    background: var(--danger-600);
+    border-color: var(--danger-600);
+}
+
+.wizard-info .wizard-step.active {
+    background: var(--info-50);
+    border-color: var(--info-200);
+    color: var(--info-700);
+}
+
+.wizard-info .wizard-step.completed {
+    background: var(--success-50);
+    border-color: var(--success-200);
+    color: var(--success-700);
+}
+
+.wizard-info .wizard-progress-fill {
+    background: var(--info-500);
+}
+
+.wizard-info .wizard-step-number {
+    background: var(--info-500);
+}
+
+.wizard-info .wizard-step.completed .wizard-step-number {
+    background: var(--success-500);
+}
+
+.wizard-info .wizard-nav-button.primary {
+    background: var(--info-500);
+    border-color: var(--info-500);
+    color: var(--white);
+}
+
+.wizard-info .wizard-nav-button.primary:hover {
+    background: var(--info-600);
+    border-color: var(--info-600);
+}

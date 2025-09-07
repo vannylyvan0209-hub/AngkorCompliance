@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Design System Style Guide - Angkor Compliance</title>
+    
+    <!-- 2025 Design System CSS -->
+    <link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+    <link rel="stylesheet" href="assets/css/components-2025.css">
+    <link rel="stylesheet" href="assets/css/layout-2025.css">
+    <link rel="stylesheet" href="assets/css/role-themes-2025.css">
+    
+    <!-- External Libraries -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--neutral-700);
+            background: var(--neutral-50);
+        }
+        
+        .style-guide {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+        
+        .style-guide-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+            padding: var(--space-8) 0;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+        }
+        
+        .style-guide-title {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .style-guide-subtitle {
+            font-size: var(--text-lg);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-4);
+        }
+        
+        .style-guide-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            justify-content: center;
+        }
+        
+        .style-guide-nav a {
+            padding: var(--space-2) var(--space-4);
+            background: var(--primary-50);
+            border: 1px solid var(--primary-200);
+            border-radius: var(--radius-md);
+            color: var(--primary-700);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            transition: all 0.2s var(--ease-out);
+        }
+        
+        .style-guide-nav a:hover {
+            background: var(--primary-100);
+            border-color: var(--primary-300);
+            transform: translateY(-1px);
+        }
+        
+        .section {
+            margin-bottom: var(--space-8);
+            padding: var(--space-6);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+        }
+        
+        .section-title {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-2);
+            border-bottom: 2px solid var(--primary-200);
+        }
+        
+        .section-description {
+            font-size: var(--text-base);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-6);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .component-card {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            transition: all 0.2s var(--ease-out);
+        }
+        
+        .component-card:hover {
+            background: var(--neutral-100);
+            border-color: var(--neutral-300);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .component-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .component-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-4);
+        }
+        
+        .component-demo {
+            margin-bottom: var(--space-4);
+        }
+        
+        .component-code {
+            background: var(--neutral-900);
+            color: var(--neutral-100);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: var(--text-sm);
+            overflow-x: auto;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .color-card {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .color-name {
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .color-value {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            font-family: monospace;
+        }
+        
+        .typography-scale {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .typography-item {
+            padding: var(--space-3);
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+        }
+        
+        .typography-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            margin-bottom: var(--space-1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .spacing-scale {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-3);
+        }
+        
+        .spacing-item {
+            text-align: center;
+        }
+        
+        .spacing-visual {
+            background: var(--primary-500);
+            margin: 0 auto var(--space-2);
+            border-radius: var(--radius-sm);
+        }
+        
+        .spacing-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            font-family: monospace;
+        }
+        
+        .role-theme-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .role-card {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+        
+        .role-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: white;
+        }
+        
+        .role-name {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .role-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        @media (max-width: 768px) {
+            .style-guide {
+                padding: var(--space-4);
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-palette {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="role-theme worker">
+    <div class="style-guide">
+        <!-- Header -->
+        <header class="style-guide-header" data-aos="fade-down">
+            <h1 class="style-guide-title">2025 Design System</h1>
+            <p class="style-guide-subtitle">Angkor Compliance Platform Style Guide</p>
+            <nav class="style-guide-nav">
+                <a href="#colors">Colors</a>
+                <a href="#typography">Typography</a>
+                <a href="#spacing">Spacing</a>
+                <a href="#components">Components</a>
+                <a href="#themes">Role Themes</a>
+                <a href="#accessibility">Accessibility</a>
+            </nav>
+        </header>
+
+        <!-- Colors Section -->
+        <section id="colors" class="section" data-aos="fade-up">
+            <h2 class="section-title">Color Palette</h2>
+            <p class="section-description">
+                Our color system is built on a foundation of neutral grays with accent colors for different roles and states.
+            </p>
+            
+            <div class="color-palette">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--primary-500);"></div>
+                    <div class="color-name">Primary</div>
+                    <div class="color-value">#3B82F6</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--success-500);"></div>
+                    <div class="color-name">Success</div>
+                    <div class="color-value">#10B981</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--warning-500);"></div>
+                    <div class="color-name">Warning</div>
+                    <div class="color-value">#F59E0B</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--danger-500);"></div>
+                    <div class="color-name">Danger</div>
+                    <div class="color-value">#EF4444</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--info-500);"></div>
+                    <div class="color-name">Info</div>
+                    <div class="color-value">#06B6D4</div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: var(--neutral-500);"></div>
+                    <div class="color-name">Neutral</div>
+                    <div class="color-value">#6B7280</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Section -->
+        <section id="typography" class="section" data-aos="fade-up">
+            <h2 class="section-title">Typography</h2>
+            <p class="section-description">
+                Our typography system uses Inter for English text and Noto Sans Khmer for Khmer text, with a clear hierarchy.
+            </p>
+            
+            <div class="typography-scale">
+                <div class="typography-item">
+                    <div class="typography-label">Heading 1</div>
+                    <h1 style="margin: 0;">The quick brown fox jumps over the lazy dog</h1>
+                </div>
+                <div class="typography-item">
+                    <div class="typography-label">Heading 2</div>
+                    <h2 style="margin: 0;">The quick brown fox jumps over the lazy dog</h2>
+                </div>
+                <div class="typography-item">
+                    <div class="typography-label">Heading 3</div>
+                    <h3 style="margin: 0;">The quick brown fox jumps over the lazy dog</h3>
+                </div>
+                <div class="typography-item">
+                    <div class="typography-label">Body Text</div>
+                    <p style="margin: 0;">The quick brown fox jumps over the lazy dog. This is body text that should be easy to read and understand.</p>
+                </div>
+                <div class="typography-item">
+                    <div class="typography-label">Small Text</div>
+                    <small style="margin: 0;">The quick brown fox jumps over the lazy dog</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing Section -->
+        <section id="spacing" class="section" data-aos="fade-up">
+            <h2 class="section-title">Spacing Scale</h2>
+            <p class="section-description">
+                Our spacing system uses a consistent scale based on 4px units for predictable layouts.
+            </p>
+            
+            <div class="spacing-scale">
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 4px; height: 4px;"></div>
+                    <div class="spacing-label">--space-1 (4px)</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 8px; height: 8px;"></div>
+                    <div class="spacing-label">--space-2 (8px)</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 12px; height: 12px;"></div>
+                    <div class="spacing-label">--space-3 (12px)</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 16px; height: 16px;"></div>
+                    <div class="spacing-label">--space-4 (16px)</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 20px; height: 20px;"></div>
+                    <div class="spacing-label">--space-5 (20px)</div>
+                </div>
+                <div class="spacing-item">
+                    <div class="spacing-visual" style="width: 24px; height: 24px;"></div>
+                    <div class="spacing-label">--space-6 (24px)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section id="components" class="section" data-aos="fade-up">
+            <h2 class="section-title">Components</h2>
+            <p class="section-description">
+                Our component library provides consistent, accessible, and beautiful UI elements.
+            </p>
+            
+            <div class="component-grid">
+                <!-- Buttons -->
+                <div class="component-card">
+                    <h3 class="component-title">Buttons</h3>
+                    <p class="component-description">Primary, secondary, and variant button styles</p>
+                    <div class="component-demo">
+                        <button class="btn btn-primary">Primary Button</button>
+                        <button class="btn btn-secondary">Secondary Button</button>
+                        <button class="btn btn-outline">Outline Button</button>
+                    </div>
+                </div>
+
+                <!-- Cards -->
+                <div class="component-card">
+                    <h3 class="component-title">Cards</h3>
+                    <p class="component-description">Glassmorphism card components with subtle shadows</p>
+                    <div class="component-demo">
+                        <div class="card">
+                            <h4>Card Title</h4>
+                            <p>This is a card component with glassmorphism effects.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forms -->
+                <div class="component-card">
+                    <h3 class="component-title">Form Inputs</h3>
+                    <p class="component-description">Modern form input styling with focus states</p>
+                    <div class="component-demo">
+                        <input type="text" class="form-input" placeholder="Enter text...">
+                        <select class="form-input">
+                            <option>Select option</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="component-card">
+                    <h3 class="component-title">Alerts</h3>
+                    <p class="component-description">Contextual alert messages for different states</p>
+                    <div class="component-demo">
+                        <div class="alert alert-success">Success message</div>
+                        <div class="alert alert-warning">Warning message</div>
+                        <div class="alert alert-danger">Error message</div>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="component-card">
+                    <h3 class="component-title">Progress Indicators</h3>
+                    <p class="component-description">Loading states and progress bars</p>
+                    <div class="component-demo">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 60%;"></div>
+                        </div>
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <!-- Avatars -->
+                <div class="component-card">
+                    <h3 class="component-title">Avatars</h3>
+                    <p class="component-description">Role-specific avatar components</p>
+                    <div class="component-demo">
+                        <div class="avatar avatar-worker">W</div>
+                        <div class="avatar avatar-factory-admin">F</div>
+                        <div class="avatar avatar-hr-staff">H</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Role Themes Section -->
+        <section id="themes" class="section" data-aos="fade-up">
+            <h2 class="section-title">Role Themes</h2>
+            <p class="section-description">
+                Different user roles have distinct color themes and styling to improve user experience.
+            </p>
+            
+            <div class="role-theme-demo">
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--worker-primary);">W</div>
+                    <h3 class="role-name">Worker</h3>
+                    <p class="role-description">Factory workers and production staff</p>
+                </div>
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--factory-admin-primary);">F</div>
+                    <h3 class="role-name">Factory Admin</h3>
+                    <p class="role-description">Factory management and supervisors</p>
+                </div>
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--hr-staff-primary);">H</div>
+                    <h3 class="role-name">HR Staff</h3>
+                    <p class="role-description">Human resources personnel</p>
+                </div>
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--grievance-committee-primary);">G</div>
+                    <h3 class="role-name">Grievance Committee</h3>
+                    <p class="role-description">Committee members handling complaints</p>
+                </div>
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--auditor-primary);">A</div>
+                    <h3 class="role-name">Auditor</h3>
+                    <p class="role-description">Compliance auditors and inspectors</p>
+                </div>
+                <div class="role-card">
+                    <div class="role-avatar" style="background: var(--super-admin-primary);">S</div>
+                    <h3 class="role-name">Super Admin</h3>
+                    <p class="role-description">System administrators</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accessibility Section -->
+        <section id="accessibility" class="section" data-aos="fade-up">
+            <h2 class="section-title">Accessibility</h2>
+            <p class="section-description">
+                Our design system follows WCAG 2.1 AA guidelines for inclusive design.
+            </p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h3 class="component-title">Color Contrast</h3>
+                    <p class="component-description">All text meets WCAG AA contrast requirements</p>
+                    <div class="component-demo">
+                        <p style="color: var(--neutral-900);">High contrast text</p>
+                        <p style="color: var(--neutral-600);">Medium contrast text</p>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="component-title">Focus States</h3>
+                    <p class="component-description">Clear focus indicators for keyboard navigation</p>
+                    <div class="component-demo">
+                        <button class="btn btn-primary" style="outline: 2px solid var(--primary-500);">Focused Button</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="component-title">Touch Targets</h3>
+                    <p class="component-description">Minimum 44px touch targets for mobile</p>
+                    <div class="component-demo">
+                        <button class="btn btn-primary" style="min-height: 44px; min-width: 44px;">Touch Target</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h3 class="component-title">Screen Reader Support</h3>
+                    <p class="component-description">Proper ARIA labels and semantic HTML</p>
+                    <div class="component-demo">
+                        <button class="btn btn-primary" aria-label="Submit form">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/role-switching-2025.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.style-guide-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

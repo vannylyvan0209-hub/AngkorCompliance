@@ -1,22 +1,16 @@
-// System Settings Management
-class SystemSettings {
+// System Settings & Configuration System for Super Admin
+class SystemSettingsSystem {
     constructor() {
         this.currentUser = null;
-        this.settings = {
-            general: {},
-            security: {},
-            notifications: {},
-            integrations: {},
-            advanced: {}
-        };
-        this.systemLogs = [];
-        this.systemStatus = {};
+        this.settings = {};
+        this.originalSettings = {};
+        this.hasUnsavedChanges = false;
         
         this.init();
     }
     
     async init() {
-        console.log('⚙️ Initializing System Settings...');
+        console.log('⚙️ Initializing System Settings & Configuration System...');
         
         // Initialize Firebase
         await this.initializeFirebase();
@@ -24,18 +18,22 @@ class SystemSettings {
         // Check authentication
         await this.checkAuthentication();
         
+        // Initialize navigation
+        this.initializeNavigation();
+        
+        // Load initial settings
+        await this.loadSettings();
+        
         // Initialize UI
         this.initializeUI();
-        
-        // Load initial data
-        await this.loadSettings();
-        await this.loadSystemLogs();
-        await this.loadSystemStatus();
         
         // Setup event listeners
         this.setupEventListeners();
         
-        console.log('✅ System Settings initialized');
+        // Setup real-time updates
+        this.setupRealTimeUpdates();
+        
+        console.log('✅ System Settings & Configuration System initialized');
     }
     
     async initializeFirebase() {
@@ -48,6 +46,7 @@ class SystemSettings {
                 this.collection = window.Firebase.collection;
                 this.addDoc = window.Firebase.addDoc;
                 this.updateDoc = window.Firebase.updateDoc;
+                this.deleteDoc = window.Firebase.deleteDoc;
                 this.query = window.Firebase.query;
                 this.where = window.Firebase.where;
                 this.orderBy = window.Firebase.orderBy;
@@ -81,7 +80,6 @@ class SystemSettings {
                             // Only allow super admins
                             if (userData.role === 'super_admin') {
                                 this.currentUser = { ...user, ...userData };
-                                this.updateUserDisplay();
                                 resolve();
                             } else {
                                 console.log('❌ Access denied - super admin privileges required');
@@ -103,409 +101,339 @@ class SystemSettings {
         });
     }
     
-    updateUserDisplay() {
-        const userName = document.getElementById('userName');
-        const userAvatar = document.getElementById('userAvatar');
-        
-        if (this.currentUser) {
-            userName.textContent = this.currentUser.name || this.currentUser.displayName || 'Super Admin';
-            
-            // Set avatar initials
-            const initials = (this.currentUser.name || 'SA').split(' ').map(n => n[0]).join('').toUpperCase();
-            userAvatar.innerHTML = `<span>${initials}</span>`;
+    initializeNavigation() {
+        // Wait for navigation service to be available
+        if (window.superAdminNavigation) {
+            window.superAdminNavigation.updateCurrentPage('System Settings');
+        } else {
+            // Retry after a short delay
+            setTimeout(() => {
+                this.initializeNavigation();
+            }, 100);
         }
     }
     
     async loadSettings() {
         try {
-            const settingsRef = this.doc(this.db, 'system_settings', 'main');
-            const settingsDoc = await this.getDoc(settingsRef);
+            const settingsRef = this.collection(this.db, 'system_settings');
+            const snapshot = await this.getDocs(settingsRef);
             
-            if (settingsDoc.exists()) {
-                this.settings = settingsDoc.data();
-            } else {
-                // Load default settings
+            this.settings = {};
+            snapshot.docs.forEach(doc => {
+                this.settings[doc.id] = doc.data();
+            });
+            
+            // If no settings in database, use default settings
+            if (Object.keys(this.settings).length === 0) {
                 this.settings = this.getDefaultSettings();
             }
             
-            this.updateSettingsDisplay();
+            // Store original settings for comparison
+            this.originalSettings = JSON.parse(JSON.stringify(this.settings));
+            
+            this.populateSettingsForm();
+            
+            console.log('✓ Loaded system settings');
             
         } catch (error) {
             console.error('Error loading settings:', error);
-            // Load default settings on error
             this.settings = this.getDefaultSettings();
-            this.updateSettingsDisplay();
+            this.originalSettings = JSON.parse(JSON.stringify(this.settings));
+            this.populateSettingsForm();
         }
     }
     
     getDefaultSettings() {
         return {
             general: {
-                platformName: 'Angkor Compliance Platform',
+                systemName: 'Angkor Compliance Platform',
+                systemDescription: 'Enterprise compliance management platform for garment manufacturing',
                 defaultLanguage: 'en',
-                timezone: 'Asia/Phnom_Penh',
-                allowRegistration: true,
-                emailVerification: true,
+                timeZone: 'Asia/Phnom_Penh',
+                maintenanceMode: false,
+                autoSave: true,
                 sessionTimeout: 30
             },
             security: {
-                twoFactorAuth: false,
+                mfaRequired: true,
                 passwordComplexity: 'medium',
-                maxLoginAttempts: 5,
-                dataEncryption: true,
-                auditLogging: true
+                passwordExpiry: 90
+            },
+            database: {
+                connectionPoolSize: 20,
+                queryTimeout: 30
+            },
+            email: {
+                smtpServer: 'smtp.gmail.com',
+                smtpPort: 587,
+                useTLS: true
             },
             notifications: {
-                systemAlerts: true,
-                weeklyReports: false,
-                realTimeNotifications: true
+                emailNotifications: true,
+                smsNotifications: false,
+                pushNotifications: true
             },
             integrations: {
-                emailService: 'smtp',
-                fileStorage: 'firebase'
+                apiRateLimit: 1000,
+                apiTimeout: 30
             },
-            advanced: {
-                cacheDuration: 24,
-                rateLimit: 100,
-                maintenanceMode: false
+            backup: {
+                autoBackup: true,
+                backupFrequency: 'weekly',
+                backupRetention: 30
+            },
+            maintenance: {
+                autoCleanup: true,
+                logRotation: true,
+                cacheManagement: true
             }
         };
     }
     
-    updateSettingsDisplay() {
-        // Update General Settings
-        document.getElementById('platformName').value = this.settings.general.platformName || 'Angkor Compliance Platform';
-        document.getElementById('defaultLanguage').value = this.settings.general.defaultLanguage || 'en';
-        document.getElementById('timezone').value = this.settings.general.timezone || 'Asia/Phnom_Penh';
-        document.getElementById('sessionTimeout').value = this.settings.general.sessionTimeout || 30;
+    populateSettingsForm() {
+        // General Settings
+        document.getElementById('systemName').value = this.settings.general?.systemName || '';
+        document.getElementById('systemDescription').value = this.settings.general?.systemDescription || '';
+        document.getElementById('defaultLanguage').value = this.settings.general?.defaultLanguage || 'en';
+        document.getElementById('timeZone').value = this.settings.general?.timeZone || 'Asia/Phnom_Penh';
+        document.getElementById('sessionTimeout').value = this.settings.general?.sessionTimeout || 30;
         
-        // Update toggle switches
-        this.updateToggleSwitch('allowRegistration', this.settings.general.allowRegistration);
-        this.updateToggleSwitch('emailVerification', this.settings.general.emailVerification);
-        this.updateToggleSwitch('twoFactorAuth', this.settings.security.twoFactorAuth);
-        this.updateToggleSwitch('dataEncryption', this.settings.security.dataEncryption);
-        this.updateToggleSwitch('auditLogging', this.settings.security.auditLogging);
-        this.updateToggleSwitch('systemAlerts', this.settings.notifications.systemAlerts);
-        this.updateToggleSwitch('weeklyReports', this.settings.notifications.weeklyReports);
-        this.updateToggleSwitch('realTimeNotifications', this.settings.notifications.realTimeNotifications);
-        this.updateToggleSwitch('maintenanceMode', this.settings.advanced.maintenanceMode);
+        // Toggle switches
+        this.setToggleState('maintenanceMode', this.settings.general?.maintenanceMode || false);
+        this.setToggleState('autoSave', this.settings.general?.autoSave || true);
         
-        // Update Security Settings
-        document.getElementById('passwordComplexity').value = this.settings.security.passwordComplexity || 'medium';
-        document.getElementById('maxLoginAttempts').value = this.settings.security.maxLoginAttempts || 5;
+        // Security Settings
+        document.getElementById('passwordComplexity').value = this.settings.security?.passwordComplexity || 'medium';
+        document.getElementById('passwordExpiry').value = this.settings.security?.passwordExpiry || 90;
+        this.setToggleState('mfaRequired', this.settings.security?.mfaRequired || true);
         
-        // Update Integrations Settings
-        document.getElementById('emailService').value = this.settings.integrations.emailService || 'smtp';
-        document.getElementById('fileStorage').value = this.settings.integrations.fileStorage || 'firebase';
+        // Database Settings
+        document.getElementById('connectionPoolSize').value = this.settings.database?.connectionPoolSize || 20;
+        document.getElementById('queryTimeout').value = this.settings.database?.queryTimeout || 30;
         
-        // Update Advanced Settings
-        document.getElementById('cacheDuration').value = this.settings.advanced.cacheDuration || 24;
-        document.getElementById('rateLimit').value = this.settings.advanced.rateLimit || 100;
+        // Email Settings
+        document.getElementById('smtpServer').value = this.settings.email?.smtpServer || 'smtp.gmail.com';
+        document.getElementById('smtpPort').value = this.settings.email?.smtpPort || 587;
+        this.setToggleState('useTLS', this.settings.email?.useTLS || true);
+        
+        // Notification Settings
+        this.setToggleState('emailNotifications', this.settings.notifications?.emailNotifications || true);
+        this.setToggleState('smsNotifications', this.settings.notifications?.smsNotifications || false);
+        this.setToggleState('pushNotifications', this.settings.notifications?.pushNotifications || true);
+        
+        // Integration Settings
+        document.getElementById('apiRateLimit').value = this.settings.integrations?.apiRateLimit || 1000;
+        document.getElementById('apiTimeout').value = this.settings.integrations?.apiTimeout || 30;
+        
+        // Backup Settings
+        document.getElementById('backupFrequency').value = this.settings.backup?.backupFrequency || 'weekly';
+        document.getElementById('backupRetention').value = this.settings.backup?.backupRetention || 30;
+        this.setToggleState('autoBackup', this.settings.backup?.autoBackup || true);
+        
+        // Maintenance Settings
+        this.setToggleState('autoCleanup', this.settings.maintenance?.autoCleanup || true);
+        this.setToggleState('logRotation', this.settings.maintenance?.logRotation || true);
+        this.setToggleState('cacheManagement', this.settings.maintenance?.cacheManagement || true);
     }
     
-    updateToggleSwitch(elementId, isActive) {
-        const element = document.getElementById(elementId);
-        if (element) {
+    setToggleState(toggleId, isActive) {
+        const toggle = document.getElementById(toggleId);
+        if (toggle) {
             if (isActive) {
-                element.classList.add('active');
+                toggle.classList.add('active');
             } else {
-                element.classList.remove('active');
+                toggle.classList.remove('active');
             }
         }
     }
     
-    async loadSystemLogs() {
-        try {
-            const logsRef = this.collection(this.db, 'system_logs');
-            const q = this.query(
-                logsRef,
-                this.orderBy('timestamp', 'desc'),
-                this.limit(20)
-            );
-            const snapshot = await this.getDocs(q);
-            this.systemLogs = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            
-            this.updateSystemLogsDisplay();
-            
-        } catch (error) {
-            console.error('Error loading system logs:', error);
-        }
+    initializeUI() {
+        // Initialize any UI components
     }
     
-    updateSystemLogsDisplay() {
-        const logsList = document.getElementById('systemLogs');
+    setupEventListeners() {
+        // Setup global event listeners
+        this.setupGlobalEventListeners();
         
-        if (this.systemLogs.length === 0) {
-            logsList.innerHTML = `
-                <div style="text-align: center; padding: var(--space-4); color: var(--neutral-500);">
-                    <p>No recent logs</p>
-                </div>
-            `;
-            return;
-        }
-        
-        logsList.innerHTML = this.systemLogs.map(log => `
-            <div class="log-item">
-                <div class="log-icon" style="background: ${this.getLogColor(log.level)};">
-                    <i data-lucide="${this.getLogIcon(log.level)}"></i>
-                </div>
-                <div class="log-content">
-                    <div class="log-title">${log.message}</div>
-                    <div class="log-time">${this.formatDate(log.timestamp)}</div>
-                </div>
-            </div>
-        `).join('');
-        
-        // Reinitialize icons
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+        // Setup form change listeners
+        this.setupFormChangeListeners();
     }
     
-    async loadSystemStatus() {
-        try {
-            // Mock system status data - in real implementation, this would come from monitoring services
-            this.systemStatus = {
-                uptime: '99.9%',
-                responseTime: '45ms',
-                activeUsers: this.calculateActiveUsers(),
-                storageUsed: this.calculateStorageUsed()
-            };
-            
-            this.updateSystemStatusDisplay();
-            
-        } catch (error) {
-            console.error('Error loading system status:', error);
-        }
-    }
-    
-    updateSystemStatusDisplay() {
-        document.getElementById('uptime').textContent = this.systemStatus.uptime || '99.9%';
-        document.getElementById('responseTime').textContent = this.systemStatus.responseTime || '45ms';
-        document.getElementById('activeUsers').textContent = this.systemStatus.activeUsers || '1,234';
-        document.getElementById('storageUsed').textContent = this.systemStatus.storageUsed || '67%';
-    }
-    
-    calculateActiveUsers() {
-        // Mock calculation - in real implementation, this would track active sessions
-        return Math.floor(Math.random() * 2000) + 500;
-    }
-    
-    calculateStorageUsed() {
-        // Mock calculation - in real implementation, this would check actual storage usage
-        return Math.floor(Math.random() * 40) + 50; // 50-90%
-    }
-    
-    getLogColor(level) {
-        const colorMap = {
-            'info': 'var(--info-500)',
-            'warning': 'var(--warning-500)',
-            'error': 'var(--error-500)',
-            'success': 'var(--success-500)'
+    setupGlobalEventListeners() {
+        // Settings navigation
+        window.showSettingsSection = (sectionName) => {
+            this.showSettingsSection(sectionName);
         };
-        return colorMap[level] || 'var(--neutral-500)';
-    }
-    
-    getLogIcon(level) {
-        const iconMap = {
-            'info': 'info',
-            'warning': 'alert-triangle',
-            'error': 'x-circle',
-            'success': 'check-circle'
-        };
-        return iconMap[level] || 'file-text';
-    }
-    
-    formatDate(date) {
-        if (!date) return 'N/A';
         
-        const dateObj = date.toDate ? date.toDate() : new Date(date);
-        return dateObj.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        // Toggle switches
+        window.toggleSetting = (settingId) => {
+            this.toggleSetting(settingId);
+        };
+        
+        // Save and reset functions
+        window.saveAllSettings = () => {
+            this.saveAllSettings();
+        };
+        
+        window.resetToDefaults = () => {
+            this.resetToDefaults();
+        };
+    }
+    
+    setupFormChangeListeners() {
+        // Add change listeners to all form inputs
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                this.markAsChanged();
+            });
         });
+    }
+    
+    showSettingsSection(sectionName) {
+        // Hide all sections
+        document.querySelectorAll('.settings-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Show selected section
+        document.getElementById(sectionName + '-settings').classList.add('active');
+        
+        // Add active class to clicked tab
+        event.target.classList.add('active');
+    }
+    
+    toggleSetting(settingId) {
+        const toggle = document.getElementById(settingId);
+        if (toggle) {
+            toggle.classList.toggle('active');
+            this.markAsChanged();
+        }
+    }
+    
+    markAsChanged() {
+        this.hasUnsavedChanges = true;
+        // You could add a visual indicator here
     }
     
     async saveAllSettings() {
         try {
-            // Collect all current settings from the UI
-            const currentSettings = this.collectCurrentSettings();
+            // Collect all settings from the form
+            const newSettings = this.collectSettingsFromForm();
             
-            // Save to Firebase
-            const settingsRef = this.doc(this.db, 'system_settings', 'main');
-            await this.updateDoc(settingsRef, {
-                ...currentSettings,
-                lastUpdated: this.serverTimestamp(),
-                updatedBy: this.currentUser.uid
-            });
+            // Update settings in database
+            for (const [category, settings] of Object.entries(newSettings)) {
+                const settingsRef = this.doc(this.db, 'system_settings', category);
+                await this.updateDoc(settingsRef, {
+                    ...settings,
+                    updatedAt: this.serverTimestamp(),
+                    updatedBy: this.currentUser.uid
+                });
+            }
             
-            // Log the settings update
-            await this.logSystemActivity('Settings updated', 'info');
+            // Update local settings
+            this.settings = newSettings;
+            this.originalSettings = JSON.parse(JSON.stringify(this.settings));
+            this.hasUnsavedChanges = false;
             
-            this.showNotification('success', 'Settings saved successfully');
+            this.showNotification('success', 'Settings saved successfully!');
             
         } catch (error) {
             console.error('Error saving settings:', error);
-            this.showNotification('error', 'Failed to save settings');
+            this.showNotification('error', 'Failed to save settings. Please try again.');
         }
     }
     
-    collectCurrentSettings() {
+    collectSettingsFromForm() {
         return {
             general: {
-                platformName: document.getElementById('platformName').value,
+                systemName: document.getElementById('systemName').value,
+                systemDescription: document.getElementById('systemDescription').value,
                 defaultLanguage: document.getElementById('defaultLanguage').value,
-                timezone: document.getElementById('timezone').value,
-                allowRegistration: document.getElementById('allowRegistration').classList.contains('active'),
-                emailVerification: document.getElementById('emailVerification').classList.contains('active'),
+                timeZone: document.getElementById('timeZone').value,
+                maintenanceMode: document.getElementById('maintenanceMode').classList.contains('active'),
+                autoSave: document.getElementById('autoSave').classList.contains('active'),
                 sessionTimeout: parseInt(document.getElementById('sessionTimeout').value)
             },
             security: {
-                twoFactorAuth: document.getElementById('twoFactorAuth').classList.contains('active'),
+                mfaRequired: document.getElementById('mfaRequired').classList.contains('active'),
                 passwordComplexity: document.getElementById('passwordComplexity').value,
-                maxLoginAttempts: parseInt(document.getElementById('maxLoginAttempts').value),
-                dataEncryption: document.getElementById('dataEncryption').classList.contains('active'),
-                auditLogging: document.getElementById('auditLogging').classList.contains('active')
+                passwordExpiry: parseInt(document.getElementById('passwordExpiry').value)
+            },
+            database: {
+                connectionPoolSize: parseInt(document.getElementById('connectionPoolSize').value),
+                queryTimeout: parseInt(document.getElementById('queryTimeout').value)
+            },
+            email: {
+                smtpServer: document.getElementById('smtpServer').value,
+                smtpPort: parseInt(document.getElementById('smtpPort').value),
+                useTLS: document.getElementById('useTLS').classList.contains('active')
             },
             notifications: {
-                systemAlerts: document.getElementById('systemAlerts').classList.contains('active'),
-                weeklyReports: document.getElementById('weeklyReports').classList.contains('active'),
-                realTimeNotifications: document.getElementById('realTimeNotifications').classList.contains('active')
+                emailNotifications: document.getElementById('emailNotifications').classList.contains('active'),
+                smsNotifications: document.getElementById('smsNotifications').classList.contains('active'),
+                pushNotifications: document.getElementById('pushNotifications').classList.contains('active')
             },
             integrations: {
-                emailService: document.getElementById('emailService').value,
-                fileStorage: document.getElementById('fileStorage').value
+                apiRateLimit: parseInt(document.getElementById('apiRateLimit').value),
+                apiTimeout: parseInt(document.getElementById('apiTimeout').value)
             },
-            advanced: {
-                cacheDuration: parseInt(document.getElementById('cacheDuration').value),
-                rateLimit: parseInt(document.getElementById('rateLimit').value),
-                maintenanceMode: document.getElementById('maintenanceMode').classList.contains('active')
+            backup: {
+                autoBackup: document.getElementById('autoBackup').classList.contains('active'),
+                backupFrequency: document.getElementById('backupFrequency').value,
+                backupRetention: parseInt(document.getElementById('backupRetention').value)
+            },
+            maintenance: {
+                autoCleanup: document.getElementById('autoCleanup').classList.contains('active'),
+                logRotation: document.getElementById('logRotation').classList.contains('active'),
+                cacheManagement: document.getElementById('cacheManagement').classList.contains('active')
             }
         };
     }
     
     async resetToDefaults() {
-        if (confirm('Are you sure you want to reset all settings to defaults? This action cannot be undone.')) {
-            try {
-                const defaultSettings = this.getDefaultSettings();
-                
-                const settingsRef = this.doc(this.db, 'system_settings', 'main');
-                await this.updateDoc(settingsRef, {
-                    ...defaultSettings,
-                    lastUpdated: this.serverTimestamp(),
-                    updatedBy: this.currentUser.uid
-                });
-                
-                this.settings = defaultSettings;
-                this.updateSettingsDisplay();
-                
-                await this.logSystemActivity('Settings reset to defaults', 'warning');
-                
-                this.showNotification('success', 'Settings reset to defaults');
-                
-            } catch (error) {
-                console.error('Error resetting settings:', error);
-                this.showNotification('error', 'Failed to reset settings');
-            }
+        if (!confirm('Are you sure you want to reset all settings to their default values? This action cannot be undone.')) {
+            return;
         }
-    }
-    
-    async createBackup() {
+        
         try {
-            // In a real implementation, this would create a comprehensive backup
-            const backupData = {
-                settings: this.settings,
-                timestamp: new Date().toISOString(),
-                createdBy: this.currentUser.uid
-            };
+            // Reset to default settings
+            this.settings = this.getDefaultSettings();
+            this.populateSettingsForm();
+            this.hasUnsavedChanges = true;
             
-            // Save backup to Firebase
-            const backupRef = this.collection(this.db, 'system_backups');
-            await this.addDoc(backupRef, backupData);
-            
-            await this.logSystemActivity('System backup created', 'info');
-            
-            this.showNotification('success', 'Backup created successfully');
+            this.showNotification('info', 'Settings reset to defaults. Click "Save All Settings" to apply changes.');
             
         } catch (error) {
-            console.error('Error creating backup:', error);
-            this.showNotification('error', 'Failed to create backup');
+            console.error('Error resetting settings:', error);
+            this.showNotification('error', 'Failed to reset settings.');
         }
     }
     
-    async restoreBackup() {
-        if (confirm('Are you sure you want to restore from backup? This will overwrite current settings.')) {
-            try {
-                // In a real implementation, this would restore from a selected backup
-                this.showNotification('info', 'Backup restoration would open a modal to select backup file');
-                
-            } catch (error) {
-                console.error('Error restoring backup:', error);
-                this.showNotification('error', 'Failed to restore backup');
-            }
-        }
-    }
-    
-    async exportData() {
-        try {
-            const exportData = {
-                settings: this.settings,
-                systemLogs: this.systemLogs,
-                systemStatus: this.systemStatus,
-                exportDate: new Date().toISOString(),
-                exportedBy: this.currentUser.uid
-            };
-            
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `system-export-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-            
-            await this.logSystemActivity('System data exported', 'info');
-            
-            this.showNotification('success', 'Data exported successfully');
-            
-        } catch (error) {
-            console.error('Error exporting data:', error);
-            this.showNotification('error', 'Failed to export data');
-        }
-    }
-    
-    async logSystemActivity(message, level = 'info') {
-        try {
-            const logRef = this.collection(this.db, 'system_logs');
-            await this.addDoc(logRef, {
-                message: message,
-                level: level,
-                timestamp: this.serverTimestamp(),
-                userId: this.currentUser.uid,
-                userEmail: this.currentUser.email
+    setupRealTimeUpdates() {
+        if (!this.onSnapshot) return;
+        
+        // Listen for settings updates
+        const settingsRef = this.collection(this.db, 'system_settings');
+        this.onSnapshot(settingsRef, (snapshot) => {
+            this.settings = {};
+            snapshot.docs.forEach(doc => {
+                this.settings[doc.id] = doc.data();
             });
             
-        } catch (error) {
-            console.error('Error logging system activity:', error);
-        }
+            // Only update form if no unsaved changes
+            if (!this.hasUnsavedChanges) {
+                this.populateSettingsForm();
+            }
+        });
     }
     
-    initializeUI() {
-        console.log('UI initialized');
-    }
-    
-    setupEventListeners() {
-        // Add event listeners for real-time updates
-        console.log('Event listeners setup');
-    }
-    
+    // Utility methods
     showNotification(type, message) {
         // Create notification element
         const notification = document.createElement('div');
@@ -514,7 +442,9 @@ class SystemSettings {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${type === 'success' ? 'var(--success-500)' : type === 'error' ? 'var(--error-500)' : 'var(--primary-500)'};
+            background: ${type === 'success' ? 'var(--success-500)' : 
+                        type === 'error' ? 'var(--error-500)' : 
+                        type === 'warning' ? 'var(--warning-500)' : 'var(--info-500)'};
             color: white;
             padding: var(--space-4);
             border-radius: var(--radius-lg);
@@ -535,18 +465,18 @@ class SystemSettings {
     }
 }
 
-// Initialize the system settings when DOM is loaded
+// Initialize the system settings system when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
     
-    // Initialize the system settings
-    window.systemSettings = new SystemSettings();
+    // Initialize the system settings system
+    window.systemSettingsSystem = new SystemSettingsSystem();
 });
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SystemSettings;
+    module.exports = SystemSettingsSystem;
 }

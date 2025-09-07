@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compliance Monitoring Dashboard - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </head>
 <body class="role-factory-admin">
+    <div id="sidebarContainer"></div>
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
@@ -27,7 +32,8 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="layout-main">
+        <div style="margin-left: 280px;">
             <!-- Compliance Overview -->
             <section class="compliance-overview">
                 <div class="overview-grid">
@@ -83,7 +89,7 @@
                 <div class="main-column">
                     <!-- Compliance Status Chart -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="bar-chart-3"></i> Compliance Status</h2>
                             <div class="card-actions">
                                 <select id="complianceFilter" class="form-select">
@@ -107,10 +113,10 @@
 
                     <!-- Violations Table -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="alert-triangle"></i> Active Violations</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="createCAP()">
+                                <button class="btn btn-primary text-white font-medium" onclick="createCAP()">
                                     <i data-lucide="plus"></i> Create CAP
                                 </button>
                                 <button class="btn btn-outline" onclick="bulkUpdateViolations()">
@@ -142,7 +148,7 @@
 
                     <!-- Corrective Action Plans -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="clipboard-list"></i> Corrective Action Plans</h2>
                             <div class="card-actions">
                                 <select id="capFilter" class="form-select">
@@ -163,10 +169,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Compliance Standards -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="shield"></i> Compliance Standards</h3>
                         </div>
                         <div class="card-body">
@@ -178,7 +184,7 @@
 
                     <!-- Recent Activities -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="activity"></i> Recent Activities</h3>
                         </div>
                         <div class="card-body">
@@ -190,7 +196,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -225,7 +231,7 @@
 
                     <!-- Upcoming Deadlines -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="clock"></i> Upcoming Deadlines</h3>
                         </div>
                         <div class="card-body">
@@ -236,7 +242,8 @@
                     </div>
                 </div>
             </div>
-        </main>
+                </div>
+</main>
     </div>
 
     <!-- Create CAP Modal -->
@@ -313,8 +320,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('createCAPModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveCAP()">Create CAP</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('createCAPModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveCAP()">Create CAP</button>
             </div>
         </div>
     </div>
@@ -334,9 +341,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('violationDetailsModal')">Close</button>
-                <button class="btn btn-warning" onclick="createCAPFromViolation()">Create CAP</button>
-                <button class="btn btn-success" onclick="markViolationResolved()">Mark Resolved</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('violationDetailsModal')">Close</button>
+                <button class="btn btn-warning text-white font-medium" onclick="createCAPFromViolation()">Create CAP</button>
+                <button class="btn btn-success text-white font-medium" onclick="markViolationResolved()">Mark Resolved</button>
             </div>
         </div>
     </div>
@@ -356,18 +363,25 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('capDetailsModal')">Close</button>
-                <button class="btn btn-primary" onclick="updateCAP()">Update CAP</button>
-                <button class="btn btn-success" onclick="completeCAP()">Mark Complete</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('capDetailsModal')">Close</button>
+                <button class="btn btn-primary text-white font-medium" onclick="updateCAP()">Update CAP</button>
+                <button class="btn btn-success text-white font-medium" onclick="completeCAP()">Mark Complete</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/factory-admin/compliance-monitoring-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </body>
 </html>
+
+

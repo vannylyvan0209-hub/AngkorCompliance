@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory User Management - Angkor Compliance</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <style>
         /* Role-specific styling for factory_admin */
         body.role-factory-admin {
@@ -322,6 +326,7 @@
     </style>
 </head>
 <body class="role-factory-admin">
+    <div id="sidebarContainer"></div>
     <div class="user-management">
         <div class="management-header">
             <div>
@@ -332,7 +337,7 @@
                 <button class="btn btn-outline" onclick="exportUserData()">
                     <i data-lucide="download"></i> Export
                 </button>
-                <button class="btn btn-primary" onclick="inviteNewUser()">
+                <button class="btn btn-primary text-white font-medium" onclick="inviteNewUser()">
                     <i data-lucide="user-plus"></i> Invite User
                 </button>
             </div>
@@ -386,7 +391,7 @@
                             <i data-lucide="users"></i>
                             <h3>No users found</h3>
                             <p>Start by inviting users to your factory</p>
-                            <button class="btn btn-primary" onclick="inviteNewUser()">
+                            <button class="btn btn-primary text-white font-medium" onclick="inviteNewUser()">
                                 <i data-lucide="user-plus"></i> Invite First User
                             </button>
                         </div>
@@ -394,7 +399,7 @@
                 </div>
             </div>
 
-            <div class="sidebar">
+            <div class="layout-sidebar bg-white shadow-lg">
                 <div class="stats-card">
                     <h3><i data-lucide="bar-chart-3"></i> User Statistics</h3>
                     <div class="stats-grid">
@@ -487,7 +492,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal('inviteUserModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary text-white font-medium">
                         <i data-lucide="send"></i> Send Invitation
                     </button>
                 </div>
@@ -549,7 +554,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal('editUserModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary text-white font-medium">
                         <i data-lucide="save"></i> Save Changes
                     </button>
                 </div>
@@ -558,12 +563,19 @@
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/factory-admin/factory-user-management.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize navigation system
@@ -576,3 +588,5 @@
     </script>
 </body>
 </html>
+
+

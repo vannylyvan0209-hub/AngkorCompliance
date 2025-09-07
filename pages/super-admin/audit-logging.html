@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logging & Compliance - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Audit Logging Specific Styles */
+        .audit-logging {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .audit-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .audit-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Audit Overview */
+        .audit-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-change {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--success-600);
+        }
+        
+        /* Audit Filters */
+        .audit-filters {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .filters-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .filters-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .filter-label {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+        
+        .filter-select {
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            background: white;
+            font-size: var(--text-sm);
+            cursor: pointer;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Audit Logs Table */
+        .audit-logs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .logs-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .logs-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .log-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .log-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        
+        .logs-table th {
+            background: var(--neutral-50);
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            color: var(--neutral-700);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .logs-table td {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--neutral-100);
+        }
+        
+        .logs-table tr:hover {
+            background: var(--neutral-50);
+        }
+        
+        .log-timestamp {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .log-user {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .user-role {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+        
+        .log-action {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xs);
+        }
+        
+        .action-icon.create {
+            background: var(--success-500);
+        }
+        
+        .action-icon.update {
+            background: var(--primary-500);
+        }
+        
+        .action-icon.delete {
+            background: var(--danger-500);
+        }
+        
+        .action-icon.login {
+            background: var(--info-500);
+        }
+        
+        .action-icon.logout {
+            background: var(--warning-500);
+        }
+        
+        .action-text {
+            font-weight: 500;
+            color: var(--neutral-900);
+        }
+        
+        .log-resource {
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+        
+        .log-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-success {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-failed {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .status-pending {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .log-details {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Compliance Tracking */
+        .compliance-tracking {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .compliance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .compliance-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .compliance-chart {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .chart-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-3);
+        }
+        
+        .chart-canvas {
+            height: 300px;
+        }
+        
+        .compliance-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .compliance-metric {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .metric-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .metric-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-description {
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-6);
+        }
+        
+        .pagination-btn {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .pagination-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .pagination-btn.active {
+            background: var(--primary-600);
+            border-color: var(--primary-600);
+            color: white;
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .compliance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .audit-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .audit-logging {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .audit-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .logs-table {
+                font-size: var(--text-sm);
+            }
+            
+            .logs-table th,
+            .logs-table td {
+                padding: var(--space-2);
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="audit-logging">
+            <div class="audit-container">
+                <!-- Audit Header -->
+                <div class="audit-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Audit Logging & Compliance</h1>
+                            <p>Comprehensive audit logging system, compliance tracking, and immutable audit trails</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="exportAuditLogs()">
+                                <i data-lucide="download"></i>
+                                Export Logs
+                            </button>
+                            <button class="action-btn" onclick="generateComplianceReport()">
+                                <i data-lucide="file-text"></i>
+                                Generate Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audit Overview -->
+                <div class="audit-overview fade-in">
+                    <div class="overview-card">
+                        <div class="overview-header">
+                            <div class="overview-icon">
+                                <i data-lucide="activity"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Total Audit Events</div>
+                        <div class="overview-value" id="totalAuditEvents">0</div>
+                        <div class="overview-change">
+                            <i data-lucide="trending-up"></i>
+                            <span>+12% vs last month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="overview-header">
+                            <div class="overview-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Active Users</div>
+                        <div class="overview-value" id="activeUsers">0</div>
+                        <div class="overview-change">
+                            <i data-lucide="trending-up"></i>
+                            <span>+8% vs last month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="overview-header">
+                            <div class="overview-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Compliance Score</div>
+                        <div class="overview-value" id="complianceScore">0%</div>
+                        <div class="overview-change">
+                            <i data-lucide="trending-up"></i>
+                            <span>+5% vs last month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="overview-header">
+                            <div class="overview-icon">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Security Events</div>
+                        <div class="overview-value" id="securityEvents">0</div>
+                        <div class="overview-change">
+                            <i data-lucide="trending-down"></i>
+                            <span>-3% vs last month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audit Filters -->
+                <div class="audit-filters fade-in">
+                    <div class="filters-header">
+                        <h3 class="filters-title">Audit Filters</h3>
+                    </div>
+                    <div class="filters-content">
+                        <div class="filter-group">
+                            <label class="filter-label">Time Range</label>
+                            <select class="filter-select" id="timeRangeFilter">
+                                <option value="1h">Last Hour</option>
+                                <option value="24h">Last 24 Hours</option>
+                                <option value="7d" selected>Last 7 Days</option>
+                                <option value="30d">Last 30 Days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">User</label>
+                            <select class="filter-select" id="userFilter">
+                                <option value="all">All Users</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Action</label>
+                            <select class="filter-select" id="actionFilter">
+                                <option value="all">All Actions</option>
+                                <option value="create">Create</option>
+                                <option value="update">Update</option>
+                                <option value="delete">Delete</option>
+                                <option value="login">Login</option>
+                                <option value="logout">Logout</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Resource</label>
+                            <select class="filter-select" id="resourceFilter">
+                                <option value="all">All Resources</option>
+                                <option value="user">User</option>
+                                <option value="factory">Factory</option>
+                                <option value="case">Case</option>
+                                <option value="audit">Audit</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audit Logs Table -->
+                <div class="audit-logs fade-in">
+                    <div class="logs-header">
+                        <h3 class="logs-title">Audit Logs</h3>
+                        <div class="logs-actions">
+                            <button class="log-btn" onclick="refreshLogs()">Refresh</button>
+                            <button class="log-btn" onclick="clearFilters()">Clear Filters</button>
+                        </div>
+                    </div>
+                    
+                    <table class="logs-table" id="auditLogsTable">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Resource</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Audit logs will be loaded here -->
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Compliance Tracking -->
+                <div class="compliance-tracking fade-in">
+                    <div class="compliance-header">
+                        <h3 class="compliance-title">Compliance Tracking</h3>
+                    </div>
+                    
+                    <div class="compliance-grid">
+                        <div class="compliance-chart">
+                            <div class="chart-title">Compliance Trends</div>
+                            <canvas id="complianceChart" class="chart-canvas"></canvas>
+                        </div>
+                        
+                        <div class="compliance-metrics">
+                            <div class="compliance-metric">
+                                <div class="metric-title">Data Integrity</div>
+                                <div class="metric-value" id="dataIntegrity">99.8%</div>
+                                <div class="metric-description">Audit trail completeness</div>
+                            </div>
+                            
+                            <div class="compliance-metric">
+                                <div class="metric-title">Access Control</div>
+                                <div class="metric-value" id="accessControl">98.5%</div>
+                                <div class="metric-description">Proper authorization</div>
+                            </div>
+                            
+                            <div class="compliance-metric">
+                                <div class="metric-title">Data Retention</div>
+                                <div class="metric-value" id="dataRetention">100%</div>
+                                <div class="metric-description">Compliance with policies</div>
+                            </div>
+                            
+                            <div class="compliance-metric">
+                                <div class="metric-title">Security Events</div>
+                                <div class="metric-value" id="securityCompliance">97.2%</div>
+                                <div class="metric-description">Incident response</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/audit-logging.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function exportAuditLogs() {
+            console.log('Exporting audit logs...');
+            // Implement export functionality
+        }
+        
+        function generateComplianceReport() {
+            console.log('Generating compliance report...');
+            // Implement report generation
+        }
+        
+        function refreshLogs() {
+            console.log('Refreshing logs...');
+            // Implement refresh functionality
+        }
+        
+        function clearFilters() {
+            console.log('Clearing filters...');
+            // Implement clear filters functionality
+        }
+    </script>
+</body>
+</html>

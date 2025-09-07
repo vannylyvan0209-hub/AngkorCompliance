@@ -1,0 +1,1456 @@
+/**
+ * Angkor Compliance Platform - Settings Pages 2025
+ * 
+ * Modern settings pages with 2025 design patterns,
+ * accessibility support, and responsive design.
+ */
+
+/* ===== SETTINGS PAGES VARIABLES ===== */
+
+:root {
+    /* Settings Pages Z-Index */
+    --settings-z-index: 100;
+    --settings-overlay-z-index: 101;
+    --settings-backdrop-z-index: 102;
+    
+    /* Settings Pages Animation Variables */
+    --settings-animation-duration: 0.3s;
+    --settings-animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    --settings-slide-duration: 0.4s;
+    --settings-fade-duration: 0.2s;
+    
+    /* Settings Pages Colors */
+    --settings-bg: var(--surface);
+    --settings-text: var(--text);
+    --settings-border: var(--border);
+    --settings-shadow: var(--shadow-sm);
+    --settings-header-bg: var(--surface);
+    --settings-header-text: var(--text);
+    --settings-sidebar-bg: var(--surface);
+    --settings-sidebar-text: var(--text);
+    --settings-content-bg: var(--surface);
+    --settings-content-text: var(--text);
+    --settings-section-bg: var(--surface);
+    --settings-section-text: var(--text);
+    --settings-section-border: var(--border);
+    --settings-form-bg: var(--surface);
+    --settings-form-text: var(--text);
+    --settings-form-border: var(--border);
+    --settings-form-focus-border: var(--primary-500);
+    --settings-form-error-border: var(--danger-500);
+    --settings-form-success-border: var(--success-500);
+    
+    /* Settings Pages Spacing */
+    --settings-padding: var(--space-6);
+    --settings-gap: var(--space-4);
+    --settings-border-radius: var(--radius-lg);
+    --settings-header-padding: var(--space-6);
+    --settings-sidebar-padding: var(--space-4);
+    --settings-content-padding: var(--space-6);
+    --settings-section-padding: var(--space-6);
+    --settings-section-gap: var(--space-4);
+    --settings-form-padding: var(--space-6);
+    --settings-form-gap: var(--space-4);
+    --settings-form-group-gap: var(--space-4);
+    --settings-form-field-gap: var(--space-2);
+    
+    /* Settings Pages Typography */
+    --settings-font-size: var(--text-sm);
+    --settings-font-weight: var(--font-medium);
+    --settings-title-font-size: var(--text-2xl);
+    --settings-title-font-weight: var(--font-bold);
+    --settings-subtitle-font-size: var(--text-lg);
+    --settings-subtitle-font-weight: var(--font-semibold);
+    --settings-section-title-font-size: var(--text-xl);
+    --settings-section-title-font-weight: var(--font-semibold);
+    --settings-section-subtitle-font-size: var(--text-sm);
+    --settings-section-subtitle-font-weight: var(--font-normal);
+    --settings-form-label-font-size: var(--text-sm);
+    --settings-form-label-font-weight: var(--font-medium);
+    --settings-form-help-font-size: var(--text-xs);
+    --settings-form-help-font-weight: var(--font-normal);
+    --settings-form-error-font-size: var(--text-xs);
+    --settings-form-error-font-weight: var(--font-medium);
+    --settings-icon-size: 20px;
+    --settings-avatar-size: 40px;
+}
+
+/* ===== SETTINGS PAGES BASE ===== */
+
+.settings-page {
+    position: relative;
+    min-height: 100vh;
+    background: var(--settings-bg);
+    color: var(--settings-text);
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--settings-header-padding);
+    background: var(--settings-header-bg);
+    border-bottom: 1px solid var(--settings-border);
+    box-shadow: var(--settings-shadow);
+}
+
+.settings-page-title {
+    font-size: var(--settings-title-font-size);
+    font-weight: var(--settings-title-font-weight);
+    color: var(--settings-header-text);
+    margin: 0;
+}
+
+.settings-page-subtitle {
+    font-size: var(--settings-subtitle-font-size);
+    font-weight: var(--settings-subtitle-font-weight);
+    color: var(--text-muted);
+    margin: var(--space-1) 0 0 0;
+}
+
+.settings-page-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.settings-page-action {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-page-action:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.settings-page-content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.settings-page-sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--settings-sidebar-bg);
+    border-right: 1px solid var(--settings-border);
+    padding: var(--settings-sidebar-padding);
+    overflow-y: auto;
+}
+
+.settings-page-main {
+    flex: 1;
+    background: var(--settings-content-bg);
+    padding: var(--settings-content-padding);
+    overflow-y: auto;
+}
+
+.settings-page-section {
+    background: var(--settings-section-bg);
+    border: 1px solid var(--settings-section-border);
+    border-radius: var(--settings-border-radius);
+    padding: var(--settings-section-padding);
+    margin-bottom: var(--settings-section-gap);
+    box-shadow: var(--settings-shadow);
+}
+
+.settings-page-section:last-child {
+    margin-bottom: 0;
+}
+
+.settings-page-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--settings-section-gap);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--settings-section-border);
+}
+
+.settings-page-section-title {
+    font-size: var(--settings-section-title-font-size);
+    font-weight: var(--settings-section-title-font-weight);
+    color: var(--settings-section-text);
+    margin: 0;
+}
+
+.settings-page-section-subtitle {
+    font-size: var(--settings-section-subtitle-font-size);
+    font-weight: var(--settings-section-subtitle-font-weight);
+    color: var(--text-muted);
+    margin: var(--space-1) 0 0 0;
+}
+
+.settings-page-section-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.settings-page-section-action {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-page-section-action:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.settings-page-section-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--settings-section-gap);
+}
+
+.settings-page-form {
+    background: var(--settings-form-bg);
+    border: 1px solid var(--settings-form-border);
+    border-radius: var(--settings-border-radius);
+    padding: var(--settings-form-padding);
+    box-shadow: var(--settings-shadow);
+}
+
+.settings-page-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--settings-form-gap);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--settings-form-border);
+}
+
+.settings-page-form-title {
+    font-size: var(--settings-section-title-font-size);
+    font-weight: var(--settings-section-title-font-weight);
+    color: var(--settings-form-text);
+    margin: 0;
+}
+
+.settings-page-form-subtitle {
+    font-size: var(--settings-section-subtitle-font-size);
+    font-weight: var(--settings-section-subtitle-font-weight);
+    color: var(--text-muted);
+    margin: var(--space-1) 0 0 0;
+}
+
+.settings-page-form-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.settings-page-form-action {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-page-form-action:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.settings-page-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--settings-form-gap);
+}
+
+.settings-page-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--settings-form-group-gap);
+}
+
+.settings-page-form-row {
+    display: flex;
+    gap: var(--settings-form-gap);
+    align-items: flex-start;
+}
+
+.settings-page-form-row .settings-page-form-field {
+    flex: 1;
+}
+
+.settings-page-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--settings-form-field-gap);
+}
+
+.settings-page-form-label {
+    font-size: var(--settings-form-label-font-size);
+    font-weight: var(--settings-form-label-font-weight);
+    color: var(--settings-form-text);
+    margin: 0;
+}
+
+.settings-page-form-label.required::after {
+    content: ' *';
+    color: var(--danger-500);
+}
+
+.settings-page-form-input {
+    width: 100%;
+    padding: var(--space-3);
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--settings-form-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-normal);
+    transition: var(--transition-colors);
+}
+
+.settings-page-form-input:focus {
+    outline: none;
+    border-color: var(--settings-form-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-input:invalid {
+    border-color: var(--settings-form-error-border);
+}
+
+.settings-page-form-input:valid {
+    border-color: var(--settings-form-success-border);
+}
+
+.settings-page-form-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: var(--space-3);
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--settings-form-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-normal);
+    transition: var(--transition-colors);
+    resize: vertical;
+}
+
+.settings-page-form-textarea:focus {
+    outline: none;
+    border-color: var(--settings-form-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-textarea:invalid {
+    border-color: var(--settings-form-error-border);
+}
+
+.settings-page-form-textarea:valid {
+    border-color: var(--settings-form-success-border);
+}
+
+.settings-page-form-select {
+    width: 100%;
+    padding: var(--space-3);
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--settings-form-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-normal);
+    transition: var(--transition-colors);
+    cursor: pointer;
+}
+
+.settings-page-form-select:focus {
+    outline: none;
+    border-color: var(--settings-form-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-select:invalid {
+    border-color: var(--settings-form-error-border);
+}
+
+.settings-page-form-select:valid {
+    border-color: var(--settings-form-success-border);
+}
+
+.settings-page-form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.settings-page-form-checkbox-input {
+    width: 20px;
+    height: 20px;
+    background: var(--surface);
+    border: 1px solid var(--settings-form-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.settings-page-form-checkbox-input:checked {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.settings-page-form-checkbox-input:focus {
+    outline: none;
+    border-color: var(--settings-form-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-checkbox-label {
+    font-size: var(--settings-form-label-font-size);
+    font-weight: var(--settings-form-label-font-weight);
+    color: var(--settings-form-text);
+    margin: 0;
+    cursor: pointer;
+}
+
+.settings-page-form-radio {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.settings-page-form-radio-input {
+    width: 20px;
+    height: 20px;
+    background: var(--surface);
+    border: 1px solid var(--settings-form-border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.settings-page-form-radio-input:checked {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.settings-page-form-radio-input:focus {
+    outline: none;
+    border-color: var(--settings-form-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-radio-label {
+    font-size: var(--settings-form-label-font-size);
+    font-weight: var(--settings-form-label-font-weight);
+    color: var(--settings-form-text);
+    margin: 0;
+    cursor: pointer;
+}
+
+.settings-page-form-switch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.settings-page-form-switch-input {
+    width: 44px;
+    height: 24px;
+    background: var(--gray-300);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    position: relative;
+}
+
+.settings-page-form-switch-input:checked {
+    background: var(--primary-500);
+}
+
+.settings-page-form-switch-input::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: var(--transition-transform);
+}
+
+.settings-page-form-switch-input:checked::after {
+    transform: translateX(20px);
+}
+
+.settings-page-form-switch-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-form-switch-label {
+    font-size: var(--settings-form-label-font-size);
+    font-weight: var(--settings-form-label-font-weight);
+    color: var(--settings-form-text);
+    margin: 0;
+    cursor: pointer;
+}
+
+.settings-page-form-help {
+    font-size: var(--settings-form-help-font-size);
+    font-weight: var(--settings-form-help-font-weight);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.settings-page-form-error {
+    font-size: var(--settings-form-error-font-size);
+    font-weight: var(--settings-form-error-font-weight);
+    color: var(--danger-600);
+    margin: 0;
+}
+
+.settings-page-form-success {
+    font-size: var(--settings-form-error-font-size);
+    font-weight: var(--settings-form-error-font-weight);
+    color: var(--success-600);
+    margin: 0;
+}
+
+.settings-page-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--settings-form-border);
+}
+
+.settings-page-form-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--primary-500);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.settings-page-form-button:hover {
+    background: var(--primary-600);
+}
+
+.settings-page-form-button:active {
+    background: var(--primary-700);
+}
+
+.settings-page-form-button.secondary {
+    background: var(--gray-100);
+    color: var(--text);
+}
+
+.settings-page-form-button.secondary:hover {
+    background: var(--gray-200);
+}
+
+.settings-page-form-button.secondary:active {
+    background: var(--gray-300);
+}
+
+.settings-page-form-button.danger {
+    background: var(--danger-500);
+    color: var(--white);
+}
+
+.settings-page-form-button.danger:hover {
+    background: var(--danger-600);
+}
+
+.settings-page-form-button.danger:active {
+    background: var(--danger-700);
+}
+
+.settings-page-form-button.success {
+    background: var(--success-500);
+    color: var(--white);
+}
+
+.settings-page-form-button.success:hover {
+    background: var(--success-600);
+}
+
+.settings-page-form-button.success:active {
+    background: var(--success-700);
+}
+
+.settings-page-form-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.settings-page-form-button:disabled:hover {
+    background: var(--primary-500);
+}
+
+.settings-page-form-button:disabled:active {
+    background: var(--primary-500);
+}
+
+/* ===== SETTINGS PAGES VARIANTS ===== */
+
+/* Default Settings Page */
+.settings-page-default {
+    background: var(--settings-bg);
+    color: var(--settings-text);
+}
+
+/* Glassmorphism Settings Page */
+.settings-page-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.settings-page-glass .settings-page-header,
+.settings-page-glass .settings-page-sidebar,
+.settings-page-glass .settings-page-main {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+/* Neumorphism Settings Page */
+.settings-page-neumorphism {
+    background: var(--surface);
+}
+
+.settings-page-neumorphism .settings-page-header,
+.settings-page-neumorphism .settings-page-sidebar,
+.settings-page-neumorphism .settings-page-main {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Elevated Settings Page */
+.settings-page-elevated {
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Flat Settings Page */
+.settings-page-flat {
+    box-shadow: none;
+    border: 2px solid var(--border);
+}
+
+/* Compact Settings Page */
+.settings-page-compact {
+    --settings-padding: var(--space-4);
+    --settings-gap: var(--space-3);
+    --settings-header-padding: var(--space-4);
+    --settings-sidebar-padding: var(--space-3);
+    --settings-content-padding: var(--space-4);
+    --settings-section-padding: var(--space-4);
+    --settings-section-gap: var(--space-3);
+    --settings-form-padding: var(--space-4);
+    --settings-form-gap: var(--space-3);
+    --settings-form-group-gap: var(--space-3);
+    --settings-form-field-gap: var(--space-1);
+}
+
+.settings-page-compact .settings-page-sidebar {
+    width: 240px;
+    min-width: 240px;
+}
+
+/* Large Settings Page */
+.settings-page-large {
+    --settings-padding: var(--space-8);
+    --settings-gap: var(--space-6);
+    --settings-header-padding: var(--space-8);
+    --settings-sidebar-padding: var(--space-6);
+    --settings-content-padding: var(--space-8);
+    --settings-section-padding: var(--space-8);
+    --settings-section-gap: var(--space-6);
+    --settings-form-padding: var(--space-8);
+    --settings-form-gap: var(--space-6);
+    --settings-form-group-gap: var(--space-6);
+    --settings-form-field-gap: var(--space-3);
+}
+
+.settings-page-large .settings-page-sidebar {
+    width: 320px;
+    min-width: 320px;
+}
+
+/* ===== SETTINGS PAGES RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+    .settings-page {
+        --settings-padding: var(--space-4);
+        --settings-gap: var(--space-3);
+        --settings-header-padding: var(--space-4);
+        --settings-sidebar-padding: var(--space-3);
+        --settings-content-padding: var(--space-4);
+        --settings-section-padding: var(--space-4);
+        --settings-section-gap: var(--space-3);
+        --settings-form-padding: var(--space-4);
+        --settings-form-gap: var(--space-3);
+        --settings-form-group-gap: var(--space-3);
+        --settings-form-field-gap: var(--space-1);
+    }
+    
+    .settings-page-content {
+        flex-direction: column;
+    }
+    
+    .settings-page-sidebar {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--settings-border);
+    }
+    
+    .settings-page-form-row {
+        flex-direction: column;
+    }
+    
+    .settings-page-form-row .settings-page-form-field {
+        flex: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-page {
+        --settings-padding: var(--space-2);
+        --settings-gap: var(--space-2);
+        --settings-header-padding: var(--space-2);
+        --settings-sidebar-padding: var(--space-2);
+        --settings-content-padding: var(--space-2);
+        --settings-section-padding: var(--space-2);
+        --settings-section-gap: var(--space-2);
+        --settings-form-padding: var(--space-2);
+        --settings-form-gap: var(--space-2);
+        --settings-form-group-gap: var(--space-2);
+        --settings-form-field-gap: var(--space-1);
+    }
+}
+
+/* ===== SETTINGS PAGES ACCESSIBILITY ===== */
+
+.settings-page[role="main"] {
+    /* Semantic main role */
+}
+
+.settings-page:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-input:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-textarea:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-select:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-checkbox-input:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-radio-input:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-switch-input:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+.settings-page-form-button:focus {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+/* ===== SETTINGS PAGES DARK MODE ===== */
+
+@media (prefers-color-scheme: dark) {
+    .settings-page {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .settings-page-header,
+    .settings-page-sidebar,
+    .settings-page-main {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .settings-page-title {
+        color: var(--text-dark);
+    }
+    
+    .settings-page-subtitle {
+        color: var(--text-muted-dark);
+    }
+    
+    .settings-page-action {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .settings-page-action:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .settings-page-section {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .settings-page-section-title {
+        color: var(--text-dark);
+    }
+    
+    .settings-page-section-subtitle {
+        color: var(--text-muted-dark);
+    }
+    
+    .settings-page-section-action {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .settings-page-section-action:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .settings-page-form {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .settings-page-form-title {
+        color: var(--text-dark);
+    }
+    
+    .settings-page-form-subtitle {
+        color: var(--text-muted-dark);
+    }
+    
+    .settings-page-form-action {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .settings-page-form-action:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .settings-page-form-label {
+        color: var(--text-dark);
+    }
+    
+    .settings-page-form-input,
+    .settings-page-form-textarea,
+    .settings-page-form-select {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .settings-page-form-input:focus,
+    .settings-page-form-textarea:focus,
+    .settings-page-form-select:focus {
+        border-color: var(--primary-400);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .settings-page-form-checkbox-input,
+    .settings-page-form-radio-input {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .settings-page-form-checkbox-input:checked,
+    .settings-page-form-radio-input:checked {
+        background: var(--primary-500);
+        border-color: var(--primary-500);
+    }
+    
+    .settings-page-form-checkbox-input:focus,
+    .settings-page-form-radio-input:focus {
+        border-color: var(--primary-400);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .settings-page-form-checkbox-label,
+    .settings-page-form-radio-label,
+    .settings-page-form-switch-label {
+        color: var(--text-dark);
+    }
+    
+    .settings-page-form-switch-input {
+        background: var(--gray-700);
+    }
+    
+    .settings-page-form-switch-input:checked {
+        background: var(--primary-500);
+    }
+    
+    .settings-page-form-switch-input::after {
+        background: var(--white);
+    }
+    
+    .settings-page-form-switch-input:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .settings-page-form-help {
+        color: var(--text-muted-dark);
+    }
+    
+    .settings-page-form-error {
+        color: var(--danger-400);
+    }
+    
+    .settings-page-form-success {
+        color: var(--success-400);
+    }
+    
+    .settings-page-form-button.secondary {
+        background: var(--gray-800);
+        color: var(--text-dark);
+    }
+    
+    .settings-page-form-button.secondary:hover {
+        background: var(--gray-700);
+    }
+    
+    .settings-page-form-button.secondary:active {
+        background: var(--gray-600);
+    }
+    
+    .settings-page-glass {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .settings-page-glass .settings-page-header,
+    .settings-page-glass .settings-page-sidebar,
+    .settings-page-glass .settings-page-main {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .settings-page-neumorphism {
+        background: var(--surface-dark);
+    }
+    
+    .settings-page-neumorphism .settings-page-header,
+    .settings-page-neumorphism .settings-page-sidebar,
+    .settings-page-neumorphism .settings-page-main {
+        background: var(--surface-dark);
+        box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    }
+}
+
+.dark-mode .settings-page {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-header,
+.dark-mode .settings-page-sidebar,
+.dark-mode .settings-page-main {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .settings-page-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-subtitle {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .settings-page-action {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-action:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .settings-page-section {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .settings-page-section-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-section-subtitle {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .settings-page-section-action {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-section-action:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .settings-page-form {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .settings-page-form-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-form-subtitle {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .settings-page-form-action {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-form-action:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .settings-page-form-label {
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-form-input,
+.dark-mode .settings-page-form-textarea,
+.dark-mode .settings-page-form-select {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .settings-page-form-input:focus,
+.dark-mode .settings-page-form-textarea:focus,
+.dark-mode .settings-page-form-select:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark-mode .settings-page-form-checkbox-input,
+.dark-mode .settings-page-form-radio-input {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .settings-page-form-checkbox-input:checked,
+.dark-mode .settings-page-form-radio-input:checked {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.dark-mode .settings-page-form-checkbox-input:focus,
+.dark-mode .settings-page-form-radio-input:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark-mode .settings-page-form-checkbox-label,
+.dark-mode .settings-page-form-radio-label,
+.dark-mode .settings-page-form-switch-label {
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-form-switch-input {
+    background: var(--gray-700);
+}
+
+.dark-mode .settings-page-form-switch-input:checked {
+    background: var(--primary-500);
+}
+
+.dark-mode .settings-page-form-switch-input::after {
+    background: var(--white);
+}
+
+.dark-mode .settings-page-form-switch-input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark-mode .settings-page-form-help {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .settings-page-form-error {
+    color: var(--danger-400);
+}
+
+.dark-mode .settings-page-form-success {
+    color: var(--success-400);
+}
+
+.dark-mode .settings-page-form-button.secondary {
+    background: var(--gray-800);
+    color: var(--text-dark);
+}
+
+.dark-mode .settings-page-form-button.secondary:hover {
+    background: var(--gray-700);
+}
+
+.dark-mode .settings-page-form-button.secondary:active {
+    background: var(--gray-600);
+}
+
+.dark-mode .settings-page-glass {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .settings-page-glass .settings-page-header,
+.dark-mode .settings-page-glass .settings-page-sidebar,
+.dark-mode .settings-page-glass .settings-page-main {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .settings-page-neumorphism {
+    background: var(--surface-dark);
+}
+
+.dark-mode .settings-page-neumorphism .settings-page-header,
+.dark-mode .settings-page-neumorphism .settings-page-sidebar,
+.dark-mode .settings-page-neumorphism .settings-page-main {
+    background: var(--surface-dark);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ===== SETTINGS PAGES PRINT ===== */
+
+@media print {
+    .settings-page {
+        box-shadow: none;
+        border: 1px solid var(--border);
+    }
+    
+    .settings-page-header,
+    .settings-page-sidebar {
+        display: none;
+    }
+    
+    .settings-page-main {
+        padding: 0;
+    }
+    
+    .settings-page-section {
+        page-break-inside: avoid;
+        margin-bottom: var(--space-4);
+    }
+    
+    .settings-page-form {
+        page-break-inside: avoid;
+        margin-bottom: var(--space-4);
+    }
+}
+
+/* ===== SETTINGS PAGES UTILITIES ===== */
+
+.settings-page-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.settings-page-loading {
+    position: relative;
+}
+
+.settings-page-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.settings-page-loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-200);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1001;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.settings-page-empty {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.settings-page-error {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--danger-600);
+    background: var(--danger-50);
+    border: 1px solid var(--danger-200);
+    border-radius: var(--radius-md);
+    margin: var(--space-4);
+}
+
+/* ===== SETTINGS PAGES THEME VARIANTS ===== */
+
+.settings-page-primary .settings-page-form-input:focus,
+.settings-page-primary .settings-page-form-textarea:focus,
+.settings-page-primary .settings-page-form-select:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-primary .settings-page-form-checkbox-input:checked,
+.settings-page-primary .settings-page-form-radio-input:checked {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.settings-page-primary .settings-page-form-switch-input:checked {
+    background: var(--primary-500);
+}
+
+.settings-page-primary .settings-page-form-button {
+    background: var(--primary-500);
+    color: var(--white);
+}
+
+.settings-page-primary .settings-page-form-button:hover {
+    background: var(--primary-600);
+}
+
+.settings-page-primary .settings-page-form-button:active {
+    background: var(--primary-700);
+}
+
+.settings-page-secondary .settings-page-form-input:focus,
+.settings-page-secondary .settings-page-form-textarea:focus,
+.settings-page-secondary .settings-page-form-select:focus {
+    border-color: var(--secondary-500);
+    box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+}
+
+.settings-page-secondary .settings-page-form-checkbox-input:checked,
+.settings-page-secondary .settings-page-form-radio-input:checked {
+    background: var(--secondary-500);
+    border-color: var(--secondary-500);
+}
+
+.settings-page-secondary .settings-page-form-switch-input:checked {
+    background: var(--secondary-500);
+}
+
+.settings-page-secondary .settings-page-form-button {
+    background: var(--secondary-500);
+    color: var(--white);
+}
+
+.settings-page-secondary .settings-page-form-button:hover {
+    background: var(--secondary-600);
+}
+
+.settings-page-secondary .settings-page-form-button:active {
+    background: var(--secondary-700);
+}
+
+.settings-page-success .settings-page-form-input:focus,
+.settings-page-success .settings-page-form-textarea:focus,
+.settings-page-success .settings-page-form-select:focus {
+    border-color: var(--success-500);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.settings-page-success .settings-page-form-checkbox-input:checked,
+.settings-page-success .settings-page-form-radio-input:checked {
+    background: var(--success-500);
+    border-color: var(--success-500);
+}
+
+.settings-page-success .settings-page-form-switch-input:checked {
+    background: var(--success-500);
+}
+
+.settings-page-success .settings-page-form-button {
+    background: var(--success-500);
+    color: var(--white);
+}
+
+.settings-page-success .settings-page-form-button:hover {
+    background: var(--success-600);
+}
+
+.settings-page-success .settings-page-form-button:active {
+    background: var(--success-700);
+}
+
+.settings-page-warning .settings-page-form-input:focus,
+.settings-page-warning .settings-page-form-textarea:focus,
+.settings-page-warning .settings-page-form-select:focus {
+    border-color: var(--warning-500);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.settings-page-warning .settings-page-form-checkbox-input:checked,
+.settings-page-warning .settings-page-form-radio-input:checked {
+    background: var(--warning-500);
+    border-color: var(--warning-500);
+}
+
+.settings-page-warning .settings-page-form-switch-input:checked {
+    background: var(--warning-500);
+}
+
+.settings-page-warning .settings-page-form-button {
+    background: var(--warning-500);
+    color: var(--white);
+}
+
+.settings-page-warning .settings-page-form-button:hover {
+    background: var(--warning-600);
+}
+
+.settings-page-warning .settings-page-form-button:active {
+    background: var(--warning-700);
+}
+
+.settings-page-danger .settings-page-form-input:focus,
+.settings-page-danger .settings-page-form-textarea:focus,
+.settings-page-danger .settings-page-form-select:focus {
+    border-color: var(--danger-500);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.settings-page-danger .settings-page-form-checkbox-input:checked,
+.settings-page-danger .settings-page-form-radio-input:checked {
+    background: var(--danger-500);
+    border-color: var(--danger-500);
+}
+
+.settings-page-danger .settings-page-form-switch-input:checked {
+    background: var(--danger-500);
+}
+
+.settings-page-danger .settings-page-form-button {
+    background: var(--danger-500);
+    color: var(--white);
+}
+
+.settings-page-danger .settings-page-form-button:hover {
+    background: var(--danger-600);
+}
+
+.settings-page-danger .settings-page-form-button:active {
+    background: var(--danger-700);
+}
+
+.settings-page-info .settings-page-form-input:focus,
+.settings-page-info .settings-page-form-textarea:focus,
+.settings-page-info .settings-page-form-select:focus {
+    border-color: var(--info-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settings-page-info .settings-page-form-checkbox-input:checked,
+.settings-page-info .settings-page-form-radio-input:checked {
+    background: var(--info-500);
+    border-color: var(--info-500);
+}
+
+.settings-page-info .settings-page-form-switch-input:checked {
+    background: var(--info-500);
+}
+
+.settings-page-info .settings-page-form-button {
+    background: var(--info-500);
+    color: var(--white);
+}
+
+.settings-page-info .settings-page-form-button:hover {
+    background: var(--info-600);
+}
+
+.settings-page-info .settings-page-form-button:active {
+    background: var(--info-700);
+}

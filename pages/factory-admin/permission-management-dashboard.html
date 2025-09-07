@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Permission Management Dashboard - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="role-factory-admin">
@@ -27,7 +30,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="layout-main">
             <!-- Permission Overview -->
             <section class="permission-overview">
                 <div class="overview-grid">
@@ -83,10 +86,10 @@
                 <div class="main-column">
                     <!-- Permission Matrix -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="grid"></i> Permission Matrix</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="createPermissionSet()">
+                                <button class="btn btn-primary text-white font-medium" onclick="createPermissionSet()">
                                     <i data-lucide="plus"></i> Create Permission Set
                                 </button>
                                 <button class="btn btn-outline" onclick="exportPermissions()">
@@ -124,7 +127,7 @@
 
                     <!-- Access Logs -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="activity"></i> Access Logs</h2>
                             <div class="card-actions">
                                 <select id="logFilter" class="form-select">
@@ -159,10 +162,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Permission Sets -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="shield"></i> Permission Sets</h3>
                         </div>
                         <div class="card-body">
@@ -174,7 +177,7 @@
 
                     <!-- Security Policies -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="lock"></i> Security Policies</h3>
                         </div>
                         <div class="card-body">
@@ -186,7 +189,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -221,7 +224,7 @@
 
                     <!-- Recent Alerts -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="bell"></i> Recent Alerts</h3>
                         </div>
                         <div class="card-body">
@@ -350,8 +353,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('permissionSetModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="savePermissionSet()">Save Permission Set</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('permissionSetModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="savePermissionSet()">Save Permission Set</button>
             </div>
         </div>
     </div>
@@ -390,8 +393,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('bulkPermissionModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmBulkPermissionUpdate()">Update Permissions</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('bulkPermissionModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="confirmBulkPermissionUpdate()">Update Permissions</button>
             </div>
         </div>
     </div>
@@ -411,16 +414,16 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('accessViolationModal')">Close</button>
-                <button class="btn btn-warning" onclick="investigateViolation()">Investigate</button>
-                <button class="btn btn-danger" onclick="blockUser()">Block User</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('accessViolationModal')">Close</button>
+                <button class="btn btn-warning text-white font-medium" onclick="investigateViolation()">Investigate</button>
+                <button class="btn btn-danger text-white font-medium" onclick="blockUser()">Block User</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script src="../../assets/js/factory-admin/permission-management-dashboard.js"></script>
 </body>

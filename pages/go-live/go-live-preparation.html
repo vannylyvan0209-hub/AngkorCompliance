@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go-Live Preparation - Angkor Compliance</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap5.min.css">
+    
+
     <style>
         .go-live-metric {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -62,24 +65,24 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="text-xl font-bold text-primary-gold" href="#">
                 <i class="fas fa-rocket me-2"></i>
                 Angkor Compliance - Go-Live Preparation
             </a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="../../index.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../../index.html">
                     <i class="fas fa-home me-1"></i>Home
                 </a>
-                <a class="nav-link" href="../security/security-penetration-testing.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../security/security-penetration-testing.html">
                     <i class="fas fa-shield-alt me-1"></i>Security
                 </a>
-                <a class="nav-link" href="../performance/performance-optimization.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../performance/performance-optimization.html">
                     <i class="fas fa-tachometer-alt me-1"></i>Performance
                 </a>
-                <a class="nav-link" href="../disaster-recovery/disaster-recovery-dashboard.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../disaster-recovery/disaster-recovery-dashboard.html">
                     <i class="fas fa-shield-alt me-1"></i>Disaster Recovery
                 </a>
-                <a class="nav-link" href="../documentation/documentation-management.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../documentation/documentation-management.html">
                     <i class="fas fa-book me-1"></i>Documentation
                 </a>
             </div>
@@ -95,7 +98,7 @@
                     <i class="fas fa-rocket text-success me-2"></i>
                     Go-Live Preparation Dashboard
                 </h1>
-                <p class="text-muted">Final preparation and validation for enterprise deployment of the Angkor Compliance platform</p>
+                <p class="text-neutral-600">Final preparation and validation for enterprise deployment of the Angkor Compliance platform</p>
             </div>
         </div>
 
@@ -140,10 +143,10 @@
         </div>
 
         <!-- Go-Live Preparation Tabs -->
-        <div class="row">
+        <div class="grid grid-cols-12 gap-6">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <ul class="nav nav-tabs card-header-tabs" id="goLiveTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="environment-tab" data-bs-toggle="tab" data-bs-target="#environment" type="button" role="tab">
@@ -151,22 +154,22 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="deployment-tab" data-bs-toggle="tab" data-bs-target="#deployment" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="deployment-tab" data-bs-toggle="tab" data-bs-target="#deployment" type="button" role="tab">
                                     <i class="fas fa-code-branch me-2"></i>Deployment Pipeline
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="uat-tab" data-bs-toggle="tab" data-bs-target="#uat" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="uat-tab" data-bs-toggle="tab" data-bs-target="#uat" type="button" role="tab">
                                     <i class="fas fa-users me-2"></i>User Acceptance Testing
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="checklist-tab" data-bs-toggle="tab" data-bs-target="#checklist" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="checklist-tab" data-bs-toggle="tab" data-bs-target="#checklist" type="button" role="tab">
                                     <i class="fas fa-clipboard-check me-2"></i>Go-Live Checklist
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="readiness-tab" data-bs-toggle="tab" data-bs-target="#readiness" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="readiness-tab" data-bs-toggle="tab" data-bs-target="#readiness" type="button" role="tab">
                                     <i class="fas fa-chart-line me-2"></i>Readiness Assessment
                                 </button>
                             </li>
@@ -179,15 +182,15 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Production Environment Setup</h5>
-                                        <p class="text-muted">Infrastructure provisioning, SSL certificates, domain configuration, and monitoring setup</p>
+                                        <p class="text-neutral-600">Infrastructure provisioning, SSL certificates, domain configuration, and monitoring setup</p>
                                     </div>
                                 </div>
-                                <div class="row" id="environmentTasks">
+                                <div class="grid grid-cols-12 gap-6" id="environmentTasks">
                                     <!-- Environment tasks will be populated here -->
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12">
-                                        <button class="btn btn-primary" id="validateEnvironment">
+                                        <button class="btn btn-primary text-white font-medium" id="validateEnvironment">
                                             <i class="fas fa-play me-2"></i>Validate Environment
                                         </button>
                                         <button class="btn btn-outline-secondary" id="exportEnvironmentReport">
@@ -202,15 +205,15 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Deployment Pipeline Validation</h5>
-                                        <p class="text-muted">CI/CD pipeline validation, automated testing, rollback procedures, and zero-downtime deployment</p>
+                                        <p class="text-neutral-600">CI/CD pipeline validation, automated testing, rollback procedures, and zero-downtime deployment</p>
                                     </div>
                                 </div>
-                                <div class="row" id="deploymentTasks">
+                                <div class="grid grid-cols-12 gap-6" id="deploymentTasks">
                                     <!-- Deployment tasks will be populated here -->
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12">
-                                        <button class="btn btn-primary" id="testDeployment">
+                                        <button class="btn btn-primary text-white font-medium" id="testDeployment">
                                             <i class="fas fa-play me-2"></i>Test Deployment
                                         </button>
                                         <button class="btn btn-outline-secondary" id="exportDeploymentReport">
@@ -225,15 +228,15 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>User Acceptance Testing (UAT)</h5>
-                                        <p class="text-muted">End-to-end workflow testing, multi-tenant scenarios, performance benchmarking, and compliance validation</p>
+                                        <p class="text-neutral-600">End-to-end workflow testing, multi-tenant scenarios, performance benchmarking, and compliance validation</p>
                                     </div>
                                 </div>
-                                <div class="row" id="uatTasks">
+                                <div class="grid grid-cols-12 gap-6" id="uatTasks">
                                     <!-- UAT tasks will be populated here -->
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12">
-                                        <button class="btn btn-primary" id="startUAT">
+                                        <button class="btn btn-primary text-white font-medium" id="startUAT">
                                             <i class="fas fa-play me-2"></i>Start UAT
                                         </button>
                                         <button class="btn btn-outline-secondary" id="exportUATReport">
@@ -248,10 +251,10 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Go-Live Checklist</h5>
-                                        <p class="text-muted">Comprehensive checklist covering all aspects of go-live preparation and validation</p>
+                                        <p class="text-neutral-600">Comprehensive checklist covering all aspects of go-live preparation and validation</p>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="grid grid-cols-12 gap-6">
                                     <div class="col-12">
                                         <div class="table-responsive">
                                             <table class="table table-striped" id="checklistTable">
@@ -279,41 +282,41 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h5>Go-Live Readiness Assessment</h5>
-                                        <p class="text-muted">Overall readiness score, risk assessment, and final approval for go-live</p>
+                                        <p class="text-neutral-600">Overall readiness score, risk assessment, and final approval for go-live</p>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="grid grid-cols-12 gap-6">
                                     <div class="col-12">
-                                        <div class="card">
+                                        <div class="card shadow-md">
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
+                                                <div class="grid grid-cols-12 gap-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <h6>Overall Readiness Score</h6>
                                                         <div class="progress mb-3" style="height: 30px;">
                                                             <div class="progress-bar bg-success" role="progressbar" style="width: 85%" id="readinessProgress">
                                                                 85%
                                                             </div>
                                                         </div>
-                                                        <p class="text-muted">Platform is ready for go-live with minor items pending</p>
+                                                        <p class="text-neutral-600">Platform is ready for go-live with minor items pending</p>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-span-12 md:col-span-6">
                                                         <h6>Risk Assessment</h6>
                                                         <div class="mb-2">
                                                             <span class="badge bg-success me-2">Low Risk</span>
-                                                            <span class="text-muted">All critical items completed</span>
+                                                            <span class="text-neutral-600">All critical items completed</span>
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="badge bg-warning me-2">Medium Risk</span>
-                                                            <span class="text-muted">2 non-critical items pending</span>
+                                                            <span class="text-neutral-600">2 non-critical items pending</span>
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="badge bg-danger me-2">High Risk</span>
-                                                            <span class="text-muted">0 items</span>
+                                                            <span class="text-neutral-600">0 items</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <hr>
-                                                <div class="row">
+                                                <div class="grid grid-cols-12 gap-6">
                                                     <div class="col-12">
                                                         <h6>Final Approval</h6>
                                                         <div class="d-flex justify-content-between align-items-center">
@@ -343,15 +346,15 @@
         <!-- Go-Live Status Overview -->
         <div class="row mt-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <h5 class="mb-0">
                             <i class="fas fa-chart-line text-success me-2"></i>
                             Go-Live Status Overview
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="row" id="goLiveStatusCards">
+                        <div class="grid grid-cols-12 gap-6" id="goLiveStatusCards">
                             <!-- Go-live status cards will be populated here -->
                         </div>
                     </div>
@@ -372,7 +375,7 @@
                     <!-- Task details will be populated here -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -398,17 +401,17 @@
                         </div>
                         <div class="mb-3">
                             <label for="taskNotes" class="form-label">Notes</label>
-                            <textarea class="form-control" id="taskNotes" rows="3"></textarea>
+                            <textarea class="form-input" id="taskNotes" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="taskOwner" class="form-label">Owner</label>
-                            <input type="text" class="form-control" id="taskOwner" required>
+                            <input type="text" class="form-input" id="taskOwner" required>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveTaskUpdate">Update Task</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="saveTaskUpdate">Update Task</button>
                 </div>
             </div>
         </div>

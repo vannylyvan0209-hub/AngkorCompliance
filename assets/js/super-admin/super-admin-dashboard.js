@@ -24,6 +24,9 @@ class SuperAdminDashboard {
         // Check authentication
         await this.checkAuthentication();
         
+        // Initialize navigation
+        this.initializeNavigation();
+        
         // Initialize UI
         this.initializeUI();
         
@@ -102,6 +105,19 @@ class SuperAdminDashboard {
                 }
             });
         });
+    }
+    
+    initializeNavigation() {
+        // Wait for navigation service to be available
+        if (window.superAdminNavigation) {
+            window.superAdminNavigation.updateCurrentPage('System Overview');
+            window.superAdminNavigation.updateNotificationCount(this.calculateSystemAlerts());
+        } else {
+            // Retry after a short delay
+            setTimeout(() => {
+                this.initializeNavigation();
+            }, 100);
+        }
     }
     
     updateUserDisplay() {

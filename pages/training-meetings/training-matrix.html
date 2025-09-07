@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Training Matrix - Angkor Compliance</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/training-meetings.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
 </head>
 <body>
     <div class="training-matrix-container">
@@ -18,10 +21,10 @@
                     <p>Role-based training requirements and compliance tracking</p>
                 </div>
                 <div class="header-right">
-                    <button id="language-toggle" class="btn btn-secondary">
+                    <button id="language-toggle" class="btn btn-secondary font-medium">
                         <i class="fas fa-globe"></i> ខ្មែរ
                     </button>
-                    <button id="export-btn" class="btn btn-primary">
+                    <button id="export-btn" class="btn btn-primary text-white font-medium">
                         <i class="fas fa-download"></i> Export Matrix
                     </button>
                 </div>
@@ -99,7 +102,7 @@
         <div class="training-programs-section">
             <div class="section-header">
                 <h2><i class="fas fa-cogs"></i> Training Program Management</h2>
-                <button id="add-program-btn" class="btn btn-primary">
+                <button id="add-program-btn" class="btn btn-primary text-white font-medium">
                     <i class="fas fa-plus"></i> Add Program
                 </button>
             </div>
@@ -206,8 +209,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('add-program-modal')">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveTrainingProgram()">Save Program</button>
+                    <button type="button" class="btn btn-secondary font-medium" onclick="closeModal('add-program-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" onclick="saveTrainingProgram()">Save Program</button>
                 </div>
             </div>
         </div>
@@ -239,8 +242,8 @@
                                     <option value="manager">Manager</option>
                                     <option value="specialist">Specialist</option>
                                 </select>
-                                <button id="select-all-btn" class="btn btn-secondary">Select All</button>
-                                <button id="clear-selection-btn" class="btn btn-secondary">Clear Selection</button>
+                                <button id="select-all-btn" class="btn btn-secondary font-medium">Select All</button>
+                                <button id="clear-selection-btn" class="btn btn-secondary font-medium">Clear Selection</button>
                             </div>
                         </div>
                         <div class="workers-list" id="workers-list">
@@ -262,8 +265,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('bulk-assignment-modal')">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="executeBulkAssignment()">Assign Training</button>
+                    <button type="button" class="btn btn-secondary font-medium" onclick="closeModal('bulk-assignment-modal')">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" onclick="executeBulkAssignment()">Assign Training</button>
                 </div>
             </div>
         </div>

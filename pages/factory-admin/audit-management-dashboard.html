@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit Management Dashboard - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </head>
 <body class="role-factory-admin">
+    <div id="sidebarContainer"></div>
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
@@ -27,7 +32,8 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="layout-main">
+        <div style="margin-left: 280px;">
             <!-- Audit Overview -->
             <section class="audit-overview">
                 <div class="overview-grid">
@@ -83,10 +89,10 @@
                 <div class="main-column">
                     <!-- Audit Schedule -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="calendar"></i> Audit Schedule</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="scheduleAudit()">
+                                <button class="btn btn-primary text-white font-medium" onclick="scheduleAudit()">
                                     <i data-lucide="plus"></i> Schedule Audit
                                 </button>
                                 <button class="btn btn-outline" onclick="importAuditData()">
@@ -103,7 +109,7 @@
 
                     <!-- Audit Results -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="file-text"></i> Audit Results</h2>
                             <div class="card-actions">
                                 <select id="auditFilter" class="form-select">
@@ -143,7 +149,7 @@
 
                     <!-- Audit Findings -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="alert-triangle"></i> Audit Findings</h2>
                             <div class="card-actions">
                                 <select id="findingsFilter" class="form-select">
@@ -164,10 +170,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Audit Types -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="folder"></i> Audit Types</h3>
                         </div>
                         <div class="card-body">
@@ -179,7 +185,7 @@
 
                     <!-- Upcoming Audits -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="clock"></i> Upcoming Audits</h3>
                         </div>
                         <div class="card-body">
@@ -191,7 +197,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -226,7 +232,7 @@
 
                     <!-- Audit Statistics -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="trending-up"></i> Audit Statistics</h3>
                         </div>
                         <div class="card-body">
@@ -237,7 +243,8 @@
                     </div>
                 </div>
             </div>
-        </main>
+                </div>
+</main>
     </div>
 
     <!-- Schedule Audit Modal -->
@@ -332,8 +339,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('scheduleAuditModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveScheduledAudit()">Schedule Audit</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('scheduleAuditModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveScheduledAudit()">Schedule Audit</button>
             </div>
         </div>
     </div>
@@ -353,9 +360,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('auditDetailsModal')">Close</button>
-                <button class="btn btn-primary" onclick="updateAudit()">Update Audit</button>
-                <button class="btn btn-success" onclick="completeAudit()">Complete Audit</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('auditDetailsModal')">Close</button>
+                <button class="btn btn-primary text-white font-medium" onclick="updateAudit()">Update Audit</button>
+                <button class="btn btn-success text-white font-medium" onclick="completeAudit()">Complete Audit</button>
             </div>
         </div>
     </div>
@@ -375,17 +382,23 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('findingDetailsModal')">Close</button>
-                <button class="btn btn-warning" onclick="createCAP()">Create CAP</button>
-                <button class="btn btn-success" onclick="resolveFinding()">Mark Resolved</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('findingDetailsModal')">Close</button>
+                <button class="btn btn-warning text-white font-medium" onclick="createCAP()">Create CAP</button>
+                <button class="btn btn-success text-white font-medium" onclick="resolveFinding()">Mark Resolved</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
     <script src="../../assets/js/factory-admin/audit-management-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
 </body>
 </html>
+
+

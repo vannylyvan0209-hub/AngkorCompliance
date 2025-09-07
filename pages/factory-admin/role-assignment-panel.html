@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Role Assignment Panel - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body class="role-factory-admin">
@@ -27,7 +30,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="layout-main">
             <!-- Role Management Overview -->
             <section class="role-overview">
                 <div class="overview-grid">
@@ -83,7 +86,7 @@
                 <div class="main-column">
                     <!-- User List -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="users"></i> User Management</h2>
                             <div class="card-actions">
                                 <div class="search-box">
@@ -123,10 +126,10 @@
 
                     <!-- Role Templates -->
                     <div class="content-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h2><i data-lucide="shield"></i> Role Templates</h2>
                             <div class="card-actions">
-                                <button class="btn btn-primary" onclick="createRoleTemplate()">
+                                <button class="btn btn-primary text-white font-medium" onclick="createRoleTemplate()">
                                     <i data-lucide="plus"></i> Create Template
                                 </button>
                             </div>
@@ -140,10 +143,10 @@
                 </div>
 
                 <!-- Right Sidebar -->
-                <div class="sidebar">
+                <div class="layout-sidebar bg-white shadow-lg">
                     <!-- Role Assignment -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="user-check"></i> Role Assignment</h3>
                         </div>
                         <div class="card-body">
@@ -180,10 +183,10 @@
                                 </div>
                                 
                                 <div class="form-actions">
-                                    <button class="btn btn-primary" onclick="assignRole()">
+                                    <button class="btn btn-primary text-white font-medium" onclick="assignRole()">
                                         <i data-lucide="check"></i> Assign Role
                                     </button>
-                                    <button class="btn btn-secondary" onclick="cancelAssignment()">
+                                    <button class="btn btn-secondary font-medium" onclick="cancelAssignment()">
                                         <i data-lucide="x"></i> Cancel
                                     </button>
                                 </div>
@@ -198,7 +201,7 @@
 
                     <!-- Permission Matrix -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="key"></i> Permission Matrix</h3>
                         </div>
                         <div class="card-body">
@@ -210,7 +213,7 @@
 
                     <!-- Quick Actions -->
                     <div class="sidebar-card">
-                        <div class="card-header">
+                        <div class="card-header bg-neutral-50">
                             <h3><i data-lucide="zap"></i> Quick Actions</h3>
                         </div>
                         <div class="card-body">
@@ -296,8 +299,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('roleAssignmentModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmRoleAssignment()">Assign Role</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('roleAssignmentModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="confirmRoleAssignment()">Assign Role</button>
             </div>
         </div>
     </div>
@@ -336,8 +339,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('bulkRoleModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmBulkAssignment()">Assign Roles</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('bulkRoleModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="confirmBulkAssignment()">Assign Roles</button>
             </div>
         </div>
     </div>
@@ -413,15 +416,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('roleTemplateModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveRoleTemplate()">Save Template</button>
+                <button class="btn btn-secondary font-medium" onclick="closeModal('roleTemplateModal')">Cancel</button>
+                <button class="btn btn-primary text-white font-medium" onclick="saveRoleTemplate()">Save Template</button>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script src="../../assets/js/factory-admin/role-assignment-panel.js"></script>
 </body>

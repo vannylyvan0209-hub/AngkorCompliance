@@ -1,0 +1,809 @@
+# Angkor Compliance Platform - 2025 Design System
+
+## Overview
+
+The Angkor Compliance Platform 2025 Design System is a comprehensive, modern design system built for the next generation of compliance management. It incorporates the latest design trends including glassmorphism, neumorphism, micro-interactions, and role-specific theming while maintaining accessibility and cultural sensitivity.
+
+## 🎨 Design Philosophy
+
+### Cultural Heritage
+- **Angkor Heritage**: Inspired by Cambodian cultural heritage with gold accents
+- **Professional Trust**: Clean, corporate aesthetic that builds confidence
+- **Compliance Focus**: Structured, organized interface reflecting regulatory requirements
+
+### 2025 Design Trends
+- **Glassmorphism**: Frosted glass effects with backdrop blur
+- **Neumorphism 2.0**: Soft, tactile UI elements with subtle shadows
+- **Micro-interactions**: Subtle animations that enhance user experience
+- **Bento Grid Layouts**: Asymmetrical, organized content presentation
+- **Edge-to-Edge Design**: Maximizing screen real estate
+- **Ultra-Minimal Navigation**: Context-sensitive, clean navigation
+
+## 🏗️ Architecture
+
+### File Structure
+```
+assets/css/
+├── design-tokens-2025.css      # Core design tokens and variables
+├── components-2025.css         # Component library
+├── layout-2025.css            # Layout system and utilities
+└── role-themes-2025.css       # Role-specific theming
+```
+
+### Core Files
+- **design-tokens-2025.css**: Design system foundation with CSS custom properties
+- **components-2025.css**: Reusable UI components with modern styling
+- **layout-2025.css**: Responsive layout system and utilities
+- **role-themes-2025.css**: Role-specific color schemes and theming
+
+## 🎯 Design Tokens
+
+### Color System
+
+#### Primary Colors (Gold Theme)
+```css
+--primary-500: #D4AF37;  /* Main brand gold */
+--primary-600: #B8941F;  /* Darker gold */
+--primary-700: #8B6914;  /* Darkest gold */
+```
+
+#### Role-Specific Colors
+- **Worker**: Gold theme (`#D4AF37`)
+- **Factory Admin**: Dark gold (`#B8941F`)
+- **HR Staff**: Green (`#22c55e`)
+- **Grievance Committee**: Orange (`#f59e0b`)
+- **Auditor**: Blue (`#3b82f6`)
+- **Analytics User**: Purple (`#8b5cf6`)
+- **Super Admin**: Red (`#ef4444`)
+
+#### Glassmorphism Colors
+```css
+--glass-bg: rgba(255, 255, 255, 0.95);
+--glass-border: rgba(255, 255, 255, 0.2);
+--glass-blur: blur(10px);
+--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+```
+
+#### Neumorphism Colors
+```css
+--neu-light: #ffffff;
+--neu-dark: #d1d9e6;
+--neu-shadow-light: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+--neu-inset-light: inset 20px 20px 60px #bebebe, inset -20px -20px 60px #ffffff;
+```
+
+### Typography
+
+#### Font Stack
+```css
+--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+--font-khmer: 'Noto Sans Khmer', 'Khmer OS', 'Leelawadee UI', sans-serif;
+```
+
+#### Scale
+```css
+--text-xs: 0.75rem;      /* 12px */
+--text-sm: 0.875rem;     /* 14px */
+--text-base: 1rem;       /* 16px */
+--text-lg: 1.125rem;     /* 18px */
+--text-xl: 1.25rem;      /* 20px */
+--text-2xl: 1.5rem;      /* 24px */
+--text-3xl: 1.875rem;    /* 30px */
+--text-4xl: 2.25rem;     /* 36px */
+--text-5xl: 3rem;        /* 48px */
+```
+
+### Spacing System
+```css
+--space-1: 0.25rem;      /* 4px */
+--space-2: 0.5rem;       /* 8px */
+--space-3: 0.75rem;      /* 12px */
+--space-4: 1rem;         /* 16px */
+--space-5: 1.25rem;      /* 20px */
+--space-6: 1.5rem;       /* 24px */
+--space-8: 2rem;         /* 32px */
+--space-10: 2.5rem;      /* 40px */
+--space-12: 3rem;        /* 48px */
+```
+
+### Border Radius
+```css
+--radius-sm: 0.125rem;   /* 2px */
+--radius-base: 0.25rem;  /* 4px */
+--radius-md: 0.375rem;   /* 6px */
+--radius-lg: 0.5rem;     /* 8px */
+--radius-xl: 0.75rem;    /* 12px */
+--radius-2xl: 1rem;      /* 16px */
+--radius-3xl: 1.5rem;    /* 24px */
+--radius-full: 9999px;
+```
+
+### Shadows
+```css
+--shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+```
+
+## 🧩 Components
+
+### Buttons
+
+#### Basic Usage
+```html
+<button class="btn btn-primary">Primary Button</button>
+<button class="btn btn-secondary">Secondary Button</button>
+<button class="btn btn-ghost">Ghost Button</button>
+<button class="btn btn-outline">Outline Button</button>
+```
+
+#### Sizes
+```html
+<button class="btn btn-primary btn-xs">Extra Small</button>
+<button class="btn btn-primary btn-sm">Small</button>
+<button class="btn btn-primary">Default</button>
+<button class="btn btn-primary btn-lg">Large</button>
+<button class="btn btn-primary btn-xl">Extra Large</button>
+```
+
+#### Special Styles
+```html
+<button class="btn btn-glass">Glassmorphism</button>
+<button class="btn btn-neu">Neumorphism</button>
+```
+
+#### Semantic Colors
+```html
+<button class="btn btn-success">Success</button>
+<button class="btn btn-warning">Warning</button>
+<button class="btn btn-danger">Danger</button>
+<button class="btn btn-info">Info</button>
+```
+
+### Cards
+
+#### Glass Card
+```html
+<div class="card">
+    <div class="card-header">
+        <h4>Card Header</h4>
+    </div>
+    <div class="card-body">
+        <p>Card content goes here.</p>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-primary btn-sm">Action</button>
+    </div>
+</div>
+```
+
+#### Neumorphism Card
+```html
+<div class="card card-neu">
+    <div class="card-header">
+        <h4>Neumorphism Card</h4>
+    </div>
+    <div class="card-body">
+        <p>Soft, tactile design with subtle shadows.</p>
+    </div>
+</div>
+```
+
+### Forms
+
+#### Basic Form
+```html
+<form class="role-form">
+    <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" class="form-input" id="email" placeholder="Enter your email">
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label" for="role">Role</label>
+        <select class="form-input form-select" id="role">
+            <option>Select your role</option>
+            <option>Worker</option>
+            <option>Factory Admin</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label" for="message">Message</label>
+        <textarea class="form-input form-textarea" id="message" placeholder="Enter your message"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+```
+
+#### Form Variants
+```html
+<!-- Neumorphism form input -->
+<input type="text" class="form-input form-input-neu" placeholder="Neumorphism input">
+```
+
+### Navigation
+
+#### Role Navigation
+```html
+<nav class="role-nav">
+    <div class="nav">
+        <div class="nav-item">
+            <a href="#" class="nav-link active">
+                <i data-lucide="home"></i>
+                Dashboard
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link">
+                <i data-lucide="users"></i>
+                Workers
+            </a>
+        </div>
+    </div>
+</nav>
+```
+
+### Badges
+
+#### Basic Badges
+```html
+<span class="badge badge-primary">Primary</span>
+<span class="badge badge-success">Success</span>
+<span class="badge badge-warning">Warning</span>
+<span class="badge badge-danger">Danger</span>
+<span class="badge badge-info">Info</span>
+<span class="badge badge-neutral">Neutral</span>
+```
+
+### Alerts
+
+#### Alert Types
+```html
+<div class="alert alert-success">
+    <i data-lucide="check-circle"></i>
+    <div>
+        <strong>Success!</strong> Your action was completed successfully.
+    </div>
+</div>
+
+<div class="alert alert-warning">
+    <i data-lucide="alert-triangle"></i>
+    <div>
+        <strong>Warning!</strong> Please review the following items.
+    </div>
+</div>
+
+<div class="alert alert-danger">
+    <i data-lucide="x-circle"></i>
+    <div>
+        <strong>Error!</strong> Something went wrong. Please try again.
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <i data-lucide="info"></i>
+    <div>
+        <strong>Info!</strong> Here's some helpful information.
+    </div>
+</div>
+```
+
+### Progress Bars
+
+#### Basic Progress
+```html
+<div class="progress">
+    <div class="progress-bar" style="width: 75%;"></div>
+</div>
+```
+
+### Loading States
+
+#### Spinners
+```html
+<div class="spinner spinner-sm"></div>
+<div class="spinner"></div>
+<div class="spinner spinner-lg"></div>
+```
+
+#### Skeleton Loading
+```html
+<div class="skeleton" style="height: 1rem; width: 100%;"></div>
+<div class="skeleton" style="height: 1rem; width: 80%;"></div>
+<div class="skeleton" style="height: 1rem; width: 60%;"></div>
+```
+
+### Avatars
+
+#### Avatar Sizes
+```html
+<div class="avatar avatar-xs">XS</div>
+<div class="avatar avatar-sm">SM</div>
+<div class="avatar avatar-md">MD</div>
+<div class="avatar avatar-lg">LG</div>
+<div class="avatar avatar-xl">XL</div>
+```
+
+## 📐 Layout System
+
+### Container System
+
+#### Basic Container
+```html
+<div class="container">
+    <!-- Content goes here -->
+</div>
+```
+
+#### Container Variants
+```html
+<div class="container-fluid">Fluid container</div>
+<div class="container-narrow">Narrow container</div>
+<div class="container-wide">Wide container</div>
+```
+
+### Grid System
+
+#### Basic Grid
+```html
+<div class="grid grid-cols-3 gap-6">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+</div>
+```
+
+#### Grid Variants
+```html
+<!-- Different column counts -->
+<div class="grid grid-cols-1">1 column</div>
+<div class="grid grid-cols-2">2 columns</div>
+<div class="grid grid-cols-3">3 columns</div>
+<div class="grid grid-cols-4">4 columns</div>
+<div class="grid grid-cols-6">6 columns</div>
+<div class="grid grid-cols-12">12 columns</div>
+
+<!-- Different gaps -->
+<div class="grid grid-cols-3 gap-1">Small gap</div>
+<div class="grid grid-cols-3 gap-4">Medium gap</div>
+<div class="grid grid-cols-3 gap-8">Large gap</div>
+```
+
+### Bento Grid Layout
+
+#### Basic Bento Grid
+```html
+<div class="bento-grid">
+    <div class="bento-item bento-item-sm">Small item</div>
+    <div class="bento-item bento-item-md">Medium item</div>
+    <div class="bento-item bento-item-lg">Large item</div>
+    <div class="bento-item bento-item-xl">Extra large item</div>
+</div>
+```
+
+### Flexbox Utilities
+
+#### Basic Flex
+```html
+<div class="flex items-center justify-between">
+    <div>Left content</div>
+    <div>Right content</div>
+</div>
+```
+
+#### Flex Variants
+```html
+<!-- Direction -->
+<div class="flex flex-col">Column</div>
+<div class="flex flex-row">Row</div>
+
+<!-- Justify content -->
+<div class="flex justify-start">Start</div>
+<div class="flex justify-center">Center</div>
+<div class="flex justify-end">End</div>
+<div class="flex justify-between">Between</div>
+<div class="flex justify-around">Around</div>
+
+<!-- Align items -->
+<div class="flex items-start">Start</div>
+<div class="flex items-center">Center</div>
+<div class="flex items-end">End</div>
+<div class="flex items-stretch">Stretch</div>
+```
+
+### Spacing Utilities
+
+#### Margin
+```html
+<div class="m-4">Margin all sides</div>
+<div class="mx-4">Margin horizontal</div>
+<div class="my-4">Margin vertical</div>
+<div class="mt-4">Margin top</div>
+<div class="mr-4">Margin right</div>
+<div class="mb-4">Margin bottom</div>
+<div class="ml-4">Margin left</div>
+```
+
+#### Padding
+```html
+<div class="p-4">Padding all sides</div>
+<div class="px-4">Padding horizontal</div>
+<div class="py-4">Padding vertical</div>
+<div class="pt-4">Padding top</div>
+<div class="pr-4">Padding right</div>
+<div class="pb-4">Padding bottom</div>
+<div class="pl-4">Padding left</div>
+```
+
+## 🎭 Role-Specific Theming
+
+### Applying Role Themes
+
+#### HTML Structure
+```html
+<body class="role-theme worker">
+    <!-- Content with worker theme -->
+</body>
+```
+
+#### Available Roles
+```html
+<body class="role-theme worker">Worker Theme</body>
+<body class="role-theme factory-admin">Factory Admin Theme</body>
+<body class="role-theme hr-staff">HR Staff Theme</body>
+<body class="role-theme grievance-committee">Grievance Committee Theme</body>
+<body class="role-theme auditor">Auditor Theme</body>
+<body class="role-theme analytics-user">Analytics User Theme</body>
+<body class="role-theme super-admin">Super Admin Theme</body>
+```
+
+### Role-Specific Components
+
+#### Role Status
+```html
+<span class="role-status worker">
+    <span class="role-status-dot"></span>
+    Worker
+</span>
+```
+
+#### Role Widgets
+```html
+<div class="role-widget">
+    <div class="role-widget-header">
+        <div class="role-widget-icon">
+            <i data-lucide="shield-check"></i>
+        </div>
+        <h3 class="role-widget-title">Compliance Status</h3>
+    </div>
+    <div class="role-widget-content">
+        <p>Current compliance metrics and status.</p>
+    </div>
+</div>
+```
+
+### Role Dashboard Layout
+```html
+<div class="role-dashboard">
+    <header class="header">
+        <div class="header-content">
+            <!-- Header content -->
+        </div>
+    </header>
+    
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <!-- Sidebar content -->
+        </div>
+    </aside>
+    
+    <main class="main">
+        <div class="main-content">
+            <!-- Main content -->
+        </div>
+    </main>
+</div>
+```
+
+## 📱 Responsive Design
+
+### Breakpoints
+```css
+/* Mobile First Approach */
+@media (max-width: 640px) { /* Small devices */ }
+@media (min-width: 641px) and (max-width: 768px) { /* Medium devices */ }
+@media (min-width: 769px) and (max-width: 1024px) { /* Large devices */ }
+@media (min-width: 1025px) { /* Extra large devices */ }
+```
+
+### Responsive Utilities
+
+#### Grid Responsiveness
+```html
+<!-- Responsive grid that adapts to screen size -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+</div>
+```
+
+#### Mobile-First Components
+```html
+<!-- Sidebar that collapses on mobile -->
+<div class="sidebar">
+    <!-- Desktop sidebar -->
+</div>
+
+<!-- Main content that adjusts margin -->
+<div class="main">
+    <!-- Main content -->
+</div>
+```
+
+## ♿ Accessibility
+
+### WCAG 2.1 AA Compliance
+
+#### Color Contrast
+- All color combinations meet WCAG AA standards
+- High contrast mode support
+- Color-blind friendly palette
+
+#### Focus Management
+```css
+/* Focus visible improvements */
+.btn:focus-visible,
+.nav-link:focus-visible,
+.form-input:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+```
+
+#### Reduced Motion Support
+```css
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .card,
+    .nav-link {
+        transition: none;
+        animation: none;
+    }
+}
+```
+
+#### High Contrast Mode
+```css
+@media (prefers-contrast: high) {
+    .btn,
+    .card,
+    .form-input {
+        border-width: 2px;
+    }
+}
+```
+
+### Keyboard Navigation
+- All interactive elements are keyboard accessible
+- Logical tab order
+- Skip links for main content
+- Focus indicators for all focusable elements
+
+### Screen Reader Support
+- Semantic HTML structure
+- ARIA labels where needed
+- Descriptive alt text for images
+- Proper heading hierarchy
+
+## 🌙 Dark Mode Support
+
+### Automatic Dark Mode
+```css
+@media (prefers-color-scheme: dark) {
+    :root {
+        --neutral-50: #0a0a0a;
+        --neutral-100: #171717;
+        /* ... other dark mode overrides */
+    }
+}
+```
+
+### Manual Dark Mode
+```html
+<body class="dark-mode">
+    <!-- Dark mode content -->
+</body>
+```
+
+## 🎨 Customization
+
+### CSS Custom Properties
+All design tokens are available as CSS custom properties, making it easy to customize:
+
+```css
+:root {
+    /* Override primary color */
+    --primary-500: #your-color;
+    
+    /* Override spacing */
+    --space-4: 1.5rem;
+    
+    /* Override typography */
+    --font-sans: 'Your Font', sans-serif;
+}
+```
+
+### Component Customization
+Components can be customized by extending the base classes:
+
+```css
+.custom-button {
+    @apply btn btn-primary;
+    /* Additional custom styles */
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+}
+```
+
+## 🚀 Performance
+
+### Optimization Features
+- **CSS Custom Properties**: Efficient theming and customization
+- **Minimal CSS**: Only necessary styles included
+- **Efficient Selectors**: Optimized for performance
+- **Reduced Motion**: Respects user preferences
+- **Print Styles**: Optimized for printing
+
+### Loading Strategy
+```html
+<!-- Critical CSS loaded first -->
+<link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+<link rel="stylesheet" href="assets/css/components-2025.css">
+
+<!-- Non-critical CSS loaded after -->
+<link rel="stylesheet" href="assets/css/layout-2025.css">
+<link rel="stylesheet" href="assets/css/role-themes-2025.css">
+```
+
+## 📚 Usage Examples
+
+### Complete Page Example
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angkor Compliance Platform</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+    <link rel="stylesheet" href="assets/css/components-2025.css">
+    <link rel="stylesheet" href="assets/css/layout-2025.css">
+    <link rel="stylesheet" href="assets/css/role-themes-2025.css">
+</head>
+<body class="role-theme worker">
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>Angkor Compliance Platform</h1>
+                <nav class="role-nav">
+                    <div class="nav">
+                        <a href="#" class="nav-link active">Dashboard</a>
+                        <a href="#" class="nav-link">Workers</a>
+                        <a href="#" class="nav-link">Compliance</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <div class="bento-grid">
+                <div class="bento-item">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Compliance Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bento-item">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Activities</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-success">
+                                <i data-lucide="check-circle"></i>
+                                <div>Compliance report submitted successfully.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+```
+
+## 🔧 Development Guidelines
+
+### File Organization
+1. **design-tokens-2025.css**: Core design system variables
+2. **components-2025.css**: Reusable UI components
+3. **layout-2025.css**: Layout system and utilities
+4. **role-themes-2025.css**: Role-specific theming
+
+### Naming Conventions
+- **BEM Methodology**: Block__Element--Modifier
+- **CSS Custom Properties**: kebab-case with descriptive names
+- **Component Classes**: Semantic, descriptive names
+- **Utility Classes**: Functional, single-purpose names
+
+### Code Standards
+- **Consistent Indentation**: 4 spaces
+- **Meaningful Comments**: Explain complex logic
+- **Modular CSS**: Single responsibility principle
+- **Performance First**: Optimize for speed and efficiency
+
+## 📖 Resources
+
+### Design System Files
+- `design-system-showcase-2025.html` - Complete showcase page
+- `assets/css/design-tokens-2025.css` - Design tokens
+- `assets/css/components-2025.css` - Component library
+- `assets/css/layout-2025.css` - Layout system
+- `assets/css/role-themes-2025.css` - Role theming
+
+### External Dependencies
+- **Inter Font**: Modern, readable typeface
+- **Noto Sans Khmer**: Khmer language support
+- **Lucide Icons**: Consistent icon system
+- **AOS Library**: Scroll animations
+
+### Browser Support
+- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- **CSS Features**: CSS Grid, Flexbox, Custom Properties, Backdrop Filter
+- **Fallbacks**: Graceful degradation for older browsers
+
+## 🤝 Contributing
+
+### Guidelines
+1. Follow the established design patterns
+2. Maintain accessibility standards
+3. Test across different devices and browsers
+4. Document new components and utilities
+5. Ensure performance optimization
+
+### Testing Checklist
+- [ ] Accessibility compliance (WCAG 2.1 AA)
+- [ ] Cross-browser compatibility
+- [ ] Responsive design on all breakpoints
+- [ ] Dark mode support
+- [ ] Reduced motion preferences
+- [ ] High contrast mode
+- [ ] Print styles
+- [ ] Performance optimization
+
+## 📄 License
+
+This design system is proprietary to the Angkor Compliance Platform. All rights reserved.
+
+---
+
+**Version**: 2025.1.0  
+**Last Updated**: January 2025  
+**Maintainer**: Angkor Compliance Platform Team

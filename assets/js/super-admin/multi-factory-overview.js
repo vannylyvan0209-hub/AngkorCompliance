@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Multi-Factory Overview System for Super Admin
 
 class MultiFactoryOverview {
     constructor() {

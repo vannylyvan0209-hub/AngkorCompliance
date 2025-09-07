@@ -1,0 +1,55 @@
+/* ===============================================
+   ANGKOR COMPLIANCE - MAIN CSS 2025
+   Consolidated Design System Entry Point
+   =============================================== */
+
+/* ===== CORE DESIGN SYSTEM ===== */
+@import url('./design-tokens-2025.css');
+@import url('./layout-2025.css');
+@import url('./navigation-2025.css');
+
+/* ===== COMPONENT SYSTEM ===== */
+@import url('./components-2025.css');
+@import url('./alerts-2025.css');
+
+/* ===== ROLE-SPECIFIC DASHBOARDS ===== */
+@import url('./auditor-dashboard-2025.css');
+@import url('./factory-dashboard-2025.css');
+@import url('./grievance-committee-dashboard-2025.css');
+@import url('./hr-dashboard-2025.css');
+@import url('./super-admin-dashboard-2025.css');
+@import url('./worker-portal-2025.css');
+
+/* ===== FEATURE-SPECIFIC STYLES ===== */
+@import url('./analytics-dashboard-2025.css');
+@import url('./monitoring-dashboard-2025.css');
+@import url('./comprehensive-testing-2025.css');
+@import url('./deployment-pipeline-2025.css');
+@import url('./post-deployment-monitoring-2025.css');
+@import url('./feedback-collection-2025.css');
+
+/* ===== RESPONSIVE OVERRIDES ===== */
+/* Mobile-first responsive design adjustments */
+@media (max-width: 768px) {
+    /* Mobile-specific overrides will be handled by individual component files */
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    /* Print-specific styles are handled by print-2025.css */
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+    /* High contrast overrides are handled by accessibility-2025.css */
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    /* Reduced motion overrides are handled by accessibility-2025.css */
+}
+
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+    /* Dark mode styles are handled by dark-mode-2025.css */
+}

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Diagnostics - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* System Diagnostics Specific Styles */
+        .system-diagnostics {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .diagnostics-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .diagnostics-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* System Health Overview */
+        .system-health {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .health-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .health-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .health-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .health-card.healthy::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .health-card.warning::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .health-card.critical::before {
+            background: linear-gradient(90deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .health-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .health-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .health-icon.healthy {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .health-icon.warning {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .health-icon.critical {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+        }
+        
+        .health-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .health-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .health-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-healthy {
+            background: var(--success-500);
+        }
+        
+        .status-warning {
+            background: var(--warning-500);
+        }
+        
+        .status-critical {
+            background: var(--danger-500);
+        }
+        
+        /* Performance Metrics */
+        .performance-metrics {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .metrics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .metrics-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .metrics-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .metric-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .metric-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .chart-container {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .chart-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-3);
+        }
+        
+        .chart-canvas {
+            height: 300px;
+        }
+        
+        .metrics-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .metric-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .metric-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+        
+        .metric-item-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+        }
+        
+        .metric-item-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-item-change {
+            font-size: var(--text-xs);
+            color: var(--success-600);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        /* System Logs */
+        .system-logs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .logs-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .logs-filters {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .log-filter {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .log-filter:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .log-filter.active {
+            background: var(--primary-600);
+            border-color: var(--primary-600);
+            color: white;
+        }
+        
+        .logs-container {
+            background: var(--neutral-900);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .log-entry {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--neutral-700);
+            font-size: var(--text-sm);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-timestamp {
+            color: var(--neutral-400);
+            min-width: 150px;
+        }
+        
+        .log-level {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .log-level.info {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .log-level.warning {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .log-level.error {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .log-message {
+            color: var(--neutral-200);
+            flex: 1;
+        }
+        
+        /* Diagnostic Tools */
+        .diagnostic-tools {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tools-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .tools-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .tool-card {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            transition: all 0.2s ease;
+        }
+        
+        .tool-card:hover {
+            background: var(--neutral-100);
+        }
+        
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .tool-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .tool-status.ready {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .tool-status.running {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .tool-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .tool-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .tool-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+        }
+        
+        .tool-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .tool-btn.danger:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-200);
+            color: var(--danger-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .system-health {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .system-diagnostics {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .system-health {
+                grid-template-columns: 1fr;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div class="system-diagnostics">
+            <div class="diagnostics-container">
+                <!-- Diagnostics Header -->
+                <div class="diagnostics-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>System Diagnostics & Monitoring</h1>
+                            <p>System health monitoring, troubleshooting tools, and performance metrics</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="runSystemDiagnostics()">
+                                <i data-lucide="activity"></i>
+                                Run Diagnostics
+                            </button>
+                            <button class="action-btn" onclick="exportDiagnostics()">
+                                <i data-lucide="download"></i>
+                                Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Health Overview -->
+                <div class="system-health fade-in">
+                    <div class="health-card healthy">
+                        <div class="health-header">
+                            <div class="health-icon healthy">
+                                <i data-lucide="server"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">Server Status</div>
+                        <div class="health-value" id="serverStatus">Online</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-healthy"></span>
+                            <span>All systems operational</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-card healthy">
+                        <div class="health-header">
+                            <div class="health-icon healthy">
+                                <i data-lucide="database"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">Database</div>
+                        <div class="health-value" id="databaseStatus">Connected</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Response time: 12ms</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-card warning">
+                        <div class="health-header">
+                            <div class="health-icon warning">
+                                <i data-lucide="cpu"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">CPU Usage</div>
+                        <div class="health-value" id="cpuUsage">78%</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-warning"></span>
+                            <span>High usage detected</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-card healthy">
+                        <div class="health-header">
+                            <div class="health-icon healthy">
+                                <i data-lucide="hard-drive"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">Disk Usage</div>
+                        <div class="health-value" id="diskUsage">45%</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Normal usage</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-card healthy">
+                        <div class="health-header">
+                            <div class="health-icon healthy">
+                                <i data-lucide="memory-stick"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">Memory</div>
+                        <div class="health-value" id="memoryUsage">62%</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Normal usage</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-card healthy">
+                        <div class="health-header">
+                            <div class="health-icon healthy">
+                                <i data-lucide="wifi"></i>
+                            </div>
+                        </div>
+                        <div class="health-title">Network</div>
+                        <div class="health-value" id="networkStatus">Active</div>
+                        <div class="health-status">
+                            <span class="status-indicator status-healthy"></span>
+                            <span>Latency: 5ms</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Metrics -->
+                <div class="performance-metrics fade-in">
+                    <div class="metrics-header">
+                        <h3 class="metrics-title">Performance Metrics</h3>
+                        <div class="metrics-actions">
+                            <button class="metric-btn" onclick="refreshMetrics()">Refresh</button>
+                            <button class="metric-btn" onclick="exportMetrics()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="chart-container">
+                            <div class="chart-title">System Performance Trends</div>
+                            <canvas id="performanceChart" class="chart-canvas"></canvas>
+                        </div>
+                        
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <div class="metric-item-header">
+                                    <div class="metric-item-title">Response Time</div>
+                                </div>
+                                <div class="metric-item-value" id="responseTime">145ms</div>
+                                <div class="metric-item-change">
+                                    <i data-lucide="trending-down"></i>
+                                    <span>-8% vs last hour</span>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <div class="metric-item-header">
+                                    <div class="metric-item-title">Throughput</div>
+                                </div>
+                                <div class="metric-item-value" id="throughput">1,247 req/s</div>
+                                <div class="metric-item-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+12% vs last hour</span>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <div class="metric-item-header">
+                                    <div class="metric-item-title">Error Rate</div>
+                                </div>
+                                <div class="metric-item-value" id="errorRate">0.2%</div>
+                                <div class="metric-item-change">
+                                    <i data-lucide="trending-down"></i>
+                                    <span>-0.1% vs last hour</span>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <div class="metric-item-header">
+                                    <div class="metric-item-title">Active Users</div>
+                                </div>
+                                <div class="metric-item-value" id="activeUsers">1,847</div>
+                                <div class="metric-item-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+156 vs last hour</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Logs -->
+                <div class="system-logs fade-in">
+                    <div class="logs-header">
+                        <h3 class="logs-title">System Logs</h3>
+                        <div class="logs-filters">
+                            <button class="log-filter active" onclick="filterLogs('all')">All</button>
+                            <button class="log-filter" onclick="filterLogs('info')">Info</button>
+                            <button class="log-filter" onclick="filterLogs('warning')">Warning</button>
+                            <button class="log-filter" onclick="filterLogs('error')">Error</button>
+                        </div>
+                    </div>
+                    
+                    <div class="logs-container" id="logsContainer">
+                        <!-- Log entries will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Diagnostic Tools -->
+                <div class="diagnostic-tools fade-in">
+                    <div class="tools-header">
+                        <h3 class="tools-title">Diagnostic Tools</h3>
+                    </div>
+                    
+                    <div class="tools-grid" id="diagnosticToolsGrid">
+                        <!-- Diagnostic tools will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/super-admin/system-diagnostics.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function runSystemDiagnostics() {
+            console.log('Running system diagnostics...');
+            // Implement diagnostics functionality
+        }
+        
+        function exportDiagnostics() {
+            console.log('Exporting diagnostics...');
+            // Implement export functionality
+        }
+        
+        function refreshMetrics() {
+            console.log('Refreshing metrics...');
+            // Implement refresh functionality
+        }
+        
+        function exportMetrics() {
+            console.log('Exporting metrics...');
+            // Implement export functionality
+        }
+        
+        function filterLogs(level) {
+            console.log('Filtering logs by level:', level);
+            // Implement log filtering
+        }
+    </script>
+</body>
+</html>

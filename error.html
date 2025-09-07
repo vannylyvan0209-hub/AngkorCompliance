@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" class="role-theme worker">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Angkor Compliance Platform</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+    <link rel="stylesheet" href="assets/css/components-2025.css">
+    <link rel="stylesheet" href="assets/css/layout-2025.css">
+    <link rel="stylesheet" href="assets/css/role-themes-2025.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <style>
+        /* Error Page Specific Styles */
+        .error-page {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .error-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--danger-50) 0%, var(--warning-50) 100%);
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .error-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            padding: var(--space-8);
+        }
+        
+        .error-illustration {
+            margin-bottom: var(--space-8);
+            position: relative;
+        }
+        
+        .error-illustration svg {
+            width: 200px;
+            height: 200px;
+            opacity: 0.8;
+        }
+        
+        .error-illustration .floating-element {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .error-illustration .floating-element:nth-child(2) {
+            top: 20px;
+            right: 20px;
+            animation-delay: 0.5s;
+        }
+        
+        .error-illustration .floating-element:nth-child(3) {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 1s;
+        }
+        
+        .error-illustration .floating-element:nth-child(4) {
+            top: 50%;
+            right: 10px;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .error-code {
+            font-size: 6rem;
+            font-weight: var(--font-black);
+            color: var(--danger-500);
+            line-height: 1;
+            margin-bottom: var(--space-4);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .error-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--text);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-description {
+            font-size: var(--text-lg);
+            color: var(--text-muted);
+            margin-bottom: var(--space-8);
+            line-height: var(--leading-relaxed);
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .error-details {
+            margin-top: var(--space-8);
+            text-align: left;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+        
+        .error-details h3 {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--text);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-details pre {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            overflow-x: auto;
+            margin: 0;
+        }
+        
+        .error-tips {
+            margin-top: var(--space-8);
+            text-align: left;
+        }
+        
+        .error-tips h3 {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--text);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-tips ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .error-tips li {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+            padding: var(--space-3);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+        
+        .error-tips li i {
+            color: var(--info-500);
+            margin-top: 2px;
+        }
+        
+        .error-tips li span {
+            color: var(--text);
+            font-size: var(--text-sm);
+        }
+        
+        .error-contact {
+            margin-top: var(--space-8);
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+        
+        .error-contact h3 {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--text);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-contact p {
+            color: var(--text-muted);
+            margin-bottom: var(--space-4);
+        }
+        
+        .error-contact-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .error-footer {
+            position: absolute;
+            bottom: var(--space-6);
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        
+        .error-footer p {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+            margin: 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: var(--space-6);
+            }
+            
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: var(--text-2xl);
+            }
+            
+            .error-description {
+                font-size: var(--text-base);
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-actions .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .error-details,
+            .error-tips,
+            .error-contact {
+                padding: var(--space-4);
+            }
+            
+            .error-contact-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-contact-actions .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .error-illustration svg {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-container {
+                padding: var(--space-4);
+            }
+            
+            .error-code {
+                font-size: 3rem;
+            }
+            
+            .error-title {
+                font-size: var(--text-xl);
+            }
+        }
+        
+        /* Dark Mode Adjustments */
+        @media (prefers-color-scheme: dark) {
+            .error-page::before {
+                background: linear-gradient(135deg, var(--danger-900) 0%, var(--warning-900) 100%);
+                opacity: 0.2;
+            }
+            
+            .error-details,
+            .error-tips li,
+            .error-contact {
+                background: var(--surface-dark);
+                border-color: var(--border-dark);
+            }
+        }
+        
+        .dark-mode .error-page::before {
+            background: linear-gradient(135deg, var(--danger-900) 0%, var(--warning-900) 100%);
+            opacity: 0.2;
+        }
+        
+        .dark-mode .error-details,
+        .dark-mode .error-tips li,
+        .dark-mode .error-contact {
+            background: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+        
+        /* Print Styles */
+        @media print {
+            .error-page::before {
+                display: none;
+            }
+            
+            .error-illustration {
+                display: none;
+            }
+            
+            .error-actions {
+                display: none;
+            }
+            
+            .error-contact-actions {
+                display: none;
+            }
+            
+            .error-footer {
+                position: static;
+                transform: none;
+                margin-top: var(--space-8);
+            }
+        }
+    </style>
+</head>
+<body class="error-page">
+    <div class="error-container">
+        <!-- Error Illustration -->
+        <div class="error-illustration" data-aos="fade-up" data-aos-duration="800">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main Error Icon -->
+                <circle cx="100" cy="100" r="80" fill="var(--danger-100)" stroke="var(--danger-300)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="60" fill="var(--danger-50)" stroke="var(--danger-200)" stroke-width="1"/>
+                <text x="100" y="110" text-anchor="middle" font-size="30" font-weight="bold" fill="var(--danger-500)">!</text>
+                
+                <!-- Floating Elements -->
+                <circle class="floating-element" cx="50" cy="50" r="8" fill="var(--warning-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="150" cy="50" r="6" fill="var(--info-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="50" cy="150" r="10" fill="var(--secondary-300)" opacity="0.6"/>
+                <circle class="floating-element" cx="150" cy="150" r="7" fill="var(--accent-300)" opacity="0.6"/>
+            </svg>
+        </div>
+        
+        <!-- Error Code -->
+        <div class="error-code" data-aos="fade-up" data-aos-delay="200" id="errorCode">500</div>
+        
+        <!-- Error Title -->
+        <h1 class="error-title" data-aos="fade-up" data-aos-delay="400" id="errorTitle">Internal Server Error</h1>
+        
+        <!-- Error Description -->
+        <p class="error-description" data-aos="fade-up" data-aos-delay="600" id="errorDescription">
+            Something went wrong on our end. We're working to fix this issue. 
+            Please try again later or contact support if the problem persists.
+        </p>
+        
+        <!-- Error Actions -->
+        <div class="error-actions" data-aos="fade-up" data-aos-delay="800">
+            <button class="btn btn-primary btn-lg" onclick="goHome()">
+                <i data-lucide="home"></i>
+                Go Home
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="goBack()">
+                <i data-lucide="arrow-left"></i>
+                Go Back
+            </button>
+            <button class="btn btn-outline btn-lg" onclick="retry()">
+                <i data-lucide="refresh-cw"></i>
+                Try Again
+            </button>
+        </div>
+        
+        <!-- Error Details -->
+        <div class="error-details" data-aos="fade-up" data-aos-delay="1000" id="errorDetails" style="display: none;">
+            <h3>Error Details</h3>
+            <pre id="errorDetailsContent"></pre>
+        </div>
+        
+        <!-- Error Tips -->
+        <div class="error-tips" data-aos="fade-up" data-aos-delay="1200">
+            <h3>What you can do:</h3>
+            <ul>
+                <li>
+                    <i data-lucide="refresh-cw"></i>
+                    <span>Refresh the page and try again</span>
+                </li>
+                <li>
+                    <i data-lucide="clock"></i>
+                    <span>Wait a few minutes and try again</span>
+                </li>
+                <li>
+                    <i data-lucide="home"></i>
+                    <span>Go back to the homepage</span>
+                </li>
+                <li>
+                    <i data-lucide="help-circle"></i>
+                    <span>Contact support if the issue persists</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Contact Support -->
+        <div class="error-contact" data-aos="fade-up" data-aos-delay="1400">
+            <h3>Need Help?</h3>
+            <p>If you continue to experience issues, please contact our support team.</p>
+            <div class="error-contact-actions">
+                <button class="btn btn-primary" onclick="contactSupport()">
+                    <i data-lucide="mail"></i>
+                    Contact Support
+                </button>
+                <button class="btn btn-outline" onclick="openHelp()">
+                    <i data-lucide="help-circle"></i>
+                    Help Center
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="error-footer" data-aos="fade-up" data-aos-delay="1600">
+        <p>&copy; 2025 Angkor Compliance Platform. All rights reserved.</p>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="assets/js/role-switching-2025.js"></script>
+    <script src="assets/js/dark-mode-2025.js"></script>
+    <script src="assets/js/accessibility-2025.js"></script>
+    <script src="assets/js/performance-2025.js"></script>
+    <script src="assets/js/cross-browser-2025.js"></script>
+    <script src="assets/js/animations-2025.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Get error details from URL parameters
+        function getErrorDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorCode = urlParams.get('code') || '500';
+            const errorTitle = urlParams.get('title') || 'Internal Server Error';
+            const errorDescription = urlParams.get('description') || 'Something went wrong on our end. We\'re working to fix this issue. Please try again later or contact support if the problem persists.';
+            const errorDetails = urlParams.get('details');
+            
+            // Update page content
+            document.getElementById('errorCode').textContent = errorCode;
+            document.getElementById('errorTitle').textContent = errorTitle;
+            document.getElementById('errorDescription').textContent = errorDescription;
+            
+            // Show error details if available
+            if (errorDetails) {
+                document.getElementById('errorDetailsContent').textContent = decodeURIComponent(errorDetails);
+                document.getElementById('errorDetails').style.display = 'block';
+            }
+            
+            // Update page title
+            document.title = `${errorTitle} - Angkor Compliance Platform`;
+        }
+        
+        // Navigation Functions
+        function goHome() {
+            window.location.href = '/index.html';
+        }
+        
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/index.html';
+            }
+        }
+        
+        function retry() {
+            window.location.reload();
+        }
+        
+        function contactSupport() {
+            window.location.href = '/help?contact=support';
+        }
+        
+        function openHelp() {
+            window.location.href = '/help';
+        }
+        
+        // Initialize error details
+        getErrorDetails();
+        
+        // Initialize role switcher
+        if (window.roleSwitcher) {
+            window.roleSwitcher.init();
+        }
+        
+        // Initialize dark mode manager
+        if (window.darkModeManager) {
+            window.darkModeManager.init();
+        }
+        
+        // Initialize accessibility manager
+        if (window.accessibilityManager) {
+            window.accessibilityManager.init();
+        }
+        
+        // Initialize performance manager
+        if (window.performanceManager) {
+            window.performanceManager.init();
+        }
+        
+        // Initialize cross-browser compatibility
+        if (window.crossBrowserManager) {
+            window.crossBrowserManager.init();
+        }
+        
+        // Initialize animation manager
+        if (window.animationManager) {
+            window.animationManager.init();
+        }
+        
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to error tips
+            const errorTips = document.querySelectorAll('.error-tips li');
+            errorTips.forEach(tip => {
+                tip.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.background = 'var(--primary-50)';
+                });
+                
+                tip.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.background = 'var(--surface)';
+                });
+            });
+            
+            // Add click effects to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+/**
+ * Angkor Compliance Platform - User Profile 2025
+ * Modern user profile pages with avatar and form styling
+ */
+
+/* ===== USER PROFILE VARIABLES ===== */
+:root {
+    --profile-bg: var(--surface);
+    --profile-text: var(--text);
+    --profile-border: var(--border);
+    --profile-shadow: var(--shadow-sm);
+    --profile-avatar-size: 120px;
+    --profile-avatar-border: 4px solid var(--primary-500);
+    --profile-section-bg: var(--surface);
+    --profile-form-bg: var(--surface);
+    --profile-form-border: var(--border);
+    --profile-form-focus: var(--primary-500);
+    --profile-padding: var(--space-6);
+    --profile-gap: var(--space-4);
+    --profile-border-radius: var(--radius-lg);
+}
+
+/* ===== USER PROFILE BASE ===== */
+.user-profile {
+    background: var(--profile-bg);
+    color: var(--profile-text);
+    min-height: 100vh;
+    padding: var(--profile-padding);
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+    padding: var(--space-6);
+    background: var(--profile-section-bg);
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-border-radius);
+    box-shadow: var(--profile-shadow);
+}
+
+.user-profile-avatar {
+    width: var(--profile-avatar-size);
+    height: var(--profile-avatar-size);
+    border-radius: 50%;
+    border: var(--profile-avatar-border);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.user-profile-info {
+    flex: 1;
+}
+
+.user-profile-name {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--profile-text);
+    margin: 0 0 var(--space-2) 0;
+}
+
+.user-profile-role {
+    font-size: var(--text-lg);
+    font-weight: var(--font-medium);
+    color: var(--primary-600);
+    margin: 0 0 var(--space-2) 0;
+}
+
+.user-profile-email {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4) 0;
+}
+
+.user-profile-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.user-profile-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+}
+
+.user-profile-section {
+    background: var(--profile-section-bg);
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-border-radius);
+    padding: var(--space-6);
+    box-shadow: var(--profile-shadow);
+}
+
+.user-profile-section-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--profile-text);
+    margin: 0 0 var(--space-4) 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--profile-border);
+}
+
+.user-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.user-profile-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.user-profile-form-label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--profile-text);
+}
+
+.user-profile-form-input {
+    padding: var(--space-3);
+    background: var(--profile-form-bg);
+    color: var(--profile-text);
+    border: 1px solid var(--profile-form-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    transition: var(--transition-colors);
+}
+
+.user-profile-form-input:focus {
+    outline: none;
+    border-color: var(--profile-form-focus);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.user-profile-form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.user-profile-form-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--profile-border);
+}
+
+.user-profile-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--primary-500);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.user-profile-button:hover {
+    background: var(--primary-600);
+}
+
+.user-profile-button.secondary {
+    background: var(--gray-100);
+    color: var(--text);
+}
+
+.user-profile-button.secondary:hover {
+    background: var(--gray-200);
+}
+
+/* ===== USER PROFILE VARIANTS ===== */
+.user-profile-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.user-profile-neumorphism {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-compact {
+    --profile-padding: var(--space-4);
+    --profile-gap: var(--space-3);
+    --profile-avatar-size: 80px;
+}
+
+.user-profile-large {
+    --profile-padding: var(--space-8);
+    --profile-gap: var(--space-6);
+    --profile-avatar-size: 160px;
+}
+
+/* ===== USER PROFILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .user-profile-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .user-profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* ===== USER PROFILE DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+    .user-profile {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .user-profile-header,
+    .user-profile-section {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .user-profile-name {
+        color: var(--text-dark);
+    }
+    
+    .user-profile-role {
+        color: var(--primary-400);
+    }
+    
+    .user-profile-email {
+        color: var(--text-muted-dark);
+    }
+    
+    .user-profile-section-title {
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .user-profile-form-label {
+        color: var(--text-dark);
+    }
+    
+    .user-profile-form-input {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .user-profile-form-input:focus {
+        border-color: var(--primary-400);
+    }
+    
+    .user-profile-button.secondary {
+        background: var(--gray-800);
+        color: var(--text-dark);
+    }
+    
+    .user-profile-button.secondary:hover {
+        background: var(--gray-700);
+    }
+}
+
+.dark-mode .user-profile {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .user-profile-header,
+.dark-mode .user-profile-section {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .user-profile-name {
+    color: var(--text-dark);
+}
+
+.dark-mode .user-profile-role {
+    color: var(--primary-400);
+}
+
+.dark-mode .user-profile-email {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .user-profile-section-title {
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .user-profile-form-label {
+    color: var(--text-dark);
+}
+
+.dark-mode .user-profile-form-input {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .user-profile-form-input:focus {
+    border-color: var(--primary-400);
+}
+
+.dark-mode .user-profile-button.secondary {
+    background: var(--gray-800);
+    color: var(--text-dark);
+}
+
+.dark-mode .user-profile-button.secondary:hover {
+    background: var(--gray-700);
+}

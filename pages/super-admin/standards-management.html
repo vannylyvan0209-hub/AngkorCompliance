@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standards Registry - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Standards Management Specific Styles */
+        .standards-management {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .management-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .management-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        /* Standards Grid */
+        .standards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .standard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .standard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .standard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+        }
+        
+        .standard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-4);
+        }
+        
+        .standard-info h3 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-1);
+        }
+        
+        .standard-info p {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .standard-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .status-draft {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .status-deprecated {
+            background: var(--danger-100);
+            color: var(--danger-700);
+        }
+        
+        .standard-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .metric-item {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-label {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .standard-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .standard-action-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+        }
+        
+        .standard-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        .standard-action-btn.danger:hover {
+            background: var(--danger-50);
+            border-color: var(--danger-200);
+            color: var(--danger-700);
+        }
+        
+        /* Standards Analytics */
+        .standards-analytics {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .analytics-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .analytics-filters {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .filter-select {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: var(--text-sm);
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+        
+        .chart-container {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .chart-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-3);
+        }
+        
+        .chart-canvas {
+            height: 300px;
+        }
+        
+        .analytics-summary {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+        
+        .summary-item {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .summary-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .summary-value {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-bottom: var(--space-1);
+        }
+        
+        .summary-change {
+            font-size: var(--text-xs);
+            color: var(--success-600);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+        
+        /* Standard Creation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .modal-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--neutral-100);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--neutral-200);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--neutral-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            background: white;
+        }
+        
+        .form-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-3);
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .checkbox-item label {
+            font-size: var(--text-sm);
+            color: var(--neutral-700);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+        }
+        
+        .btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .standards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .standards-management {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .standards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .standard-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    <div id="sidebarContainer"></div>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div style="margin-left: 280px;">
+        <div class="standards-management">
+            <div class="management-container">
+                <!-- Management Header -->
+                <div class="management-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Standards Registry</h1>
+                            <p>Manage compliance standards, requirements, and audit checklists</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="openStandardCreation()">
+                                <i data-lucide="plus"></i>
+                                Create Standard
+                            </button>
+                            <button class="action-btn" onclick="exportStandards()">
+                                <i data-lucide="download"></i>
+                                Export Standards
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Standards Grid -->
+                <div class="standards-grid fade-in" id="standardsGrid">
+                    <!-- Standard cards will be loaded here -->
+                </div>
+                
+                <!-- Standards Analytics -->
+                <div class="standards-analytics fade-in">
+                    <div class="analytics-header">
+                        <h2 class="analytics-title">Standards Analytics</h2>
+                        <div class="analytics-filters">
+                            <select class="filter-select" id="timeFilter">
+                                <option value="7d">Last 7 days</option>
+                                <option value="30d">Last 30 days</option>
+                                <option value="90d">Last 90 days</option>
+                                <option value="1y">Last year</option>
+                            </select>
+                            <select class="filter-select" id="categoryFilter">
+                                <option value="all">All Categories</option>
+                                <option value="labor">Labor Standards</option>
+                                <option value="environmental">Environmental</option>
+                                <option value="safety">Safety</option>
+                                <option value="quality">Quality</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-grid">
+                        <div class="chart-container">
+                            <div class="chart-title">Standards Usage Over Time</div>
+                            <canvas id="standardsUsageChart" class="chart-canvas"></canvas>
+                        </div>
+                        
+                        <div class="analytics-summary">
+                            <div class="summary-item">
+                                <div class="summary-title">Total Standards</div>
+                                <div class="summary-value" id="totalStandards">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+5.2%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Active Standards</div>
+                                <div class="summary-value" id="activeStandards">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+3.1%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Compliance Rate</div>
+                                <div class="summary-value" id="complianceRate">0%</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+2.4%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-title">Audit Checklists</div>
+                                <div class="summary-value" id="auditChecklists">0</div>
+                                <div class="summary-change">
+                                    <i data-lucide="trending-up"></i>
+                                    <span>+8.7%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+</main>
+    
+    <!-- Standard Creation Modal -->
+    <div class="modal-overlay" id="standardCreationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Standard</h2>
+                <button class="modal-close" onclick="closeStandardCreation()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="standardCreationForm">
+                <div class="form-group">
+                    <label class="form-label">Standard Name</label>
+                    <input type="text" class="form-input" id="standardName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Standard Code</label>
+                    <input type="text" class="form-input" id="standardCode" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="standardCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="labor">Labor Standards</option>
+                        <option value="environmental">Environmental</option>
+                        <option value="safety">Safety</option>
+                        <option value="quality">Quality</option>
+                        <option value="social">Social Compliance</option>
+                        <option value="ethical">Ethical Sourcing</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Version</label>
+                    <input type="text" class="form-input" id="standardVersion" value="1.0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input form-textarea" id="standardDescription" placeholder="Brief description of the standard..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Applicable Industries</label>
+                    <div class="form-checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="industry-garment" value="garment">
+                            <label for="industry-garment">Garment Manufacturing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="industry-textile" value="textile">
+                            <label for="industry-textile">Textile Production</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="industry-footwear" value="footwear">
+                            <label for="industry-footwear">Footwear Manufacturing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="industry-electronics" value="electronics">
+                            <label for="industry-electronics">Electronics Assembly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="industry-general" value="general">
+                            <label for="industry-general">General Manufacturing</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="standardStatus" required>
+                        <option value="draft">Draft</option>
+                        <option value="active">Active</option>
+                        <option value="deprecated">Deprecated</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Effective Date</label>
+                    <input type="date" class="form-input" id="effectiveDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Expiry Date (Optional)</label>
+                    <input type="date" class="form-input" id="expiryDate">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeStandardCreation()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Standard</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/standards-management.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function openStandardCreation() {
+            document.getElementById('standardCreationModal').classList.add('show');
+        }
+        
+        function closeStandardCreation() {
+            document.getElementById('standardCreationModal').classList.remove('show');
+        }
+        
+        function exportStandards() {
+            console.log('Exporting standards...');
+            // Implement export functionality
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('standardCreationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeStandardCreation();
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('standardCreationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Submitting standard creation...');
+            // Implement form submission
+        });
+    </script>
+</body>
+</html>
+

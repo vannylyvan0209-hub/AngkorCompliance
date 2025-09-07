@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support System - Super Admin - Angkor Compliance Platform</title>
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    
+    <!-- Modern CSS -->
+    
+    
+    
+    
+    
+    
+    <!-- Inter Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <style>
+        /* Role-specific styling for super_admin */
+        body.role-super-admin {
+            --role-primary: var(--super-admin-primary);
+            --role-secondary: var(--super-admin-secondary);
+            --role-accent: var(--super-admin-accent);
+        }
+        
+        /* Help & Support System Specific Styles */
+        .help-support-system {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: var(--space-6);
+        }
+        
+        .help-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .help-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .header-left p {
+            color: var(--neutral-600);
+            font-size: var(--text-lg);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, var(--danger-600), var(--danger-700));
+        }
+        
+        /* Help Overview */
+        .help-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .overview-card.documentation::before {
+            background: linear-gradient(90deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-card.tickets::before {
+            background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-card.resolved::before {
+            background: linear-gradient(90deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-card.response::before {
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .overview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-xl);
+        }
+        
+        .overview-icon.documentation {
+            background: linear-gradient(135deg, var(--info-500), var(--info-600));
+        }
+        
+        .overview-icon.tickets {
+            background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        }
+        
+        .overview-icon.resolved {
+            background: linear-gradient(135deg, var(--success-500), var(--success-600));
+        }
+        
+        .overview-icon.response {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+        }
+        
+        .overview-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .overview-description {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        /* Help Management */
+        .help-management {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .management-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .management-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .management-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Help Tabs */
+        .help-tabs {
+            margin-bottom: var(--space-6);
+        }
+        
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-2);
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .tab-btn {
+            padding: var(--space-3) var(--space-6);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-600);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Documentation */
+        .documentation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .doc-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .doc-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .doc-title {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .doc-category {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .doc-category.guide {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .doc-category.tutorial {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .doc-category.reference {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .doc-category.faq {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .doc-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+        
+        .doc-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        /* Support Tickets */
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+        
+        .ticket-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .ticket-item:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .ticket-item.open {
+            border-left: 4px solid var(--warning-500);
+        }
+        
+        .ticket-item.in-progress {
+            border-left: 4px solid var(--info-500);
+        }
+        
+        .ticket-item.resolved {
+            border-left: 4px solid var(--success-500);
+        }
+        
+        .ticket-item.closed {
+            border-left: 4px solid var(--neutral-400);
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-2);
+        }
+        
+        .ticket-title {
+            font-size: var(--text-md);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .ticket-id {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+            background: var(--neutral-100);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+        }
+        
+        .ticket-content {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+        
+        .ticket-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ticket-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .ticket-status.open {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .ticket-status.in-progress {
+            background: var(--info-100);
+            color: var(--info-700);
+        }
+        
+        .ticket-status.resolved {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .ticket-status.closed {
+            background: var(--neutral-100);
+            color: var(--neutral-600);
+        }
+        
+        .ticket-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .ticket-action-btn {
+            padding: var(--space-1) var(--space-2);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .ticket-action-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Knowledge Base */
+        .knowledge-base {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+        
+        .kb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .kb-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .kb-search {
+            position: relative;
+            width: 300px;
+        }
+        
+        .kb-search-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-10) var(--space-3) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+        }
+        
+        .kb-search-icon {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neutral-400);
+        }
+        
+        .kb-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .kb-category {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .kb-category:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .kb-category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .kb-category-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .kb-category-count {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+        }
+        
+        .kb-category-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .kb-category-articles {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .kb-article {
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            background: var(--neutral-50);
+            font-size: var(--text-sm);
+            color: var(--neutral-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .kb-article:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+        
+        /* Contact Support */
+        .contact-support {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .contact-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .contact-method {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+        
+        .contact-method:hover {
+            border-color: var(--primary-200);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .contact-method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        
+        .contact-method-name {
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+        
+        .contact-method-status {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .contact-method-status.available {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+        
+        .contact-method-status.busy {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+        
+        .contact-method-description {
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+            margin-bottom: var(--space-3);
+        }
+        
+        .contact-method-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .contact-btn {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-md);
+            background: white;
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .contact-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-200);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .help-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .documentation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kb-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .help-support-system {
+                padding: var(--space-4);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+            
+            .help-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-nav {
+                flex-wrap: wrap;
+            }
+            
+            .kb-search {
+                width: 100%;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+</head>
+<body class="role-super-admin">
+    <div id="sidebarContainer"></div>
+    
+    <!-- Navigation Sidebar -->
+    <div id="navigation-sidebar" class="layout-sidebar bg-white shadow-lg"></div>
+
+    <!-- Header -->
+    <header id="navigation-header" class="header"></header>
+
+    <!-- Quick Actions -->
+    <div id="quick-actions" class="quick-actions-container"></div>
+
+    <!-- Main Content -->
+    <main class="layout-main">
+        <div style="margin-left: 280px;">
+        <div class="help-support-system">
+            <div class="help-container">
+                <!-- Help Header -->
+                <div class="help-header fade-in">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <h1>Help & Support System</h1>
+                            <p>Comprehensive help documentation, support ticket system, and administrator assistance tools</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="action-btn secondary" onclick="createTicket()">
+                                <i data-lucide="plus"></i>
+                                Create Ticket
+                            </button>
+                            <button class="action-btn" onclick="searchKnowledgeBase()">
+                                <i data-lucide="search"></i>
+                                Search Help
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Help Overview -->
+                <div class="help-overview fade-in">
+                    <div class="overview-card documentation">
+                        <div class="overview-header">
+                            <div class="overview-icon documentation">
+                                <i data-lucide="book-open"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Documentation</div>
+                        <div class="overview-value" id="totalDocumentation">47</div>
+                        <div class="overview-description">Help articles and guides available</div>
+                    </div>
+                    
+                    <div class="overview-card tickets">
+                        <div class="overview-header">
+                            <div class="overview-icon tickets">
+                                <i data-lucide="ticket"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Open Tickets</div>
+                        <div class="overview-value" id="openTickets">12</div>
+                        <div class="overview-description">Support tickets requiring attention</div>
+                    </div>
+                    
+                    <div class="overview-card resolved">
+                        <div class="overview-header">
+                            <div class="overview-icon resolved">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Resolved</div>
+                        <div class="overview-value" id="resolvedTickets">156</div>
+                        <div class="overview-description">Tickets resolved this month</div>
+                    </div>
+                    
+                    <div class="overview-card response">
+                        <div class="overview-header">
+                            <div class="overview-icon response">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="overview-title">Avg Response</div>
+                        <div class="overview-value" id="avgResponseTime">2.3h</div>
+                        <div class="overview-description">Average response time</div>
+                    </div>
+                </div>
+                
+                <!-- Help Management -->
+                <div class="help-management fade-in">
+                    <div class="management-header">
+                        <h3 class="management-title">Help & Support Management</h3>
+                        <div class="management-actions">
+                            <button class="management-btn" onclick="refreshHelp()">Refresh</button>
+                            <button class="management-btn" onclick="exportTickets()">Export</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Tabs -->
+                    <div class="help-tabs">
+                        <div class="tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('documentation')">Documentation</button>
+                            <button class="tab-btn" onclick="switchTab('tickets')">Support Tickets</button>
+                            <button class="tab-btn" onclick="switchTab('knowledge')">Knowledge Base</button>
+                            <button class="tab-btn" onclick="switchTab('contact')">Contact Support</button>
+                        </div>
+                        
+                        <!-- Documentation Tab -->
+                        <div id="documentation-tab" class="tab-content active">
+                            <div class="documentation-grid" id="documentationGrid">
+                                <!-- Documentation items will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Support Tickets Tab -->
+                        <div id="tickets-tab" class="tab-content">
+                            <div class="ticket-list" id="ticketList">
+                                <!-- Support tickets will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Knowledge Base Tab -->
+                        <div id="knowledge-tab" class="tab-content">
+                            <div class="knowledge-base">
+                                <div class="kb-header">
+                                    <h3 class="kb-title">Knowledge Base</h3>
+                                    <div class="kb-search">
+                                        <input type="text" class="kb-search-input" placeholder="Search knowledge base..." id="kbSearchInput">
+                                        <i data-lucide="search" class="kb-search-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="kb-categories" id="kbCategories">
+                                    <!-- Knowledge base categories will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Support Tab -->
+                        <div id="contact-tab" class="tab-content">
+                            <div class="contact-support">
+                                <div class="contact-header">
+                                    <h3 class="contact-title">Contact Support</h3>
+                                </div>
+                                <div class="contact-methods" id="contactMethods">
+                                    <!-- Contact methods will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+</main>
+    
+    <!-- Scripts -->
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/navigation-component.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/super-admin-navigation.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/help-support-core.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/super-admin/help-support-actions.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+    
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+        
+        // Global functions for HTML onclick handlers
+        function createTicket() {
+            console.log('Creating support ticket...');
+            // Implement create ticket
+        }
+        
+        function searchKnowledgeBase() {
+            console.log('Searching knowledge base...');
+            // Implement search functionality
+        }
+        
+        function refreshHelp() {
+            console.log('Refreshing help system...');
+            // Implement refresh functionality
+        }
+        
+        function exportTickets() {
+            console.log('Exporting tickets...');
+            // Implement export functionality
+        }
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

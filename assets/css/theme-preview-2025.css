@@ -1,0 +1,361 @@
+/**
+ * Angkor Compliance Platform - Theme Preview 2025
+ * Theme preview functionality for role switching
+ */
+
+/* ===== THEME PREVIEW VARIABLES ===== */
+:root {
+    --theme-preview-bg: var(--surface);
+    --theme-preview-text: var(--text);
+    --theme-preview-border: var(--border);
+    --theme-preview-shadow: var(--shadow-lg);
+    --theme-preview-overlay: rgba(0, 0, 0, 0.5);
+    --theme-preview-padding: var(--space-6);
+    --theme-preview-gap: var(--space-4);
+    --theme-preview-border-radius: var(--radius-lg);
+    --theme-preview-z-index: 1000;
+    --theme-preview-overlay-z-index: 999;
+}
+
+/* ===== THEME PREVIEW BASE ===== */
+.theme-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--theme-preview-overlay);
+    backdrop-filter: blur(8px);
+    z-index: var(--theme-preview-overlay-z-index);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-all);
+}
+
+.theme-preview.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.theme-preview-content {
+    background: var(--theme-preview-bg);
+    border: 1px solid var(--theme-preview-border);
+    border-radius: var(--theme-preview-border-radius);
+    box-shadow: var(--theme-preview-shadow);
+    padding: var(--theme-preview-padding);
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: var(--transition-transform);
+}
+
+.theme-preview.active .theme-preview-content {
+    transform: scale(1);
+}
+
+.theme-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--theme-preview-border);
+}
+
+.theme-preview-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--theme-preview-text);
+    margin: 0;
+}
+
+.theme-preview-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-preview-close:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.theme-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--theme-preview-gap);
+    margin-bottom: var(--space-6);
+}
+
+.theme-preview-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: var(--transition-all);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-preview-item:hover {
+    border-color: var(--primary-500);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-preview-item.active {
+    border-color: var(--primary-500);
+    background: var(--primary-50);
+}
+
+.theme-preview-item-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+.theme-preview-item-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--primary-600);
+}
+
+.theme-preview-item-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text);
+    margin: 0;
+}
+
+.theme-preview-item-description {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3) 0;
+}
+
+.theme-preview-item-preview {
+    height: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-preview-item-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, var(--primary-100), var(--secondary-100));
+    opacity: 0.3;
+}
+
+.theme-preview-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--theme-preview-border);
+}
+
+.theme-preview-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--primary-500);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.theme-preview-button:hover {
+    background: var(--primary-600);
+}
+
+.theme-preview-button.secondary {
+    background: var(--gray-100);
+    color: var(--text);
+}
+
+.theme-preview-button.secondary:hover {
+    background: var(--gray-200);
+}
+
+/* ===== THEME PREVIEW VARIANTS ===== */
+.theme-preview-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.theme-preview-glass .theme-preview-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.theme-preview-neumorphism {
+    background: var(--surface);
+}
+
+.theme-preview-neumorphism .theme-preview-content {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ===== THEME PREVIEW RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .theme-preview-content {
+        width: 95%;
+        padding: var(--space-4);
+    }
+    
+    .theme-preview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .theme-preview-actions {
+        flex-direction: column;
+    }
+}
+
+/* ===== THEME PREVIEW DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+    .theme-preview {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    
+    .theme-preview-content {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .theme-preview-title {
+        color: var(--text-dark);
+    }
+    
+    .theme-preview-close {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .theme-preview-close:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .theme-preview-item {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .theme-preview-item:hover {
+        border-color: var(--primary-400);
+    }
+    
+    .theme-preview-item.active {
+        border-color: var(--primary-400);
+        background: var(--primary-900);
+    }
+    
+    .theme-preview-item-title {
+        color: var(--text-dark);
+    }
+    
+    .theme-preview-item-description {
+        color: var(--text-muted-dark);
+    }
+    
+    .theme-preview-item-preview {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .theme-preview-button.secondary {
+        background: var(--gray-800);
+        color: var(--text-dark);
+    }
+    
+    .theme-preview-button.secondary:hover {
+        background: var(--gray-700);
+    }
+}
+
+.dark-mode .theme-preview {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .theme-preview-content {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .theme-preview-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .theme-preview-close {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .theme-preview-close:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .theme-preview-item {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .theme-preview-item:hover {
+    border-color: var(--primary-400);
+}
+
+.dark-mode .theme-preview-item.active {
+    border-color: var(--primary-400);
+    background: var(--primary-900);
+}
+
+.dark-mode .theme-preview-item-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .theme-preview-item-description {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .theme-preview-item-preview {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .theme-preview-button.secondary {
+    background: var(--gray-800);
+    color: var(--text-dark);
+}
+
+.dark-mode .theme-preview-button.secondary:hover {
+    background: var(--gray-700);
+}

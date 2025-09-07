@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Intake - Angkor Compliance 4</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/grievance-committee/case-intake.css">
+    
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="case-intake-container">
+        <!-- Header Section -->
+        <header class="intake-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="text-3xl font-bold text-neutral-900">
+                        <i data-lucide="file-plus"></i>
+                        Case Intake
+                    </h1>
+                    <p class="page-subtitle">Receive and process new grievance cases</p>
+                </div>
+                <div class="header-right">
+                    <div class="intake-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Today's Intakes</span>
+                            <span class="stat-value" id="todayIntakes">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Pending Review</span>
+                            <span class="stat-value" id="pendingReview">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg. Processing Time</span>
+                            <span class="stat-value" id="avgProcessingTime">15 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Intake Form Section -->
+        <div class="intake-form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>New Grievance Case</h2>
+                    <div class="case-number-display">
+                        <span class="case-number-label">Case Number:</span>
+                        <span class="case-number" id="generatedCaseNumber">GC-XXXXXX-XXXXX</span>
+                        <button class="btn btn-sm btn-outline" onclick="generateNewCaseNumber()">
+                            <i data-lucide="refresh-cw"></i>
+                            Regenerate
+                        </button>
+                    </div>
+                </div>
+
+                <form id="intakeForm" class="intake-form">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="user"></i>
+                            Basic Information
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Case Title *</label>
+                                <input type="text" id="caseTitle" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Submission Date *</label>
+                                <input type="datetime-local" id="submissionDate" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Worker ID (if known)</label>
+                                <input type="text" id="workerId" class="form-input" placeholder="Optional">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select id="department" class="form-select">
+                                    <option value="">Select Department</option>
+                                    <option value="production">Production</option>
+                                    <option value="quality">Quality Control</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="warehouse">Warehouse</option>
+                                    <option value="office">Office</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grievance Details -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="alert-triangle"></i>
+                            Grievance Details
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Category *</label>
+                                <select id="grievanceCategory" class="form-select" required onchange="updateSubcategories()">
+                                    <option value="">Select Category</option>
+                                    <option value="harassment">Harassment</option>
+                                    <option value="discrimination">Discrimination</option>
+                                    <option value="safety">Safety</option>
+                                    <option value="wages">Wages & Benefits</option>
+                                    <option value="working_conditions">Working Conditions</option>
+                                    <option value="management">Management Issues</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Subcategory</label>
+                                <select id="grievanceSubcategory" class="form-select">
+                                    <option value="">Select Subcategory</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea id="grievanceDescription" class="form-textarea" rows="4" required 
+                                      placeholder="Please provide a detailed description of the grievance..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Additional Details</label>
+                            <textarea id="additionalDetails" class="form-textarea" rows="3" 
+                                      placeholder="Any additional information, witnesses, or context..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Severity Assessment -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="gauge"></i>
+                            Severity Assessment
+                        </h3>
+                        <div class="severity-assessment">
+                            <div class="severity-options">
+                                <div class="severity-option" onclick="selectSeverity('low')">
+                                    <input type="radio" name="severity" value="low" id="severityLow">
+                                    <label for="severityLow" class="severity-label">
+                                        <div class="severity-icon severity-low">
+                                            <i data-lucide="info"></i>
+                                        </div>
+                                        <div class="severity-content">
+                                            <h4>Low</h4>
+                                            <p>Minor issues, no immediate risk</p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="severity-option" onclick="selectSeverity('medium')">
+                                    <input type="radio" name="severity" value="medium" id="severityMedium">
+                                    <label for="severityMedium" class="severity-label">
+                                        <div class="severity-icon severity-medium">
+                                            <i data-lucide="alert-circle"></i>
+                                        </div>
+                                        <div class="severity-content">
+                                            <h4>Medium</h4>
+                                            <p>Moderate concern, requires attention</p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="severity-option" onclick="selectSeverity('high')">
+                                    <input type="radio" name="severity" value="high" id="severityHigh">
+                                    <label for="severityHigh" class="severity-label">
+                                        <div class="severity-icon severity-high">
+                                            <i data-lucide="alert-triangle"></i>
+                                        </div>
+                                        <div class="severity-content">
+                                            <h4>High</h4>
+                                            <p>Serious issue, immediate action needed</p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="severity-option" onclick="selectSeverity('critical')">
+                                    <input type="radio" name="severity" value="critical" id="severityCritical">
+                                    <label for="severityCritical" class="severity-label">
+                                        <div class="severity-icon severity-critical">
+                                            <i data-lucide="x-circle"></i>
+                                        </div>
+                                        <div class="severity-content">
+                                            <h4>Critical</h4>
+                                            <p>Emergency situation, immediate intervention</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Initial Assessment -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="clipboard-list"></i>
+                            Initial Assessment
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Priority Level *</label>
+                                <select id="priorityLevel" class="form-select" required>
+                                    <option value="">Select Priority</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Urgency</label>
+                                <select id="urgencyLevel" class="form-select">
+                                    <option value="normal">Normal</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="emergency">Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Initial Notes</label>
+                            <textarea id="initialNotes" class="form-textarea" rows="3" 
+                                      placeholder="Initial observations, immediate actions needed..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Assignment -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="users"></i>
+                            Assignment
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Assigned Investigator</label>
+                                <select id="assignedInvestigator" class="form-select">
+                                    <option value="">Select Investigator</option>
+                                    <!-- Investigators will be populated here -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Auto-assign based on workload</label>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="autoAssign" class="form-checkbox" checked>
+                                    <label for="autoAssign" class="checkbox-label">Enable auto-assignment</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i data-lucide="phone"></i>
+                            Contact Information
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Contact Name</label>
+                                <input type="text" id="contactName" class="form-input" placeholder="Optional">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Contact Phone</label>
+                                <input type="tel" id="contactPhone" class="form-input" placeholder="Optional">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Email</label>
+                            <input type="email" id="contactEmail" class="form-input" placeholder="Optional">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preferred Contact Method</label>
+                            <select id="preferredContact" class="form-select">
+                                <option value="phone">Phone</option>
+                                <option value="email">Email</option>
+                                <option value="in_person">In Person</option>
+                                <option value="anonymous">Anonymous</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="saveDraft()">
+                            <i data-lucide="save"></i>
+                            Save Draft
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="previewCase()">
+                            <i data-lucide="eye"></i>
+                            Preview
+                        </button>
+                        <button type="submit" class="btn btn-primary text-white font-medium">
+                            <i data-lucide="check"></i>
+                            Submit Case
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Case Preview</h2>
+                <button class="modal-close" onclick="closeModal('previewModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="case-preview-content">
+                    <!-- Preview content will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('previewModal')">Back to Edit</button>
+                <button class="btn btn-primary text-white font-medium" onclick="submitCase()">Submit Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Case Submitted Successfully</h2>
+                <button class="modal-close" onclick="closeModal('successModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="success-content">
+                    <div class="success-icon">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <h3>Case Created</h3>
+                    <p>Your grievance case has been successfully submitted and is now in the system.</p>
+                    <div class="case-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Case Number:</span>
+                            <span class="summary-value" id="successCaseNumber"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Status:</span>
+                            <span class="summary-value">New</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Priority:</span>
+                            <span class="summary-value" id="successPriority"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="createNewCase()">Create Another Case</button>
+                <button class="btn btn-primary text-white font-medium" onclick="goToCaseManagement()">Go to Case Management</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spinner-icon"></i>
+            <p>Processing case...</p>
+        </div>
+    </div>
+
+    <script src="../../assets/js/firebase-config.js"></script>
+    <script src="../../assets/js/grievance-committee/case-intake.js"></script>
+</body>
+</html>

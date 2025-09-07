@@ -1,9 +1,9 @@
 /**
  * Angkor Compliance Platform - User Management Service
- * Handles user CRUD operations, role management, and factory associations
+ * Handles user CRUD operations, role assignments, and factory management
  */
 
-import { Firebase } from '../../firebase-config.js';
+import { Firebase } from '../../../firebase-config.js';
 
 class UserManagementService {
     constructor() {

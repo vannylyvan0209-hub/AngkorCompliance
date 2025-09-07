@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evidence Organization - Angkor Compliance 4</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/auditor/evidence-organization.css">
+    
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
@@ -18,7 +21,7 @@
         <header class="organization-header">
             <div class="header-content">
                 <div class="header-left">
-                    <h1 class="page-title">
+                    <h1 class="text-3xl font-bold text-neutral-900">
                         <i data-lucide="folder-open"></i>
                         Evidence Organization
                     </h1>
@@ -58,7 +61,7 @@
                             <i data-lucide="wand-2"></i>
                             Auto Categorize
                         </button>
-                        <button class="btn btn-primary" onclick="evidenceOrganizer.uploadEvidence()">
+                        <button class="btn btn-primary text-white font-medium" onclick="evidenceOrganizer.uploadEvidence()">
                             <i data-lucide="upload"></i>
                             Upload Evidence
                         </button>
@@ -170,7 +173,7 @@
                         <h3>Drag & Drop Files Here</h3>
                         <p>or click to browse files</p>
                         <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4,.mp3,.wav" style="display: none;">
-                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <button class="btn btn-primary text-white font-medium" onclick="document.getElementById('fileInput').click()">
                             Choose Files
                         </button>
                     </div>
@@ -231,7 +234,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceOrganizer.closeUploadModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="evidenceOrganizer.processUpload()">Upload Evidence</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceOrganizer.processUpload()">Upload Evidence</button>
             </div>
         </div>
     </div>
@@ -253,7 +256,7 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceOrganizer.closeDetailsModal()">Close</button>
                 <button class="btn btn-outline" onclick="evidenceOrganizer.editEvidence()">Edit</button>
-                <button class="btn btn-primary" onclick="evidenceOrganizer.downloadEvidence()">Download</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceOrganizer.downloadEvidence()">Download</button>
             </div>
         </div>
     </div>
@@ -298,7 +301,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceOrganizer.closeCreateFolderModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="evidenceOrganizer.saveFolder()">Create Folder</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceOrganizer.saveFolder()">Create Folder</button>
             </div>
         </div>
     </div>
@@ -357,7 +360,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceOrganizer.closeBulkOrganizeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="evidenceOrganizer.applyBulkOrganization()">Apply Changes</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceOrganizer.applyBulkOrganization()">Apply Changes</button>
             </div>
         </div>
     </div>
@@ -371,7 +374,7 @@
     </div>
 
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script src="../../assets/js/auditor/evidence-organization.js"></script>
 </body>

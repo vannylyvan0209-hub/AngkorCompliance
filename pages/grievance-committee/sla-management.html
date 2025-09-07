@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLA Management - Grievance Committee</title>
     <link rel="icon" type="image/png" href="../../favicon.png">
-    <link rel="stylesheet" href="../../assets/css/main-modern.css">
-    <link rel="stylesheet" href="../../assets/css/color-system.css">
-    <link rel="stylesheet" href="../../assets/css/navigation.css">
+    
+    
+    
+    
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -89,12 +92,12 @@
             .config-grid { grid-template-columns: 1fr; }
         }
     </style>
-</head>
+    <script src="../../assets/js/universal-navigation.js"></script>`n</head>
 <body class="role-grievance-committee">
     <div class="sla-layout">
         <div id="sidebarContainer"></div>
         <script>
-            fetch('../../assets/html/sidebar-template.html')
+            fetch('../../assets/html/universal-sidebar-template.html')
                 .then(r => r.text())
                 .then(html => {
                     document.getElementById('sidebarContainer').innerHTML = html;
@@ -103,9 +106,9 @@
                 });
         </script>
         
-        <main class="main-content">
-            <header class="page-header">
-                <div class="page-title">
+        <main class="layout-main">
+            <header class="mb-8 pb-6 border-b border-neutral-200">
+                <div class="text-3xl font-bold text-neutral-900">
                     <div>
                         <h1><i data-lucide="clock"></i> SLA Management</h1>
                         <p>Monitor and configure Service Level Agreements for grievance cases</p>
@@ -114,7 +117,7 @@
                         <button class="btn btn-outline" onclick="exportSLAReport()">
                             <i data-lucide="download"></i> Export Report
                         </button>
-                        <button class="btn btn-primary" onclick="openSLAConfig()">
+                        <button class="btn btn-primary text-white font-medium" onclick="openSLAConfig()">
                             <i data-lucide="settings"></i> Configure SLA
                         </button>
                     </div>
@@ -318,7 +321,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script type="module" src="../../firebase-config.js"></script>
     <script src="../../assets/js/grievance-committee/sla-management.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     
     <script>
@@ -333,3 +336,4 @@
     </script>
 </body>
 </html>
+

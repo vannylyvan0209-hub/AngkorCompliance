@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Billing Management System for Super Admin
 
 class BillingManagement {
     constructor() {

@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en" class="role-theme worker">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angkor Compliance Platform - 2025 Component Library</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/design-tokens-2025.css">
+    <link rel="stylesheet" href="assets/css/components-2025.css">
+    <link rel="stylesheet" href="assets/css/layout-2025.css">
+    <link rel="stylesheet" href="assets/css/role-themes-2025.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <style>
+        /* Component Library Specific Styles */
+        .component-library {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+        }
+        
+        .library-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: var(--space-6) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .library-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+        
+        .library-title {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-500);
+            margin: 0;
+        }
+        
+        .library-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .role-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .role-selector select {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            color: var(--text);
+            font-size: var(--text-sm);
+        }
+        
+        .library-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 90;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .library-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--text);
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            padding: var(--space-4);
+        }
+        
+        .nav-section {
+            margin-bottom: var(--space-6);
+        }
+        
+        .nav-section-title {
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-3);
+        }
+        
+        .nav-item {
+            display: block;
+            padding: var(--space-2) var(--space-3);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: var(--transition-colors);
+            margin-bottom: var(--space-1);
+        }
+        
+        .nav-item:hover {
+            background: var(--primary-50);
+            color: var(--primary-600);
+        }
+        
+        .nav-item.active {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .library-main {
+            margin-left: 0;
+            padding: var(--space-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .component-section {
+            margin-bottom: var(--space-12);
+        }
+        
+        .section-header {
+            margin-bottom: var(--space-6);
+        }
+        
+        .section-title {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--text);
+            margin: 0 0 var(--space-2) 0;
+        }
+        
+        .section-description {
+            font-size: var(--text-lg);
+            color: var(--text-muted);
+            margin: 0;
+        }
+        
+        .component-demo {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .demo-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--text);
+            margin: 0;
+        }
+        
+        .demo-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            transition: var(--transition-colors);
+        }
+        
+        .demo-toggle:hover {
+            background: var(--primary-50);
+            color: var(--primary-600);
+        }
+        
+        .demo-content {
+            margin-bottom: var(--space-4);
+        }
+        
+        .demo-code {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text);
+            overflow-x: auto;
+            display: none;
+        }
+        
+        .demo-code.show {
+            display: block;
+        }
+        
+        .demo-code pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .component-variants {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .variant-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+        
+        .variant-label {
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 80;
+            display: none;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .library-sidebar {
+                width: 100%;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .library-main {
+                padding: var(--space-4);
+            }
+            
+            .component-variants {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Dark mode adjustments */
+        @media (prefers-color-scheme: dark) {
+            .library-header {
+                background: var(--surface-dark);
+                border-bottom-color: var(--border-dark);
+            }
+            
+            .library-sidebar {
+                background: var(--surface-dark);
+                border-right-color: var(--border-dark);
+            }
+            
+            .component-demo {
+                background: var(--surface-dark);
+                border-color: var(--border-dark);
+            }
+            
+            .demo-code {
+                background: var(--background-dark);
+                border-color: var(--border-dark);
+            }
+            
+            .variant-item {
+                background: var(--surface-dark);
+                border-color: var(--border-dark);
+            }
+        }
+        
+        .dark-mode .library-header {
+            background: var(--surface-dark);
+            border-bottom-color: var(--border-dark);
+        }
+        
+        .dark-mode .library-sidebar {
+            background: var(--surface-dark);
+            border-right-color: var(--border-dark);
+        }
+        
+        .dark-mode .component-demo {
+            background: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+        
+        .dark-mode .demo-code {
+            background: var(--background-dark);
+            border-color: var(--border-dark);
+        }
+        
+        .dark-mode .variant-item {
+            background: var(--surface-dark);
+            border-color: var(--border-dark);
+        }
+    </style>
+</head>
+<body class="component-library">
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Library Header -->
+    <header class="library-header">
+        <div class="library-nav">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i data-lucide="menu"></i>
+            </button>
+            <h1 class="library-title">Component Library 2025</h1>
+            <div class="library-controls">
+                <div class="role-selector">
+                    <label for="roleSelect">Role:</label>
+                    <select id="roleSelect">
+                        <option value="worker">Worker</option>
+                        <option value="factory-admin">Factory Admin</option>
+                        <option value="hr-staff">HR Staff</option>
+                        <option value="grievance-committee">Grievance Committee</option>
+                        <option value="auditor">Auditor</option>
+                        <option value="analytics-user">Analytics User</option>
+                        <option value="super-admin">Super Admin</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline btn-sm" id="darkModeToggle">
+                    <i data-lucide="moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Library Sidebar -->
+    <nav class="library-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Components</h2>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">
+                <h3 class="nav-section-title">Foundation</h3>
+                <a href="#colors" class="nav-item">Colors</a>
+                <a href="#typography" class="nav-item">Typography</a>
+                <a href="#spacing" class="nav-item">Spacing</a>
+                <a href="#shadows" class="nav-item">Shadows</a>
+            </div>
+            <div class="nav-section">
+                <h3 class="nav-section-title">Components</h3>
+                <a href="#buttons" class="nav-item">Buttons</a>
+                <a href="#cards" class="nav-item">Cards</a>
+                <a href="#forms" class="nav-item">Forms</a>
+                <a href="#alerts" class="nav-item">Alerts</a>
+                <a href="#progress" class="nav-item">Progress</a>
+                <a href="#avatars" class="nav-item">Avatars</a>
+                <a href="#icons" class="nav-item">Icons</a>
+            </div>
+            <div class="nav-section">
+                <h3 class="nav-section-title">Layout</h3>
+                <a href="#grid" class="nav-item">Grid System</a>
+                <a href="#bento" class="nav-item">Bento Grid</a>
+                <a href="#flexbox" class="nav-item">Flexbox</a>
+                <a href="#containers" class="nav-item">Containers</a>
+            </div>
+            <div class="nav-section">
+                <h3 class="nav-section-title">Themes</h3>
+                <a href="#role-themes" class="nav-item">Role Themes</a>
+                <a href="#dark-mode" class="nav-item">Dark Mode</a>
+                <a href="#accessibility" class="nav-item">Accessibility</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Library Main Content -->
+    <main class="library-main">
+        <!-- Colors Section -->
+        <section id="colors" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Colors</h2>
+                <p class="section-description">Color palette and usage guidelines for the 2025 design system.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Primary Colors</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-50); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 50</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-100); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 100</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-200); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 200</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-300); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 300</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-400); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 400</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-500); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 500</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-600); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 600</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-700); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 700</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-800); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 800</div>
+                        </div>
+                        <div class="variant-item">
+                            <div style="width: 100%; height: 60px; background: var(--primary-900); border-radius: var(--radius-md); margin-bottom: var(--space-2);"></div>
+                            <div class="variant-label">Primary 900</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>/* Primary Colors */
+--primary-50: #fefce8;
+--primary-100: #fef3c7;
+--primary-200: #fde68a;
+--primary-300: #fcd34d;
+--primary-400: #fbbf24;
+--primary-500: #d4af37; /* Main brand color */
+--primary-600: #b8941f;
+--primary-700: #9c7c1a;
+--primary-800: #806415;
+--primary-900: #644c10;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Buttons Section -->
+        <section id="buttons" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Buttons</h2>
+                <p class="section-description">Interactive button components with various styles, sizes, and effects.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Button Variants</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <button class="btn btn-primary">Primary</button>
+                            <div class="variant-label">Primary</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-secondary">Secondary</button>
+                            <div class="variant-label">Secondary</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-success">Success</button>
+                            <div class="variant-label">Success</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-warning">Warning</button>
+                            <div class="variant-label">Warning</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-danger">Danger</button>
+                            <div class="variant-label">Danger</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-info">Info</button>
+                            <div class="variant-label">Info</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="btn btn-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="btn btn-success"&gt;Success&lt;/button&gt;
+&lt;button class="btn btn-warning"&gt;Warning&lt;/button&gt;
+&lt;button class="btn btn-danger"&gt;Danger&lt;/button&gt;
+&lt;button class="btn btn-info"&gt;Info&lt;/button&gt;</code></pre>
+                </div>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Button Sizes</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-xs">Extra Small</button>
+                            <div class="variant-label">Extra Small</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-sm">Small</button>
+                            <div class="variant-label">Small</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-md">Medium</button>
+                            <div class="variant-label">Medium</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-lg">Large</button>
+                            <div class="variant-label">Large</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-xl">Extra Large</button>
+                            <div class="variant-label">Extra Large</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;button class="btn btn-primary btn-xs"&gt;Extra Small&lt;/button&gt;
+&lt;button class="btn btn-primary btn-sm"&gt;Small&lt;/button&gt;
+&lt;button class="btn btn-primary btn-md"&gt;Medium&lt;/button&gt;
+&lt;button class="btn btn-primary btn-lg"&gt;Large&lt;/button&gt;
+&lt;button class="btn btn-primary btn-xl"&gt;Extra Large&lt;/button&gt;</code></pre>
+                </div>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Button Effects</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-gradient">Gradient</button>
+                            <div class="variant-label">Gradient</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-shine">Shine</button>
+                            <div class="variant-label">Shine</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-glow">Glow</button>
+                            <div class="variant-label">Glow</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-float">Float</button>
+                            <div class="variant-label">Float</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-bounce">Bounce</button>
+                            <div class="variant-label">Bounce</div>
+                        </div>
+                        <div class="variant-item">
+                            <button class="btn btn-primary btn-pulse">Pulse</button>
+                            <div class="variant-label">Pulse</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;button class="btn btn-primary btn-gradient"&gt;Gradient&lt;/button&gt;
+&lt;button class="btn btn-primary btn-shine"&gt;Shine&lt;/button&gt;
+&lt;button class="btn btn-primary btn-glow"&gt;Glow&lt;/button&gt;
+&lt;button class="btn btn-primary btn-float"&gt;Float&lt;/button&gt;
+&lt;button class="btn btn-primary btn-bounce"&gt;Bounce&lt;/button&gt;
+&lt;button class="btn btn-primary btn-pulse"&gt;Pulse&lt;/button&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cards Section -->
+        <section id="cards" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Cards</h2>
+                <p class="section-description">Card components for displaying content in organized containers.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Card Variants</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div class="card" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <span>Basic Card</span>
+                            </div>
+                            <div class="variant-label">Basic</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="card card-glass" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <span>Glass Card</span>
+                            </div>
+                            <div class="variant-label">Glass</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="card card-neumorphism" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <span>Neumorphism</span>
+                            </div>
+                            <div class="variant-label">Neumorphism</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="card card-elevated" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <span>Elevated</span>
+                            </div>
+                            <div class="variant-label">Elevated</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;div class="card"&gt;Basic Card&lt;/div&gt;
+&lt;div class="card card-glass"&gt;Glass Card&lt;/div&gt;
+&lt;div class="card card-neumorphism"&gt;Neumorphism Card&lt;/div&gt;
+&lt;div class="card card-elevated"&gt;Elevated Card&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Forms Section -->
+        <section id="forms" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Forms</h2>
+                <p class="section-description">Form components for user input and data collection.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Form Inputs</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" placeholder="Enter email">
+                            </div>
+                            <div class="variant-label">Text Input</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-input" placeholder="Enter password">
+                            </div>
+                            <div class="variant-label">Password Input</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="form-group">
+                                <label class="form-label">Select</label>
+                                <select class="form-select">
+                                    <option>Option 1</option>
+                                    <option>Option 2</option>
+                                </select>
+                            </div>
+                            <div class="variant-label">Select</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="form-group">
+                                <label class="form-label">Textarea</label>
+                                <textarea class="form-textarea" placeholder="Enter message"></textarea>
+                            </div>
+                            <div class="variant-label">Textarea</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;div class="form-group"&gt;
+    &lt;label class="form-label"&gt;Email&lt;/label&gt;
+    &lt;input type="email" class="form-input" placeholder="Enter email"&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Alerts Section -->
+        <section id="alerts" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Alerts</h2>
+                <p class="section-description">Alert components for displaying important messages and notifications.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Alert Types</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div class="alert alert-info">
+                                <div class="alert-icon">
+                                    <i data-lucide="info"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <p class="alert-message">This is an info alert.</p>
+                                </div>
+                            </div>
+                            <div class="variant-label">Info</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="alert alert-success">
+                                <div class="alert-icon">
+                                    <i data-lucide="check-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <p class="alert-message">This is a success alert.</p>
+                                </div>
+                            </div>
+                            <div class="variant-label">Success</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="alert alert-warning">
+                                <div class="alert-icon">
+                                    <i data-lucide="alert-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <p class="alert-message">This is a warning alert.</p>
+                                </div>
+                            </div>
+                            <div class="variant-label">Warning</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="alert alert-danger">
+                                <div class="alert-icon">
+                                    <i data-lucide="x-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <p class="alert-message">This is a danger alert.</p>
+                                </div>
+                            </div>
+                            <div class="variant-label">Danger</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;div class="alert alert-info"&gt;
+    &lt;div class="alert-icon"&gt;
+        &lt;i data-lucide="info"&gt;&lt;/i&gt;
+    &lt;/div&gt;
+    &lt;div class="alert-content"&gt;
+        &lt;p class="alert-message"&gt;This is an info alert.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Progress Section -->
+        <section id="progress" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Progress Indicators</h2>
+                <p class="section-description">Progress components for showing loading states and completion status.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Progress Types</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 75%"></div>
+                            </div>
+                            <div class="variant-label">Progress Bar</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="spinner spinner-md"></div>
+                            <div class="variant-label">Spinner</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="progress-ring" data-progress="75">
+                                <svg class="progress-ring-circle" width="60" height="60">
+                                    <circle class="progress-ring-background" cx="30" cy="30" r="25"></circle>
+                                    <circle class="progress-ring-progress" cx="30" cy="30" r="25"></circle>
+                                </svg>
+                                <div class="progress-ring-text">75%</div>
+                            </div>
+                            <div class="variant-label">Progress Ring</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;div class="progress"&gt;
+    &lt;div class="progress-bar" style="width: 75%"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="spinner spinner-md"&gt;&lt;/div&gt;
+
+&lt;div class="progress-ring" data-progress="75"&gt;
+    &lt;svg class="progress-ring-circle" width="60" height="60"&gt;
+        &lt;circle class="progress-ring-background" cx="30" cy="30" r="25"&gt;&lt;/circle&gt;
+        &lt;circle class="progress-ring-progress" cx="30" cy="30" r="25"&gt;&lt;/circle&gt;
+    &lt;/svg&gt;
+    &lt;div class="progress-ring-text"&gt;75%&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Avatars Section -->
+        <section id="avatars" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Avatars</h2>
+                <p class="section-description">Avatar components for displaying user profile pictures and status.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Avatar Types</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <div class="avatar avatar-sm avatar-worker">
+                                <div class="avatar-placeholder">W</div>
+                            </div>
+                            <div class="variant-label">Worker Small</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="avatar avatar-md avatar-factory-admin">
+                                <div class="avatar-placeholder">FA</div>
+                            </div>
+                            <div class="variant-label">Factory Admin</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="avatar avatar-lg avatar-hr-staff">
+                                <div class="avatar-placeholder">HR</div>
+                            </div>
+                            <div class="variant-label">HR Staff</div>
+                        </div>
+                        <div class="variant-item">
+                            <div class="avatar avatar-xl avatar-auditor">
+                                <div class="avatar-placeholder">A</div>
+                            </div>
+                            <div class="variant-label">Auditor</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;div class="avatar avatar-sm avatar-worker"&gt;
+    &lt;div class="avatar-placeholder"&gt;W&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="avatar avatar-md avatar-factory-admin"&gt;
+    &lt;div class="avatar-placeholder"&gt;FA&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Icons Section -->
+        <section id="icons" class="component-section">
+            <div class="section-header">
+                <h2 class="section-title">Icons</h2>
+                <p class="section-description">Icon components using Lucide icons with consistent sizing and styling.</p>
+            </div>
+            
+            <div class="component-demo">
+                <div class="demo-header">
+                    <h3 class="demo-title">Icon Sizes</h3>
+                    <button class="demo-toggle" onclick="toggleCode(this)">
+                        <i data-lucide="code"></i>
+                    </button>
+                </div>
+                <div class="demo-content">
+                    <div class="component-variants">
+                        <div class="variant-item">
+                            <i data-lucide="user" class="icon icon-xs icon-primary"></i>
+                            <div class="variant-label">Extra Small</div>
+                        </div>
+                        <div class="variant-item">
+                            <i data-lucide="user" class="icon icon-sm icon-primary"></i>
+                            <div class="variant-label">Small</div>
+                        </div>
+                        <div class="variant-item">
+                            <i data-lucide="user" class="icon icon-md icon-primary"></i>
+                            <div class="variant-label">Medium</div>
+                        </div>
+                        <div class="variant-item">
+                            <i data-lucide="user" class="icon icon-lg icon-primary"></i>
+                            <div class="variant-label">Large</div>
+                        </div>
+                        <div class="variant-item">
+                            <i data-lucide="user" class="icon icon-xl icon-primary"></i>
+                            <div class="variant-label">Extra Large</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-code">
+                    <pre><code>&lt;i data-lucide="user" class="icon icon-xs icon-primary"&gt;&lt;/i&gt;
+&lt;i data-lucide="user" class="icon icon-sm icon-primary"&gt;&lt;/i&gt;
+&lt;i data-lucide="user" class="icon icon-md icon-primary"&gt;&lt;/i&gt;
+&lt;i data-lucide="user" class="icon icon-lg icon-primary"&gt;&lt;/i&gt;
+&lt;i data-lucide="user" class="icon icon-xl icon-primary"&gt;&lt;/i&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- JavaScript -->
+    <script src="assets/js/role-switching-2025.js"></script>
+    <script src="assets/js/dark-mode-2025.js"></script>
+    <script src="assets/js/accessibility-2025.js"></script>
+    <script src="assets/js/performance-2025.js"></script>
+    <script src="assets/js/cross-browser-2025.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+        
+        // Role switching
+        const roleSelect = document.getElementById('roleSelect');
+        roleSelect.addEventListener('change', (e) => {
+            const newRole = e.target.value;
+            document.body.className = `component-library role-theme ${newRole}`;
+        });
+        
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+        });
+        
+        // Code toggle functionality
+        function toggleCode(button) {
+            const demo = button.closest('.component-demo');
+            const code = demo.querySelector('.demo-code');
+            const icon = button.querySelector('i');
+            
+            code.classList.toggle('show');
+            icon.setAttribute('data-lucide', code.classList.contains('show') ? 'eye-off' : 'code');
+            lucide.createIcons();
+        }
+        
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile menu
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Initialize role switcher
+        if (window.roleSwitcher) {
+            window.roleSwitcher.init();
+        }
+        
+        // Initialize dark mode manager
+        if (window.darkModeManager) {
+            window.darkModeManager.init();
+        }
+        
+        // Initialize accessibility manager
+        if (window.accessibilityManager) {
+            window.accessibilityManager.init();
+        }
+        
+        // Initialize performance manager
+        if (window.performanceManager) {
+            window.performanceManager.init();
+        }
+        
+        // Initialize cross-browser compatibility
+        if (window.crossBrowserManager) {
+            window.crossBrowserManager.init();
+        }
+    </script>
+</body>
+</html>

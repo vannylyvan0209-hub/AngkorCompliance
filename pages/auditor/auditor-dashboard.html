@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Auditor Dashboard - Angkor Compliance</title>
+	<link rel="icon" type="image/png" href="../../favicon.png">
+	<!-- 2025 Design System CSS -->
+	
+	
+	
+	
+	
+	<!-- Third-party Libraries -->
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+	<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	
+	<!-- Auditor Dashboard Specific CSS -->
+	<link rel="stylesheet" href="../../assets/css/auditor-dashboard-2025.css">
+	
+	<!-- Legacy CSS for backward compatibility -->
+	
+	
+	
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/navigation-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/universal-navigation.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<style>
+		.dashboard-layout { display:flex; min-height: 100vh; }
+		.main-content { flex:1; margin-left: 280px; background: var(--neutral-50); min-height: 100vh; }
+		.page-header { background: white; border-bottom: 1px solid var(--neutral-200); padding: var(--space-6) var(--space-8); }
+		.grid { display:grid; gap: var(--space-6); padding: var(--space-8); grid-template-columns: 2fr 1fr; }
+		.card { background:white; border:1px solid var(--neutral-200); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); }
+		.card-header { display:flex; align-items:center; justify-content: space-between; padding: var(--space-6); border-bottom: 1px solid var(--neutral-200); }
+		.card-body { padding: var(--space-6); }
+		.table { width:100%; border-collapse: collapse; }
+		.table th { background: var(--neutral-50); padding: var(--space-4); text-align:left; border-bottom: 1px solid var(--neutral-200); font-size: var(--text-sm); color: var(--neutral-700); }
+		.table td { padding: var(--space-4); border-bottom: 1px solid var(--neutral-100); }
+		@media (max-width: 1024px){ .grid { grid-template-columns: 1fr; } .main-content { margin-left: 0; } }
+	</style>
+</head>
+<body class="role-theme auditor">
+    <div id="sidebarContainer"></div>
+	<div class="auditor-dashboard">
+		<!-- 2025 Navigation System -->
+		<nav class="role-nav">
+			<div class="nav">
+				<div class="nav-brand">
+					<img src="logo.png" alt="Angkor Compliance" class="logo">
+					<span class="brand-text">Auditor Dashboard</span>
+				</div>
+				<div class="nav-items">
+					<div class="nav-item">
+						<a href="#dashboard" class="nav-link active" data-aos="fade-down" data-aos-delay="100">
+							<i data-lucide="home"></i>
+							<span>Dashboard</span>
+						</a>
+					</div>
+					<div class="nav-item">
+						<a href="pages/auditor/audit-planning.html" class="nav-link" data-aos="fade-down" data-aos-delay="200">
+							<i data-lucide="calendar"></i>
+							<span>Audit Planning</span>
+						</a>
+					</div>
+					<div class="nav-item">
+						<a href="pages/auditor/evidence-collection.html" class="nav-link" data-aos="fade-down" data-aos-delay="300">
+							<i data-lucide="folder-plus"></i>
+							<span>Evidence Collection</span>
+						</a>
+					</div>
+					<div class="nav-item">
+						<a href="pages/auditor/evidence-review.html" class="nav-link" data-aos="fade-down" data-aos-delay="400">
+							<i data-lucide="eye"></i>
+							<span>Evidence Review</span>
+						</a>
+					</div>
+					<div class="nav-item">
+						<a href="pages/auditor/finding-documentation.html" class="nav-link" data-aos="fade-down" data-aos-delay="500">
+							<i data-lucide="clipboard-list"></i>
+							<span>Findings</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="nav-actions">
+				<div class="language-selector">
+					<select id="languageSelect" class="form-select">
+						<option value="en">English</option>
+						<option value="km">ខ្មែរ</option>
+						<option value="th">ไทย</option>
+						<option value="vi">Tiếng Việt</option>
+					</select>
+				</div>
+				<div class="role-selector">
+					<label for="roleSelect" class="role-label">Role:</label>
+					<select id="roleSelect" onchange="changeRole(this.value)" class="form-select">
+						<option value="worker">Worker</option>
+						<option value="factory-admin">Factory Admin</option>
+						<option value="hr-staff">HR Staff</option>
+						<option value="grievance-committee">Grievance Committee</option>
+						<option value="auditor" selected>Auditor</option>
+						<option value="analytics-user">Analytics User</option>
+						<option value="super-admin">Super Admin</option>
+					</select>
+				</div>
+			</div>
+		</nav>
+
+		<main class="portal-main">
+        <div style="margin-left: 280px;">
+			<!-- Auditor Header with 2025 Design -->
+			<section class="auditor-header-section" id="auditorHeader">
+				<div class="container">
+					<div class="bento-grid">
+						<div class="bento-card bento-hero" data-aos="fade-up" data-aos-delay="100">
+							<div class="card-content">
+								<div class="auditor-header-content">
+									<div class="header-left">
+										<h1 class="hero-title">
+											<i data-lucide="search"></i>
+											Auditor Dashboard
+										</h1>
+										<p class="hero-subtitle">Read-only view of compliance, CAPs, and documents</p>
+									</div>
+									<div class="auditor-actions">
+										<button class="btn btn-primary" onclick="auditor.exportCaps()" data-aos="fade-up" data-aos-delay="200">
+											<i data-lucide="download"></i>
+											<span>Export CAPs</span>
+										</button>
+										<button class="btn btn-secondary" onclick="refreshAuditorData()" data-aos="fade-up" data-aos-delay="300">
+											<i data-lucide="refresh-cw"></i>
+											<span>Refresh</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<!-- Main Content with 2025 Design -->
+			<section class="main-content-section" id="mainContent">
+				<div class="container">
+					<div class="bento-grid">
+						<!-- Compliance Trend Chart -->
+						<div class="bento-card bento-chart" data-aos="fade-up" data-aos-delay="100">
+							<div class="card-content">
+								<div class="card-header">
+									<h3 class="card-title">Compliance Trend</h3>
+								</div>
+								<div class="chart-container">
+									<canvas id="complianceTrend"></canvas>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Quick Stats -->
+						<div class="bento-card bento-stats" data-aos="fade-up" data-aos-delay="200">
+							<div class="card-content">
+								<div class="card-header">
+									<h3 class="card-title">Quick Stats</h3>
+								</div>
+								<div class="stats-grid">
+									<div class="stat-item">
+										<div class="stat-icon" style="background: var(--warning-100); color: var(--warning-600);">
+											<i data-lucide="alert-triangle"></i>
+										</div>
+										<div class="stat-content">
+											<div class="stat-label">Open CAPs</div>
+											<div class="stat-value" id="statOpenCaps">-</div>
+										</div>
+									</div>
+									<div class="stat-item">
+										<div class="stat-icon" style="background: var(--danger-100); color: var(--danger-600);">
+											<i data-lucide="clock"></i>
+										</div>
+										<div class="stat-content">
+											<div class="stat-label">Expiring Docs (30d)</div>
+											<div class="stat-value" id="statExpiring">-</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<!-- Recent CAPs with 2025 Design -->
+			<section class="recent-caps-section" id="recentCaps">
+				<div class="container">
+					<div class="bento-grid">
+						<div class="bento-card bento-table" data-aos="fade-up" data-aos-delay="100">
+							<div class="card-content">
+								<div class="card-header">
+									<h3 class="card-title">Recent CAPs</h3>
+									<button class="btn btn-outline" onclick="auditor.exportCaps()">
+										<i data-lucide="download"></i>
+										<span>Export</span>
+									</button>
+								</div>
+								<div class="table-container">
+									<table class="data-table">
+										<thead>
+											<tr>
+												<th>Title</th>
+												<th>Factory</th>
+												<th>Status</th>
+												<th>Created</th>
+											</tr>
+										</thead>
+										<tbody id="auditorCaps">
+											<tr>
+												<td colspan="4">Loading...</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		        </div>
+</main>
+	</div>
+
+	<!-- 2025 Design System JavaScript -->
+	<script src="../../assets/js/role-switching-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/dark-mode-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/animations-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/accessibility-2025.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	
+	<!-- Legacy JavaScript -->
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script type="module" src="firebase-config.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/lang.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/enterprise-authentication.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	<script src="../../assets/js/auditor-dashboard.js"></script>
+    <script src="../../assets/js/universal-navigation.js"></script>
+	
+	<script>
+		// Initialize Auditor Dashboard
+		console.log('🔍 Auditor Dashboard loading...');
+		
+		// Initialize 2025 Design System
+		document.addEventListener('DOMContentLoaded', function() {
+			// Initialize AOS animations
+			AOS.init({
+				duration: 800,
+				easing: 'ease-in-out',
+				once: true
+			});
+
+			// Initialize Lucide icons
+			lucide.createIcons();
+
+			// Initialize role switching
+			if (window.roleSwitching) {
+				window.roleSwitching.init();
+			}
+
+			// Initialize dark mode
+			if (window.darkMode) {
+				window.darkMode.init();
+			}
+
+			// Initialize accessibility features
+			if (window.accessibility) {
+				window.accessibility.init();
+			}
+		});
+
+		// Role switching function
+		function changeRole(role) {
+			if (window.roleSwitching) {
+				window.roleSwitching.switchRole(role);
+			} else {
+				// Fallback role switching
+				const body = document.body;
+				body.className = `role-theme ${role}`;
+			}
+		}
+
+		// Refresh auditor data function
+		function refreshAuditorData() {
+			console.log('Refreshing auditor data...');
+			// Add refresh logic here
+		}
+	</script>
+</body>
+</html>
+
+
+

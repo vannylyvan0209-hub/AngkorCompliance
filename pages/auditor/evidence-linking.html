@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evidence Linking - Angkor Compliance 4</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
     <link rel="stylesheet" href="../../assets/css/auditor/evidence-linking.css">
+    
+
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
@@ -18,7 +21,7 @@
         <header class="linking-header">
             <div class="header-content">
                 <div class="header-left">
-                    <h1 class="page-title">
+                    <h1 class="text-3xl font-bold text-neutral-900">
                         <i data-lucide="link"></i>
                         Evidence Linking
                     </h1>
@@ -62,7 +65,7 @@
                             <i data-lucide="download"></i>
                             Export Report
                         </button>
-                        <button class="btn btn-primary" onclick="evidenceLinker.startLinking()">
+                        <button class="btn btn-primary text-white font-medium" onclick="evidenceLinker.startLinking()">
                             <i data-lucide="play"></i>
                             Start Linking
                         </button>
@@ -354,7 +357,7 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceLinker.closeLinkingModal()">Cancel</button>
                 <button class="btn btn-outline" onclick="evidenceLinker.saveLinkDraft()">Save Draft</button>
-                <button class="btn btn-primary" onclick="evidenceLinker.createLink()">Create Link</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceLinker.createLink()">Create Link</button>
             </div>
         </div>
     </div>
@@ -423,7 +426,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceLinker.closeBulkLinkingModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="evidenceLinker.applyBulkLinking()">Apply Bulk Linking</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceLinker.applyBulkLinking()">Apply Bulk Linking</button>
             </div>
         </div>
     </div>
@@ -460,7 +463,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="evidenceLinker.closeRequirementsTreeModal()">Close</button>
-                <button class="btn btn-primary" onclick="evidenceLinker.exportTreeView()">Export Tree</button>
+                <button class="btn btn-primary text-white font-medium" onclick="evidenceLinker.exportTreeView()">Export Tree</button>
             </div>
         </div>
     </div>
@@ -474,7 +477,7 @@
     </div>
 
     <script src="../../assets/js/firebase-config.js"></script>
-    <script src="../../assets/js/nav-config.js"></script>
+    <script src="../../assets/js/navigation-config.js"></script>
     <script src="../../assets/js/navigation-component.js"></script>
     <script src="../../assets/js/auditor/evidence-linking.js"></script>
 </body>

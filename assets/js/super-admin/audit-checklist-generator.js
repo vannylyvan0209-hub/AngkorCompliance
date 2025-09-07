@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Audit Checklist Generator for Super Admin
 
 class AuditChecklistGenerator {
     constructor() {

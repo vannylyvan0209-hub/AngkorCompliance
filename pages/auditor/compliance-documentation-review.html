@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compliance Documentation Review - Angkor Compliance Platform</title>
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/auditor.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+
 </head>
 <body class="role-auditor">
     <div class="container-fluid">
@@ -29,12 +32,12 @@
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <div class="row">
+        <main class="layout-main">
+            <div class="grid grid-cols-12 gap-6">
                 <!-- Left Panel - Document Queue -->
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-header">
+                <div class="col-span-12 lg:col-span-4">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h3><i class="fas fa-list"></i> Document Queue</h3>
                             <div class="card-actions">
                                 <button class="btn btn-outline-primary btn-sm" id="refreshQueue">
@@ -47,7 +50,7 @@
                             <div class="filter-controls">
                                 <div class="form-group">
                                     <label for="statusFilter">Status</label>
-                                    <select id="statusFilter" class="form-control">
+                                    <select id="statusFilter" class="form-input">
                                         <option value="">All Status</option>
                                         <option value="pending">Pending Review</option>
                                         <option value="in_review">In Review</option>
@@ -58,7 +61,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="categoryFilter">Category</label>
-                                    <select id="categoryFilter" class="form-control">
+                                    <select id="categoryFilter" class="form-input">
                                         <option value="">All Categories</option>
                                         <option value="policies">Policies</option>
                                         <option value="procedures">Procedures</option>
@@ -70,7 +73,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="priorityFilter">Priority</label>
-                                    <select id="priorityFilter" class="form-control">
+                                    <select id="priorityFilter" class="form-input">
                                         <option value="">All Priorities</option>
                                         <option value="high">High</option>
                                         <option value="medium">Medium</option>
@@ -89,17 +92,17 @@
 
                 <!-- Right Panel - Document Review -->
                 <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-header">
+                    <div class="card shadow-md">
+                        <div class="card-header bg-neutral-50">
                             <h3><i class="fas fa-search"></i> Document Review</h3>
                             <div class="card-actions">
-                                <button class="btn btn-secondary" id="saveReview">
+                                <button class="btn btn-secondary font-medium" id="saveReview">
                                     <i class="fas fa-save"></i> Save Review
                                 </button>
-                                <button class="btn btn-success" id="approveDocument">
+                                <button class="btn btn-success text-white font-medium" id="approveDocument">
                                     <i class="fas fa-check"></i> Approve
                                 </button>
-                                <button class="btn btn-danger" id="rejectDocument">
+                                <button class="btn btn-danger text-white font-medium" id="rejectDocument">
                                     <i class="fas fa-times"></i> Reject
                                 </button>
                             </div>
@@ -108,42 +111,42 @@
                             <div id="documentReviewForm">
                                 <!-- Document Information -->
                                 <div class="document-info">
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Document Title:</label>
                                                 <span id="docTitle">-</span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Document Type:</label>
                                                 <span id="docType">-</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Submitted By:</label>
                                                 <span id="docSubmitter">-</span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Submission Date:</label>
                                                 <span id="docSubmissionDate">-</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Priority:</label>
                                                 <span id="docPriority">-</span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-span-12 md:col-span-6">
                                             <div class="info-item">
                                                 <label>Status:</label>
                                                 <span id="docStatus">-</span>
@@ -170,11 +173,11 @@
                                         <!-- Compliance Assessment -->
                                         <div class="form-section">
                                             <h5>Compliance Assessment</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
+                                            <div class="grid grid-cols-12 gap-6">
+                                                <div class="col-span-12 md:col-span-6">
                                                     <div class="form-group">
                                                         <label for="complianceScore">Compliance Score *</label>
-                                                        <select id="complianceScore" class="form-control" required>
+                                                        <select id="complianceScore" class="form-input" required>
                                                             <option value="">Select Score</option>
                                                             <option value="excellent">Excellent (90-100%)</option>
                                                             <option value="good">Good (80-89%)</option>
@@ -184,10 +187,10 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-span-12 md:col-span-6">
                                                     <div class="form-group">
                                                         <label for="complianceStatus">Compliance Status *</label>
-                                                        <select id="complianceStatus" class="form-control" required>
+                                                        <select id="complianceStatus" class="form-input" required>
                                                             <option value="">Select Status</option>
                                                             <option value="compliant">Compliant</option>
                                                             <option value="non_compliant">Non-Compliant</option>
@@ -202,11 +205,11 @@
                                         <!-- Quality Assessment -->
                                         <div class="form-section">
                                             <h5>Quality Assessment</h5>
-                                            <div class="row">
+                                            <div class="grid grid-cols-12 gap-6">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="clarityScore">Clarity</label>
-                                                        <select id="clarityScore" class="form-control">
+                                                        <select id="clarityScore" class="form-input">
                                                             <option value="">Select Score</option>
                                                             <option value="5">5 - Excellent</option>
                                                             <option value="4">4 - Good</option>
@@ -219,7 +222,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="completenessScore">Completeness</label>
-                                                        <select id="completenessScore" class="form-control">
+                                                        <select id="completenessScore" class="form-input">
                                                             <option value="">Select Score</option>
                                                             <option value="5">5 - Complete</option>
                                                             <option value="4">4 - Mostly Complete</option>
@@ -232,7 +235,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="accuracyScore">Accuracy</label>
-                                                        <select id="accuracyScore" class="form-control">
+                                                        <select id="accuracyScore" class="form-input">
                                                             <option value="">Select Score</option>
                                                             <option value="5">5 - Highly Accurate</option>
                                                             <option value="4">4 - Accurate</option>
@@ -250,30 +253,30 @@
                                             <h5>Review Comments</h5>
                                             <div class="form-group">
                                                 <label for="strengths">Strengths</label>
-                                                <textarea id="strengths" class="form-control" rows="3" placeholder="Document the strengths of this document..."></textarea>
+                                                <textarea id="strengths" class="form-input" rows="3" placeholder="Document the strengths of this document..."></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="weaknesses">Areas for Improvement</label>
-                                                <textarea id="weaknesses" class="form-control" rows="3" placeholder="Document areas that need improvement..."></textarea>
+                                                <textarea id="weaknesses" class="form-input" rows="3" placeholder="Document areas that need improvement..."></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="recommendations">Recommendations</label>
-                                                <textarea id="recommendations" class="form-control" rows="3" placeholder="Provide specific recommendations for improvement..."></textarea>
+                                                <textarea id="recommendations" class="form-input" rows="3" placeholder="Provide specific recommendations for improvement..."></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="overallAssessment">Overall Assessment *</label>
-                                                <textarea id="overallAssessment" class="form-control" rows="4" placeholder="Provide an overall assessment of the document..." required></textarea>
+                                                <textarea id="overallAssessment" class="form-input" rows="4" placeholder="Provide an overall assessment of the document..." required></textarea>
                                             </div>
                                         </div>
 
                                         <!-- Action Required -->
                                         <div class="form-section">
                                             <h5>Action Required</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
+                                            <div class="grid grid-cols-12 gap-6">
+                                                <div class="col-span-12 md:col-span-6">
                                                     <div class="form-group">
                                                         <label for="actionRequired">Action Required *</label>
-                                                        <select id="actionRequired" class="form-control" required>
+                                                        <select id="actionRequired" class="form-input" required>
                                                             <option value="">Select Action</option>
                                                             <option value="approve">Approve as-is</option>
                                                             <option value="approve_with_minor_changes">Approve with minor changes</option>
@@ -283,16 +286,16 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-span-12 md:col-span-6">
                                                     <div class="form-group">
                                                         <label for="deadline">Revision Deadline</label>
-                                                        <input type="date" id="deadline" class="form-control">
+                                                        <input type="date" id="deadline" class="form-input">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="actionNotes">Action Notes</label>
-                                                <textarea id="actionNotes" class="form-control" rows="2" placeholder="Additional notes about the required action..."></textarea>
+                                                <textarea id="actionNotes" class="form-input" rows="2" placeholder="Additional notes about the required action..."></textarea>
                                             </div>
                                         </div>
                                     </form>

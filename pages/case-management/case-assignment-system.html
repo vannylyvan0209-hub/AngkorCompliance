@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Assignment System - Angkor Compliance Platform</title>
+    
+    <link rel="stylesheet" href="assets/css/grievance-committee/grievance-committee.css">
+    
+
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --primary-gold-dark: #B8941F;
+            --primary-gold-light: #F4E4BC;
+            --primary-gold-lighter: #FDF8E8;
+            --success-500: #22c55e;
+            --warning-500: #f59e0b;
+            --danger-500: #ef4444;
+            --info-500: #3b82f6;
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-400: #9ca3af;
+            --neutral-500: #6b7280;
+            --neutral-600: #4b5563;
+            --neutral-700: #374151;
+            --neutral-800: #1f2937;
+            --neutral-900: #111827;
+        }
+
+        .case-assignment-system {
+            background: linear-gradient(135deg, var(--primary-gold-lighter) 0%, #ffffff 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .system-header {
+            background: linear-gradient(135deg, var(--info-500) 0%, #1d4ed8 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .system-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .system-header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .system-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .control-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--neutral-200);
+        }
+
+        .control-panel h3 {
+            margin: 0 0 20px 0;
+            color: var(--neutral-800);
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--neutral-200);
+            padding-bottom: 10px;
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 12px;
+            border: 1px solid var(--neutral-300);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--info-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--info-500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success-500);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: var(--warning-500);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger-500);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .case-info h4 {
+            margin: 0 0 8px 0;
+            color: var(--neutral-800);
+            font-size: 1.2rem;
+        }
+
+        .case-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--neutral-600);
+        }
+
+        .case-number {
+            font-weight: 600;
+            color: var(--info-500);
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-critical {
+            background: #fef2f2;
+            color: var(--danger-500);
+            border: 1px solid #fecaca;
+        }
+
+        .priority-high {
+            background: #fffbeb;
+            color: var(--warning-500);
+            border: 1px solid #fde68a;
+        }
+
+        .priority-medium {
+            background: #eff6ff;
+            color: var(--info-500);
+            border: 1px solid #bfdbfe;
+        }
+
+        .priority-low {
+            background: #f0fdf4;
+            color: var(--success-500);
+            border: 1px solid #bbf7d0;
+        }
+
+        .case-details {
+            margin-bottom: 16px;
+        }
+
+        .case-description {
+            color: var(--neutral-700);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .case-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--neutral-50);
+            border-radius: 8px;
+            border: 1px solid var(--neutral-200);
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--neutral-600);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .case-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .sla-warning {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: var(--warning-500);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .sla-breach {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: var(--danger-500);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .assignment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .assignment-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--neutral-800);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--neutral-500);
+        }
+
+        .close-btn:hover {
+            color: var(--neutral-700);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--neutral-700);
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--neutral-300);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--neutral-500);
+        }
+
+        .empty-state h3 {
+            margin: 0 0 16px 0;
+            color: var(--neutral-600);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--neutral-500);
+        }
+
+        .spinner {
+            border: 3px solid var(--neutral-200);
+            border-top: 3px solid var(--info-500);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .case-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .case-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="case-assignment-system">
+        <header class="system-header">
+            <h1>🚨 Case Assignment System</h1>
+            <p>Intelligent case assignment, SLA management, and escalation control</p>
+        </header>
+
+        <div class="system-container">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <h3>🎯 Assignment Controls</h3>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="status-filter">Status</label>
+                        <select id="status-filter">
+                            <option value="">All Statuses</option>
+                            <option value="intake">Intake</option>
+                            <option value="triage">Triage</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="investigation">Investigation</option>
+                            <option value="resolution">Resolution</option>
+                            <option value="verification">Verification</option>
+                            <option value="closed">Closed</option>
+                            <option value="escalated">Escalated</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="priority-filter">Priority</label>
+                        <select id="priority-filter">
+                            <option value="">All Priorities</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="assignee-filter">Assignee</label>
+                        <select id="assignee-filter">
+                            <option value="">All Assignees</option>
+                            <option value="unassigned">Unassigned</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sla-filter">SLA Status</label>
+                        <select id="sla-filter">
+                            <option value="">All SLA Statuses</option>
+                            <option value="on-track">On Track</option>
+                            <option value="at-risk">At Risk</option>
+                            <option value="breached">Breached</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary text-white font-medium" onclick="refreshCases()">
+                        🔄 Refresh Cases
+                    </button>
+                    <button class="btn btn-success text-white font-medium" onclick="showBulkAssignment()">
+                        📋 Bulk Assignment
+                    </button>
+                    <button class="btn btn-warning text-white font-medium" onclick="showEscalationPanel()">
+                        ⚠️ Escalation Panel
+                    </button>
+                    <button class="btn btn-info" onclick="showSLAReport()">
+                        📊 SLA Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cases Grid -->
+            <div class="cases-grid" id="cases-grid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading cases...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div class="assignment-modal" id="assignment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Assign Case</h3>
+                <button class="close-btn" onclick="closeAssignmentModal()">&times;</button>
+            </div>
+            
+            <form id="assignment-form">
+                <div class="form-group">
+                    <label for="assignee-select">Assignee</label>
+                    <select id="assignee-select" required>
+                        <option value="">Select assignee...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="priority-select">Priority</label>
+                    <select id="priority-select" required>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Assignment Notes</label>
+                    <textarea id="notes" placeholder="Enter assignment notes, special instructions, or context..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary font-medium" onclick="closeAssignmentModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary text-white font-medium">
+                        Assign Case
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { Firebase, initializeFirebase } from './firebase-config.js';
+
+        // Initialize Firebase using centralized config
+        initializeFirebase();
+        const db = Firebase.db;
+        const auth = Firebase.auth;
+
+        // Global variables
+        let currentUser = null;
+        let currentFactory = null;
+        let cases = [];
+        let investigators = [];
+
+        // Initialize the system
+        async function initializeSystem() {
+            try {
+                console.log('🚀 Initializing Case Assignment System...');
+                
+                // Wait for authentication
+                await new Promise((resolve) => {
+                    const unsubscribe = auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            currentUser = user;
+                            currentFactory = localStorage.getItem('currentFactory') || 'default';
+                            unsubscribe();
+                            resolve();
+                        }
+                    });
+                });
+
+                // Load investigators and cases
+                await Promise.all([
+                    loadInvestigators(),
+                    loadCases()
+                ]);
+
+                // Set up event listeners
+                setupEventListeners();
+                
+                console.log('✅ Case Assignment System initialized');
+                
+            } catch (error) {
+                console.error('❌ Error initializing system:', error);
+                showError('Failed to initialize system');
+            }
+        }
+
+        // Load investigators
+        async function loadInvestigators() {
+            try {
+                const investigatorsSnapshot = await db.collection('users').get();
+                investigators = [];
+                
+                investigatorsSnapshot.forEach(doc => {
+                    const user = doc.data();
+                    if (user.role === 'grievance_committee' || user.role === 'hr_staff') {
+                        investigators.push({
+                            id: doc.id,
+                            name: user.displayName || user.email,
+                            role: user.role,
+                            email: user.email
+                        });
+                    }
+                });
+
+                // Populate assignee filter and modal
+                populateAssigneeFilter();
+                populateAssigneeModal();
+                
+                console.log(`✅ Loaded ${investigators.length} investigators`);
+                
+            } catch (error) {
+                console.error('❌ Error loading investigators:', error);
+            }
+        }
+
+        // Load cases
+        async function loadCases() {
+            try {
+                showLoading();
+                
+                const casesSnapshot = await db.collection('grievances')
+                    .where('factoryId', '==', currentFactory)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                cases = [];
+                
+                casesSnapshot.forEach(doc => {
+                    const grievance = { id: doc.id, ...doc.data() };
+                    cases.push(grievance);
+                });
+
+                // Apply filters and render
+                applyFilters();
+                
+                console.log(`✅ Loaded ${cases.length} cases`);
+                
+            } catch (error) {
+                console.error('❌ Error loading cases:', error);
+                showError('Failed to load cases');
+            }
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const priorityFilter = document.getElementById('priority-filter').value;
+            const assigneeFilter = document.getElementById('assignee-filter').value;
+            const slaFilter = document.getElementById('sla-filter').value;
+
+            let filteredCases = cases;
+
+            if (statusFilter) {
+                filteredCases = filteredCases.filter(c => c.status === statusFilter);
+            }
+
+            if (priorityFilter) {
+                filteredCases = filteredCases.filter(c => c.priority === priorityFilter);
+            }
+
+            if (assigneeFilter === 'unassigned') {
+                filteredCases = filteredCases.filter(c => !c.assignee);
+            } else if (assigneeFilter) {
+                filteredCases = filteredCases.filter(c => c.assignee === assigneeFilter);
+            }
+
+            if (slaFilter) {
+                filteredCases = filteredCases.filter(c => getSLAStatus(c) === slaFilter);
+            }
+
+            renderCases(filteredCases);
+        }
+
+        // Render cases
+        function renderCases(casesToRender) {
+            const grid = document.getElementById('cases-grid');
+            
+            if (casesToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No cases found</h3>
+                        <p>Try adjusting your filters or create new cases</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = casesToRender.map(caseItem => `
+                <div class="case-card">
+                    <div class="case-header">
+                        <div class="case-info">
+                            <h4>${caseItem.description.substring(0, 60)}${caseItem.description.length > 60 ? '...' : ''}</h4>
+                            <div class="case-meta">
+                                <span class="case-number">#${caseItem.caseNumber}</span>
+                                <span>${caseItem.workerName}</span>
+                                <span>${new Date(caseItem.createdAt?.toDate?.() || caseItem.createdAt).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="priority-badge priority-${caseItem.priority}">
+                            ${caseItem.priority}
+                        </div>
+                    </div>
+                    
+                    <div class="case-details">
+                        <p class="case-description">${caseItem.description}</p>
+                        
+                        ${getSLAWarning(caseItem)}
+                        
+                        <div class="case-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${caseItem.slaDays}</div>
+                                <div class="stat-label">SLA Days</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${getDaysRemaining(caseItem)}</div>
+                                <div class="stat-label">Days Left</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${caseItem.status}</div>
+                                <div class="stat-label">Status</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${caseItem.assignee ? 'Assigned' : 'Unassigned'}</div>
+                                <div class="stat-label">Assignment</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="case-actions">
+                        ${caseItem.assignee ? 
+                            `<button class="btn btn-info" onclick="viewCaseDetails('${caseItem.id}')">👁️ View Details</button>` :
+                            `<button class="btn btn-primary text-white font-medium" onclick="assignCase('${caseItem.id}')">📋 Assign Case</button>`
+                        }
+                        <button class="btn btn-warning text-white font-medium" onclick="escalateCase('${caseItem.id}')">⚠️ Escalate</button>
+                        <button class="btn btn-success text-white font-medium" onclick="updateCaseStatus('${caseItem.id}')">📝 Update Status</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get SLA warning
+        function getSLAWarning(caseItem) {
+            const daysRemaining = getDaysRemaining(caseItem);
+            const slaStatus = getSLAStatus(caseItem);
+            
+            if (slaStatus === 'breached') {
+                return `<div class="sla-breach">🚨 SLA BREACHED - Case is overdue by ${Math.abs(daysRemaining)} days</div>`;
+            } else if (slaStatus === 'at-risk') {
+                return `<div class="sla-warning">⚠️ SLA AT RISK - Only ${daysRemaining} days remaining</div>`;
+            }
+            
+            return '';
+        }
+
+        // Get days remaining
+        function getDaysRemaining(caseItem) {
+            const dueDate = new Date(caseItem.dueDate);
+            const now = new Date();
+            const diffTime = dueDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        // Get SLA status
+        function getSLAStatus(caseItem) {
+            const daysRemaining = getDaysRemaining(caseItem);
+            
+            if (daysRemaining < 0) return 'breached';
+            if (daysRemaining <= 2) return 'at-risk';
+            return 'on-track';
+        }
+
+        // Show assignment modal
+        window.assignCase = function(caseId) {
+            const modal = document.getElementById('assignment-modal');
+            const form = document.getElementById('assignment-form');
+            
+            // Store case ID for form submission
+            form.dataset.caseId = caseId;
+            
+            // Reset form
+            form.reset();
+            
+            // Show modal
+            modal.classList.add('show');
+        }
+
+        // Close assignment modal
+        window.closeAssignmentModal = function() {
+            const modal = document.getElementById('assignment-modal');
+            modal.classList.remove('show');
+        }
+
+        // Populate assignee filter
+        function populateAssigneeFilter() {
+            const filter = document.getElementById('assignee-filter');
+            const modal = document.getElementById('assignee-select');
+            
+            const options = investigators.map(inv => 
+                `<option value="${inv.id}">${inv.name} (${inv.role})</option>`
+            );
+            
+            filter.innerHTML += options.join('');
+            modal.innerHTML += options.join('');
+        }
+
+        // Populate assignee modal
+        function populateAssigneeModal() {
+            const modal = document.getElementById('assignee-select');
+            modal.innerHTML = '<option value="">Select assignee...</option>';
+            
+            const options = investigators.map(inv => 
+                `<option value="${inv.id}">${inv.name} (${inv.role})</option>`
+            );
+            
+            modal.innerHTML += options.join('');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Filter change events
+            document.getElementById('status-filter').addEventListener('change', applyFilters);
+            document.getElementById('priority-filter').addEventListener('change', applyFilters);
+            document.getElementById('assignee-filter').addEventListener('change', applyFilters);
+            document.getElementById('sla-filter').addEventListener('change', applyFilters);
+            
+            // Assignment form submission
+            document.getElementById('assignment-form').addEventListener('submit', handleAssignment);
+            
+            // Modal close on outside click
+            document.getElementById('assignment-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'assignment-modal') {
+                    closeAssignmentModal();
+                }
+            });
+        }
+
+        // Handle assignment form submission
+        async function handleAssignment(e) {
+            e.preventDefault();
+            
+            const caseId = e.target.dataset.caseId;
+            const assigneeId = document.getElementById('assignee-select').value;
+            const priority = document.getElementById('priority-select').value;
+            const notes = document.getElementById('notes').value;
+            
+            try {
+                // Update case in Firestore
+                const caseRef = db.collection('grievances').doc(caseId);
+                await caseRef.update({
+                    assignee: assigneeId,
+                    priority: priority,
+                    status: 'assigned',
+                    updatedAt: new Date(),
+                    'timeline.assignment': new Date(),
+                    notes: db.FieldValue.arrayUnion({
+                        type: 'assignment',
+                        content: notes,
+                        createdBy: currentUser.uid,
+                        createdAt: new Date()
+                    })
+                });
+                
+                console.log('✅ Case assigned successfully');
+                closeAssignmentModal();
+                
+                // Refresh cases
+                await loadCases();
+                
+                showSuccess('Case assigned successfully');
+                
+            } catch (error) {
+                console.error('❌ Error assigning case:', error);
+                showError('Failed to assign case');
+            }
+        }
+
+        // Utility functions
+        window.refreshCases = loadCases;
+        
+        window.showBulkAssignment = function() {
+            showInfo('Bulk assignment feature coming soon');
+        };
+        
+        window.showEscalationPanel = function() {
+            showInfo('Escalation panel feature coming soon');
+        };
+        
+        window.showSLAReport = function() {
+            showInfo('SLA report feature coming soon');
+        };
+        
+        window.viewCaseDetails = function(caseId) {
+            showInfo('Case details view coming soon');
+        };
+        
+        window.escalateCase = function(caseId) {
+            showInfo('Case escalation feature coming soon');
+        };
+        
+        window.updateCaseStatus = function(caseId) {
+            showInfo('Status update feature coming soon');
+        };
+
+        // Notification functions
+        function showSuccess(message) {
+            // Implement success notification
+            console.log('✅', message);
+        }
+        
+        function showError(message) {
+            // Implement error notification
+            console.error('❌', message);
+        }
+        
+        function showInfo(message) {
+            // Implement info notification
+            console.log('ℹ️', message);
+        }
+        
+        function showLoading() {
+            const grid = document.getElementById('cases-grid');
+            grid.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading cases...</p>
+                </div>
+            `;
+        }
+
+        // Initialize system when page loads
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+    </script>
+</body>
+</html>

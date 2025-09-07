@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../../assets/css/main-2025.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar Sync - Angkor Compliance</title>
     <link rel="stylesheet" href="../../assets/css/main.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
-    <link rel="stylesheet" href="../../assets/css/training-meetings.css">
+    
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+    
+
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="text-xl font-bold text-primary-gold" href="#">
                 <i class="fas fa-shield-alt me-2"></i>
                 Angkor Compliance
             </a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="../dashboard.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../dashboard.html">
                     <i class="fas fa-home me-1"></i>
                     Dashboard
                 </a>
-                <a class="nav-link" href="../training-meetings/training-matrix.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../training-meetings/training-matrix.html">
                     <i class="fas fa-graduation-cap me-1"></i>
                     Training Matrix
                 </a>
-                <a class="nav-link" href="../training-meetings/agenda-generator.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../training-meetings/agenda-generator.html">
                     <i class="fas fa-calendar-alt me-1"></i>
                     Agenda Generator
                 </a>
-                <a class="nav-link" href="../training-meetings/task-orchestration.html">
+                <a class="text-neutral-600 hover:text-primary-gold transition-colors" href="../training-meetings/task-orchestration.html">
                     <i class="fas fa-tasks me-1"></i>
                     Task Orchestration
                 </a>
@@ -57,7 +60,7 @@
                         <p class="text-muted mb-0">Factory & personal calendar integration, ICS sync, and holiday awareness</p>
                     </div>
                     <div class="btn-group">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                        <button class="btn btn-primary text-white font-medium" data-bs-toggle="modal" data-bs-target="#createEventModal">
                             <i class="fas fa-plus me-1"></i>
                             Create Event
                         </button>
@@ -77,8 +80,8 @@
         <!-- Calendar Views Tabs -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow-md">
+                    <div class="card-header bg-neutral-50">
                         <ul class="nav nav-tabs card-header-tabs" id="calendarTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="factory-calendar-tab" data-bs-toggle="tab" data-bs-target="#factory-calendar" type="button" role="tab">
@@ -87,19 +90,19 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="personal-calendar-tab" data-bs-toggle="tab" data-bs-target="#personal-calendar" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="personal-calendar-tab" data-bs-toggle="tab" data-bs-target="#personal-calendar" type="button" role="tab">
                                     <i class="fas fa-user me-1"></i>
                                     Personal Calendar
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="meeting-calendar-tab" data-bs-toggle="tab" data-bs-target="#meeting-calendar" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="meeting-calendar-tab" data-bs-toggle="tab" data-bs-target="#meeting-calendar" type="button" role="tab">
                                     <i class="fas fa-users me-1"></i>
                                     Meeting Calendar
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="training-calendar-tab" data-bs-toggle="tab" data-bs-target="#training-calendar" type="button" role="tab">
+                                <button class="text-neutral-600 hover:text-primary-gold transition-colors" id="training-calendar-tab" data-bs-toggle="tab" data-bs-target="#training-calendar" type="button" role="tab">
                                     <i class="fas fa-graduation-cap me-1"></i>
                                     Training Calendar
                                 </button>
@@ -111,7 +114,7 @@
                             <!-- Factory Calendar Tab -->
                             <div class="tab-pane fade show active" id="factory-calendar" role="tabpanel">
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group">
                                             <button class="btn btn-outline-secondary" id="factoryToday">
                                                 <i class="fas fa-calendar-day me-1"></i>
@@ -126,7 +129,7 @@
                                         </div>
                                         <span class="ms-3" id="factoryCurrentDate">February 2024</span>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group float-end">
                                             <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
                                             <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
@@ -140,7 +143,7 @@
                             <!-- Personal Calendar Tab -->
                             <div class="tab-pane fade" id="personal-calendar" role="tabpanel">
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group">
                                             <button class="btn btn-outline-secondary" id="personalToday">
                                                 <i class="fas fa-calendar-day me-1"></i>
@@ -155,7 +158,7 @@
                                         </div>
                                         <span class="ms-3" id="personalCurrentDate">February 2024</span>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group float-end">
                                             <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
                                             <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
@@ -169,7 +172,7 @@
                             <!-- Meeting Calendar Tab -->
                             <div class="tab-pane fade" id="meeting-calendar" role="tabpanel">
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group">
                                             <button class="btn btn-outline-secondary" id="meetingToday">
                                                 <i class="fas fa-calendar-day me-1"></i>
@@ -184,7 +187,7 @@
                                         </div>
                                         <span class="ms-3" id="meetingCurrentDate">February 2024</span>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group float-end">
                                             <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
                                             <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
@@ -198,7 +201,7 @@
                             <!-- Training Calendar Tab -->
                             <div class="tab-pane fade" id="training-calendar" role="tabpanel">
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group">
                                             <button class="btn btn-outline-secondary" id="trainingToday">
                                                 <i class="fas fa-calendar-day me-1"></i>
@@ -213,7 +216,7 @@
                                         </div>
                                         <span class="ms-3" id="trainingCurrentDate">February 2024</span>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="btn-group float-end">
                                             <button class="btn btn-outline-secondary" data-calendar-view="dayGridMonth">Month</button>
                                             <button class="btn btn-outline-secondary" data-calendar-view="timeGridWeek">Week</button>
@@ -230,9 +233,9 @@
         </div>
 
         <!-- Calendar Management Section -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 md:col-span-6">
+                <div class="card shadow-md">
                     <div class="calendar-header">
                         <h6 class="mb-0">Calendar Sources</h6>
                     </div>
@@ -247,8 +250,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-span-12 md:col-span-6">
+                <div class="card shadow-md">
                     <div class="calendar-header">
                         <h6 class="mb-0">Holiday Calendar</h6>
                     </div>
@@ -276,11 +279,11 @@
                 </div>
                 <div class="modal-body">
                     <form id="createEventForm">
-                        <div class="row">
+                        <div class="grid grid-cols-12 gap-6">
                             <div class="col-md-8">
                                 <div class="mb-3">
                                     <label class="form-label">Event Title *</label>
-                                    <input type="text" class="form-control" id="eventTitle" required>
+                                    <input type="text" class="form-input" id="eventTitle" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -298,22 +301,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">Start Date & Time *</label>
-                                    <input type="datetime-local" class="form-control" id="eventStart" required>
+                                    <input type="datetime-local" class="form-input" id="eventStart" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">End Date & Time *</label>
-                                    <input type="datetime-local" class="form-control" id="eventEnd" required>
+                                    <input type="datetime-local" class="form-input" id="eventEnd" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">Calendar</label>
                                     <select class="form-select" id="eventCalendar">
@@ -324,7 +327,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">All Day Event</label>
                                     <div class="form-check">
@@ -336,16 +339,16 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                            <textarea class="form-input" id="eventDescription" rows="3"></textarea>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">Location</label>
-                                    <input type="text" class="form-control" id="eventLocation" placeholder="Meeting room, address, etc.">
+                                    <input type="text" class="form-input" id="eventLocation" placeholder="Meeting room, address, etc.">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <label class="form-label">Color</label>
                                     <input type="color" class="form-control form-control-color" id="eventColor" value="#007bff">
@@ -361,15 +364,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Reminders</label>
-                            <div class="row">
-                                <div class="col-md-6">
+                            <div class="grid grid-cols-12 gap-6">
+                                <div class="col-span-12 md:col-span-6">
                                     <select class="form-select" id="reminderType">
                                         <option value="email">Email</option>
                                         <option value="popup">Popup</option>
                                         <option value="sms">SMS</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-span-12 md:col-span-6">
                                     <select class="form-select" id="reminderTime">
                                         <option value="0">At time of event</option>
                                         <option value="5">5 minutes before</option>
@@ -384,8 +387,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveEventBtn">Create Event</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="saveEventBtn">Create Event</button>
                 </div>
             </div>
         </div>
@@ -403,7 +406,7 @@
                     <form id="importCalendarForm">
                         <div class="mb-3">
                             <label class="form-label">Calendar File (ICS/CSV)</label>
-                            <input type="file" class="form-control" id="calendarFile" accept=".ics,.csv" required>
+                            <input type="file" class="form-input" id="calendarFile" accept=".ics,.csv" required>
                             <small class="form-text text-muted">Supported formats: ICS (iCalendar), CSV</small>
                         </div>
                         <div class="mb-3">
@@ -427,15 +430,15 @@
                                 <label class="form-check-label">Allow duplicate events</label>
                             </div>
                         </div>
-                        <div class="alert alert-info">
+                        <div class="p-4 mb-4 bg-info-50 border border-info-200 text-info-800 rounded-lg">
                             <i class="fas fa-info-circle me-1"></i>
                             Importing will add events to the selected calendar. Existing events may be modified if overwrite is enabled.
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="importCalendarBtn">Import Calendar</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="importCalendarBtn">Import Calendar</button>
                 </div>
             </div>
         </div>
@@ -464,12 +467,12 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Date Range</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" id="exportStartDate" required>
+                            <div class="grid grid-cols-12 gap-6">
+                                <div class="col-span-12 md:col-span-6">
+                                    <input type="date" class="form-input" id="exportStartDate" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" id="exportEndDate" required>
+                                <div class="col-span-12 md:col-span-6">
+                                    <input type="date" class="form-input" id="exportEndDate" required>
                                 </div>
                             </div>
                         </div>
@@ -499,8 +502,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="exportCalendarBtn">Export Calendar</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="exportCalendarBtn">Export Calendar</button>
                 </div>
             </div>
         </div>
@@ -529,15 +532,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Calendar Name</label>
-                            <input type="text" class="form-control" id="sourceName" placeholder="Enter calendar name" required>
+                            <input type="text" class="form-input" id="sourceName" placeholder="Enter calendar name" required>
                         </div>
                         <div class="mb-3" id="sourceUrlSection" style="display: none;">
                             <label class="form-label">Calendar URL</label>
-                            <input type="url" class="form-control" id="sourceUrl" placeholder="https://calendar.google.com/...">
+                            <input type="url" class="form-input" id="sourceUrl" placeholder="https://calendar.google.com/...">
                         </div>
                         <div class="mb-3" id="sourceFileSection" style="display: none;">
                             <label class="form-label">Calendar File</label>
-                            <input type="file" class="form-control" id="sourceFile" accept=".ics,.csv">
+                            <input type="file" class="form-input" id="sourceFile" accept=".ics,.csv">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sync Frequency</label>
@@ -555,8 +558,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveCalendarSourceBtn">Add Source</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="saveCalendarSourceBtn">Add Source</button>
                 </div>
             </div>
         </div>
@@ -574,11 +577,11 @@
                     <form id="addHolidayForm">
                         <div class="mb-3">
                             <label class="form-label">Holiday Name</label>
-                            <input type="text" class="form-control" id="holidayName" placeholder="e.g., New Year's Day" required>
+                            <input type="text" class="form-input" id="holidayName" placeholder="e.g., New Year's Day" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Date</label>
-                            <input type="date" class="form-control" id="holidayDate" required>
+                            <input type="date" class="form-input" id="holidayDate" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type</label>
@@ -591,7 +594,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" id="holidayDescription" rows="2" placeholder="Optional description"></textarea>
+                            <textarea class="form-input" id="holidayDescription" rows="2" placeholder="Optional description"></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Recurring</label>
@@ -603,8 +606,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveHolidayBtn">Add Holiday</button>
+                    <button type="button" class="btn btn-secondary font-medium" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary text-white font-medium" id="saveHolidayBtn">Add Holiday</button>
                 </div>
             </div>
         </div>

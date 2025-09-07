@@ -1,0 +1,413 @@
+/**
+ * Angkor Compliance Platform - Keyboard Shortcuts 2025
+ * Keyboard shortcuts with visual feedback
+ */
+
+/* ===== KEYBOARD SHORTCUTS VARIABLES ===== */
+:root {
+    --shortcuts-bg: var(--surface);
+    --shortcuts-text: var(--text);
+    --shortcuts-border: var(--border);
+    --shortcuts-shadow: var(--shadow-lg);
+    --shortcuts-overlay: rgba(0, 0, 0, 0.5);
+    --shortcuts-padding: var(--space-6);
+    --shortcuts-gap: var(--space-4);
+    --shortcuts-border-radius: var(--radius-lg);
+    --shortcuts-z-index: 1000;
+    --shortcuts-overlay-z-index: 999;
+    --shortcuts-key-bg: var(--gray-100);
+    --shortcuts-key-text: var(--text);
+    --shortcuts-key-border: var(--border);
+    --shortcuts-key-shadow: var(--shadow-sm);
+    --shortcuts-key-active-bg: var(--primary-500);
+    --shortcuts-key-active-text: var(--white);
+    --shortcuts-key-active-shadow: var(--shadow-md);
+}
+
+/* ===== KEYBOARD SHORTCUTS BASE ===== */
+.keyboard-shortcuts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--shortcuts-overlay);
+    backdrop-filter: blur(8px);
+    z-index: var(--shortcuts-overlay-z-index);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-all);
+}
+
+.keyboard-shortcuts.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.keyboard-shortcuts-content {
+    background: var(--shortcuts-bg);
+    border: 1px solid var(--shortcuts-border);
+    border-radius: var(--shortcuts-border-radius);
+    box-shadow: var(--shortcuts-shadow);
+    padding: var(--shortcuts-padding);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: var(--transition-transform);
+}
+
+.keyboard-shortcuts.active .keyboard-shortcuts-content {
+    transform: scale(1);
+}
+
+.keyboard-shortcuts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--shortcuts-border);
+}
+
+.keyboard-shortcuts-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--shortcuts-text);
+    margin: 0;
+}
+
+.keyboard-shortcuts-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboard-shortcuts-close:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.keyboard-shortcuts-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.keyboard-shortcuts-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.keyboard-shortcuts-section-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--shortcuts-text);
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--shortcuts-border);
+}
+
+.keyboard-shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.keyboard-shortcuts-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3);
+    background: var(--surface);
+    border: 1px solid var(--shortcuts-border);
+    border-radius: var(--radius-md);
+    transition: var(--transition-all);
+}
+
+.keyboard-shortcuts-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+}
+
+.keyboard-shortcuts-item-description {
+    font-size: var(--text-sm);
+    color: var(--shortcuts-text);
+    margin: 0;
+}
+
+.keyboard-shortcuts-item-keys {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.keyboard-shortcuts-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 var(--space-2);
+    background: var(--shortcuts-key-bg);
+    color: var(--shortcuts-key-text);
+    border: 1px solid var(--shortcuts-key-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    box-shadow: var(--shortcuts-key-shadow);
+    transition: var(--transition-all);
+}
+
+.keyboard-shortcuts-key.active {
+    background: var(--shortcuts-key-active-bg);
+    color: var(--shortcuts-key-active-text);
+    box-shadow: var(--shortcuts-key-active-shadow);
+    transform: scale(0.95);
+}
+
+.keyboard-shortcuts-key.plus {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+/* ===== KEYBOARD SHORTCUTS INDICATOR ===== */
+.keyboard-shortcuts-indicator {
+    position: fixed;
+    top: var(--space-4);
+    right: var(--space-4);
+    background: var(--shortcuts-bg);
+    border: 1px solid var(--shortcuts-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    box-shadow: var(--shortcuts-shadow);
+    z-index: var(--shortcuts-z-index);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition-all);
+}
+
+.keyboard-shortcuts-indicator.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.keyboard-shortcuts-indicator-text {
+    font-size: var(--text-sm);
+    color: var(--shortcuts-text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.keyboard-shortcuts-indicator-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 var(--space-1);
+    background: var(--shortcuts-key-bg);
+    color: var(--shortcuts-key-text);
+    border: 1px solid var(--shortcuts-key-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    box-shadow: var(--shortcuts-key-shadow);
+}
+
+/* ===== KEYBOARD SHORTCUTS VARIANTS ===== */
+.keyboard-shortcuts-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.keyboard-shortcuts-glass .keyboard-shortcuts-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.keyboard-shortcuts-neumorphism {
+    background: var(--surface);
+}
+
+.keyboard-shortcuts-neumorphism .keyboard-shortcuts-content {
+    background: var(--surface);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ===== KEYBOARD SHORTCUTS RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .keyboard-shortcuts-content {
+        width: 95%;
+        padding: var(--space-4);
+    }
+    
+    .keyboard-shortcuts-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+    
+    .keyboard-shortcuts-item-keys {
+        align-self: flex-end;
+    }
+}
+
+/* ===== KEYBOARD SHORTCUTS DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+    .keyboard-shortcuts {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    
+    .keyboard-shortcuts-content {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .keyboard-shortcuts-title {
+        color: var(--text-dark);
+    }
+    
+    .keyboard-shortcuts-close {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .keyboard-shortcuts-close:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .keyboard-shortcuts-section-title {
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .keyboard-shortcuts-item {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .keyboard-shortcuts-item:hover {
+        background: var(--primary-900);
+        border-color: var(--primary-700);
+    }
+    
+    .keyboard-shortcuts-item-description {
+        color: var(--text-dark);
+    }
+    
+    .keyboard-shortcuts-key {
+        background: var(--gray-800);
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .keyboard-shortcuts-key.plus {
+        color: var(--text-muted-dark);
+    }
+    
+    .keyboard-shortcuts-indicator {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .keyboard-shortcuts-indicator-text {
+        color: var(--text-dark);
+    }
+    
+    .keyboard-shortcuts-indicator-key {
+        background: var(--gray-800);
+        color: var(--text-dark);
+        border-color: var(--border-dark);
+    }
+}
+
+.dark-mode .keyboard-shortcuts {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .keyboard-shortcuts-content {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .keyboard-shortcuts-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .keyboard-shortcuts-close {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .keyboard-shortcuts-close:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .keyboard-shortcuts-section-title {
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .keyboard-shortcuts-item {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .keyboard-shortcuts-item:hover {
+    background: var(--primary-900);
+    border-color: var(--primary-700);
+}
+
+.dark-mode .keyboard-shortcuts-item-description {
+    color: var(--text-dark);
+}
+
+.dark-mode .keyboard-shortcuts-key {
+    background: var(--gray-800);
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .keyboard-shortcuts-key.plus {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .keyboard-shortcuts-indicator {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .keyboard-shortcuts-indicator-text {
+    color: var(--text-dark);
+}
+
+.dark-mode .keyboard-shortcuts-indicator-key {
+    background: var(--gray-800);
+    color: var(--text-dark);
+    border-color: var(--border-dark);
+}

@@ -1,0 +1,607 @@
+/**
+ * Angkor Compliance Platform - PWA Features 2025
+ * Progressive Web App features with 2025 design system styling
+ */
+
+/* ===== PWA FEATURES VARIABLES ===== */
+:root {
+    --pwa-bg: var(--surface);
+    --pwa-text: var(--text);
+    --pwa-border: var(--border);
+    --pwa-shadow: var(--shadow-lg);
+    --pwa-overlay: rgba(0, 0, 0, 0.5);
+    --pwa-padding: var(--space-6);
+    --pwa-gap: var(--space-4);
+    --pwa-border-radius: var(--radius-lg);
+    --pwa-z-index: 1000;
+    --pwa-overlay-z-index: 999;
+    --pwa-install-bg: var(--surface);
+    --pwa-install-text: var(--text);
+    --pwa-install-border: var(--border);
+    --pwa-install-primary: var(--primary-500);
+    --pwa-install-secondary: var(--gray-100);
+    --pwa-update-bg: var(--surface);
+    --pwa-update-text: var(--text);
+    --pwa-update-border: var(--border);
+    --pwa-update-warning: var(--warning-500);
+    --pwa-offline-bg: var(--surface);
+    --pwa-offline-text: var(--text);
+    --pwa-offline-border: var(--border);
+    --pwa-offline-error: var(--danger-500);
+    --pwa-sync-bg: var(--surface);
+    --pwa-sync-text: var(--text);
+    --pwa-sync-border: var(--border);
+    --pwa-sync-info: var(--info-500);
+}
+
+/* ===== PWA INSTALL PROMPT ===== */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    background: var(--pwa-install-bg);
+    border: 1px solid var(--pwa-install-border);
+    border-radius: var(--pwa-border-radius);
+    box-shadow: var(--pwa-shadow);
+    padding: var(--pwa-padding);
+    z-index: var(--pwa-z-index);
+    transform: translateY(100%);
+    transition: var(--transition-transform);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-install-prompt.active {
+    transform: translateY(0);
+}
+
+.pwa-install-prompt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+}
+
+.pwa-install-prompt-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--pwa-install-text);
+    margin: 0;
+}
+
+.pwa-install-prompt-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pwa-install-prompt-close:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.pwa-install-prompt-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.pwa-install-prompt-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-100);
+    color: var(--primary-600);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pwa-install-prompt-text {
+    flex: 1;
+}
+
+.pwa-install-prompt-description {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.pwa-install-prompt-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+}
+
+.pwa-install-prompt-button {
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.pwa-install-prompt-button.primary {
+    background: var(--pwa-install-primary);
+    color: var(--white);
+}
+
+.pwa-install-prompt-button.primary:hover {
+    background: var(--primary-600);
+}
+
+.pwa-install-prompt-button.secondary {
+    background: var(--pwa-install-secondary);
+    color: var(--text);
+}
+
+.pwa-install-prompt-button.secondary:hover {
+    background: var(--gray-200);
+}
+
+/* ===== PWA UPDATE PROMPT ===== */
+.pwa-update-prompt {
+    position: fixed;
+    top: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    background: var(--pwa-update-bg);
+    border: 1px solid var(--pwa-update-border);
+    border-radius: var(--pwa-border-radius);
+    box-shadow: var(--pwa-shadow);
+    padding: var(--pwa-padding);
+    z-index: var(--pwa-z-index);
+    transform: translateY(-100%);
+    transition: var(--transition-transform);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-update-prompt.active {
+    transform: translateY(0);
+}
+
+.pwa-update-prompt-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+.pwa-update-prompt-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--pwa-update-warning);
+}
+
+.pwa-update-prompt-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--pwa-update-text);
+    margin: 0;
+}
+
+.pwa-update-prompt-message {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4) 0;
+}
+
+.pwa-update-prompt-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+}
+
+.pwa-update-prompt-button {
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: var(--transition-colors);
+}
+
+.pwa-update-prompt-button.primary {
+    background: var(--pwa-update-warning);
+    color: var(--white);
+}
+
+.pwa-update-prompt-button.primary:hover {
+    background: var(--warning-600);
+}
+
+.pwa-update-prompt-button.secondary {
+    background: var(--gray-100);
+    color: var(--text);
+}
+
+.pwa-update-prompt-button.secondary:hover {
+    background: var(--gray-200);
+}
+
+/* ===== PWA OFFLINE INDICATOR ===== */
+.pwa-offline-indicator {
+    position: fixed;
+    top: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background: var(--pwa-offline-bg);
+    border: 1px solid var(--pwa-offline-border);
+    border-radius: var(--pwa-border-radius);
+    box-shadow: var(--pwa-shadow);
+    padding: var(--space-3) var(--space-4);
+    z-index: var(--pwa-z-index);
+    transition: var(--transition-transform);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-offline-indicator.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+.pwa-offline-indicator-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.pwa-offline-indicator-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--pwa-offline-error);
+}
+
+.pwa-offline-indicator-text {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--pwa-offline-text);
+    margin: 0;
+}
+
+/* ===== PWA SYNC INDICATOR ===== */
+.pwa-sync-indicator {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    background: var(--pwa-sync-bg);
+    border: 1px solid var(--pwa-sync-border);
+    border-radius: var(--pwa-border-radius);
+    box-shadow: var(--pwa-shadow);
+    padding: var(--space-3) var(--space-4);
+    z-index: var(--pwa-z-index);
+    transform: translateY(100%);
+    transition: var(--transition-transform);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-sync-indicator.active {
+    transform: translateY(0);
+}
+
+.pwa-sync-indicator-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.pwa-sync-indicator-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--pwa-sync-info);
+    animation: spin 1s linear infinite;
+}
+
+.pwa-sync-indicator-text {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--pwa-sync-text);
+    margin: 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== PWA LOADING SCREEN ===== */
+.pwa-loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--pwa-bg);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: var(--transition-all);
+}
+
+.pwa-loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.pwa-loading-screen-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.pwa-loading-screen-logo {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-100);
+    color: var(--primary-600);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.pwa-loading-screen-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--pwa-text);
+    margin: 0;
+}
+
+.pwa-loading-screen-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--primary-200);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.pwa-loading-screen-message {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== PWA VARIANTS ===== */
+.pwa-install-prompt-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-update-prompt-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-offline-indicator-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-sync-indicator-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.pwa-loading-screen-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+/* ===== PWA RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .pwa-install-prompt {
+        left: var(--space-2);
+        right: var(--space-2);
+        bottom: var(--space-2);
+    }
+    
+    .pwa-update-prompt {
+        left: var(--space-2);
+        right: var(--space-2);
+        top: var(--space-2);
+    }
+    
+    .pwa-install-prompt-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .pwa-install-prompt-actions {
+        flex-direction: column;
+    }
+}
+
+/* ===== PWA DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+    .pwa-install-prompt {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .pwa-install-prompt-title {
+        color: var(--text-dark);
+    }
+    
+    .pwa-install-prompt-close {
+        background: var(--surface-dark);
+        color: var(--text-dark);
+    }
+    
+    .pwa-install-prompt-close:hover {
+        background: var(--primary-900);
+        color: var(--primary-300);
+    }
+    
+    .pwa-install-prompt-description {
+        color: var(--text-muted-dark);
+    }
+    
+    .pwa-install-prompt-button.secondary {
+        background: var(--gray-800);
+        color: var(--text-dark);
+    }
+    
+    .pwa-install-prompt-button.secondary:hover {
+        background: var(--gray-700);
+    }
+    
+    .pwa-update-prompt {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .pwa-update-prompt-title {
+        color: var(--text-dark);
+    }
+    
+    .pwa-update-prompt-message {
+        color: var(--text-muted-dark);
+    }
+    
+    .pwa-update-prompt-button.secondary {
+        background: var(--gray-800);
+        color: var(--text-dark);
+    }
+    
+    .pwa-update-prompt-button.secondary:hover {
+        background: var(--gray-700);
+    }
+    
+    .pwa-offline-indicator {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .pwa-offline-indicator-text {
+        color: var(--text-dark);
+    }
+    
+    .pwa-sync-indicator {
+        background: var(--surface-dark);
+        border-color: var(--border-dark);
+    }
+    
+    .pwa-sync-indicator-text {
+        color: var(--text-dark);
+    }
+    
+    .pwa-loading-screen {
+        background: var(--surface-dark);
+    }
+    
+    .pwa-loading-screen-title {
+        color: var(--text-dark);
+    }
+    
+    .pwa-loading-screen-message {
+        color: var(--text-muted-dark);
+    }
+}
+
+.dark-mode .pwa-install-prompt {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .pwa-install-prompt-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-install-prompt-close {
+    background: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-install-prompt-close:hover {
+    background: var(--primary-900);
+    color: var(--primary-300);
+}
+
+.dark-mode .pwa-install-prompt-description {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .pwa-install-prompt-button.secondary {
+    background: var(--gray-800);
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-install-prompt-button.secondary:hover {
+    background: var(--gray-700);
+}
+
+.dark-mode .pwa-update-prompt {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .pwa-update-prompt-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-update-prompt-message {
+    color: var(--text-muted-dark);
+}
+
+.dark-mode .pwa-update-prompt-button.secondary {
+    background: var(--gray-800);
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-update-prompt-button.secondary:hover {
+    background: var(--gray-700);
+}
+
+.dark-mode .pwa-offline-indicator {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .pwa-offline-indicator-text {
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-sync-indicator {
+    background: var(--surface-dark);
+    border-color: var(--border-dark);
+}
+
+.dark-mode .pwa-sync-indicator-text {
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-loading-screen {
+    background: var(--surface-dark);
+}
+
+.dark-mode .pwa-loading-screen-title {
+    color: var(--text-dark);
+}
+
+.dark-mode .pwa-loading-screen-message {
+    color: var(--text-muted-dark);
+}

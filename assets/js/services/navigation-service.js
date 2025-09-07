@@ -1,7 +1,9 @@
 /**
  * Angkor Compliance Platform - Navigation Service
- * Handles dynamic navigation, route protection, and role-based access control
+ * Handles route protection, role-based navigation, and factory context
  */
+
+import { Firebase } from '../../../firebase-config.js';
 
 class NavigationService {
     constructor() {

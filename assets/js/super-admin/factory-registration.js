@@ -1,4 +1,4 @@
-import { initializeFirebase } from '../../firebase-config.js';
+// Factory Registration System for Super Admin
 
 class FactoryRegistration {
     constructor() {
