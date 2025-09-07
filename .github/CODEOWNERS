@@ -1,0 +1,27 @@
+# Global code owners
+* @vannylyvan0209-hub
+
+# Frontend specific
+/angkor-compliance-v2/frontend/ @vannylyvan0209-hub
+
+# Backend specific
+/angkor-compliance-v2/backend/ @vannylyvan0209-hub
+
+# Documentation
+/docs/ @vannylyvan0209-hub
+
+# CI/CD and infrastructure
+/.github/ @vannylyvan0209-hub
+/docker/ @vannylyvan0209-hub
+
+# Design system and assets
+/assets/ @vannylyvan0209-hub
+
+# HTML pages and templates
+/pages/ @vannylyvan0209-hub
+
+# Configuration files
+*.json @vannylyvan0209-hub
+*.yml @vannylyvan0209-hub
+*.yaml @vannylyvan0209-hub
+*.md @vannylyvan0209-hub
